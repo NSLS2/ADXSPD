@@ -12,10 +12,16 @@ $(PROD_NAME)_DBD += XSPDSupport.dbd
 $(PROD_NAME)_SRCS += $(PROD_NAME)_registerRecordDeviceDriver.cpp $(PROD_NAME)Main.cpp
 
 # Add any libraries built by the EPICS build system here
-$(PROD_NAME)_LIBS += ADXSPD
+$(PROD_NAME)_LIBS += ADXSPD cpr
 
-# Add any system libraries here
-$(PROD_NAME)_SYS_LIBS +=
+ifdef ZMQ_LIB
+  zmq_DIR        += $(ZMQ_LIB)
+  PROD_LIBS      += zmq
+else
+  PROD_SYS_LIBS  += zmq
+endif
+
+PROD_SYS_LIBS += curl z
 
 include $(ADCORE)/ADApp/commonDriverMakefile
 

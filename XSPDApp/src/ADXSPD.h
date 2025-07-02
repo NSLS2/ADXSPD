@@ -19,46 +19,26 @@
 #define ADXSPD_REVISION 0
 #define ADXSPD_MODIFICATION 0
 
-// Error message formatters
-#define ERR(msg)                                                                                 \
-    asynPrint(pasynUserSelf, ASYN_TRACE_ERROR, "ERROR | %s::%s: %s\n", driverName, functionName, \
-              msg)
+#include <cpr/cpr.h>
 
-#define ERR_ARGS(fmt, ...)                                                              \
-    asynPrint(pasynUserSelf, ASYN_TRACE_ERROR, "ERROR | %s::%s: " fmt "\n", driverName, \
-              functionName, __VA_ARGS__);
-
-// Warning message formatters
-#define WARN(msg)                                                                      \
-    asynPrint(pasynUserSelf, ASYN_TRACE_WARNING, "WARNING | %s::%s: %s\n", driverName, \
-              functionName, msg)
-
-#define WARN_ARGS(fmt, ...)                                                                 \
-    asynPrint(pasynUserSelf, ASYN_TRACE_WARNING, "WARNING | %s::%s: " fmt "\n", driverName, \
-              functionName, __VA_ARGS__);
-
-// Info message formatters
-#define INFO(msg) \
-    asynPrint(pasynUserSelf, ASYN_TRACE_FLOW, "INFO | %s::%s: %s\n", driverName, functionName, msg)
-
-#define INFO_ARGS(fmt, ...)                                                           \
-    asynPrint(pasynUserSelf, ASYN_TRACE_FLOW, "INFO | %s::%s: " fmt "\n", driverName, \
-              functionName, __VA_ARGS__);
-
-// Debug message formatters
-#define DEBUG(msg) \
-    asynPrint(pasynUserSelf, ASYN_TRACE_FLOW, "DEBUG | %s::%s: %s\n", driverName, functionName, msg)
-
-#define DEBUG_ARGS(fmt, ...)                                                           \
-    asynPrint(pasynUserSelf, ASYN_TRACE_FLOW, "DEBUG | %s::%s: " fmt "\n", driverName, \
-              functionName, __VA_ARGS__);
-
-// Define macros that correspond to string representations of PVs from EPICS database template here.
-// For example: For a record with `OUT` field set to `@asyn($(PORT), $(ADDR=0),
-// $(TIMEOUT=1))PV_NAME`, add, where the record represents an integer value: #define
-// ADXSPD_PVNameString          "PV_NAME"            //asynInt32
+#include <json.hpp>
 
 #include "ADDriver.h"
+
+#define ADXSPD_NumModulesString "XSPD_NUM_MODULES"
+#define ADXSPD_APIVersionString "XSPD_API_VERSION"
+#define ADXSPD_XSPDVersionString "XSPD_VERSION"
+
+using json = nlohmann::json;  // For JSON handling
+using namespace std;
+
+typedef enum ADXSPD_LOG_LEVEL {
+    ADXSPD_LOG_LEVEL_NONE = 0,      // No logging
+    ADXSPD_LOG_LEVEL_ERROR = 10,    // Error messages only
+    ADXSPD_LOG_LEVEL_WARNING = 20,  // Warnings and errors
+    ADXSPD_LOG_LEVEL_INFO = 30,     // Info, warnings, and errors
+    ADXSPD_LOG_LEVEL_DEBUG = 40     // Debugging information
+} ADXSPD_LogLevel_t;
 
 /*
  * Class definition of the ADXSPD driver
@@ -66,20 +46,26 @@
 class ADXSPD : ADDriver {
    public:
     // Constructor for the ADXSPD driver
-    ADXSPD(const char* portName, ......);
+    ADXSPD(const char* portName, const char* ip, int ctrlPort, const char* deviceId);
 
     // ADDriver overrides
     virtual asynStatus writeInt32(asynUser* pasynUser, epicsInt32 value);
     virtual asynStatus writeFloat64(asynUser* pasynUser, epicsFloat64 value);
+    virtual void report(FILE* fp, int details);
 
     // Destructor. Disconnects from the detector and performs cleanup
     ~ADXSPD();
 
+    // Must be public, since it is called from an external C function
+    void acquisitionThread();
+
    protected:
-// Add PV indexes here. You must also define the first/last index as you add them.
-// Ex: int ADXSPD_PVName;
-#define ADXSPD_FIRST_PARAM ......
-#define ADXSPD_LAST_PARAM ......
+    int ADXSPD_NumModules;
+    int ADXSPD_APIVersion;
+    int ADXSPD_XSPDVersion;
+
+#define ADXSPD_FIRST_PARAM ADXSPD_NumModules
+#define ADXSPD_LAST_PARAM ADXSPD_XSPDVersion
 
    private:
     bool acquisitionActive;  // Flag to indicate if acquisition is active
@@ -87,7 +73,14 @@ class ADXSPD : ADDriver {
 
     void acquireStart();
     void acquireStop();
-    void acquisitionThread();
+
+    json xspdGet(string endpoint);
+    json xspdGetValue(string path);
+
+    string apiUri;    // IP address and port for the device
+    string deviceId;  // Device ID for the XSPD device
+
+    ADXSPD_LogLevel_t logLevel = ADXSPD_LOG_LEVEL_INFO;  // Logging level for the driver
 };
 
 // Stores number of additional PV parameters are added by the driver

@@ -23,9 +23,47 @@
 #include <stdlib.h>
 #include <string.h>
 
+using json = nlohmann::json;
 using namespace std;
 
 const char* driverName = "ADXSPD";
+
+// Error message formatters
+#define ERR(msg)                                  \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_ERROR) \
+        printf("ERROR | %s::%s: %s\n", driverName, functionName, msg);
+
+#define ERR_ARGS(fmt, ...)                        \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_ERROR) \
+        printf("ERROR | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
+
+// Warning message formatters
+#define WARN(msg)                                   \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_WARNING) \
+        printf("WARNING | %s::%s: %s\n", driverName, functionName, msg);
+
+#define WARN_ARGS(fmt, ...)                         \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_WARNING) \
+        printf("WARNING | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
+
+// Info message formatters. Because there is no ASYN trace for info messages, we just use `printf`
+// here.
+#define INFO(msg)                                \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_INFO) \
+        printf("INFO | %s::%s: %s\n", driverName, functionName, msg);
+
+#define INFO_ARGS(fmt, ...)                      \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_INFO) \
+        printf("INFO | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
+
+// Debug message formatters
+#define DEBUG(msg)                                \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_DEBUG) \
+    printf("DEBUG | %s::%s: %s\n", driverName, functionName, msg)
+
+#define DEBUG_ARGS(fmt, ...)                      \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_DEBUG) \
+        printf("DEBUG | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
 
 /*
  * External configuration function for ADXSPD.
@@ -35,8 +73,9 @@ const char* driverName = "ADXSPD";
  * @params[in]: all passed into constructor
  * @return:     status
  */
-extern "C" int ADXSPDConfig(const char* portName, .....) {
-    new ADXSPD(portName, ......);
+extern "C" int ADXSPDConfig(const char* portName, const char* ip, int ctrlPort,
+                            const char* deviceId) {
+    new ADXSPD(portName, ip, ctrlPort, deviceId);
     return (asynSuccess);
 }
 
@@ -60,6 +99,42 @@ static void exitCallbackC(void* pPvt) {
 static void acquisitionThreadC(void* drvPvt) {
     ADXSPD* pPvt = (ADXSPD*)drvPvt;
     pPvt->acquisitionThread();
+}
+
+static string capitalize(const string& str) {
+    if (str.empty()) return str;
+    string result = str;
+    result[0] = toupper(result[0]);
+    return result;
+}
+
+json ADXSPD::xspdGet(string endpoint) {
+    const char* functionName = "xspdGet";
+    // Make a GET request to the XSPD API
+    cpr::Response response = cpr::Get(cpr::Url(this->apiUri + "/" + endpoint));
+
+    if (response.status_code != 200) {
+        ERR_ARGS("Failed to get data from %s: %s", endpoint.c_str(),
+                 response.error.message.c_str());
+        return json();
+    }
+
+    try {
+        return json::parse(response.text.c_str());
+    } catch (json::parse_error& e) {
+        ERR_ARGS("Failed to parse JSON response from %s: %s", endpoint.c_str(), e.what());
+        return json();
+    }
+}
+
+json ADXSPD::xspdGetValue(string path) {
+    const char* functionName = "xspdGetValue";
+    json response = xspdGet("v1/devices/" + this->deviceId + "/variables?path=" + path);
+    if (response.empty()) {
+        ERR_ARGS("Failed to get value for path %s", path.c_str());
+        return json();
+    }
+    return response["value"];
 }
 
 // -----------------------------------------------------------------------
@@ -90,25 +165,22 @@ void ADXSPD::acquireStart() {
 void ADXSPD::acquisitionThread() {
     const char* functionName = "acquisitionThread";
 
+    NDArray* pArray = NULL;
+    ADImageMode_t acquisitionMode;
+    NDArrayInfo arrayInfo;
     NDDataType_t dataType;
-    NDColorMode_t colorMode;
-    getIntegerParam(NDColorMode, (int*)&colorMode);
+    NDColorMode_t colorMode = NDColorModeMono;  // Only monochrome is supported.
+
     getIntegerParam(NDDataType, (int*)&dataType);
+    getIntegerParam(ADImageMode, (int*)&acquisitionMode);
 
-    int ndims = 3;                            // For color
-    if (colorMode == NDColorMono) ndims = 2;  // For monochrome
-
-    int dims[ndims];
-    if (ndims == 2) {
-        getIntegerParam(ADSizeX, &dims[0]);
-        getIntegerParam(ADSizeY, &dims[1]);
-    } else {
-        dims[0] = 3;
-        getIntegerParam(ADSizeX, &dims[1]);
-        getIntegerParam(ADSizeY, &dims[2]);
-    }
+    size_t dims[2];
+    getIntegerParam(ADSizeX, (int*)&dims[0]);
+    getIntegerParam(ADSizeY, (int*)&dims[1]);
 
     int collectedImages = 0;
+    int targetNumImages;
+    getIntegerParam(ADNumImages, &targetNumImages);
 
     // Start the acquisition given resolution, data type, color mode here
     this->acquisitionActive = true;
@@ -119,7 +191,7 @@ void ADXSPD::acquisitionThread() {
         // Get a new frame using the vendor SDK here here
 
         // Allocate the NDArray of the correct size
-        this->pArrays[0] = pNDArrayPool->alloc(ndims, dims, dataType, 0, NULL);
+        this->pArrays[0] = pNDArrayPool->alloc(2, dims, dataType, 0, NULL);
         if (this->pArrays[0] != NULL) {
             pArray = this->pArrays[0];
         } else {
@@ -141,7 +213,7 @@ void ADXSPD::acquisitionThread() {
         setIntegerParam(NDArraySizeY, arrayInfo.ySize);
 
         // Copy data from new frame to pArray
-        memcpy(pArray->pData, POINTER_TO_FRAME_DATA, arrayInfo.totalBytes);
+        // memcpy(pArray->pData, POINTER_TO_FRAME_DATA, arrayInfo.totalBytes);
 
         // increment the array counter
         int arrayCounter;
@@ -221,29 +293,25 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
     if (function == ADAcquire) {
         if (value && !acquiring) {
             acquireStart();
-        }
-        if (!value && acquiring) {
+        } else if (!value && acquiring) {
             acquireStop();
+        }
+    } else if (function == ADImageMode) {
+        if (acquiring == 1) {
+            acquireStop();
+        } else if (function < ADXSPD_FIRST_PARAM) {
+            status = ADDriver::writeInt32(pasynUser, value);
         }
     }
-
-    else if (function == ADImageMode)
-        if (acquiring == 1)
-            acquireStop();
-
-        else {
-            if (function < ADXSPD_FIRST_PARAM) {
-                status = ADDriver::writeInt32(pasynUser, value);
-            }
-        }
     callParamCallbacks();
 
     if (status) {
-        ERR_ARGS("status=%d, function=%d, value=%d\n", status, function, value);
+        ERR_ARGS("status=%d, function=%d, value=%d", status, function, value);
         return asynError;
-    } else
-        DEBUG_ARGS("function=%d value=%d\n", function, value);
-    return asynSuccess;
+    } else {
+        DEBUG_ARGS("function=%d value=%d", function, value);
+        return asynSuccess;
+    }
 }
 
 /*
@@ -274,11 +342,12 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
     callParamCallbacks();
 
     if (status) {
-        ERR_ARGS("status=%d, function=%d, value=%f\n", status, function, value);
+        ERR_ARGS("status=%d, function=%d, value=%f", status, function, value);
         return asynError;
-    } else
-        DEBUG_ARGS("function=%d value=%f\n", function, value);
-    return status;
+    } else {
+        DEBUG_ARGS("function=%d value=%f", function, value);
+        return status;
+    }
 }
 
 /*
@@ -301,12 +370,13 @@ void ADXSPD::report(FILE* fp, int details) {
 // ADXSPD Constructor/Destructor
 //----------------------------------------------------------------------------
 
-ADXSPD::ADXSPD(const char* portName, .....)
+ADXSPD::ADXSPD(const char* portName, const char* ip, int ctrlPort, const char* deviceId)
     : ADDriver(portName, 1, (int)NUM_XSPD_PARAMS, 0, 0, 0, 0, 0, 1, 0, 0) {
     static const char* functionName = "ADXSPD";
 
-    // Call createParam here for all of your
-    // ex. createParam(ADUVC_UVCComplianceLevelString, asynParamInt32, &ADUVC_UVCComplianceLevel);
+    createParam(ADXSPD_NumModulesString, asynParamInt32, &ADXSPD_NumModules);
+    createParam(ADXSPD_APIVersionString, asynParamOctet, &ADXSPD_APIVersion);
+    createParam(ADXSPD_XSPDVersionString, asynParamOctet, &ADXSPD_XSPDVersion);
 
     // Sets driver version PV (version numbers defined in header file)
     char versionString[25];
@@ -314,19 +384,73 @@ ADXSPD::ADXSPD(const char* portName, .....)
                   ADXSPD_MODIFICATION);
     setStringParam(NDDriverVersion, versionString);
 
-    // Initialzie vendor SDK and connect to the device here
+    // Initialize vendor SDK and connect to the device here
+    this->apiUri = string(ip) + ":" + to_string(ctrlPort) + "/api";
+    INFO_ARGS("Connecting to XSPD api at %s", this->apiUri.c_str());
+
+    json xspdVersionInfo = xspdGet("");
+    if (xspdVersionInfo.empty()) {
+        ERR("Failed to retrieve XSPD version information.");
+        return;
+    }
+    setStringParam(ADXSPD_APIVersion, xspdVersionInfo["api version"].get<string>().c_str());
+    setStringParam(ADXSPD_XSPDVersion, xspdVersionInfo["xspd version"].get<string>().c_str());
+
+    json deviceList = xspdGet("v1/devices")["devices"];
+    if (deviceList.empty()) {
+        ERR("No devices found!");
+        return;
+    }
+
+    json requestedDevice = NULL;
+
+    INFO_ARGS("Found %ld devices", deviceList.size());
+    if (deviceId == NULL) {
+        INFO("Device ID not specified, using first device in list.");
+        requestedDevice = deviceList[0];
+
+    } else {
+        for (const auto& device : deviceList) {
+            if (strcmp(device["id"].get<string>().c_str(), deviceId) == 0) {
+                requestedDevice = device;
+                break;
+            }
+        }
+    }
+
+    if (requestedDevice == NULL) {
+        ERR_ARGS("Device with ID %s not found in device list.", deviceId);
+        return;
+    }
+
+    this->deviceId = requestedDevice["id"].get<string>();
+    INFO_ARGS("Retrieving info for device with ID %s...", this->deviceId.c_str());
+
+    json deviceInfo = xspdGetValue("info");
+    if (deviceInfo.empty()) {
+        ERR_ARGS("Failed to retrieve device info for device ID %s", this->deviceId.c_str());
+        return;
+    }
+
+    json detectorInfo = deviceInfo["detectors"][0];
 
     // Retrieve device information and populate all PVs.
-    setStringParam(ADManufacturer, ....);
-    setStringParam(ADModel, ....);
-    setStringParam(ADSerialNumber, ....);
-    setStringParam(ADFirmwareVersion, ....);
-    setStringParam(ADSDKVersion, ....);
-    setIntegerParam(ADMaxSizeX, ....);
-    setIntegerParam(ADMaxSizeY, ....);
-
+    setStringParam(ADManufacturer, "X-Spectrum GmbH");
+    setStringParam(ADModel, capitalize(detectorInfo["detector-id"].get<string>()).c_str());
+    // setStringParam(ADSerialNumber, ....);
+    // setStringParam(ADFirmwareVersion, ....);
+    setStringParam(ADSDKVersion, deviceInfo["libxsp version"].get<string>().c_str());
+    // setIntegerParam(ADMaxSizeX, ....);
+    // setIntegerParam(ADMaxSizeY, ....);
     setIntegerParam(ADMinX, 0);
     setIntegerParam(ADMinY, 0);
+
+    // Initialize our modules
+    int numModules = detectorInfo["modules"].size();
+    setIntegerParam(ADXSPD_NumModules, numModules);
+    for (int i = 0; i < numModules; i++) {
+        // TODO: Create module objects
+    }
 
     callParamCallbacks();
 
@@ -348,28 +472,27 @@ ADXSPD::~ADXSPD() {
 // ADXSPD ioc shell registration
 //-------------------------------------------------------------
 
-/* XSPDConfig -> These are the args passed to the constructor in the epics config function */
 static const iocshArg XSPDConfigArg0 = {"Port name", iocshArgString};
-
-// This parameter must be customized by the driver author. Generally a URL, Serial Number, ID, IP
-// are used to connect.
-static const iocshArg XSPDConfigArg1 = {"Connection Param", iocshArgString};
+static const iocshArg XSPDConfigArg1 = {"IP", iocshArgString};
+static const iocshArg XSPDConfigArg2 = {"Control Port", iocshArgInt};
+static const iocshArg XSPDConfigArg3 = {"Device ID", iocshArgString};
 
 /* Array of config args */
-static const iocshArg* const XSPDConfigArgs[] = {&XSPDConfigArg0, &XSPDConfigArg1};
+static const iocshArg* const XSPDConfigArgs[] = {&XSPDConfigArg0, &XSPDConfigArg1, &XSPDConfigArg2,
+                                                 &XSPDConfigArg3};
 
 /* what function to call at config */
 static void configXSPDCallFunc(const iocshArgBuf* args) {
-    ADXSPDConfig(args[0].sval, args[1].sval);
+    ADXSPDConfig(args[0].sval, args[1].sval, args[2].ival, args[3].sval);
 }
 
-/* information about the configuration function */
-static const iocshFuncDef configUVC = {"ADXSPDConfig", 2, XSPDConfigArgs};
+/* Function definition */
+static const iocshFuncDef configXSPD = {"ADXSPDConfig", 4, XSPDConfigArgs};
 
 /* IOC register function */
 static void XSPDRegister(void) { iocshRegister(&configXSPD, configXSPDCallFunc); }
 
-/* external function for IOC register */
+/* external function for IOC registration */
 extern "C" {
 epicsExportRegistrar(XSPDRegister);
 }
