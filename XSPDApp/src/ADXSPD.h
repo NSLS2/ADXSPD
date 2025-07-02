@@ -46,7 +46,7 @@ typedef enum ADXSPD_LOG_LEVEL {
 class ADXSPD : ADDriver {
    public:
     // Constructor for the ADXSPD driver
-    ADXSPD(const char* portName, const char* ip, int ctrlPort, const char* deviceId);
+    ADXSPD(const char* portName, const char* ipPort, const char* deviceId);
 
     // ADDriver overrides
     virtual asynStatus writeInt32(asynUser* pasynUser, epicsInt32 value);

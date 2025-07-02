@@ -73,9 +73,8 @@ const char* driverName = "ADXSPD";
  * @params[in]: all passed into constructor
  * @return:     status
  */
-extern "C" int ADXSPDConfig(const char* portName, const char* ip, int ctrlPort,
-                            const char* deviceId) {
-    new ADXSPD(portName, ip, ctrlPort, deviceId);
+extern "C" int ADXSPDConfig(const char* portName, const char* ipPort, const char* deviceId) {
+    new ADXSPD(portName, ipPort, deviceId);
     return (asynSuccess);
 }
 
@@ -370,7 +369,7 @@ void ADXSPD::report(FILE* fp, int details) {
 // ADXSPD Constructor/Destructor
 //----------------------------------------------------------------------------
 
-ADXSPD::ADXSPD(const char* portName, const char* ip, int ctrlPort, const char* deviceId)
+ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     : ADDriver(portName, 1, (int)NUM_XSPD_PARAMS, 0, 0, 0, 0, 0, 1, 0, 0) {
     static const char* functionName = "ADXSPD";
 
@@ -385,7 +384,7 @@ ADXSPD::ADXSPD(const char* portName, const char* ip, int ctrlPort, const char* d
     setStringParam(NDDriverVersion, versionString);
 
     // Initialize vendor SDK and connect to the device here
-    this->apiUri = string(ip) + ":" + to_string(ctrlPort) + "/api";
+    this->apiUri = string(ipPort) + "/api";
     INFO_ARGS("Connecting to XSPD api at %s", this->apiUri.c_str());
 
     json xspdVersionInfo = xspdGet("");
@@ -473,21 +472,19 @@ ADXSPD::~ADXSPD() {
 //-------------------------------------------------------------
 
 static const iocshArg XSPDConfigArg0 = {"Port name", iocshArgString};
-static const iocshArg XSPDConfigArg1 = {"IP", iocshArgString};
-static const iocshArg XSPDConfigArg2 = {"Control Port", iocshArgInt};
-static const iocshArg XSPDConfigArg3 = {"Device ID", iocshArgString};
+static const iocshArg XSPDConfigArg1 = {"IP Port", iocshArgString};
+static const iocshArg XSPDConfigArg2 = {"Device ID", iocshArgString};
 
 /* Array of config args */
-static const iocshArg* const XSPDConfigArgs[] = {&XSPDConfigArg0, &XSPDConfigArg1, &XSPDConfigArg2,
-                                                 &XSPDConfigArg3};
+static const iocshArg* const XSPDConfigArgs[] = {&XSPDConfigArg0, &XSPDConfigArg1, &XSPDConfigArg2};
 
 /* what function to call at config */
 static void configXSPDCallFunc(const iocshArgBuf* args) {
-    ADXSPDConfig(args[0].sval, args[1].sval, args[2].ival, args[3].sval);
+    ADXSPDConfig(args[0].sval, args[1].sval, args[2].sval);
 }
 
 /* Function definition */
-static const iocshFuncDef configXSPD = {"ADXSPDConfig", 4, XSPDConfigArgs};
+static const iocshFuncDef configXSPD = {"ADXSPDConfig", 3, XSPDConfigArgs};
 
 /* IOC register function */
 static void XSPDRegister(void) { iocshRegister(&configXSPD, configXSPDCallFunc); }
