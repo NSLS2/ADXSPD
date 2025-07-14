@@ -86,7 +86,7 @@ extern "C" int ADXSPDConfig(const char* portName, const char* ipPort, const char
  * @return:     void
  */
 static void exitCallbackC(void* pPvt) {
-    ADXSPD* pXSPD = (ADXSPD*)pPvt;
+    ADXSPD* pXSPD = (ADXSPD*) pPvt;
     delete (pXSPD);
 }
 
@@ -96,7 +96,7 @@ static void exitCallbackC(void* pPvt) {
  * @param drvPvt Pointer to instance of ADXSPD driver object
  */
 static void acquisitionThreadC(void* drvPvt) {
-    ADXSPD* pPvt = (ADXSPD*)drvPvt;
+    ADXSPD* pPvt = (ADXSPD*) drvPvt;
     pPvt->acquisitionThread();
 }
 
@@ -110,6 +110,9 @@ static string capitalize(const string& str) {
 json ADXSPD::xspdGet(string endpoint) {
     const char* functionName = "xspdGet";
     // Make a GET request to the XSPD API
+
+    DEBUG_ARGS("Requesting data from %s", endpoint.c_str());
+
     cpr::Response response = cpr::Get(cpr::Url(this->apiUri + "/" + endpoint));
 
     if (response.status_code != 200) {
@@ -118,8 +121,10 @@ json ADXSPD::xspdGet(string endpoint) {
         return json();
     }
 
+    DEBUG_ARGS("Recv: %s", response.text.c_str());
+
     try {
-        return json::parse(response.text.c_str());
+        return json::parse(response.text.c_str(), nullptr, true, false, true);
     } catch (json::parse_error& e) {
         ERR_ARGS("Failed to parse JSON response from %s: %s", endpoint.c_str(), e.what());
         return json();
@@ -154,8 +159,8 @@ void ADXSPD::acquireStart() {
     opts.stackSize = epicsThreadGetStackSize(epicsThreadStackBig);
     opts.joinable = 1;
 
-    this->acquisitionThreadId =
-        epicsThreadCreateOpt("acquisitionThread", (EPICSTHREADFUNC)acquisitionThreadC, this, &opts);
+    this->acquisitionThreadId = epicsThreadCreateOpt(
+        "acquisitionThread", (EPICSTHREADFUNC) acquisitionThreadC, this, &opts);
 }
 
 /**
@@ -170,12 +175,12 @@ void ADXSPD::acquisitionThread() {
     NDDataType_t dataType;
     NDColorMode_t colorMode = NDColorModeMono;  // Only monochrome is supported.
 
-    getIntegerParam(NDDataType, (int*)&dataType);
-    getIntegerParam(ADImageMode, (int*)&acquisitionMode);
+    getIntegerParam(NDDataType, (int*) &dataType);
+    getIntegerParam(ADImageMode, (int*) &acquisitionMode);
 
     size_t dims[2];
-    getIntegerParam(ADSizeX, (int*)&dims[0]);
-    getIntegerParam(ADSizeY, (int*)&dims[1]);
+    getIntegerParam(ADSizeX, (int*) &dims[0]);
+    getIntegerParam(ADSizeY, (int*) &dims[1]);
 
     int collectedImages = 0;
     int targetNumImages;
@@ -207,7 +212,7 @@ void ADXSPD::acquisitionThread() {
 
         // Set array size PVs based on collected frame
         pArray->getInfo(&arrayInfo);
-        setIntegerParam(NDArraySize, (int)arrayInfo.totalBytes);
+        setIntegerParam(NDArraySize, (int) arrayInfo.totalBytes);
         setIntegerParam(NDArraySizeX, arrayInfo.xSize);
         setIntegerParam(NDArraySizeY, arrayInfo.ySize);
 
@@ -370,7 +375,7 @@ void ADXSPD::report(FILE* fp, int details) {
 //----------------------------------------------------------------------------
 
 ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
-    : ADDriver(portName, 1, (int)NUM_XSPD_PARAMS, 0, 0, 0, 0, 0, 1, 0, 0) {
+    : ADDriver(portName, 1, (int) NUM_XSPD_PARAMS, 0, 0, 0, 0, 0, 1, 0, 0) {
     static const char* functionName = "ADXSPD";
 
     createParam(ADXSPD_NumModulesString, asynParamInt32, &ADXSPD_NumModules);

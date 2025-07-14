@@ -80,10 +80,10 @@ class ADXSPD : ADDriver {
     string apiUri;    // IP address and port for the device
     string deviceId;  // Device ID for the XSPD device
 
-    ADXSPD_LogLevel_t logLevel = ADXSPD_LOG_LEVEL_INFO;  // Logging level for the driver
+    ADXSPD_LogLevel_t logLevel = ADXSPD_LOG_LEVEL_DEBUG;  // Logging level for the driver
 };
 
 // Stores number of additional PV parameters are added by the driver
-#define NUM_XSPD_PARAMS ((int)(&ADXSPD_LAST_PARAM - &ADXSPD_FIRST_PARAM + 1))
+#define NUM_XSPD_PARAMS ((int) (&ADXSPD_LAST_PARAM - &ADXSPD_FIRST_PARAM + 1))
 
 #endif
