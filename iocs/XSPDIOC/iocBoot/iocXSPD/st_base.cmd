@@ -2,6 +2,7 @@
 errlogInit(20000)
 
 < envPaths
+# < /epics/common/localhost-netsetup.cmd
 
 epicsEnvSet("ENGINEER",                 "Jakub Wlodek")
 epicsEnvSet("PORT",                     "XSPD1")
@@ -17,13 +18,14 @@ epicsEnvSet("NELMT",                    "65536")
 epicsEnvSet("NDTYPE",                   "Int16")
 epicsEnvSet("NDFTVL",                   "SHORT")
 epicsEnvSet("CBUFFS",                   "500")
+epicsEnvSet("EPICS_DB_INCLUDE_PATH", "$(ADCORE)/db")
 
 dbLoadDatabase("$(ADXSPD)/iocs/XSPDIOC/dbd/XSPDApp.dbd")
 XSPDApp_registerRecordDeviceDriver(pdbbase)
 
 # Create instance of ADXSPD driver, and pause to show connection messages
 ADXSPDConfig("$(PORT)", "http://localhost:8008")
-epicsThreadSleep(3)
+# epicsThreadSleep(3)
 
 dbLoadRecords("$(ADCORE)/db/ADBase.template", "P=$(PREFIX),R=cam1:,PORT=$(PORT),ADDR=0,TIMEOUT=1")
 dbLoadRecords("$(ADXSPD)/db/ADXSPD.template","P=$(PREFIX),R=cam1:,PORT=$(PORT),ADDR=0,TIMEOUT=1")
@@ -31,9 +33,9 @@ dbLoadRecords("$(ADXSPD)/db/ADXSPD.template","P=$(PREFIX),R=cam1:,PORT=$(PORT),A
 # Load all other plugins using commonPlugins.cmd
 < $(ADCORE)/iocBoot/commonPlugins.cmd
 
-set_requestfile_path("$(ADXSPD)/XSPDApp/Db")
+# set_requestfile_path("$(ADXSPD)/XSPDApp/Db")
 
 iocInit()
 
 # save things every thirty seconds
-create_monitor_set("auto_settings.req", 30, "P=$(PREFIX)")
+# create_monitor_set("auto_settings.req", 30, "P=$(PREFIX)")

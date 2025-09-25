@@ -17,7 +17,7 @@
 // version numbers
 #define ADXSPD_VERSION 0
 #define ADXSPD_REVISION 0
-#define ADXSPD_MODIFICATION 0
+#define ADXSPD_MODIFICATION 1
 
 #include <cpr/cpr.h>
 
@@ -39,6 +39,11 @@ typedef enum ADXSPD_LOG_LEVEL {
     ADXSPD_LOG_LEVEL_INFO = 30,     // Info, warnings, and errors
     ADXSPD_LOG_LEVEL_DEBUG = 40     // Debugging information
 } ADXSPD_LogLevel_t;
+
+typedef enum ADXSPD_ON_OFF {
+    ADXSPD_OFF = 0,
+    ADXSPD_ON = 1,
+} ADXSPD_OnOff_t;
 
 /*
  * Class definition of the ADXSPD driver
@@ -68,19 +73,23 @@ class ADXSPD : ADDriver {
 #define ADXSPD_LAST_PARAM ADXSPD_XSPDVersion
 
    private:
-    bool acquisitionActive;  // Flag to indicate if acquisition is active
+    bool alive = true;  // Flag to indicate whether our acquisition thread and monitor thread should keep running
     epicsThreadId acquisitionThreadId;
+    epicsThreadId monitorThreadId;
 
     void acquireStart();
     void acquireStop();
 
     json xspdGet(string endpoint);
-    json xspdGetValue(string path);
 
     string apiUri;    // IP address and port for the device
     string deviceId;  // Device ID for the XSPD device
+    string detectorId; // Detector ID
+    string dataPortId;
+    string dataPortIp;
+    int dataPortPort;
 
-    ADXSPD_LogLevel_t logLevel = ADXSPD_LOG_LEVEL_DEBUG;  // Logging level for the driver
+    ADXSPD_LogLevel_t logLevel = ADXSPD_LOG_LEVEL_INFO;  // Logging level for the driver
 };
 
 // Stores number of additional PV parameters are added by the driver
