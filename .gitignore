@@ -14,3 +14,4 @@ envPaths
 dllPath.bat
 autorun.cmd
 venv/
+.ruff_cache/

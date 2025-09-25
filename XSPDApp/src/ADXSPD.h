@@ -25,10 +25,6 @@
 
 #include "ADDriver.h"
 
-#define ADXSPD_NumModulesString "XSPD_NUM_MODULES"
-#define ADXSPD_APIVersionString "XSPD_API_VERSION"
-#define ADXSPD_XSPDVersionString "XSPD_VERSION"
-
 using json = nlohmann::json;  // For JSON handling
 using namespace std;
 
@@ -63,17 +59,20 @@ class ADXSPD : ADDriver {
 
     // Must be public, since it is called from an external C function
     void acquisitionThread();
+    void monitorThread();
+
+    ADXSPD_LogLevel_t getLogLevel() { return this->logLevel; }
 
    protected:
-    int ADXSPD_NumModules;
-    int ADXSPD_APIVersion;
-    int ADXSPD_XSPDVersion;
-
-#define ADXSPD_FIRST_PARAM ADXSPD_NumModules
-#define ADXSPD_LAST_PARAM ADXSPD_XSPDVersion
+// Load auto-generated parameter string and index definitions
+#include "ADXSPDParamDefs.h"
 
    private:
-    bool alive = true;  // Flag to indicate whether our acquisition thread and monitor thread should keep running
+    const char* driverName = "ADXSPD";
+    void createAllParams();
+
+    bool alive = true;  // Flag to indicate whether our acquisition thread and monitor thread should
+                        // keep running
     epicsThreadId acquisitionThreadId;
     epicsThreadId monitorThreadId;
 
@@ -82,17 +81,14 @@ class ADXSPD : ADDriver {
 
     json xspdGet(string endpoint);
 
-    string apiUri;    // IP address and port for the device
-    string deviceId;  // Device ID for the XSPD device
-    string detectorId; // Detector ID
+    string apiUri;      // IP address and port for the device
+    string deviceId;    // Device ID for the XSPD device
+    string detectorId;  // Detector ID
     string dataPortId;
     string dataPortIp;
     int dataPortPort;
 
     ADXSPD_LogLevel_t logLevel = ADXSPD_LOG_LEVEL_INFO;  // Logging level for the driver
 };
-
-// Stores number of additional PV parameters are added by the driver
-#define NUM_XSPD_PARAMS ((int) (&ADXSPD_LAST_PARAM - &ADXSPD_FIRST_PARAM + 1))
 
 #endif

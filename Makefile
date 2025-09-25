@@ -21,3 +21,11 @@ realuninstall: realuninstall_iocs
 realuninstall_iocs:
 	$(MAKE) -C iocs realuninstall
 .PHONY: realuninstall realuninstall_iocs
+
+
+bobfiles:
+	epicsdb2bob XSPDApp/Db XSPDApp/op/bob -m P=DEV:XSPD1 R=cam1: PORT=XSPD1 ADDR=0 TIMEOUT=1 -d -r _RBV -t none --macro_level launcher
+
+paramdefs:
+	scripts/generate_param_defs.py XSPDApp/Db/ADXSPD.template XSPDApp/src
+	scripts/generate_param_defs.py XSPDApp/Db/ADXSPDModule.template XSPDApp/src

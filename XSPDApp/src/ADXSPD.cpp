@@ -26,8 +26,6 @@
 using json = nlohmann::json;
 using namespace std;
 
-const char* driverName = "ADXSPD";
-
 // Error message formatters
 #define ERR(msg)                                  \
     if (this->logLevel >= ADXSPD_LOG_LEVEL_ERROR) \
@@ -110,13 +108,6 @@ static void monitorThreadC(void* drvPvt) {
     pPvt->monitorThread();
 }
 
-static string capitalize(const string& str) {
-    if (str.empty()) return str;
-    string result = str;
-    result[0] = toupper(result[0]);
-    return result;
-}
-
 json ADXSPD::xspdGet(string endpoint) {
     const char* functionName = "xspdGet";
     // Make a GET request to the XSPD API
@@ -135,8 +126,8 @@ json ADXSPD::xspdGet(string endpoint) {
     DEBUG_ARGS("Recv: %s", response.text.c_str());
 
     try {
-        json parsedResponse =  json::parse(response.text.c_str(), nullptr, true, false, true);
-        if(parsedResponse.empty()) {
+        json parsedResponse = json::parse(response.text.c_str(), nullptr, true, false, true);
+        if (parsedResponse.empty()) {
             ERR_ARGS("Empty JSON response from %s", endpoint.c_str());
         }
         return parsedResponse;
@@ -153,19 +144,12 @@ json ADXSPD::xspdGet(string endpoint) {
 /**
  * Function that spawns new acquisition thread, if able
  */
-void ADXSPD::acquireStart() {
-    const char* functionName = "acquireStart";
-
-}
+void ADXSPD::acquireStart() { const char* functionName = "acquireStart"; }
 
 /**
  * @brief stops acquisition by aborting exposure and joinging acq thread
  */
-void ADXSPD::acquireStop() {
-    const char* functionName = "acquireStop";
-}
-
-
+void ADXSPD::acquireStop() { const char* functionName = "acquireStop"; }
 
 /**
  * Main acquisition function for ADXSPD
@@ -187,11 +171,10 @@ void ADXSPD::acquisitionThread() {
     getIntegerParam(ADSizeY, (int*) &dims[1]);
 
     int collectedImages = 0;
-    int targetNumImages;
-    getIntegerParam(ADNumImages, &targetNumImages);
-    while (this->alive) {
-        setIntegerParam(ADStatus, ADStatusAcquire);
 
+    while (this->alive) {
+        int targetNumImages;
+        getIntegerParam(ADNumImages, &targetNumImages);
         // Get a new frame using the vendor SDK here here
 
         // Allocate the NDArray of the correct size
@@ -234,10 +217,10 @@ void ADXSPD::acquisitionThread() {
 
         // If in single mode, finish acq, if in multiple mode and reached target number
         // complete acquisition.
-        if (acquisitionMode == ADImageSingle) {
-            this->acquisitionActive = false;
-        } else if (acquisitionMode == ADImageMultiple && collectedImages == targetNumImages) {
-            this->acquisitionActive = false;
+        if (acquisitionMode == ADImageSingle ||
+            acquisitionMode == ADImageMultiple && collectedImages == targetNumImages) {
+            acquireStop();
+            collectedImages = 0;
         }
         // Release the array
         pArray->release();
@@ -246,8 +229,6 @@ void ADXSPD::acquisitionThread() {
         callParamCallbacks();
     }
 
-    setIntegerParam(ADStatus, ADStatusIdle);
-    setIntegerParam(ADAcquire, 0);
     callParamCallbacks();
 }
 
@@ -362,12 +343,12 @@ void ADXSPD::report(FILE* fp, int details) {
 //----------------------------------------------------------------------------
 
 ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
-    : ADDriver(portName, 1, (int) NUM_XSPD_PARAMS, 0, 0, 0, 0, 0, 1, 0, 0) {
+    : ADDriver(portName, 1, (int) NUM_ADXSPD_PARAMS, 0, 0, 0, 0, 0, 1, 0, 0) {
     static const char* functionName = "ADXSPD";
+    cpr::Response response;
 
-    createParam(ADXSPD_APIVersionString, asynParamOctet, &ADXSPD_APIVersion);
-    createParam(ADXSPD_XSPDVersionString, asynParamOctet, &ADXSPD_XSPDVersion);
-    createParam(ADXSPD_NumModulesString, asynParamInt32, &ADXSPD_NumModules);
+    // Create ADXSPD specific parameters
+    createAllParams();
 
     // Sets driver version PV (version numbers defined in header file)
     char versionString[25];
@@ -379,7 +360,7 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     string baseApiUri = string(ipPort) + "/api";
     INFO_ARGS("Connecting to XSPD api at %s", baseApiUri.c_str());
 
-    cpr::Response response = cpr::Get(cpr::Url(baseApiUri));
+    response = cpr::Get(cpr::Url(baseApiUri));
     if (response.status_code != 200) {
         ERR_ARGS("Failed to connect to XSPD API at %s: %s", baseApiUri.c_str(),
                  response.error.message.c_str());
@@ -394,11 +375,11 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
         return;
     }
     string apiVersion = xspdVersionInfo["api version"].get<string>();
-    setStringParam(ADXSPD_APIVersion, apiVersion.c_str());
-    setStringParam(ADXSPD_XSPDVersion, xspdVersionInfo["xspd version"].get<string>().c_str());
+    setStringParam(ADXSPD_ApiVersion, apiVersion.c_str());
+    setStringParam(ADXSPD_Version, xspdVersionInfo["xspd version"].get<string>().c_str());
     this->apiUri = baseApiUri + "/" + apiVersion;
-    
-    cpr::Response response = cpr::Get(cpr::Url(this->apiUri + "/devices"));
+
+    response = cpr::Get(cpr::Url(this->apiUri + "/devices"));
     if (response.status_code != 200) {
         ERR_ARGS("Failed to get device list from %s: %s", (this->apiUri + "/devices").c_str(),
                  response.error.message.c_str());
@@ -431,15 +412,15 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
         return;
     }
 
-
     this->deviceId = requestedDevice["id"].get<string>();
     setStringParam(ADSerialNumber, this->deviceId.c_str());
 
     INFO_ARGS("Retrieving info for device with ID %s...", this->deviceId.c_str());
 
-    cpr::Response response = cpr::Get(cpr::Url(this->apiUri + "/devices/" + this->deviceId));
+    response = cpr::Get(cpr::Url(this->apiUri + "/devices/" + this->deviceId));
     if (response.status_code != 200) {
-        ERR_ARGS("Failed to get device info from %s: %s", (this->apiUri + "/devices/" + this->deviceId).c_str(),
+        ERR_ARGS("Failed to get device info from %s: %s",
+                 (this->apiUri + "/devices/" + this->deviceId).c_str(),
                  response.error.message.c_str());
         return;
     }
@@ -458,20 +439,22 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     this->dataPortId = dataPortInfo["id"].get<string>();
     this->dataPortIp = dataPortInfo["ip"].get<string>();
     this->dataPortPort = dataPortInfo["port"].get<int>();
-    INFO_ARGS("Found data port w/ id %s bound to %s:%d", this->dataPortId.c_str(), this->dataPortIp.c_str(), this->dataPortPort);
+    INFO_ARGS("Found data port w/ id %s bound to %s:%d", this->dataPortId.c_str(),
+              this->dataPortIp.c_str(), this->dataPortPort);
 
-    json deviceInfo = xspdGet("info");
-    if (deviceInfo.empty()) {
+    json info = xspdGet("info");
+    if (info.empty()) {
         ERR_ARGS("Failed to retrieve device info for device ID %s", this->deviceId.c_str());
         return;
     }
 
     // For now only support single-detector devices
-    json detectorInfo = deviceInfo["detectors"][0];
+    json detectorInfo = info["detectors"][0];
     this->detectorId = detectorInfo["id"].get<string>();
 
-    for(auto &module : detectorInfo["modules"]) {
-        INFO_ARGS("Found module %s, type %s", module["id"].get<string>().c_str(), module["type"].get<string>().c_str());
+    for (auto& module : detectorInfo["modules"]) {
+        INFO_ARGS("Found module %s, type %s", module["id"].get<string>().c_str(),
+                  module["type"].get<string>().c_str());
         // TODO: Create module objects here
     }
 
@@ -497,13 +480,15 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     opts.priority = epicsThreadPriorityHigh;
     opts.stackSize = epicsThreadGetStackSize(epicsThreadStackBig);
     opts.joinable = 1;
-    this->acquisitionThreadId = epicsThreadCreateOpt("acquisitionThread", (EPICSTHREADFUNC) acquisitionThreadC, this, &opts);
+    this->acquisitionThreadId = epicsThreadCreateOpt(
+        "acquisitionThread", (EPICSTHREADFUNC) acquisitionThreadC, this, &opts);
 
     epicsThreadOpts monitorOpts;
     monitorOpts.priority = epicsThreadPriorityMedium;
     monitorOpts.stackSize = epicsThreadGetStackSize(epicsThreadStackMedium);
     monitorOpts.joinable = 1;
-    this->monitorThreadId = epicsThreadCreateOpt("monitorThread", (EPICSTHREADFUNC) monitorThreadC, this, &monitorOpts);
+    this->monitorThreadId =
+        epicsThreadCreateOpt("monitorThread", (EPICSTHREADFUNC) monitorThreadC, this, &monitorOpts);
 
     // when epics is exited, delete the instance of this class
     epicsAtExit(exitCallbackC, this);
@@ -514,13 +499,15 @@ ADXSPD::~ADXSPD() {
 
     INFO("Shutting down ADXSPD driver...");
 
-    if (this->acquisitionActive && this->acquisitionThreadId != NULL) acquireStop();
-
+    this->alive = false;
+    if (this->acquisitionThreadId != NULL) {
+        INFO("Waiting for acquisition thread to join...");
+        epicsThreadMustJoin(this->acquisitionThreadId);
+    }
     if (this->monitorThreadId != NULL) {
         INFO("Waiting for monitoring thread to join...");
         epicsThreadMustJoin(this->monitorThreadId);
     }
-
     INFO("Done.");
 }
 

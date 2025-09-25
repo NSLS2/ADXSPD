@@ -137,7 +137,7 @@ record(bi, "$(P)$(R)ChargeSumming_RBV"){
 record(bo, "$(P)$(R)FlatFieldCorrection"){
     field(DESC, "Flat field correction enable")
     field(DTYP, "asynInt32")
-    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_FLAT_FIELD_CORRECTION")
+    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_F_F_CORRECTION")
     field(ZRVL, "0")
     field(ZRST, "Disabled")
     field(ONVL, "1")
@@ -149,7 +149,7 @@ record(bo, "$(P)$(R)FlatFieldCorrection"){
 record(bi, "$(P)$(R)FlatFieldCorrection_RBV"){
     field(DESC, "Flat field correction enable readback")
     field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_FLAT_FIELD_CORRECTION")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_F_F_CORRECTION")
     field(ZRVL, "0")
     field(ZRST, "Disabled")
     field(ONVL, "1")
@@ -326,4 +326,3 @@ record(mbbi, "$(P)$(R)ShuffleMode_RBV"){
     field(THST, "Byte Shuffle")
     field(SCAN, "I/O Intr")
 }
-

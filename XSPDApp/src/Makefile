@@ -9,10 +9,10 @@ endif
 
 USR_CPPFLAGS += -std=c++11
 
-INC += ADXSPD.h
+INC += ADXSPD.h ADXSPDParamDefs.h ADXSPDModule.h ADXSPDModuleParamDefs.h
 
 LIBRARY_IOC = ADXSPD
-LIB_SRCS += ADXSPD.cpp
+LIB_SRCS += ADXSPDParamDefs.cpp ADXSPD.cpp ADXSPDModuleParamDefs.cpp ADXSPDModule.cpp
 
 
 DBD += XSPDSupport.dbd

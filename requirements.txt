@@ -1,0 +1,3 @@
+ruff
+pre-commit
+git+https://github.com/NSLS2/epicsdb2bob
