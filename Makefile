@@ -24,8 +24,8 @@ realuninstall_iocs:
 
 
 bobfiles:
-	epicsdb2bob XSPDApp/Db XSPDApp/op/bob -m P=DEV:XSPD1: R=cam1: PORT=XSPD1 ADDR=0 TIMEOUT=1 -d -r _RBV -t none -b XSPDApp/op/bob
+	epicsdb2bob xspdApp/Db xspdApp/op/bob -m P=DEV:XSPD1: R=cam1: PORT=XSPD1 ADDR=0 TIMEOUT=1 -d -r _RBV -t none -b xspdApp/op/bob
 
 paramdefs:
-	scripts/generate_param_defs.py XSPDApp/Db/ADXSPD.template XSPDApp/src
-	scripts/generate_param_defs.py XSPDApp/Db/ADXSPDModule.template XSPDApp/src
+	scripts/generate_param_defs.py xspdApp/Db/ADXSPD.template xspdApp/src
+	scripts/generate_param_defs.py xspdApp/Db/ADXSPDModule.template xspdApp/src

@@ -20,8 +20,8 @@ epicsEnvSet("NDFTVL",                   "SHORT")
 epicsEnvSet("CBUFFS",                   "500")
 epicsEnvSet("EPICS_DB_INCLUDE_PATH", "$(ADCORE)/db")
 
-dbLoadDatabase("$(ADXSPD)/iocs/XSPDIOC/dbd/XSPDApp.dbd")
-XSPDApp_registerRecordDeviceDriver(pdbbase)
+dbLoadDatabase("$(ADXSPD)/iocs/xspdIOC/dbd/xspdApp.dbd")
+xspdApp_registerRecordDeviceDriver(pdbbase)
 
 # Create instance of ADXSPD driver, and pause to show connection messages
 ADXSPDConfig("$(PORT)", "http://localhost:8008")
@@ -32,7 +32,7 @@ dbLoadRecords("$(ADXSPD)/db/ADXSPD.template","P=$(PREFIX),R=cam1:,PORT=$(PORT),A
 # Load all other plugins using commonPlugins.cmd
 < $(ADCORE)/iocBoot/commonPlugins.cmd
 
-# set_requestfile_path("$(ADXSPD)/XSPDApp/Db")
+# set_requestfile_path("$(ADXSPD)/xspdApp/Db")
 
 iocInit()
 

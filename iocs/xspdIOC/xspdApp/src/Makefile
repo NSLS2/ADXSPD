@@ -3,11 +3,11 @@ include $(TOP)/configure/CONFIG
 #----------------------------------------
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
 
-PROD_NAME = XSPDApp
+PROD_NAME = xspdApp
 PROD_IOC += $(PROD_NAME)
 
 DBD += $(PROD_NAME).dbd
-$(PROD_NAME)_DBD += XSPDSupport.dbd
+$(PROD_NAME)_DBD += xspdSupport.dbd
 
 $(PROD_NAME)_SRCS += $(PROD_NAME)_registerRecordDeviceDriver.cpp $(PROD_NAME)Main.cpp
 
