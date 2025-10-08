@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Saved on 2025-10-08 17:09:00 by jwlodek-->
+<display version="2.0.0">
+  <name>ADXSPD Top</name>
+  <macros>
+    <P>DEV:XSPD1:</P>
+    <R>cam1:</R>
+  </macros>
+  <width>1300</width>
+  <height>1000</height>
+  <background_color>
+    <color red="187" green="187" blue="187">
+    </color>
+  </background_color>
+  <widget type="embedded" version="2.0.0">
+    <name>Embedded Display</name>
+    <file>ADXSPD.bob</file>
+    <x>740</x>
+    <y>60</y>
+    <width>490</width>
+    <height>540</height>
+    <resize>2</resize>
+  </widget>
+  <widget type="embedded" version="2.0.0">
+    <name>Embedded Display_1</name>
+    <file>../../../../ADCore/ADApp/op/bob/autoconvert/ADBase.bob</file>
+    <x>10</x>
+    <y>20</y>
+    <width>715</width>
+    <height>970</height>
+    <resize>2</resize>
+  </widget>
+  <widget type="embedded" version="2.0.0">
+    <name>Embedded Display_2</name>
+    <file>ADXSPDModule.bob</file>
+    <x>740</x>
+    <y>620</y>
+    <width>490</width>
+    <height>570</height>
+    <resize>2</resize>
+  </widget>
+</display>

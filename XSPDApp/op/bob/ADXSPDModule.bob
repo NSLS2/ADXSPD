@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <display version="2.0.0">
+    <name>ADXSPDModule</name>
+    <widget type="label" version="2.0.0">
+      <name>02762845</name>
+      <x>10</x>
+      <y>20</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Board Temp readback in C</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>40591710</name>
+      <x>170</x>
+      <y>20</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)BoardTemp_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>3052362d</name>
+      <x>10</x>
+      <y>50</y>
+      <width>150</width>
+      <height>20</height>
+      <text>FPGA Temp readback in C</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>c2956382</name>
+      <x>170</x>
+      <y>50</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)FPGATemp_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>d0d8a3ad</name>
+      <x>10</x>
+      <y>80</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Humidity sensor Temp readback in C</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>7dcaf27b</name>
+      <x>170</x>
+      <y>80</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)HumiditySensorTemp_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>6454e0eb</name>
+      <x>10</x>
+      <y>110</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Humidity readback in %</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>a102728c</name>
+      <x>170</x>
+      <y>110</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Humidity_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>1802daf1</name>
+      <x>10</x>
+      <y>140</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Voltage in V</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textentry" version="2.0.0">
+      <name>32480184</name>
+      <x>170</x>
+      <y>140</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Voltage</pv_name>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="115" blue="255" green="223" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>bb0da039</name>
+      <x>330</x>
+      <y>140</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Voltage_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>e5e86a4c</name>
+      <x>10</x>
+      <y>170</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Sensor current readback in mA</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>1732c3be</name>
+      <x>170</x>
+      <y>170</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)SensorCurrent_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>07467c21</name>
+      <x>10</x>
+      <y>200</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Saturation threshold readback in counts/sec/pixel</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>f66492f8</name>
+      <x>170</x>
+      <y>200</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)SaturationThresh_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>b9bc6b1e</name>
+      <x>10</x>
+      <y>230</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Rotation yaw readback in degrees</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>735bcf3e</name>
+      <x>170</x>
+      <y>230</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)RotationYaw_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>8b2cfe88</name>
+      <x>10</x>
+      <y>260</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Rotation pitch readback in degrees</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>1adb608b</name>
+      <x>170</x>
+      <y>260</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)RotationPitch_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>a5be4885</name>
+      <x>10</x>
+      <y>290</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Rotation roll readback in degrees</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>e8e781b7</name>
+      <x>170</x>
+      <y>290</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)RotationRoll_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>f23d7e22</name>
+      <x>10</x>
+      <y>320</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Position X readback in mm</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>d208eebe</name>
+      <x>170</x>
+      <y>320</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)PositionX_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>117f5146</name>
+      <x>10</x>
+      <y>350</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Position Y readback in mm</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>0fa39ed3</name>
+      <x>170</x>
+      <y>350</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)PositionY_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>61191f36</name>
+      <x>10</x>
+      <y>380</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Position Z readback in mm</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>d2608826</name>
+      <x>170</x>
+      <y>380</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)PositionZ_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>160121c3</name>
+      <x>10</x>
+      <y>410</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Max frames readback</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>f258320f</name>
+      <x>170</x>
+      <y>410</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)MaxFrames_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>a53a7da4</name>
+      <x>10</x>
+      <y>440</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Number of sub-frames readback</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>f867539c</name>
+      <x>170</x>
+      <y>440</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)NumSubFrames_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>7f6ce2e7</name>
+      <x>10</x>
+      <y>470</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Number of connectors readback</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>64cad7e4</name>
+      <x>170</x>
+      <y>470</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)NumConnectors_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>7c416454</name>
+      <x>10</x>
+      <y>500</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Interpolation mode readback</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="led" version="2.0.0">
+      <name>49441b85</name>
+      <x>170</x>
+      <y>500</y>
+      <width>20</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)InterpolationMode_RBV</pv_name>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>b16c92b7</name>
+      <x>10</x>
+      <y>530</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Features bitmask readback</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>c5eab263</name>
+      <x>170</x>
+      <y>530</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)FeaturesBitmask_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+    </widget>
+    <background_color>
+      <color red="187" blue="187" green="187" alpha="255"/>
+    </background_color>
+    <height>570</height>
+    <width>490</width>
+  </display>
