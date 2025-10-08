@@ -19,7 +19,7 @@
 #
 ##################################################################
 
-# include "ADBase.template"
+include "ADBase.template"
 
 record(stringin, "$(P)$(R)APIVersion_RBV"){
     field(DESC, "XSPD API Version")
@@ -92,10 +92,8 @@ record(bo, "$(P)$(R)SaturationFlag"){
     field(DESC, "Saturation flag enable")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_SATURATION_FLAG")
-    field(ZRVL, "0")
-    field(ZRST, "Disabled")
-    field(ONVL, "1")
-    field(ONST, "Enabled")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
     field(VAL, "0")
     field(PINI, "No")
 }
@@ -104,10 +102,8 @@ record(bi, "$(P)$(R)SaturationFlag_RBV"){
     field(DESC, "Saturation flag enable readback")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_SATURATION_FLAG")
-    field(ZRVL, "0")
-    field(ZRST, "Disabled")
-    field(ONVL, "1")
-    field(ONST, "Enabled")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
     field(SCAN, "I/O Intr")
 }
 
@@ -115,11 +111,8 @@ record(bo, "$(P)$(R)ChargeSumming"){
     field(DESC, "Charge summing enable")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHARGE_SUMMING")
-    field(ZRVL, "0")
-    field(ZRST, "Disabled")
-    field(ONVL, "1")
-    field(ONST, "Enabled")
-    field(VAL, "0")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
     field(PINI, "No")
 }
 
@@ -127,10 +120,8 @@ record(bi, "$(P)$(R)ChargeSumming_RBV"){
     field(DESC, "Charge summing enable readback")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHARGE_SUMMING")
-    field(ZRVL, "0")
-    field(ZRST, "Disabled")
-    field(ONVL, "1")
-    field(ONST, "Enabled")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
     field(SCAN, "I/O Intr")
 }
 
@@ -138,10 +129,8 @@ record(bo, "$(P)$(R)FlatFieldCorrection"){
     field(DESC, "Flat field correction enable")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_F_F_CORRECTION")
-    field(ZRVL, "0")
-    field(ZRST, "Disabled")
-    field(ONVL, "1")
-    field(ONST, "Enabled")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
     field(VAL, "0")
     field(PINI, "No")
 }
@@ -150,10 +139,8 @@ record(bi, "$(P)$(R)FlatFieldCorrection_RBV"){
     field(DESC, "Flat field correction enable readback")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_F_F_CORRECTION")
-    field(ZRVL, "0")
-    field(ZRST, "Disabled")
-    field(ONVL, "1")
-    field(ONST, "Enabled")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
     field(SCAN, "I/O Intr")
 }
 
@@ -161,10 +148,8 @@ record(bo, "$(P)$(R)GatingMode"){
     field(DESC, "Gating mode enable")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_GATING_MODE")
-    field(ZRVL, "0")
-    field(ZRST, "Disabled")
-    field(ONVL, "1")
-    field(ONST, "Enabled")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
     field(VAL, "0")
     field(PINI, "No")
 }
@@ -173,10 +158,8 @@ record(bi, "$(P)$(R)GatingMode_RBV"){
     field(DESC, "Gating mode enable readback")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_GATING_MODE")
-    field(ZRVL, "0")
-    field(ZRST, "Disabled")
-    field(ONVL, "1")
-    field(ONST, "Enabled")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
     field(SCAN, "I/O Intr")
 }
 
@@ -244,10 +227,8 @@ record(bo, "$(P)$(R)CounterMode"){
     field(DESC, "Counter mode enable")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_COUNTER_MODE")
-    field(ZRVL, "0")
-    field(ZRST, "Single")
-    field(ONVL, "1")
-    field(ONST, "Dual")
+    field(ZNAM, "Single")
+    field(ONAM, "Dual")
     field(VAL, "0")
     field(PINI, "No")
 }
@@ -256,10 +237,8 @@ record(bi, "$(P)$(R)CounterMode_RBV"){
     field(DESC, "Counter mode enable readback")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_COUNTER_MODE")
-    field(ZRVL, "0")
-    field(ZRST, "Single")
-    field(ONVL, "1")
-    field(ONST, "Dual")
+    field(ZNAM, "Single")
+    field(ONAM, "Dual")
     field(SCAN, "I/O Intr")
 }
 
@@ -267,10 +246,8 @@ record(bo, "$(P)$(R)Reset") {
     field(DESC, "Reset detector")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_RESET")
-    field(ZRVL, "0")
-    field(ZRST, "Abort")
-    field(ONVL, "1")
-    field(ONST, "Reset")
+    field(ZNAM, "Abort")
+    field(ONAM, "Reset")
     field(VAL, "0")
     field(PINI, "No")
 }
@@ -279,10 +256,8 @@ record(bo, "$(P)$(R)GenerateFlatfield"){
     field(DESC, "Generate flatfield")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_GENERATE_FLATFIELD")
-    field(ZRVL, "0")
-    field(ZRST, "Abort")
-    field(ONVL, "1")
-    field(ONST, "Generate")
+    field(ZNAM, "Abort")
+    field(ONAM, "Generate")
     field(VAL, "0")
     field(PINI, "No")
 }

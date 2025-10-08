@@ -15,14 +15,14 @@ record(ai, "$(P)$(R)FPGATemp_RBV"){
 record(ai, "$(P)$(R)HumiditySensorTemp_RBV"){
     field(DESC, "Humidity sensor Temp readback in C")
     field(DTYP, "asynFloat64")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_HUMIDITY_TEMP")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_HUM_TEMP")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)Humidity_RBV"){
     field(DESC, "Humidity readback in %")
     field(DTYP, "asynFloat64")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_HUMIDITY")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_HUM")
     field(SCAN, "I/O Intr")
 }
 
@@ -44,14 +44,14 @@ record(ai, "$(P)$(R)Voltage_RBV"){
 record(ai, "$(P)$(R)SensorCurrent_RBV"){
     field(DESC, "Sensor current readback in mA")
     field(DTYP, "asynFloat64")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_SENSOR_CURRENT")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_SENS_CURR")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)SaturationThresh_RBV"){
     field(DESC, "Saturation threshold readback in counts/sec/pixel")
     field(DTYP, "asynFloat64")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_SATURATION_THRESH")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_SAT_THRESH")
     field(SCAN, "I/O Intr")
 }
 
@@ -59,42 +59,42 @@ record(ai, "$(P)$(R)SaturationThresh_RBV"){
 record(ai, "$(P)$(R)RotationYaw_RBV"){
     field(DESC, "Rotation yaw readback in degrees")
     field(DTYP, "asynFloat64")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_ROTATION_YAW")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_ROT_YAW")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)RotationPitch_RBV"){
     field(DESC, "Rotation pitch readback in degrees")
     field(DTYP, "asynFloat64")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_ROTATION_PITCH")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_ROT_PITCH")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)RotationRoll_RBV"){
     field(DESC, "Rotation roll readback in degrees")
     field(DTYP, "asynFloat64")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_ROTATION_ROLL")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_ROT_ROLL")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)PositionX_RBV"){
     field(DESC, "Position X readback in mm")
     field(DTYP, "asynFloat64")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_POSITION_X")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_POS_X")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)PositionY_RBV"){
     field(DESC, "Position Y readback in mm")
     field(DTYP, "asynFloat64")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_POSITION_Y")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_POS_Y")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)PositionZ_RBV"){
     field(DESC, "Position Z readback in mm")
     field(DTYP, "asynFloat64")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_POSITION_Z")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_POS_Z")
     field(SCAN, "I/O Intr")
 }
 
@@ -115,24 +115,22 @@ record(ai, "$(P)$(R)NumSubFrames_RBV"){
 record(ai, "$(P)$(R)NumConnectors_RBV") {
     field(DESC, "Number of connectors readback")
     field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_NUM_CONNECTORS")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_NUM_CONS")
     field(SCAN, "I/O Intr")
 }
 
 record(bi, "$(P)$(R)InterpolationMode_RBV") {
     field(DESC, "Interpolation mode readback")
     field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_INTERPOLATION_MODE")
-    field(ZRVL, "0")
-    field(ZRST, "Disabled")
-    field(ONVL, "1")
-    field(ONST, "Enabled")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_INTERP_MODE")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)FeaturesBitmask_RBV") {
     field(DESC, "Features bitmask readback")
     field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_FEATURES_BITMASK")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MOD_FEAT_BITMASK")
     field(SCAN, "I/O Intr")
 }
