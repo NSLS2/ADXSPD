@@ -27,7 +27,6 @@ XSPDApp_registerRecordDeviceDriver(pdbbase)
 ADXSPDConfig("$(PORT)", "http://localhost:8008")
 # epicsThreadSleep(3)
 
-dbLoadRecords("$(ADCORE)/db/ADBase.template", "P=$(PREFIX),R=cam1:,PORT=$(PORT),ADDR=0,TIMEOUT=1")
 dbLoadRecords("$(ADXSPD)/db/ADXSPD.template","P=$(PREFIX),R=cam1:,PORT=$(PORT),ADDR=0,TIMEOUT=1")
 
 # Load all other plugins using commonPlugins.cmd
