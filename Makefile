@@ -2,13 +2,13 @@
 TOP = .
 include $(TOP)/configure/CONFIG
 DIRS := $(DIRS) configure
-DIRS := $(DIRS) XSPDApp
-DIRS := $(DIRS) XSPDSupport
+DIRS := $(DIRS) xspdApp
+DIRS := $(DIRS) xspdSupport
 
-XSPDApp_DEPEND_DIRS += XSPDSupport
+xspdApp_DEPEND_DIRS += xspdSupport
 ifeq ($(BUILD_IOCS), YES)
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard iocs))
-iocs_DEPEND_DIRS += XSPDApp
+iocs_DEPEND_DIRS += xspdApp
 endif
 include $(TOP)/configure/RULES_TOP
 
