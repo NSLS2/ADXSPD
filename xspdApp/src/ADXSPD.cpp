@@ -126,7 +126,7 @@ json ADXSPD::xspdGet(string endpoint) {
     DEBUG_ARGS("Recv: %s", response.text.c_str());
 
     try {
-        json parsedResponse = json::parse(response.text.c_str(), nullptr, true, false, true);
+        json parsedResponse = json::parse(response.text, nullptr, true, false, true);
         if (parsedResponse.empty()) {
             ERR_ARGS("Empty JSON response from %s", endpoint.c_str());
         }
@@ -369,7 +369,7 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
 
     DEBUG_ARGS("Recv: %s", response.text.c_str());
 
-    json xspdVersionInfo = json::parse(response.text.c_str(), nullptr, true, false, true);
+    json xspdVersionInfo = json::parse(response.text, nullptr, true, false, true);
     if (xspdVersionInfo.empty()) {
         ERR("Failed to retrieve XSPD version information.");
         return;
@@ -385,7 +385,7 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
                  response.error.message.c_str());
         return;
     }
-    json deviceList = json::parse(response.text.c_str(), nullptr, true, false, true);
+    json deviceList = json::parse(response.text, nullptr, true, false, true);
     if (deviceList.empty()) {
         ERR("No devices found!");
         return;
@@ -424,7 +424,7 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
                  response.error.message.c_str());
         return;
     }
-    json deviceInfo = json::parse(response.text.c_str(), nullptr, true, false, true);
+    json deviceInfo = json::parse(response.text, nullptr, true, false, true);
     if (deviceInfo.empty()) {
         ERR_ARGS("Failed to retrieve device info for device ID %s", this->deviceId.c_str());
         return;
@@ -531,9 +531,9 @@ static void configXSPDCallFunc(const iocshArgBuf* args) {
 static const iocshFuncDef configXSPD = {"ADXSPDConfig", 3, XSPDConfigArgs};
 
 /* IOC register function */
-static void XSPDRegister(void) { iocshRegister(&configXSPD, configXSPDCallFunc); }
+static void ADXSPDRegister(void) { iocshRegister(&configXSPD, configXSPDCallFunc); }
 
 /* external function for IOC registration */
 extern "C" {
-epicsExportRegistrar(XSPDRegister);
+epicsExportRegistrar(ADXSPDRegister);
 }
