@@ -26,43 +26,6 @@
 using json = nlohmann::json;
 using namespace std;
 
-// Error message formatters
-#define ERR(msg)                                  \
-    if (this->logLevel >= ADXSPD_LOG_LEVEL_ERROR) \
-        printf("ERROR | %s::%s: %s\n", driverName, functionName, msg);
-
-#define ERR_ARGS(fmt, ...)                        \
-    if (this->logLevel >= ADXSPD_LOG_LEVEL_ERROR) \
-        printf("ERROR | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
-
-// Warning message formatters
-#define WARN(msg)                                   \
-    if (this->logLevel >= ADXSPD_LOG_LEVEL_WARNING) \
-        printf("WARNING | %s::%s: %s\n", driverName, functionName, msg);
-
-#define WARN_ARGS(fmt, ...)                         \
-    if (this->logLevel >= ADXSPD_LOG_LEVEL_WARNING) \
-        printf("WARNING | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
-
-// Info message formatters. Because there is no ASYN trace for info messages, we just use `printf`
-// here.
-#define INFO(msg)                                \
-    if (this->logLevel >= ADXSPD_LOG_LEVEL_INFO) \
-        printf("INFO | %s::%s: %s\n", driverName, functionName, msg);
-
-#define INFO_ARGS(fmt, ...)                      \
-    if (this->logLevel >= ADXSPD_LOG_LEVEL_INFO) \
-        printf("INFO | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
-
-// Debug message formatters
-#define DEBUG(msg)                                \
-    if (this->logLevel >= ADXSPD_LOG_LEVEL_DEBUG) \
-    printf("DEBUG | %s::%s: %s\n", driverName, functionName, msg)
-
-#define DEBUG_ARGS(fmt, ...)                      \
-    if (this->logLevel >= ADXSPD_LOG_LEVEL_DEBUG) \
-        printf("DEBUG | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
-
 /*
  * External configuration function for ADXSPD.
  * Envokes the constructor to create a new ADXSPD object
@@ -108,6 +71,12 @@ static void monitorThreadC(void* drvPvt) {
     pPvt->monitorThread();
 }
 
+/**
+ * @brief Makes a GET request to the XSPD API and returns the parsed JSON response
+ *
+ * @param endpoint The API endpoint to query
+ * @return json Parsed JSON response from the API
+ */
 json ADXSPD::xspdGet(string endpoint) {
     const char* functionName = "xspdGet";
     // Make a GET request to the XSPD API
@@ -144,12 +113,18 @@ json ADXSPD::xspdGet(string endpoint) {
 /**
  * Function that spawns new acquisition thread, if able
  */
-void ADXSPD::acquireStart() { const char* functionName = "acquireStart"; }
+void ADXSPD::acquireStart() {
+    const char* functionName = "acquireStart";
+    setIntegerParam(ADAcquire, 1);
+}
 
 /**
  * @brief stops acquisition by aborting exposure and joinging acq thread
  */
-void ADXSPD::acquireStop() { const char* functionName = "acquireStop"; }
+void ADXSPD::acquireStop() {
+    const char* functionName = "acquireStop";
+    setIntegerParam(ADAcquire, 0);
+}
 
 /**
  * Main acquisition function for ADXSPD
@@ -232,6 +207,9 @@ void ADXSPD::acquisitionThread() {
     callParamCallbacks();
 }
 
+/**
+ * Main monitoring function for ADXSPD
+ */
 void ADXSPD::monitorThread() {
     const char* functionName = "monitorThread";
 
@@ -245,13 +223,12 @@ void ADXSPD::monitorThread() {
 // ADDriver function overwrites
 //-------------------------------------------------------------------------
 
-/*
- * Function overwriting ADDriver base function.
- * Takes in a function (PV) changes, and a value it is changing to, and processes the input
+/**
+ * Override of ADDriver base function - callback whenever an int32 PV is written to
  *
- * @params[in]: pasynUser       -> asyn client who requests a write
- * @params[in]: value           -> int32 value to write
- * @return: asynStatus      -> success if write was successful, else failure
+ * @param pasynUser asyn client who requests a write
+ * @param value int32 value to written to the parameter
+ * @return asynStatus success if write was successful, else failure
  */
 asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
     int function = pasynUser->reason;
@@ -260,7 +237,6 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
     static const char* functionName = "writeInt32";
     getIntegerParam(ADAcquire, &acquiring);
 
-    status = setIntegerParam(function, value);
     // start/stop acquisition
     if (function == ADAcquire) {
         if (value && !acquiring) {
@@ -322,14 +298,11 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
     }
 }
 
-/*
- * Function used for reporting ADUVC device and library information to a external
- * log file. The function first prints all libuvc specific information to the file,
- * then continues on to the base ADDriver 'report' function
+/**
+ * @brief Override of ADDriver base function - reports driver status
  *
- * @params[in]: fp      -> pointer to log file
- * @params[in]: details -> number of details to write to the file
- * @return: void
+ * @param fp File pointer to write report to
+ * @param details Level of detail for the report
  */
 void ADXSPD::report(FILE* fp, int details) {
     const char* functionName = "report";
@@ -342,6 +315,14 @@ void ADXSPD::report(FILE* fp, int details) {
 // ADXSPD Constructor/Destructor
 //----------------------------------------------------------------------------
 
+/**
+ * Constructor for the ADXSPD driver
+ *
+ * @param portName The name of the asyn port for this driver
+ * @param ipPort The IP address and port of the XSPD device (e.g. 192.168.1.100:8080)
+ * @param deviceId The device ID of the XSPD device to connect to (if NULL, connects to first device
+ * found)
+ */
 ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     : ADDriver(portName, 1, (int) NUM_ADXSPD_PARAMS, 0, 0, 0, 0, 0, 1, 0, 0) {
     static const char* functionName = "ADXSPD";
@@ -367,17 +348,18 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
         return;
     }
 
-    DEBUG_ARGS("Recv: %s", response.text.c_str());
-
     json xspdVersionInfo = json::parse(response.text, nullptr, true, false, true);
     if (xspdVersionInfo.empty()) {
         ERR("Failed to retrieve XSPD version information.");
         return;
     }
     string apiVersion = xspdVersionInfo["api version"].get<string>();
+    string xspdVersion = xspdVersionInfo["xspd version"].get<string>();
     setStringParam(ADXSPD_ApiVersion, apiVersion.c_str());
-    setStringParam(ADXSPD_Version, xspdVersionInfo["xspd version"].get<string>().c_str());
-    this->apiUri = baseApiUri + "/" + apiVersion;
+    setStringParam(ADXSPD_Version, xspdVersion.c_str());
+
+    INFO_ARGS("Connected to XSPD API, version %s", xspdVersion.c_str());
+    this->apiUri = baseApiUri + "/v" + apiVersion;
 
     response = cpr::Get(cpr::Url(this->apiUri + "/devices"));
     if (response.status_code != 200) {

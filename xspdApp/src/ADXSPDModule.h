@@ -31,8 +31,9 @@ class ADXSPDModule : public asynPortDriver {
     ADXSPD* parent;   // Pointer to the parent ADXSPD driver object
     string moduleId;  // Module ID string
     int moduleIndex;  // Index of this module in the parent detector
-
     void createAllParams();
+
+    ADXSPD_LogLevel_t getLogLevel() { return this->parent->getLogLevel(); }
 };
 
 #endif
