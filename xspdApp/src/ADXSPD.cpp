@@ -12,17 +12,6 @@
 
 #include "ADXSPD.h"
 
-#include <epicsExit.h>
-#include <epicsExport.h>
-#include <epicsStdio.h>
-#include <epicsString.h>
-#include <epicsThread.h>
-#include <epicsTime.h>
-#include <iocsh.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 using json = nlohmann::json;
 using namespace std;
 
