@@ -15,25 +15,24 @@
 using json = nlohmann::json;
 using namespace std;
 
-/*
- * External configuration function for ADXSPD.
- * Envokes the constructor to create a new ADXSPD object
- * This is the function that initializes the driver, and is called in the IOC startup script
+/**
+ * @brief C wrapper function called by iocsh to create an instance of the ADXSPD driver
  *
- * @params[in]: all passed into constructor
- * @return:     status
+ * @param portName The name of the asyn port for this driver
+ * @param ipPort The IP address and port of the XSPD device (e.g. 192.168.1.100:8080)
+ * @param deviceId The device ID of the XSPD device to connect to (if NULL, connects to first device
+ * found)
+ * @return int asynStatus code
  */
 extern "C" int ADXSPDConfig(const char* portName, const char* ipPort, const char* deviceId) {
     new ADXSPD(portName, ipPort, deviceId);
-    return (asynSuccess);
+    return asynSuccess;
 }
 
-/*
- * Callback function fired when IOC is terminated.
- * Deletes the driver object and performs cleanup
+/**
+ * @brief C wrapper function called on IOC exit to delete the ADXSPD driver instance
  *
- * @params[in]: pPvt -> pointer to the driver object created in ADXSPDConfig
- * @return:     void
+ * @param pPvt Pointer to the ADXSPD driver instance
  */
 static void exitCallbackC(void* pPvt) {
     ADXSPD* pXSPD = (ADXSPD*) pPvt;
@@ -95,12 +94,70 @@ json ADXSPD::xspdGet(string endpoint) {
     }
 }
 
+/**
+ * @brief Makes a PUT request to the XSPD API to set a variable value
+ *
+ * @param endpoint The API endpoint to set
+ * @param value The value to set
+ * @return asynStatus success if the request was successful, else failure
+ */
+
+template <typename T>
+asynStatus ADXSPD::xspdSet(string endpoint, T value) {
+    const char* functionName = "xspdSet";
+    // Make a PUT request to the XSPD API
+    string requestUri = this->apiUri + "/devices/" + this->deviceId +
+                        "/variables?path=" + endpoint + "&value=" + to_string(value);
+    DEBUG_ARGS("Sending PUT request to %s with value %s", requestUri.c_str(),
+               to_string(value).c_str());
+
+    cpr::Response response = cpr::Put(cpr::Url(requestUri));
+
+    if (response.status_code != 200) {
+        ERR_ARGS("Failed to set data for %s: %s", endpoint.c_str(), response.error.message.c_str());
+        return asynError;
+    }
+
+    return asynSuccess;
+}
+
+asynStatus ADXSPD::xspdCommand(string command) {
+    const char* functionName = "xspdCommand";
+
+    json commands = xspdGet("commands");
+    bool commandFound = false;
+    for (auto& cmd : commands["data"]) {
+        if (cmd["name"] == command) {
+            DEBUG_ARGS("Found command %s in device commands", command.c_str());
+            commandFound = true;
+            break;
+        }
+    }
+    if (!commandFound) {
+        ERR_ARGS("Command %s not found in device commands", command.c_str());
+        return asynError;
+    }
+
+    // Make a POST request to the XSPD API
+    string requestUri = this->apiUri + "/devices/" + this->deviceId + "/command?path=" + command;
+    DEBUG_ARGS("Sending POST request to %s", requestUri.c_str());
+
+    cpr::Response response = cpr::Post(cpr::Url(requestUri));
+
+    if (response.status_code != 200) {
+        ERR_ARGS("Failed to send command %s: %s", command.c_str(), response.error.message.c_str());
+        return asynError;
+    }
+
+    return asynSuccess;
+}
+
 // -----------------------------------------------------------------------
 // ADXSPD Acquisition Functions
 // -----------------------------------------------------------------------
 
 /**
- * Function that spawns new acquisition thread, if able
+ * @brief Starts acquisition
  */
 void ADXSPD::acquireStart() {
     const char* functionName = "acquireStart";

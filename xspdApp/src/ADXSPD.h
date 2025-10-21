@@ -127,6 +127,9 @@ class ADXSPD : ADDriver {
     void acquireStop();
 
     json xspdGet(string endpoint);
+    template <typename T>
+    asynStatus xspdSet(string endpoint, T value);
+    asynStatus xspdCommand(string command);
 
     string apiUri;      // IP address and port for the device
     string deviceId;    // Device ID for the XSPD device
