@@ -15,7 +15,7 @@ LIBRARY_IOC = ADXSPD
 LIB_SRCS += ADXSPDParamDefs.cpp ADXSPD.cpp ADXSPDModuleParamDefs.cpp ADXSPDModule.cpp
 
 
-DBD += XSPDSupport.dbd
+DBD += xspdSupport.dbd
 
 include $(ADCORE)/ADApp/commonLibraryMakefile
 

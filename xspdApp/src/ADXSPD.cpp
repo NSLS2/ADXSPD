@@ -112,9 +112,9 @@ json ADXSPD::xspdGet(string endpoint) {
     const char* functionName = "xspdGet";
     // Make a GET request to the XSPD API
 
-    DEBUG_ARGS("Requesting data from %s", endpoint.c_str());
-
     string requestUri = this->apiUri + "/devices/" + this->deviceId + "/variables?path=" + endpoint;
+    DEBUG_ARGS("Sending GET request to %s", requestUri.c_str());
+
     cpr::Response response = cpr::Get(cpr::Url(requestUri));
 
     if (response.status_code != 200) {
@@ -123,13 +123,13 @@ json ADXSPD::xspdGet(string endpoint) {
         return json();
     }
 
-    DEBUG_ARGS("Recv: %s", response.text.c_str());
-
     try {
         json parsedResponse = json::parse(response.text, nullptr, true, false, true);
         if (parsedResponse.empty()) {
             ERR_ARGS("Empty JSON response from %s", endpoint.c_str());
         }
+        DEBUG_ARGS("Recv response for endpoint %s: %s", endpoint.c_str(),
+                   parsedResponse.dump(4).c_str());
         return parsedResponse;
     } catch (json::parse_error& e) {
         ERR_ARGS("Failed to parse JSON response from %s: %s", endpoint.c_str(), e.what());
