@@ -65,7 +65,8 @@ static void monitorThreadC(void* drvPvt) {
  * @param endpoint The API endpoint to query
  * @return json Parsed JSON response from the API
  */
-json ADXSPD::xspdGet(string endpoint) {
+template <typename T>
+T ADXSPD::xspdGet(string endpoint, string key = "value") {
     const char* functionName = "xspdGet";
     // Make a GET request to the XSPD API
 
@@ -87,7 +88,12 @@ json ADXSPD::xspdGet(string endpoint) {
         }
         DEBUG_ARGS("Recv response for endpoint %s: %s", endpoint.c_str(),
                    parsedResponse.dump(4).c_str());
-        return parsedResponse;
+        if (parsedResponse.contains(key)) {
+            return parsedResponse[key].get<T>();
+        } else {
+            ERR_ARGS("Key %s not found in JSON response from %s", key.c_str(), endpoint.c_str());
+            return json();
+        }
     } catch (json::parse_error& e) {
         ERR_ARGS("Failed to parse JSON response from %s: %s", endpoint.c_str(), e.what());
         return json();
@@ -260,8 +266,20 @@ void ADXSPD::monitorThread() {
     const char* functionName = "monitorThread";
 
     while (this->alive) {
+        string status = xspdGet("status").get<string>();
+        if (status.compare("connected")) {
+            setIntegerParam(ADStatus, ADStatusInitializing);
+        } else if (status.compare("ready")) {
+            setIntegerParam(ADStatus, ADStatusIdle);
+        } else {
+            setIntegerParam(ADStatus, ADStatusAcquire);
+        }
+
+        for (auto& module : this->modules) {
+            module->checkStatus();
+        }
         // Poll some status variables from the detector here
-        epicsThreadSleep(5.0);
+        epicsThreadSleep(1.0);
     }
 }
 

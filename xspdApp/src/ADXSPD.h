@@ -35,6 +35,7 @@
 #include <nlohmann/json.hpp>
 
 #include "ADDriver.h"
+#include "ADXSPDModule.h"
 
 using json = nlohmann::json;  // For JSON handling
 using namespace std;
@@ -89,6 +90,8 @@ typedef enum ADXSPD_ON_OFF {
     ADXSPD_ON = 1,
 } ADXSPD_OnOff_t;
 
+class ADXSPDModule;  // Forward declaration
+
 /*
  * Class definition of the ADXSPD driver
  */
@@ -110,6 +113,16 @@ class ADXSPD : ADDriver {
     void monitorThread();
 
     ADXSPD_LogLevel_t getLogLevel() { return this->logLevel; }
+    string getDeviceId() { return this->deviceId; }
+    string getDetectorId() { return this->detectorId; }
+
+    template <typename T>
+    T xspdGet(string endpoint, string key);
+
+    template <typename T>
+    asynStatus xspdSet(string endpoint, T value);
+
+    asynStatus xspdCommand(string command);
 
    protected:
 // Load auto-generated parameter string and index definitions
@@ -129,11 +142,7 @@ class ADXSPD : ADDriver {
 
     void acquireStart();
     void acquireStop();
-
-    json xspdGet(string endpoint);
-    template <typename T>
-    asynStatus xspdSet(string endpoint, T value);
-    asynStatus xspdCommand(string command);
+    vector<ADXSPDModule*> modules;
 
     string apiUri;      // IP address and port for the device
     string deviceId;    // Device ID for the XSPD device
