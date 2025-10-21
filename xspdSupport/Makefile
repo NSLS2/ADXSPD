@@ -7,8 +7,8 @@ include $(TOP)/configure/CONFIG
 
 SRC_DIRS += ../json
 
-INC += json.hpp
-INC += json_fwd.hpp
+INC += nlohmann/json.hpp
+INC += nlohmann/json_fwd.hpp
 
 SRC_DIRS += ../cpr
 
