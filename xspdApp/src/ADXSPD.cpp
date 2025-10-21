@@ -470,6 +470,24 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     INFO_ARGS("Found data port w/ id %s bound to %s:%d", this->dataPortId.c_str(),
               this->dataPortIp.c_str(), this->dataPortPort);
 
+    this->zmqContext = zmq_ctx_new();
+    this->zmqSubscriber = zmq_socket(this->zmqContext, ZMQ_SUB);
+    int rc = zmq_connect(
+        this->zmqSubscriber,
+        (string("tcp://") + this->dataPortIp + ":" + to_string(this->dataPortPort)).c_str());
+    if (rc != 0) {
+        ERR_ARGS("Failed to connect to data port zmq socket at %s:%d", this->dataPortIp.c_str(),
+                 this->dataPortPort);
+        return;
+    }
+    // Subscribe to all messages
+    rc = zmq_setsockopt(this->zmqSubscriber, ZMQ_SUBSCRIBE, "", 0);
+    if (rc != 0) {
+        ERR_ARGS("Failed to set zmq socket options for data port at %s:%d",
+                 this->dataPortIp.c_str(), this->dataPortPort);
+        return;
+    }
+
     json info = xspdGet("info");
     if (info.empty()) {
         ERR_ARGS("Failed to retrieve device info for device ID %s", this->deviceId.c_str());
@@ -535,6 +553,15 @@ ADXSPD::~ADXSPD() {
     if (this->monitorThreadId != NULL) {
         INFO("Waiting for monitoring thread to join...");
         epicsThreadMustJoin(this->monitorThreadId);
+    }
+    if (this->zmqSubscriber != NULL) {
+        INFO("Closing zmq subscriber socket...");
+        zmq_close(this->zmqSubscriber);
+    }
+
+    if (this->zmqContext != NULL) {
+        INFO("Destroying zmq context...");
+        zmq_ctx_destroy(this->zmqContext);
     }
     INFO("Done.");
 }

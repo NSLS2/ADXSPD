@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <zmq.h>
 
 #include <nlohmann/json.hpp>
 
@@ -122,6 +123,9 @@ class ADXSPD : ADDriver {
                         // keep running
     epicsThreadId acquisitionThreadId;
     epicsThreadId monitorThreadId;
+
+    void* zmqContext;
+    void* zmqSubscriber;
 
     void acquireStart();
     void acquireStop();
