@@ -28,3 +28,6 @@ bobfiles:
 
 paramdefs:
 	pixi run make-paramdefs
+
+lint:
+	pixi run lint

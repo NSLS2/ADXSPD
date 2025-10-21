@@ -36,6 +36,93 @@ typedef enum ADXSPD_LOG_LEVEL {
     ADXSPD_LOG_LEVEL_DEBUG = 40     // Debugging information
 } ADXSPD_LogLevel_t;
 
+// Error message formatters
+#define ERR(msg)                                  \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_ERROR) \
+        printf("ERROR | %s::%s: %s\n", driverName, functionName, msg);
+
+#define ERR_ARGS(fmt, ...)                        \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_ERROR) \
+        printf("ERROR | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
+
+#define ERR_TO_STATUS(msg)                                             \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_ERROR) {                    \
+        printf("ERROR | %s::%s: %s\n", driverName, functionName, msg); \
+        setStringParam(ADStatusMessage, msg);                          \
+        setIntegerParam(ADStatus, ADStatusError);                      \
+        callParamCallbacks();                                          \
+    }
+
+#define ERR_TO_STATUS_ARGS(fmt, ...)                                      \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_ERROR) {                       \
+        char errMsg[256];                                                 \
+        snprintf(errMsg, sizeof(errMsg), fmt, __VA_ARGS__);               \
+        printf("ERROR | %s::%s: %s\n", driverName, functionName, errMsg); \
+        setStringParam(ADStatusMessage, errMsg);                          \
+        setIntegerParam(ADStatus, ADStatusError);                         \
+        callParamCallbacks();                                             \
+    }
+
+// Warning message formatters
+#define WARN(msg)                                   \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_WARNING) \
+        printf("WARNING | %s::%s: %s\n", driverName, functionName, msg);
+
+#define WARN_ARGS(fmt, ...)                         \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_WARNING) \
+        printf("WARNING | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
+
+#define WARN_TO_STATUS(msg)                                              \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_WARNING) {                    \
+        printf("WARNING | %s::%s: %s\n", driverName, functionName, msg); \
+        setStringParam(ADStatusMessage, msg);                            \
+        setIntegerParam(ADStatus, ADStatusError);                        \
+        callParamCallbacks();                                            \
+    }
+
+#define WARN_TO_STATUS_ARGS(fmt, ...)                                        \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_WARNING) {                        \
+        char warnMsg[256];                                                   \
+        epicsSnprintf(warnMsg, sizeof(warnMsg), fmt, __VA_ARGS__);           \
+        printf("WARNING | %s::%s: %s\n", driverName, functionName, warnMsg); \
+        setStringParam(ADStatusMessage, warnMsg);                            \
+        setIntegerParam(ADStatus, ADStatusError);                            \
+        callParamCallbacks();                                                \
+    }
+
+#define INFO(msg)                                \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_INFO) \
+        printf("INFO | %s::%s: %s\n", driverName, functionName, msg);
+
+#define INFO_ARGS(fmt, ...)                      \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_INFO) \
+        printf("INFO | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
+
+#define INFO_TO_STATUS(msg)                                           \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_INFO) {                    \
+        printf("INFO | %s::%s: %s\n", driverName, functionName, msg); \
+        setStringParam(ADStatusMessage, msg);                         \
+        callParamCallbacks();                                         \
+    }
+
+#define INFO_TO_STATUS_ARGS(fmt, ...)                                     \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_INFO) {                        \
+        char infoMsg[256];                                                \
+        epicsSnprintf(infoMsg, sizeof(infoMsg), fmt, __VA_ARGS__);        \
+        printf("INFO | %s::%s: %s\n", driverName, functionName, infoMsg); \
+        setStringParam(ADStatusMessage, infoMsg);                         \
+        callParamCallbacks();                                             \
+    }
+
+// Debug message formatters
+#define DEBUG(msg)                                \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_DEBUG) \
+    printf("DEBUG | %s::%s: %s\n", driverName, functionName, msg)
+
+#define DEBUG_ARGS(fmt, ...)                      \
+    if (this->logLevel >= ADXSPD_LOG_LEVEL_DEBUG) \
+        printf("DEBUG | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
+
 typedef enum ADXSPD_ON_OFF {
     ADXSPD_OFF = 0,
     ADXSPD_ON = 1,

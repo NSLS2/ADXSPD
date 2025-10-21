@@ -21,4 +21,3 @@ python = ">=3.12.12,<3.13"
 [pypi-dependencies]
 epicsdbtools = { git = "https://github.com/jwlodek/epicsdbtools.git" }
 epicsdb2bob = { git = "https://github.com/NSLS2/epicsdb2bob.git" }
-
