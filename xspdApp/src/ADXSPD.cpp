@@ -12,39 +12,34 @@
 
 #include "ADXSPD.h"
 
-#include <epicsExit.h>
-#include <epicsExport.h>
-#include <epicsStdio.h>
-#include <epicsString.h>
-#include <epicsThread.h>
-#include <epicsTime.h>
-#include <iocsh.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 using json = nlohmann::json;
 using namespace std;
 
+<<<<<<< HEAD
 /*
  * External configuration function for ADXSPD.
  * Envokes the constructor to create a new ADXSPD object
  * This is the function that initializes the driver, and is called in the IOC startup script
+=======
+/**
+ * @brief C wrapper function called by iocsh to create an instance of the ADXSPD driver
+>>>>>>> 691678ff4018adf90d2bb07cbbf4b548fa66073e
  *
- * @params[in]: all passed into constructor
- * @return:     status
+ * @param portName The name of the asyn port for this driver
+ * @param ipPort The IP address and port of the XSPD device (e.g. 192.168.1.100:8080)
+ * @param deviceId The device ID of the XSPD device to connect to (if NULL, connects to first device
+ * found)
+ * @return int asynStatus code
  */
 extern "C" int ADXSPDConfig(const char* portName, const char* ipPort, const char* deviceId) {
     new ADXSPD(portName, ipPort, deviceId);
-    return (asynSuccess);
+    return asynSuccess;
 }
 
-/*
- * Callback function fired when IOC is terminated.
- * Deletes the driver object and performs cleanup
+/**
+ * @brief C wrapper function called on IOC exit to delete the ADXSPD driver instance
  *
- * @params[in]: pPvt -> pointer to the driver object created in ADXSPDConfig
- * @return:     void
+ * @param pPvt Pointer to the ADXSPD driver instance
  */
 static void exitCallbackC(void* pPvt) {
     ADXSPD* pXSPD = (ADXSPD*) pPvt;
@@ -71,13 +66,20 @@ static void monitorThreadC(void* drvPvt) {
     pPvt->monitorThread();
 }
 
-json ADXSPD::xspdGet(string endpoint) {
+/**
+ * @brief Makes a GET request to the XSPD API and returns the parsed JSON response
+ *
+ * @param endpoint The API endpoint to query
+ * @return json Parsed JSON response from the API
+ */
+template <typename T>
+T ADXSPD::xspdGet(string endpoint, string key = "value") {
     const char* functionName = "xspdGet";
     // Make a GET request to the XSPD API
 
-    DEBUG_ARGS("Requesting data from %s", endpoint.c_str());
-
     string requestUri = this->apiUri + "/devices/" + this->deviceId + "/variables?path=" + endpoint;
+    DEBUG_ARGS("Sending GET request to %s", requestUri.c_str());
+
     cpr::Response response = cpr::Get(cpr::Url(requestUri));
 
     if (response.status_code != 200) {
@@ -86,18 +88,81 @@ json ADXSPD::xspdGet(string endpoint) {
         return json();
     }
 
-    DEBUG_ARGS("Recv: %s", response.text.c_str());
-
     try {
-        json parsedResponse = json::parse(response.text.c_str(), nullptr, true, false, true);
+        json parsedResponse = json::parse(response.text, nullptr, true, false, true);
         if (parsedResponse.empty()) {
             ERR_ARGS("Empty JSON response from %s", endpoint.c_str());
         }
-        return parsedResponse;
+        DEBUG_ARGS("Recv response for endpoint %s: %s", endpoint.c_str(),
+                   parsedResponse.dump(4).c_str());
+        if (parsedResponse.contains(key)) {
+            return parsedResponse[key].get<T>();
+        } else {
+            ERR_ARGS("Key %s not found in JSON response from %s", key.c_str(), endpoint.c_str());
+            return json();
+        }
     } catch (json::parse_error& e) {
         ERR_ARGS("Failed to parse JSON response from %s: %s", endpoint.c_str(), e.what());
         return json();
     }
+}
+
+/**
+ * @brief Makes a PUT request to the XSPD API to set a variable value
+ *
+ * @param endpoint The API endpoint to set
+ * @param value The value to set
+ * @return asynStatus success if the request was successful, else failure
+ */
+
+template <typename T>
+asynStatus ADXSPD::xspdSet(string endpoint, T value) {
+    const char* functionName = "xspdSet";
+    // Make a PUT request to the XSPD API
+    string requestUri = this->apiUri + "/devices/" + this->deviceId +
+                        "/variables?path=" + endpoint + "&value=" + to_string(value);
+    DEBUG_ARGS("Sending PUT request to %s with value %s", requestUri.c_str(),
+               to_string(value).c_str());
+
+    cpr::Response response = cpr::Put(cpr::Url(requestUri));
+
+    if (response.status_code != 200) {
+        ERR_ARGS("Failed to set data for %s: %s", endpoint.c_str(), response.error.message.c_str());
+        return asynError;
+    }
+
+    return asynSuccess;
+}
+
+asynStatus ADXSPD::xspdCommand(string command) {
+    const char* functionName = "xspdCommand";
+
+    json commands = xspdGet("commands");
+    bool commandFound = false;
+    for (auto& cmd : commands["data"]) {
+        if (cmd["name"] == command) {
+            DEBUG_ARGS("Found command %s in device commands", command.c_str());
+            commandFound = true;
+            break;
+        }
+    }
+    if (!commandFound) {
+        ERR_ARGS("Command %s not found in device commands", command.c_str());
+        return asynError;
+    }
+
+    // Make a POST request to the XSPD API
+    string requestUri = this->apiUri + "/devices/" + this->deviceId + "/command?path=" + command;
+    DEBUG_ARGS("Sending POST request to %s", requestUri.c_str());
+
+    cpr::Response response = cpr::Post(cpr::Url(requestUri));
+
+    if (response.status_code != 200) {
+        ERR_ARGS("Failed to send command %s: %s", command.c_str(), response.error.message.c_str());
+        return asynError;
+    }
+
+    return asynSuccess;
 }
 
 // -----------------------------------------------------------------------
@@ -105,14 +170,20 @@ json ADXSPD::xspdGet(string endpoint) {
 // -----------------------------------------------------------------------
 
 /**
- * Function that spawns new acquisition thread, if able
+ * @brief Starts acquisition
  */
-void ADXSPD::acquireStart() { const char* functionName = "acquireStart"; }
+void ADXSPD::acquireStart() {
+    const char* functionName = "acquireStart";
+    setIntegerParam(ADAcquire, 1);
+}
 
 /**
  * @brief stops acquisition by aborting exposure and joinging acq thread
  */
-void ADXSPD::acquireStop() { const char* functionName = "acquireStop"; }
+void ADXSPD::acquireStop() {
+    const char* functionName = "acquireStop";
+    setIntegerParam(ADAcquire, 0);
+}
 
 /**
  * Main acquisition function for ADXSPD
@@ -195,12 +266,27 @@ void ADXSPD::acquisitionThread() {
     callParamCallbacks();
 }
 
+/**
+ * Main monitoring function for ADXSPD
+ */
 void ADXSPD::monitorThread() {
     const char* functionName = "monitorThread";
 
     while (this->alive) {
+        string status = xspdGet("status").get<string>();
+        if (status.compare("connected")) {
+            setIntegerParam(ADStatus, ADStatusInitializing);
+        } else if (status.compare("ready")) {
+            setIntegerParam(ADStatus, ADStatusIdle);
+        } else {
+            setIntegerParam(ADStatus, ADStatusAcquire);
+        }
+
+        for (auto& module : this->modules) {
+            module->checkStatus();
+        }
         // Poll some status variables from the detector here
-        epicsThreadSleep(5.0);
+        epicsThreadSleep(1.0);
     }
 }
 
@@ -208,13 +294,12 @@ void ADXSPD::monitorThread() {
 // ADDriver function overwrites
 //-------------------------------------------------------------------------
 
-/*
- * Function overwriting ADDriver base function.
- * Takes in a function (PV) changes, and a value it is changing to, and processes the input
+/**
+ * Override of ADDriver base function - callback whenever an int32 PV is written to
  *
- * @params[in]: pasynUser       -> asyn client who requests a write
- * @params[in]: value           -> int32 value to write
- * @return: asynStatus      -> success if write was successful, else failure
+ * @param pasynUser asyn client who requests a write
+ * @param value int32 value to written to the parameter
+ * @return asynStatus success if write was successful, else failure
  */
 asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
     int function = pasynUser->reason;
@@ -223,7 +308,6 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
     static const char* functionName = "writeInt32";
     getIntegerParam(ADAcquire, &acquiring);
 
-    status = setIntegerParam(function, value);
     // start/stop acquisition
     if (function == ADAcquire) {
         if (value && !acquiring) {
@@ -285,14 +369,11 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
     }
 }
 
-/*
- * Function used for reporting ADUVC device and library information to a external
- * log file. The function first prints all libuvc specific information to the file,
- * then continues on to the base ADDriver 'report' function
+/**
+ * @brief Override of ADDriver base function - reports driver status
  *
- * @params[in]: fp      -> pointer to log file
- * @params[in]: details -> number of details to write to the file
- * @return: void
+ * @param fp File pointer to write report to
+ * @param details Level of detail for the report
  */
 void ADXSPD::report(FILE* fp, int details) {
     const char* functionName = "report";
@@ -305,6 +386,14 @@ void ADXSPD::report(FILE* fp, int details) {
 // ADXSPD Constructor/Destructor
 //----------------------------------------------------------------------------
 
+/**
+ * Constructor for the ADXSPD driver
+ *
+ * @param portName The name of the asyn port for this driver
+ * @param ipPort The IP address and port of the XSPD device (e.g. 192.168.1.100:8080)
+ * @param deviceId The device ID of the XSPD device to connect to (if NULL, connects to first device
+ * found)
+ */
 ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     : ADDriver(portName, 1, (int) NUM_ADXSPD_PARAMS, 0, 0, 0, 0, 0, 1, 0, 0) {
     static const char* functionName = "ADXSPD";
@@ -330,17 +419,18 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
         return;
     }
 
-    DEBUG_ARGS("Recv: %s", response.text.c_str());
-
-    json xspdVersionInfo = json::parse(response.text.c_str(), nullptr, true, false, true);
+    json xspdVersionInfo = json::parse(response.text, nullptr, true, false, true);
     if (xspdVersionInfo.empty()) {
         ERR("Failed to retrieve XSPD version information.");
         return;
     }
     string apiVersion = xspdVersionInfo["api version"].get<string>();
+    string xspdVersion = xspdVersionInfo["xspd version"].get<string>();
     setStringParam(ADXSPD_ApiVersion, apiVersion.c_str());
-    setStringParam(ADXSPD_Version, xspdVersionInfo["xspd version"].get<string>().c_str());
-    this->apiUri = baseApiUri + "/" + apiVersion;
+    setStringParam(ADXSPD_Version, xspdVersion.c_str());
+
+    INFO_ARGS("Connected to XSPD API, version %s", xspdVersion.c_str());
+    this->apiUri = baseApiUri + "/v" + apiVersion;
 
     response = cpr::Get(cpr::Url(this->apiUri + "/devices"));
     if (response.status_code != 200) {
@@ -348,7 +438,7 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
                  response.error.message.c_str());
         return;
     }
-    json deviceList = json::parse(response.text.c_str(), nullptr, true, false, true);
+    json deviceList = json::parse(response.text, nullptr, true, false, true);
     if (deviceList.empty()) {
         ERR("No devices found!");
         return;
@@ -387,7 +477,7 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
                  response.error.message.c_str());
         return;
     }
-    json deviceInfo = json::parse(response.text.c_str(), nullptr, true, false, true);
+    json deviceInfo = json::parse(response.text, nullptr, true, false, true);
     if (deviceInfo.empty()) {
         ERR_ARGS("Failed to retrieve device info for device ID %s", this->deviceId.c_str());
         return;
@@ -404,6 +494,24 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     this->dataPortPort = dataPortInfo["port"].get<int>();
     INFO_ARGS("Found data port w/ id %s bound to %s:%d", this->dataPortId.c_str(),
               this->dataPortIp.c_str(), this->dataPortPort);
+
+    this->zmqContext = zmq_ctx_new();
+    this->zmqSubscriber = zmq_socket(this->zmqContext, ZMQ_SUB);
+    int rc = zmq_connect(
+        this->zmqSubscriber,
+        (string("tcp://") + this->dataPortIp + ":" + to_string(this->dataPortPort)).c_str());
+    if (rc != 0) {
+        ERR_ARGS("Failed to connect to data port zmq socket at %s:%d", this->dataPortIp.c_str(),
+                 this->dataPortPort);
+        return;
+    }
+    // Subscribe to all messages
+    rc = zmq_setsockopt(this->zmqSubscriber, ZMQ_SUBSCRIBE, "", 0);
+    if (rc != 0) {
+        ERR_ARGS("Failed to set zmq socket options for data port at %s:%d",
+                 this->dataPortIp.c_str(), this->dataPortPort);
+        return;
+    }
 
     json info = xspdGet("info");
     if (info.empty()) {
@@ -471,6 +579,15 @@ ADXSPD::~ADXSPD() {
         INFO("Waiting for monitoring thread to join...");
         epicsThreadMustJoin(this->monitorThreadId);
     }
+    if (this->zmqSubscriber != NULL) {
+        INFO("Closing zmq subscriber socket...");
+        zmq_close(this->zmqSubscriber);
+    }
+
+    if (this->zmqContext != NULL) {
+        INFO("Destroying zmq context...");
+        zmq_ctx_destroy(this->zmqContext);
+    }
     INFO("Done.");
 }
 
@@ -494,9 +611,9 @@ static void configXSPDCallFunc(const iocshArgBuf* args) {
 static const iocshFuncDef configXSPD = {"ADXSPDConfig", 3, XSPDConfigArgs};
 
 /* IOC register function */
-static void XSPDRegister(void) { iocshRegister(&configXSPD, configXSPDCallFunc); }
+static void ADXSPDRegister(void) { iocshRegister(&configXSPD, configXSPDCallFunc); }
 
 /* external function for IOC registration */
 extern "C" {
-epicsExportRegistrar(XSPDRegister);
+epicsExportRegistrar(ADXSPDRegister);
 }

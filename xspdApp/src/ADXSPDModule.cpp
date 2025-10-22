@@ -9,7 +9,42 @@
 
 #include "ADXSPDModule.h"
 
+<<<<<<< HEAD
 ADXSPDModule::ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* pPvt,
+=======
+template <typename T>
+T ADXSPDModule::getModuleParam(string endpoint) {
+    const char* functionName = "getModuleParam";
+    string moduleEndpoint = "devices/" + parent->getDeviceId() +
+                            "/variables?path=" + parent->getDetectorId() + "/" + moduleId;
+
+    json response = parent->xspdGet(moduleEndpoint + "/" + endpoint)["value"];
+    if (response.empty() || response.is_null()) {
+        ERR_ARGS("Failed to get module parameter %s for module %s", endpoint.c_str(),
+                 moduleId.c_str());
+        return NULL;
+    } else {
+        return response.get<T>();
+    }
+}
+
+void ADXSPDModule::checkStatus() {
+    const char* functionName = "checkStatus";
+
+    // Example: Read module temperature and update parameter
+    setDoubleParam(ADXSPDModule_ModSensCurr, getModuleParam<double>("sensor_current"));
+
+    vector<double> temps = getModuleParam<vector<double>>("temperature");
+    setDoubleParam(ADXSPDModule_ModBoardTemp, temps[0]);
+    setDoubleParam(ADXSPDModule_ModFpgaTemp, temps[1]);
+    setDoubleParam(ADXSPDModule_ModHumTemp, temps[2]);
+
+    setDoubleParam(ADXSPDModule_ModHum, getModuleParam<double>("humidity"));
+    // Add more status checks as needed
+}
+
+ADXSPDModule::ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* parent,
+>>>>>>> 691678ff4018adf90d2bb07cbbf4b548fa66073e
                            int moduleIndex)
     : asynPortDriver(
           portName, 1, /* maxAddr */
@@ -23,10 +58,12 @@ ADXSPDModule::ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* p
           0) /* Default stack size*/
 {
     static const char* functionName = "ADXSPDModule";
-    this->parent = pPvt;
+    this->parent = parent;
     this->moduleId = string(moduleId);
     this->moduleIndex = moduleIndex;
     createAllParams();
+
+    INFO_ARGS("Configured ADXSPDModule for module %s (index %d)", moduleId, moduleIndex);
 }
 
 ADXSPDModule::~ADXSPDModule() {

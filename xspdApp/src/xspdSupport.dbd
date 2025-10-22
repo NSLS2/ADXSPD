@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 registrar("XSPDRegister")
+=======
+registrar("ADXSPDRegister")
+>>>>>>> 691678ff4018adf90d2bb07cbbf4b548fa66073e
