@@ -118,8 +118,10 @@ class ADXSPD : ADDriver {
     string getDeviceId() { return this->deviceId; }
     string getDetectorId() { return this->detectorId; }
 
+    json xspdGet(string uri);
+
     template <typename T>
-    T xspdGet(string endpoint, string key = "value");
+    T xspdGetVar(string endpoint, string key = "value");
 
     template <typename T>
     asynStatus xspdSet(string endpoint, T value);

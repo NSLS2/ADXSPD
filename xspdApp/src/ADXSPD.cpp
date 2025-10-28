@@ -60,44 +60,59 @@ static void monitorThreadC(void* drvPvt) {
     pPvt->monitorThread();
 }
 
+
 /**
  * @brief Makes a GET request to the XSPD API and returns the parsed JSON response
  *
- * @param endpoint The API endpoint to query
+ * @param uri The full URI to make the GET request to
  * @return json Parsed JSON response from the API
  */
-template <typename T>
-T ADXSPD::xspdGet(string endpoint, string key) {
+json ADXSPD::xspdGet(string uri) {
     const char* functionName = "xspdGet";
     // Make a GET request to the XSPD API
 
-    string requestUri = this->apiUri + "/devices/" + this->deviceId + "/variables?path=" + endpoint;
-    DEBUG_ARGS("Sending GET request to %s", requestUri.c_str());
+    DEBUG_ARGS("Sending GET request to %s", uri.c_str());
 
-    cpr::Response response = cpr::Get(cpr::Url(requestUri));
+    cpr::Response response = cpr::Get(cpr::Url(uri));
 
     if (response.status_code != 200) {
-        ERR_ARGS("Failed to get data from %s: %s", requestUri.c_str(),
+        ERR_ARGS("Failed to get data from %s: %s", uri.c_str(),
                  response.error.message.c_str());
-        return T();
+        return json();
     }
 
     try {
         json parsedResponse = json::parse(response.text, nullptr, true, false, true);
         if (parsedResponse.empty()) {
-            ERR_ARGS("Empty JSON response from %s", endpoint.c_str());
+            ERR_ARGS("Empty JSON response from %s", uri.c_str());
+            return json();
         }
-        DEBUG_ARGS("Recv response for endpoint %s: %s", endpoint.c_str(),
+        DEBUG_ARGS("Recv response for endpoint %s: %s", uri.c_str(),
                    parsedResponse.dump(4).c_str());
-        if (parsedResponse.contains(key)) {
-            return parsedResponse[key].get<T>();
+        return parsedResponse;
+    } catch (json::parse_error& e) {
+        ERR_ARGS("Failed to parse JSON response from %s: %s", uri.c_str(), e.what());
+        return json();
+    }
+}
+
+template <typename T>
+T ADXSPD::xspdGetVar(string endpoint, string key) {
+    const char* functionName = "xspdGetVar";
+
+    string fullVarEndpoint = this->apiUri + "/devices/" + this->deviceId + "/variables?path=" + endpoint;
+
+    json response = xspdGet(fullVarEndpoint);
+    if (response.is_null() || response.empty()) {
+        ERR_ARGS("Failed to get variable %s", endpoint.c_str());
+        return T();
+    } else {
+        if (response.contains(key)) {
+            return response[key].get<T>();
         } else {
-            ERR_ARGS("Key %s not found in JSON response from %s", key.c_str(), endpoint.c_str());
+            ERR_ARGS("Key %s not found in variable %s", key.c_str(), endpoint.c_str());
             return T();
         }
-    } catch (json::parse_error& e) {
-        ERR_ARGS("Failed to parse JSON response from %s: %s", endpoint.c_str(), e.what());
-        return T();
     }
 }
 
@@ -131,7 +146,7 @@ asynStatus ADXSPD::xspdSet(string endpoint, T value) {
 asynStatus ADXSPD::xspdCommand(string command) {
     const char* functionName = "xspdCommand";
 
-    json commands = xspdGet<json>("commands");
+    json commands = xspdGetVar<json>("commands");
     bool commandFound = false;
     for (auto& cmd : commands["data"]) {
         if (cmd["name"] == command) {
@@ -267,7 +282,7 @@ void ADXSPD::monitorThread() {
     const char* functionName = "monitorThread";
 
     while (this->alive) {
-        string status = xspdGet<string>("status");
+        string status = xspdGetVar<string>("status");
         if (status.compare("connected")) {
             setIntegerParam(ADStatus, ADStatusInitializing);
         } else if (status.compare("ready")) {
@@ -403,21 +418,16 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     setStringParam(NDDriverVersion, versionString);
 
     // Initialize vendor SDK and connect to the device here
-    std::string baseApiUri = std::string(ipPort) + "/api";
+    string baseApiUri = string(ipPort) + "/api";
     INFO_ARGS("Connecting to XSPD api at %s", baseApiUri.c_str());
 
-    response = cpr::Get(cpr::Url(baseApiUri));
-    if (response.status_code != 200) {
-        ERR_ARGS("Failed to connect to XSPD API at %s: %s", baseApiUri.c_str(),
-                 response.error.message.c_str());
-        return;
-    }
 
-    json xspdVersionInfo = json::parse(response.text, nullptr, true, false, true);
+    json xspdVersionInfo = xspdGet(baseApiUri);
     if (xspdVersionInfo.empty()) {
         ERR("Failed to retrieve XSPD version information.");
         return;
     }
+
     string apiVersion = xspdVersionInfo["api version"].get<string>();
     string xspdVersion = xspdVersionInfo["xspd version"].get<string>();
     setStringParam(ADXSPD_ApiVersion, apiVersion.c_str());
@@ -426,64 +436,65 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     INFO_ARGS("Connected to XSPD API, version %s", xspdVersion.c_str());
     this->apiUri = baseApiUri + "/v" + apiVersion;
 
-    response = cpr::Get(cpr::Url(this->apiUri + "/devices"));
-    if (response.status_code != 200) {
-        ERR_ARGS("Failed to get device list from %s: %s", (this->apiUri + "/devices").c_str(),
-                 response.error.message.c_str());
+    json devices = xspdGet(this->apiUri + "/devices");
+    if (devices.is_null() || devices.empty() || !devices.contains("devices")) {
+        ERR("Failed to retrieve device list from XSPD API.");
         return;
     }
-    json deviceList = json::parse(response.text, nullptr, true, false, true)["devices"];
+
+    json deviceList = devices["devices"];
     if (deviceList.empty()) {
         ERR("No devices found!");
         return;
     }
 
-    json requestedDevice = nullptr;
-
+    json requestedDevice = json();
     INFO_ARGS("Found %ld devices", deviceList.size());
+
     if (deviceId == nullptr) {
         INFO("Device ID not specified, using first device in list.");
         requestedDevice = deviceList[0];
     } else {
         for (const auto& device : deviceList) {
-            if (device["id"].get<std::string>().compare(deviceId) == 0) {
+            if (device.contains("id") && device["id"].get<string>().compare(deviceId) == 0) {
                 requestedDevice = device;
                 break;
             }
         }
     }
 
-    if (requestedDevice == NULL) {
-        ERR_ARGS("Device with ID %s not found in device list.", deviceId);
+    if (requestedDevice.empty()) {
+        ERR_ARGS("Device with ID %s not found in device list!", deviceId);
         return;
     }
 
-    this->deviceId = requestedDevice["id"].get<std::string>();
+    this->deviceId = requestedDevice["id"].get<string>();
     setStringParam(ADSerialNumber, this->deviceId.c_str());
 
     INFO_ARGS("Retrieving info for device with ID %s...", this->deviceId.c_str());
 
-    response = cpr::Get(cpr::Url(this->apiUri + "/devices/" + this->deviceId));
-    if (response.status_code != 200) {
-        ERR_ARGS("Failed to get device info from %s: %s",
-                 (this->apiUri + "/devices/" + this->deviceId).c_str(),
-                 response.error.message.c_str());
-        return;
-    }
-    json deviceInfo = json::parse(response.text, nullptr, true, false, true);
-    if (deviceInfo.empty()) {
-        ERR_ARGS("Failed to retrieve device info for device ID %s", this->deviceId.c_str());
+    json deviceInfo = xspdGet(this->apiUri + "/devices/" + this->deviceId);
+    if (deviceInfo.is_null() || deviceInfo.empty()) {
+        ERR_ARGS("Failed to get device info from %s",
+                 (this->apiUri + "/devices/" + this->deviceId).c_str());
         return;
     }
 
-    // Assume we have a single data port (i.e. image stitching xspd-side)
-    json dataPortInfo = deviceInfo["system"]["data-ports"][0];
-    if (dataPortInfo.empty()) {
-        ERR_ARGS("No data ports found for device ID %s", this->deviceId.c_str());
+    if(!deviceInfo.contains("system") || !deviceInfo["system"].contains("data-ports") || deviceInfo["system"]["data-ports"].empty()) {
+        ERR_ARGS("No system/data-ports info found for device ID %s", this->deviceId.c_str());
         return;
     }
-    this->dataPortId = dataPortInfo["id"].get<std::string>();
-    this->dataPortIp = dataPortInfo["ip"].get<std::string>();
+
+    // Always use the first data port (i.e. image stitching xspd-side)
+    json dataPortInfo = deviceInfo["system"]["data-ports"][0];
+
+    if (!dataPortInfo.contains("id") || !dataPortInfo.contains("ip") || !dataPortInfo.contains("port")) {
+        ERR_ARGS("Incomplete data port info for device ID %s", this->deviceId.c_str());
+        return;
+    }
+
+    this->dataPortId = dataPortInfo["id"].get<string>();
+    this->dataPortIp = dataPortInfo["ip"].get<string>();
     this->dataPortPort = dataPortInfo["port"].get<int>();
     INFO_ARGS("Found data port w/ id %s bound to %s:%d", this->dataPortId.c_str(),
               this->dataPortIp.c_str(), this->dataPortPort);
@@ -506,23 +517,23 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
         return;
     }
 
-    json info = xspdGet<json>("info");
-    if (info.empty()) {
+    json info = xspdGetVar<json>("info");
+    if (info.empty() || !info.contains("detectors") || info["detectors"].empty()) {
         ERR_ARGS("Failed to retrieve device info for device ID %s", this->deviceId.c_str());
         return;
     }
 
     // For now only support single-detector devices
-    json detectorInfo = info["value"]["detectors"][0];
-    this->detectorId = detectorInfo["detector-id"].get<std::string>();
+    json detectorInfo = info["detectors"][0];
+    this->detectorId = detectorInfo["detector-id"].get<string>();
 
     // Retrieve device information and populate all PVs.
     setStringParam(ADManufacturer, "X-Spectrum GmbH");
     setStringParam(ADModel, this->detectorId.c_str());
-    setStringParam(ADSDKVersion, info["value"]["libxsp version"].get<std::string>().c_str());
+    setStringParam(ADSDKVersion, info["libxsp version"].get<string>().c_str());
 
-    int maxSizeX = xspdGet<int>(this->dataPortId + "/frame_width");
-    int maxSizeY = xspdGet<int>(this->dataPortId + "/frame_height");
+    int maxSizeX = xspdGetVar<int>(this->dataPortId + "/frame_width");
+    int maxSizeY = xspdGetVar<int>(this->dataPortId + "/frame_height");
     setIntegerParam(ADMaxSizeX, maxSizeX);
     setIntegerParam(ADMaxSizeY, maxSizeY);
     setIntegerParam(ADMinX, 0);
@@ -532,8 +543,8 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     int numModules = detectorInfo["modules"].size();
     setIntegerParam(ADXSPD_NumModules, numModules);
     for (auto& module : detectorInfo["modules"]) {
-        INFO_ARGS("Found module %s, type %s", module["module"].get<std::string>().c_str(),
-                  module["firmware"].get<std::string>().c_str());
+        INFO_ARGS("Found module %s, type %s", module["module"].get<string>().c_str(),
+                  module["firmware"].get<string>().c_str());
         // TODO: Create module objects here
     }
 

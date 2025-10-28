@@ -10,18 +10,22 @@
 #include "ADXSPDModule.h"
 
 template <typename T>
-T ADXSPDModule::getModuleParam(string endpoint) {
+T ADXSPDModule::getModuleParam(string endpoint, string key) {
     const char* functionName = "getModuleParam";
     string moduleEndpoint = "devices/" + parent->getDeviceId() +
                             "/variables?path=" + parent->getDetectorId() + "/" + moduleId;
 
-    json response = parent->xspdGet<json>(moduleEndpoint + "/" + endpoint);
+    json response = parent->xspdGet(moduleEndpoint + "/" + endpoint);
     if (response.empty() || response.is_null()) {
         ERR_ARGS("Failed to get module parameter %s for module %s", endpoint.c_str(),
                  moduleId.c_str());
         return T();
+    } else if (!response.contains(key)) {
+        ERR_ARGS("Key %s not found in module parameter %s for module %s", key.c_str(),
+                 endpoint.c_str(), moduleId.c_str());
+        return T();
     } else {
-        return response.get<T>();
+        return response[key].get<T>();
     }
 }
 
@@ -56,6 +60,7 @@ ADXSPDModule::ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* p
     static const char* functionName = "ADXSPDModule";
     this->parent = parent;
     this->moduleId = string(moduleId);
+    this->moduleEndpoint = parent->getDetectorId() + "/" + this->moduleId;
     this->moduleIndex = moduleIndex;
     createAllParams();
 

@@ -12,6 +12,8 @@
 
 #include "ADXSPD.h"
 
+using namespace std;
+
 class ADXSPDModule : public asynPortDriver {
    public:
     ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* parent, int moduleIndex);
@@ -23,7 +25,7 @@ class ADXSPDModule : public asynPortDriver {
     // virtual void report(FILE* fp, int details);
 
     template <typename T>
-    T getModuleParam(string endpoint);
+    T getModuleParam(string endpoint, string key = "value");
     void checkStatus();
 
    protected:
@@ -33,7 +35,8 @@ class ADXSPDModule : public asynPortDriver {
    private:
     const char* driverName = "ADXSPDModule";
     ADXSPD* parent;        // Pointer to the parent ADXSPD driver object
-    std::string moduleId;  // Module ID string
+    string moduleId;  // Module ID string
+    string moduleEndpoint;  // Full API endpoint for this module
     int moduleIndex;       // Index of this module in the parent detector
     void createAllParams();
 
