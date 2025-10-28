@@ -12,18 +12,12 @@
 
 #include "ADXSPD.h"
 
-using json = nlohmann::json;
-using namespace std;
+#include "ADXSPDModule.h"
 
-<<<<<<< HEAD
-/*
- * External configuration function for ADXSPD.
- * Envokes the constructor to create a new ADXSPD object
- * This is the function that initializes the driver, and is called in the IOC startup script
-=======
+using json = nlohmann::json;
+
 /**
  * @brief C wrapper function called by iocsh to create an instance of the ADXSPD driver
->>>>>>> 691678ff4018adf90d2bb07cbbf4b548fa66073e
  *
  * @param portName The name of the asyn port for this driver
  * @param ipPort The IP address and port of the XSPD device (e.g. 192.168.1.100:8080)
@@ -73,7 +67,7 @@ static void monitorThreadC(void* drvPvt) {
  * @return json Parsed JSON response from the API
  */
 template <typename T>
-T ADXSPD::xspdGet(string endpoint, string key = "value") {
+T ADXSPD::xspdGet(string endpoint, string key) {
     const char* functionName = "xspdGet";
     // Make a GET request to the XSPD API
 
@@ -83,9 +77,9 @@ T ADXSPD::xspdGet(string endpoint, string key = "value") {
     cpr::Response response = cpr::Get(cpr::Url(requestUri));
 
     if (response.status_code != 200) {
-        ERR_ARGS("Failed to get data from %s: %s", endpoint.c_str(),
+        ERR_ARGS("Failed to get data from %s: %s", requestUri.c_str(),
                  response.error.message.c_str());
-        return json();
+        return T();
     }
 
     try {
@@ -99,11 +93,11 @@ T ADXSPD::xspdGet(string endpoint, string key = "value") {
             return parsedResponse[key].get<T>();
         } else {
             ERR_ARGS("Key %s not found in JSON response from %s", key.c_str(), endpoint.c_str());
-            return json();
+            return T();
         }
     } catch (json::parse_error& e) {
         ERR_ARGS("Failed to parse JSON response from %s: %s", endpoint.c_str(), e.what());
-        return json();
+        return T();
     }
 }
 
@@ -137,7 +131,7 @@ asynStatus ADXSPD::xspdSet(string endpoint, T value) {
 asynStatus ADXSPD::xspdCommand(string command) {
     const char* functionName = "xspdCommand";
 
-    json commands = xspdGet("commands");
+    json commands = xspdGet<json>("commands");
     bool commandFound = false;
     for (auto& cmd : commands["data"]) {
         if (cmd["name"] == command) {
@@ -191,7 +185,7 @@ void ADXSPD::acquireStop() {
 void ADXSPD::acquisitionThread() {
     const char* functionName = "acquisitionThread";
 
-    NDArray* pArray = NULL;
+    NDArray* pArray = nullptr;
     ADImageMode_t acquisitionMode;
     NDArrayInfo arrayInfo;
     NDDataType_t dataType;
@@ -200,9 +194,9 @@ void ADXSPD::acquisitionThread() {
     getIntegerParam(NDDataType, (int*) &dataType);
     getIntegerParam(ADImageMode, (int*) &acquisitionMode);
 
-    size_t dims[2];
-    getIntegerParam(ADSizeX, (int*) &dims[0]);
-    getIntegerParam(ADSizeY, (int*) &dims[1]);
+    int dims[2];
+    getIntegerParam(ADSizeX, &dims[0]);
+    getIntegerParam(ADSizeY, &dims[1]);
 
     int collectedImages = 0;
 
@@ -212,7 +206,7 @@ void ADXSPD::acquisitionThread() {
         // Get a new frame using the vendor SDK here here
 
         // Allocate the NDArray of the correct size
-        this->pArrays[0] = pNDArrayPool->alloc(2, dims, dataType, 0, NULL);
+        this->pArrays[0] = pNDArrayPool->alloc(2, (size_t*) dims, dataType, 0, NULL);
         if (this->pArrays[0] != NULL) {
             pArray = this->pArrays[0];
         } else {
@@ -273,7 +267,7 @@ void ADXSPD::monitorThread() {
     const char* functionName = "monitorThread";
 
     while (this->alive) {
-        string status = xspdGet("status").get<string>();
+        string status = xspdGet<string>("status");
         if (status.compare("connected")) {
             setIntegerParam(ADStatus, ADStatusInitializing);
         } else if (status.compare("ready")) {
@@ -409,7 +403,7 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     setStringParam(NDDriverVersion, versionString);
 
     // Initialize vendor SDK and connect to the device here
-    string baseApiUri = string(ipPort) + "/api";
+    std::string baseApiUri = std::string(ipPort) + "/api";
     INFO_ARGS("Connecting to XSPD api at %s", baseApiUri.c_str());
 
     response = cpr::Get(cpr::Url(baseApiUri));
@@ -438,22 +432,21 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
                  response.error.message.c_str());
         return;
     }
-    json deviceList = json::parse(response.text, nullptr, true, false, true);
+    json deviceList = json::parse(response.text, nullptr, true, false, true)["devices"];
     if (deviceList.empty()) {
         ERR("No devices found!");
         return;
     }
 
-    json requestedDevice = NULL;
+    json requestedDevice = nullptr;
 
     INFO_ARGS("Found %ld devices", deviceList.size());
-    if (deviceId == NULL) {
+    if (deviceId == nullptr) {
         INFO("Device ID not specified, using first device in list.");
         requestedDevice = deviceList[0];
-
     } else {
         for (const auto& device : deviceList) {
-            if (strcmp(device["id"].get<string>().c_str(), deviceId) == 0) {
+            if (device["id"].get<std::string>().compare(deviceId) == 0) {
                 requestedDevice = device;
                 break;
             }
@@ -465,7 +458,7 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
         return;
     }
 
-    this->deviceId = requestedDevice["id"].get<string>();
+    this->deviceId = requestedDevice["id"].get<std::string>();
     setStringParam(ADSerialNumber, this->deviceId.c_str());
 
     INFO_ARGS("Retrieving info for device with ID %s...", this->deviceId.c_str());
@@ -489,8 +482,8 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
         ERR_ARGS("No data ports found for device ID %s", this->deviceId.c_str());
         return;
     }
-    this->dataPortId = dataPortInfo["id"].get<string>();
-    this->dataPortIp = dataPortInfo["ip"].get<string>();
+    this->dataPortId = dataPortInfo["id"].get<std::string>();
+    this->dataPortIp = dataPortInfo["ip"].get<std::string>();
     this->dataPortPort = dataPortInfo["port"].get<int>();
     INFO_ARGS("Found data port w/ id %s bound to %s:%d", this->dataPortId.c_str(),
               this->dataPortIp.c_str(), this->dataPortPort);
@@ -513,36 +506,35 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
         return;
     }
 
-    json info = xspdGet("info");
+    json info = xspdGet<json>("info");
     if (info.empty()) {
         ERR_ARGS("Failed to retrieve device info for device ID %s", this->deviceId.c_str());
         return;
     }
 
     // For now only support single-detector devices
-    json detectorInfo = info["detectors"][0];
-    this->detectorId = detectorInfo["id"].get<string>();
-
-    for (auto& module : detectorInfo["modules"]) {
-        INFO_ARGS("Found module %s, type %s", module["id"].get<string>().c_str(),
-                  module["type"].get<string>().c_str());
-        // TODO: Create module objects here
-    }
+    json detectorInfo = info["value"]["detectors"][0];
+    this->detectorId = detectorInfo["detector-id"].get<std::string>();
 
     // Retrieve device information and populate all PVs.
     setStringParam(ADManufacturer, "X-Spectrum GmbH");
-    setStringParam(ADModel, this->xspdGet("type")["value"].get<string>().c_str());
-    setStringParam(ADSDKVersion, deviceInfo["libxsp version"].get<string>().c_str());
-    // setIntegerParam(ADMaxSizeX, ....);
-    // setIntegerParam(ADMaxSizeY, ....);
+    setStringParam(ADModel, this->detectorId.c_str());
+    setStringParam(ADSDKVersion, info["value"]["libxsp version"].get<std::string>().c_str());
+
+    int maxSizeX = xspdGet<int>(this->dataPortId + "/frame_width");
+    int maxSizeY = xspdGet<int>(this->dataPortId + "/frame_height");
+    setIntegerParam(ADMaxSizeX, maxSizeX);
+    setIntegerParam(ADMaxSizeY, maxSizeY);
     setIntegerParam(ADMinX, 0);
     setIntegerParam(ADMinY, 0);
 
     // Initialize our modules
     int numModules = detectorInfo["modules"].size();
     setIntegerParam(ADXSPD_NumModules, numModules);
-    for (int i = 0; i < numModules; i++) {
-        // TODO: Create module objects
+    for (auto& module : detectorInfo["modules"]) {
+        INFO_ARGS("Found module %s, type %s", module["module"].get<std::string>().c_str(),
+                  module["firmware"].get<std::string>().c_str());
+        // TODO: Create module objects here
     }
 
     callParamCallbacks();

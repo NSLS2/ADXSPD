@@ -9,20 +9,17 @@
 
 #include "ADXSPDModule.h"
 
-<<<<<<< HEAD
-ADXSPDModule::ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* pPvt,
-=======
 template <typename T>
 T ADXSPDModule::getModuleParam(string endpoint) {
     const char* functionName = "getModuleParam";
     string moduleEndpoint = "devices/" + parent->getDeviceId() +
                             "/variables?path=" + parent->getDetectorId() + "/" + moduleId;
 
-    json response = parent->xspdGet(moduleEndpoint + "/" + endpoint)["value"];
+    json response = parent->xspdGet<json>(moduleEndpoint + "/" + endpoint);
     if (response.empty() || response.is_null()) {
         ERR_ARGS("Failed to get module parameter %s for module %s", endpoint.c_str(),
                  moduleId.c_str());
-        return NULL;
+        return T();
     } else {
         return response.get<T>();
     }
@@ -44,7 +41,6 @@ void ADXSPDModule::checkStatus() {
 }
 
 ADXSPDModule::ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* parent,
->>>>>>> 691678ff4018adf90d2bb07cbbf4b548fa66073e
                            int moduleIndex)
     : asynPortDriver(
           portName, 1, /* maxAddr */

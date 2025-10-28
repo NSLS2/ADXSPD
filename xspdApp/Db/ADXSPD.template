@@ -55,7 +55,7 @@ record(mbbo, "$(P)$(R)CompressLevel"){
     field(THVL, "3")
     field(THST, "4")
     field(VAL, "1")
-    field(PINI, "Yes")
+    field(PINI, "YES")
 }
 
 record(mbbi, "$(P)$(R)CompressLevel_RBV"){
@@ -78,7 +78,7 @@ record(ao, "$(P)$(R)BeamEnergy"){
     field(DTYP, "asynFloat64")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_BEAM_ENERGY")
     field(VAL, "0.0")
-    field(PINI, "No")
+    field(PINI, "NO")
 }
 
 record(ai, "$(P)$(R)BeamEnergy_RBV"){
@@ -95,7 +95,7 @@ record(bo, "$(P)$(R)SaturationFlag"){
     field(ZNAM, "Disabled")
     field(ONAM, "Enabled")
     field(VAL, "0")
-    field(PINI, "No")
+    field(PINI, "NO")
 }
 
 record(bi, "$(P)$(R)SaturationFlag_RBV"){
@@ -113,7 +113,7 @@ record(bo, "$(P)$(R)ChargeSumming"){
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHARGE_SUMMING")
     field(ZNAM, "Disabled")
     field(ONAM, "Enabled")
-    field(PINI, "No")
+    field(PINI, "NO")
 }
 
 record(bi, "$(P)$(R)ChargeSumming_RBV"){
@@ -132,7 +132,7 @@ record(bo, "$(P)$(R)FlatFieldCorrection"){
     field(ZNAM, "Disabled")
     field(ONAM, "Enabled")
     field(VAL, "0")
-    field(PINI, "No")
+    field(PINI, "NO")
 }
 
 record(bi, "$(P)$(R)FlatFieldCorrection_RBV"){
@@ -151,7 +151,7 @@ record(bo, "$(P)$(R)GatingMode"){
     field(ZNAM, "Disabled")
     field(ONAM, "Enabled")
     field(VAL, "0")
-    field(PINI, "No")
+    field(PINI, "NO")
 }
 
 record(bi, "$(P)$(R)GatingMode_RBV"){
@@ -183,7 +183,7 @@ record(ao, "$(P)$(R)HighThreshold"){
     field(DTYP, "asynFloat64")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_HIGH_THRESHOLD")
     field(VAL, "0.0")
-    field(PINI, "No")
+    field(PINI, "NO")
 }
 
 record(ai, "$(P)$(R)HighThreshold_RBV"){
@@ -199,7 +199,7 @@ record(ao, "$(P)$(R)LowThreshold"){
     field(DTYP, "asynFloat64")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_LOW_THRESHOLD")
     field(VAL, "0.0")
-    field(PINI, "No")
+    field(PINI, "NO")
 }
 
 record(ai, "$(P)$(R)LowThreshold_RBV"){
@@ -220,7 +220,7 @@ record(mbbo, "$(P)$(R)TriggerMode"){
     field(TWVL, "2")
     field(TWST, "External Sequence")
     field(VAL, "0")
-    field(PINI, "No")
+    field(PINI, "NO")
 }
 
 record(bo, "$(P)$(R)CounterMode"){
@@ -230,7 +230,7 @@ record(bo, "$(P)$(R)CounterMode"){
     field(ZNAM, "Single")
     field(ONAM, "Dual")
     field(VAL, "0")
-    field(PINI, "No")
+    field(PINI, "NO")
 }
 
 record(bi, "$(P)$(R)CounterMode_RBV"){
@@ -249,7 +249,7 @@ record(bo, "$(P)$(R)Reset") {
     field(ZNAM, "Abort")
     field(ONAM, "Reset")
     field(VAL, "0")
-    field(PINI, "No")
+    field(PINI, "NO")
 }
 
 record(bo, "$(P)$(R)GenerateFlatfield"){
@@ -259,7 +259,7 @@ record(bo, "$(P)$(R)GenerateFlatfield"){
     field(ZNAM, "Abort")
     field(ONAM, "Generate")
     field(VAL, "0")
-    field(PINI, "No")
+    field(PINI, "NO")
 }
 
 record(waveform, "$(P)$(R)FlatfieldStatus_RBV"){
@@ -284,7 +284,7 @@ record(mbbo, "$(P)$(R)ShuffleMode"){
     field(THVL, "3")
     field(THST, "Byte Shuffle")
     field(VAL, "0")
-    field(PINI, "No")
+    field(PINI, "NO")
 }
 
 record(mbbi, "$(P)$(R)ShuffleMode_RBV"){
