@@ -6,6 +6,11 @@ DIRS := $(DIRS) XSPDApp
 DIRS := $(DIRS) XSPDSupport
 
 XSPDApp_DEPEND_DIRS += XSPDSupport
+ifeq ($(BUILD_TESTS), YES)
+DIR := $(DIRS) $(filter-out $(DIRS), $(wildcard tests))
+tests_DEPEND_DIRS += xspdApp
+endif
+
 ifeq ($(BUILD_IOCS), YES)
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard iocs))
 iocs_DEPEND_DIRS += XSPDApp
