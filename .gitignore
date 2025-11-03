@@ -19,3 +19,7 @@ venv/
 *.a
 *.so
 a.out
+# pixi environments
+.pixi/*
+!.pixi/config.toml
+*.local

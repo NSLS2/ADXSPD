@@ -9,44 +9,38 @@
 
 #include "ADXSPDModule.h"
 
-// Error message formatters
-#define ERR(msg)                                               \
-    if (this->parent->getLogLevel() >= ADXSPD_LOG_LEVEL_ERROR) \
-        printf("ERROR | %s::%s: %s\n", driverName, functionName, msg);
+template <typename T>
+T ADXSPDModule::getModuleParam(string endpoint) {
+    const char* functionName = "getModuleParam";
+    string moduleEndpoint = "devices/" + parent->getDeviceId() +
+                            "/variables?path=" + parent->getDetectorId() + "/" + moduleId;
 
-#define ERR_ARGS(fmt, ...)                                     \
-    if (this->parent->getLogLevel() >= ADXSPD_LOG_LEVEL_ERROR) \
-        printf("ERROR | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
+    json response = parent->xspdGet<json>(moduleEndpoint + "/" + endpoint);
+    if (response.empty() || response.is_null()) {
+        ERR_ARGS("Failed to get module parameter %s for module %s", endpoint.c_str(),
+                 moduleId.c_str());
+        return T();
+    } else {
+        return response.get<T>();
+    }
+}
 
-// Warning message formatters
-#define WARN(msg)                                                \
-    if (this->parent->getLogLevel() >= ADXSPD_LOG_LEVEL_WARNING) \
-        printf("WARNING | %s::%s: %s\n", driverName, functionName, msg);
+void ADXSPDModule::checkStatus() {
+    const char* functionName = "checkStatus";
 
-#define WARN_ARGS(fmt, ...)                                      \
-    if (this->parent->getLogLevel() >= ADXSPD_LOG_LEVEL_WARNING) \
-        printf("WARNING | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
+    // Example: Read module temperature and update parameter
+    setDoubleParam(ADXSPDModule_ModSensCurr, getModuleParam<double>("sensor_current"));
 
-// Info message formatters. Because there is no ASYN trace for info messages, we just use `printf`
-// here.
-#define INFO(msg)                                             \
-    if (this->parent->getLogLevel() >= ADXSPD_LOG_LEVEL_INFO) \
-        printf("INFO | %s::%s: %s\n", driverName, functionName, msg);
+    vector<double> temps = getModuleParam<vector<double>>("temperature");
+    setDoubleParam(ADXSPDModule_ModBoardTemp, temps[0]);
+    setDoubleParam(ADXSPDModule_ModFpgaTemp, temps[1]);
+    setDoubleParam(ADXSPDModule_ModHumTemp, temps[2]);
 
-#define INFO_ARGS(fmt, ...)                                   \
-    if (this->parent->getLogLevel() >= ADXSPD_LOG_LEVEL_INFO) \
-        printf("INFO | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
+    setDoubleParam(ADXSPDModule_ModHum, getModuleParam<double>("humidity"));
+    // Add more status checks as needed
+}
 
-// Debug message formatters
-#define DEBUG(msg)                                             \
-    if (this->parent->getLogLevel() >= ADXSPD_LOG_LEVEL_DEBUG) \
-    printf("DEBUG | %s::%s: %s\n", driverName, functionName, msg)
-
-#define DEBUG_ARGS(fmt, ...)                                   \
-    if (this->parent->getLogLevel() >= ADXSPD_LOG_LEVEL_DEBUG) \
-        printf("DEBUG | %s::%s: %s" fmt "\n", driverName, functionName, __VA_ARGS__);
-
-ADXSPDModule::ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* pPvt,
+ADXSPDModule::ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* parent,
                            int moduleIndex)
     : asynPortDriver(
           portName, 1, /* maxAddr */
@@ -60,10 +54,12 @@ ADXSPDModule::ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* p
           0) /* Default stack size*/
 {
     static const char* functionName = "ADXSPDModule";
-    this->parent = pPvt;
+    this->parent = parent;
     this->moduleId = string(moduleId);
     this->moduleIndex = moduleIndex;
     createAllParams();
+
+    INFO_ARGS("Configured ADXSPDModule for module %s (index %d)", moduleId, moduleIndex);
 }
 
 ADXSPDModule::~ADXSPDModule() {

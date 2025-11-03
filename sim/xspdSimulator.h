@@ -8,6 +8,8 @@
 #include <thread>
 
 using namespace std;
+
+
 class XspdSimulator {
 public:
     XspdSimulator(int ctrlPort, int dataPort);

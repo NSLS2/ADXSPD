@@ -10,11 +10,12 @@ XspdSimulator::XspdSimulator(int ctrlPort, int dataPort) : ctrlPort(ctrlPort), d
     CROW_ROUTE(this->app, "/api/v1/devices")
     ([this](){
         crow::json::wvalue devices;
-        devices["devices"] = crow::json::wvalue::list();
+        vector<crow::json::wvalue> deviceList = crow::json::wvalue::list();
         crow::json::wvalue device;
         device["id"] = this->detectorId;
         device["dataPortId"] = this->dataPortId;
-        devices["devices"].push_back(device);
+        deviceList.push_back(device);
+        devices["devices"] = deviceList;
         return devices;
     });
 

@@ -7,10 +7,10 @@ include $(TOP)/configure/CONFIG
 
 SRC_DIRS += ../json
 
-INC += json.hpp
-INC += json_fwd.hpp
+INC += nlohmann/json.hpp
+INC += nlohmann/json_fwd.hpp
 
-ifeq ($(WITH_SIMD), YES)
+ifeq ($(BUILD_TESTS), YES)
 SRC_DIRS += ../crow
 
 INC += crow.h

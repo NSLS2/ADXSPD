@@ -2,10 +2,10 @@
 TOP = .
 include $(TOP)/configure/CONFIG
 DIRS := $(DIRS) configure
-DIRS := $(DIRS) XSPDApp
-DIRS := $(DIRS) XSPDSupport
+DIRS := $(DIRS) xspdApp
+DIRS := $(DIRS) xspdSupport
 
-XSPDApp_DEPEND_DIRS += XSPDSupport
+xspdApp_DEPEND_DIRS += xspdSupport
 ifeq ($(BUILD_TESTS), YES)
 DIR := $(DIRS) $(filter-out $(DIRS), $(wildcard tests))
 tests_DEPEND_DIRS += xspdApp
@@ -13,7 +13,7 @@ endif
 
 ifeq ($(BUILD_IOCS), YES)
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard iocs))
-iocs_DEPEND_DIRS += XSPDApp
+iocs_DEPEND_DIRS += xspdApp
 endif
 include $(TOP)/configure/RULES_TOP
 
@@ -29,8 +29,10 @@ realuninstall_iocs:
 
 
 bobfiles:
-	epicsdb2bob xspdApp/Db xspdApp/op/bob -m P=DEV:XSPD1: R=cam1: PORT=XSPD1 ADDR=0 TIMEOUT=1 -d -r _RBV -t none -b xspdApp/op/bob
+	pixi run make-bobfiles
 
 paramdefs:
-	scripts/generate_param_defs.py xspdApp/Db/ADXSPD.template xspdApp/src
-	scripts/generate_param_defs.py xspdApp/Db/ADXSPDModule.template xspdApp/src
+	pixi run make-paramdefs
+
+lint:
+	pixi run lint

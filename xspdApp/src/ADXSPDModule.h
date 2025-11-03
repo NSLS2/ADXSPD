@@ -14,13 +14,17 @@
 
 class ADXSPDModule : public asynPortDriver {
    public:
-    ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* pPvt, int moduleIndex);
+    ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* parent, int moduleIndex);
     ~ADXSPDModule();
 
     // These are the methods that we override from asynPortDriver
-    virtual asynStatus writeInt32(asynUser* pasynUser, epicsInt32 value);
-    virtual asynStatus writeFloat64(asynUser* pasynUser, epicsFloat64 value);
-    virtual void report(FILE* fp, int details);
+    // virtual asynStatus writeInt32(asynUser* pasynUser, epicsInt32 value);
+    // virtual asynStatus writeFloat64(asynUser* pasynUser, epicsFloat64 value);
+    // virtual void report(FILE* fp, int details);
+
+    template <typename T>
+    T getModuleParam(string endpoint);
+    void checkStatus();
 
    protected:
     // Module parameters
@@ -28,11 +32,12 @@ class ADXSPDModule : public asynPortDriver {
 
    private:
     const char* driverName = "ADXSPDModule";
-    ADXSPD* parent;   // Pointer to the parent ADXSPD driver object
-    string moduleId;  // Module ID string
-    int moduleIndex;  // Index of this module in the parent detector
-
+    ADXSPD* parent;        // Pointer to the parent ADXSPD driver object
+    std::string moduleId;  // Module ID string
+    int moduleIndex;       // Index of this module in the parent detector
     void createAllParams();
+
+    ADXSPD_LogLevel_t getLogLevel() { return this->parent->getLogLevel(); }
 };
 
 #endif

@@ -6,46 +6,46 @@
 
 // String definitions for parameters
 #define ADXSPDModule_ModBoardTempString "XSPD_MOD_BOARD_TEMP"
-#define ADXSPDModule_ModInterpModeString "XSPD_MOD_INTERP_MODE"
-#define ADXSPDModule_ModRotPitchString "XSPD_MOD_ROT_PITCH"
-#define ADXSPDModule_ModNumSubframesString "XSPD_MOD_NUM_SUBFRAMES"
-#define ADXSPDModule_ModRotRollString "XSPD_MOD_ROT_ROLL"
-#define ADXSPDModule_ModNumConsString "XSPD_MOD_NUM_CONS"
-#define ADXSPDModule_ModPosXString "XSPD_MOD_POS_X"
-#define ADXSPDModule_ModMaxFramesString "XSPD_MOD_MAX_FRAMES"
-#define ADXSPDModule_ModRotYawString "XSPD_MOD_ROT_YAW"
 #define ADXSPDModule_ModFpgaTempString "XSPD_MOD_FPGA_TEMP"
-#define ADXSPDModule_ModVoltageString "XSPD_MOD_VOLTAGE"
-#define ADXSPDModule_ModFeatBitmaskString "XSPD_MOD_FEAT_BITMASK"
-#define ADXSPDModule_ModHumString "XSPD_MOD_HUM"
 #define ADXSPDModule_ModHumTempString "XSPD_MOD_HUM_TEMP"
-#define ADXSPDModule_ModPosYString "XSPD_MOD_POS_Y"
+#define ADXSPDModule_ModHumString "XSPD_MOD_HUM"
+#define ADXSPDModule_ModVoltageString "XSPD_MOD_VOLTAGE"
 #define ADXSPDModule_ModSensCurrString "XSPD_MOD_SENS_CURR"
 #define ADXSPDModule_ModSatThreshString "XSPD_MOD_SAT_THRESH"
+#define ADXSPDModule_ModRotYawString "XSPD_MOD_ROT_YAW"
+#define ADXSPDModule_ModRotPitchString "XSPD_MOD_ROT_PITCH"
+#define ADXSPDModule_ModRotRollString "XSPD_MOD_ROT_ROLL"
+#define ADXSPDModule_ModPosXString "XSPD_MOD_POS_X"
+#define ADXSPDModule_ModPosYString "XSPD_MOD_POS_Y"
 #define ADXSPDModule_ModPosZString "XSPD_MOD_POS_Z"
+#define ADXSPDModule_ModMaxFramesString "XSPD_MOD_MAX_FRAMES"
+#define ADXSPDModule_ModNumSubframesString "XSPD_MOD_NUM_SUBFRAMES"
+#define ADXSPDModule_ModNumConsString "XSPD_MOD_NUM_CONS"
+#define ADXSPDModule_ModInterpModeString "XSPD_MOD_INTERP_MODE"
+#define ADXSPDModule_ModFeatBitmaskString "XSPD_MOD_FEAT_BITMASK"
 
 // Parameter index definitions
 int ADXSPDModule_ModBoardTemp;
-int ADXSPDModule_ModInterpMode;
-int ADXSPDModule_ModRotPitch;
-int ADXSPDModule_ModNumSubframes;
-int ADXSPDModule_ModRotRoll;
-int ADXSPDModule_ModNumCons;
-int ADXSPDModule_ModPosX;
-int ADXSPDModule_ModMaxFrames;
-int ADXSPDModule_ModRotYaw;
 int ADXSPDModule_ModFpgaTemp;
-int ADXSPDModule_ModVoltage;
-int ADXSPDModule_ModFeatBitmask;
-int ADXSPDModule_ModHum;
 int ADXSPDModule_ModHumTemp;
-int ADXSPDModule_ModPosY;
+int ADXSPDModule_ModHum;
+int ADXSPDModule_ModVoltage;
 int ADXSPDModule_ModSensCurr;
 int ADXSPDModule_ModSatThresh;
+int ADXSPDModule_ModRotYaw;
+int ADXSPDModule_ModRotPitch;
+int ADXSPDModule_ModRotRoll;
+int ADXSPDModule_ModPosX;
+int ADXSPDModule_ModPosY;
 int ADXSPDModule_ModPosZ;
+int ADXSPDModule_ModMaxFrames;
+int ADXSPDModule_ModNumSubframes;
+int ADXSPDModule_ModNumCons;
+int ADXSPDModule_ModInterpMode;
+int ADXSPDModule_ModFeatBitmask;
 
 #define ADXSPDMODULE_FIRST_PARAM ADXSPDModule_ModBoardTemp
-#define ADXSPDMODULE_LAST_PARAM ADXSPDModule_ModPosZ
+#define ADXSPDMODULE_LAST_PARAM ADXSPDModule_ModFeatBitmask
 
 #define NUM_ADXSPDMODULE_PARAMS ((int) (&ADXSPDMODULE_LAST_PARAM - &ADXSPDMODULE_FIRST_PARAM + 1))
 

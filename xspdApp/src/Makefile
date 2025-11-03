@@ -7,7 +7,7 @@ ifeq (windows-x64, $(findstring windows-x64, $(T_A)))
 USR_CPPFLAGS += -D__X64
 endif
 
-USR_CPPFLAGS += -std=c++11
+USR_CPPFLAGS += -std=c++17
 
 INC += ADXSPD.h ADXSPDParamDefs.h ADXSPDModule.h ADXSPDModuleParamDefs.h
 
@@ -15,7 +15,7 @@ LIBRARY_IOC = ADXSPD
 LIB_SRCS += ADXSPDParamDefs.cpp ADXSPD.cpp ADXSPDModuleParamDefs.cpp ADXSPDModule.cpp
 
 
-DBD += XSPDSupport.dbd
+DBD += xspdSupport.dbd
 
 include $(ADCORE)/ADApp/commonLibraryMakefile
 
