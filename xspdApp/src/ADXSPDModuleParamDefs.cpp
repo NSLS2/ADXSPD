@@ -22,4 +22,7 @@ void ADXSPDModule::createAllParams() {
     createParam(ADXSPDModule_ModNumConsString, asynParamInt32, &ADXSPDModule_ModNumCons);
     createParam(ADXSPDModule_ModInterpModeString, asynParamInt32, &ADXSPDModule_ModInterpMode);
     createParam(ADXSPDModule_ModFeatBitmaskString, asynParamInt32, &ADXSPDModule_ModFeatBitmask);
+    createParam(ADXSPDModule_ModCompressLevelString, asynParamInt32, &ADXSPDModule_ModCompressLevel);
+    createParam(ADXSPDModule_ModCompressorString, asynParamInt32, &ADXSPDModule_ModCompressor);
+    createParam(ADXSPDModule_RamAllocatedString, asynParamInt32, &ADXSPDModule_RamAllocated);
 }

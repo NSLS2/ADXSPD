@@ -9,6 +9,7 @@
 #define ADXSPD_VersionString "XSPD_VERSION"
 #define ADXSPD_NumModulesString "XSPD_NUM_MODULES"
 #define ADXSPD_CompressLevelString "XSPD_COMPRESS_LEVEL"
+#define ADXSPD_CompressorString "XSPD_COMPRESSOR"
 #define ADXSPD_BeamEnergyString "XSPD_BEAM_ENERGY"
 #define ADXSPD_SaturationFlagString "XSPD_SATURATION_FLAG"
 #define ADXSPD_ChargeSummingString "XSPD_CHARGE_SUMMING"
@@ -29,6 +30,7 @@ int ADXSPD_ApiVersion;
 int ADXSPD_Version;
 int ADXSPD_NumModules;
 int ADXSPD_CompressLevel;
+int ADXSPD_Compressor;
 int ADXSPD_BeamEnergy;
 int ADXSPD_SaturationFlag;
 int ADXSPD_ChargeSumming;
@@ -47,6 +49,6 @@ int ADXSPD_ShuffleMode;
 #define ADXSPD_FIRST_PARAM ADXSPD_ApiVersion
 #define ADXSPD_LAST_PARAM ADXSPD_ShuffleMode
 
-#define NUM_ADXSPD_PARAMS ((int) (&ADXSPD_LAST_PARAM - &ADXSPD_FIRST_PARAM + 1))
+#define NUM_ADXSPD_PARAMS ((int)(&ADXSPD_LAST_PARAM - &ADXSPD_FIRST_PARAM + 1))
 
 #endif

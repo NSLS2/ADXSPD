@@ -8,6 +8,7 @@ void ADXSPD::createAllParams() {
     createParam(ADXSPD_VersionString, asynParamOctet, &ADXSPD_Version);
     createParam(ADXSPD_NumModulesString, asynParamInt32, &ADXSPD_NumModules);
     createParam(ADXSPD_CompressLevelString, asynParamInt32, &ADXSPD_CompressLevel);
+    createParam(ADXSPD_CompressorString, asynParamInt32, &ADXSPD_Compressor);
     createParam(ADXSPD_BeamEnergyString, asynParamFloat64, &ADXSPD_BeamEnergy);
     createParam(ADXSPD_SaturationFlagString, asynParamInt32, &ADXSPD_SaturationFlag);
     createParam(ADXSPD_ChargeSummingString, asynParamInt32, &ADXSPD_ChargeSumming);
