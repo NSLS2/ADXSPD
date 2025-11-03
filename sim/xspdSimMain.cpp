@@ -1,22 +1,35 @@
 #include "xspdSimulator.h"
+#include <cpr/cpr.h>
 #include <iostream>
-#include <csignal>
-
-volatile sig_atomic_t stopRequested = 0;
-
-void handleSignal(int signal) {
-    if (signal == SIGINT || signal == SIGTERM) {
-        stopRequested = 1;
-    }
-}
 
 int main(int argc, char* argv[]) {
-    signal(SIGINT, handleSignal);
-    signal(SIGTERM, handleSignal);
 
     XspdSimulator simulator(8000, 8080);
-    while (!stopRequested) {
-        this_thread::sleep_for(chrono::milliseconds(100));
+
+    bool run = true;
+    string command;
+    while (run) {
+        cout << "xspdSim > ";
+        getline(cin, command);
+
+        if (command == "exit") {
+            run = false;
+        } else if (command == "help") {
+            cout << "Available commands:\n";
+            cout << "  help - Show this help message\n";
+            cout << "  exit - Exit the simulator\n";
+            cout << "  <endpoint> - Send a GET request to the specified REST API endpoint\n";
+        } else if (!command.empty()) {
+            string url = "http://localhost:8000/" + command;
+            cout << "Sending GET request to: " << url << endl;
+
+            // Use a simple HTTP client to send the request
+            cpr::Response res = cpr::Get(cpr::Url{url});
+
+            cout << "Response Code: " << res.status_code << endl;
+            cout << "Response Body: " << res.text << endl;
+        }
     }
+
     return 0;
 }

@@ -9,19 +9,53 @@ XspdSimulator::XspdSimulator(int ctrlPort, int dataPort) : ctrlPort(ctrlPort), d
 
     CROW_ROUTE(this->app, "/api/v1/devices")
     ([this](){
-        crow::json::wvalue devices;
-        vector<crow::json::wvalue> deviceList = crow::json::wvalue::list();
-        crow::json::wvalue device;
-        device["id"] = this->detectorId;
-        device["dataPortId"] = this->dataPortId;
-        deviceList.push_back(device);
-        devices["devices"] = deviceList;
+        crow::json::wvalue devices = crow::json::wvalue({
+            {"devices", crow::json::wvalue::list({
+                crow::json::wvalue({{"id", this->deviceId}}),
+                crow::json::wvalue({{"type", "xspd"}}),
+                crow::json::wvalue({{"href", "http://localhost:" + to_string(this->ctrlPort) + "/api/v1/devices/" + this->deviceId}})
+            })}
+        });
         return devices;
     });
 
-    CROW_ROUTE(this->app, "/api/v1/devices/xspdSimulator/variables?path=<string>")
+    CROW_ROUTE(this->app, "/api/v1/devices/simdet")
+    ([this](){
+        crow::json::wvalue deviceInfo;
+        deviceInfo["id"] = this->deviceId;
+        deviceInfo["type"] = "xsp";
+        deviceInfo["configfile"] = "/opt/xsp/config/system.yml";
+        deviceInfo["system"] = crow::json::wvalue({
+            {"id", "SYS"},
+            {"detectors", crow::json::wvalue::list({
+                crow::json::wvalue({
+                    {"id", this->detectorId},
+                    {"modules", 1}
+                })
+            })}
+        });
+        deviceInfo["dataPorts"] = crow::json::wvalue::list({
+            crow::json::wvalue({
+                {"ref", this->detectorId + "/1"},
+                {"id", this->dataPortId},
+                {"ip", "localhost"},
+                {"port", this->dataPort},
+            })
+        });
+
+        return deviceInfo;
+    });
+
+    CROW_ROUTE(this->app, "/api/v1/devices/simdet/variables?path=<string>")
     ([this](string varName){
-        return this->constructVariableResp(varName);
+        crow::json::wvalue resp;
+        if (this->variables.find(varName) != this->variables.end()){
+            resp["path"] = varName;
+            resp["value"] = this->variables[varName];
+        } else {
+            resp["error"] = "unknown variable";
+        }
+        return resp;
     });
 
     this->start();
@@ -30,17 +64,6 @@ XspdSimulator::XspdSimulator(int ctrlPort, int dataPort) : ctrlPort(ctrlPort), d
 XspdSimulator::~XspdSimulator(){
     this->stop();
 }
-
-crow::json::wvalue XspdSimulator::constructVariableResp(string varName){
-    crow::json::wvalue resp;
-    if (this->variables.find(varName) != this->variables.end()){
-        resp["path"] = varName;
-        resp["value"] = this->variables[varName];
-    } else {
-        resp["error"] = "unknown variable";
-    }
-    return resp;
-} 
 
 
 void XspdSimulator::start(){
@@ -59,13 +82,18 @@ void XspdSimulator::start(){
 }
 
 void XspdSimulator::stop(){
+    cout << "Shutting down REST API server..." << endl;
     this->app.stop();
     if (this->restServerThread.joinable()){
+        cout << "Joining REST API server thread..." << endl;
         this->restServerThread.join();
     }
+
+    cout << "Stopping ZMQ Publisher..." << endl;
     zmq_close(this->zmqPublisher);
     zmq_ctx_destroy(this->zmqContext);
     if (this->zmqPubThread.joinable()){
+        cout << "Joining ZMQ Publisher thread..." << endl;
         this->zmqPubThread.join();
     }
     cout << "XspdSimulator stopped." << endl;
