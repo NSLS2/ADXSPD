@@ -24,7 +24,9 @@ class ADXSPDModule : public asynPortDriver {
 
     template <typename T>
     T getModuleParam(string endpoint);
+    asynStatus setModuleParam(string endpoint, T value);
     void checkStatus();
+    void getInitialState();
 
    protected:
     // Module parameters
