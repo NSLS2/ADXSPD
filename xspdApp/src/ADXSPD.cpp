@@ -60,6 +60,36 @@ static void monitorThreadC(void* drvPvt) {
     pPvt->monitorThread();
 }
 
+<<<<<<< HEAD
+=======
+ADXSPD_OnOff_t ADXSPD::parseOnOff(string value) {
+    const char* functionName = "parseOnOff";
+    if (value == "ON" || value == "1" || value == "True" || value == "true") {
+        return ADXSPD_ON;
+    } else if (value == "OFF" || value == "0" || value == "False" || value == "false") {
+        return ADXSPD_OFF;
+    } else {
+        ERR_ARGS("Invalid On/Off value: %s", value.c_str());
+        return ADXSPD_OFF;
+    }
+}
+
+ADXSPD_ShuffleMode_t ADXSPD::parseShuffleMode(string value) {
+    const char* functionName = "parseShuffleMode";
+    if (value == "NONE" || value == "0") {
+        return ADXSPD_SHUFFLE_NONE;
+    } else if (value == "AUTO" || value == "1") {
+        return ADXSPD_AUTO_SHUFFLE;
+    } else if (value == "BIT" || value == "2") {
+        return ADXSPD_SHUFFLE_BIT;
+    } else if (value == "BYTE" || value == "3") {
+        return ADXSPD_SHUFFLE_BYTE;
+    } else {
+        ERR_ARGS("Invalid Shuffle Mode value: %s", value.c_str());
+        return ADXSPD_SHUFFLE_NONE;
+    }
+}
+>>>>>>> 5d2943c26c36caad8693ec0cb6d9a32eb9ca5c73
 
 /**
  * @brief Makes a GET request to the XSPD API and returns the parsed JSON response
@@ -275,6 +305,13 @@ void ADXSPD::acquisitionThread() {
     callParamCallbacks();
 }
 
+void ADXSPD::getInitialState() {
+    const char* functionName = "getInitialState";
+
+    setDoubleParam(ADAcquireTime, xspdGet<double>("shutter_time"));
+    callParamCallbacks();
+}
+
 /**
  * Main monitoring function for ADXSPD
  */
@@ -296,6 +333,7 @@ void ADXSPD::monitorThread() {
         }
         // Poll some status variables from the detector here
         epicsThreadSleep(1.0);
+        callParamCallbacks();
     }
 }
 

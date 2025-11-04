@@ -23,6 +23,9 @@
 #define ADXSPDModule_ModNumConsString "XSPD_MOD_NUM_CONS"
 #define ADXSPDModule_ModInterpModeString "XSPD_MOD_INTERP_MODE"
 #define ADXSPDModule_ModFeatBitmaskString "XSPD_MOD_FEAT_BITMASK"
+#define ADXSPDModule_ModCompressLevelString "XSPD_MOD_COMPRESS_LEVEL"
+#define ADXSPDModule_ModCompressorString "XSPD_MOD_COMPRESSOR"
+#define ADXSPDModule_RamAllocatedString "XSPD_RAM_ALLOCATED"
 
 // Parameter index definitions
 int ADXSPDModule_ModBoardTemp;
@@ -43,10 +46,13 @@ int ADXSPDModule_ModNumSubframes;
 int ADXSPDModule_ModNumCons;
 int ADXSPDModule_ModInterpMode;
 int ADXSPDModule_ModFeatBitmask;
+int ADXSPDModule_ModCompressLevel;
+int ADXSPDModule_ModCompressor;
+int ADXSPDModule_RamAllocated;
 
 #define ADXSPDMODULE_FIRST_PARAM ADXSPDModule_ModBoardTemp
-#define ADXSPDMODULE_LAST_PARAM ADXSPDModule_ModFeatBitmask
+#define ADXSPDMODULE_LAST_PARAM ADXSPDModule_RamAllocated
 
-#define NUM_ADXSPDMODULE_PARAMS ((int) (&ADXSPDMODULE_LAST_PARAM - &ADXSPDMODULE_FIRST_PARAM + 1))
+#define NUM_ADXSPDMODULE_PARAMS ((int)(&ADXSPDMODULE_LAST_PARAM - &ADXSPDMODULE_FIRST_PARAM + 1))
 
 #endif

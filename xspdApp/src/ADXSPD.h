@@ -33,6 +33,7 @@
 #include <cstddef>
 #include <cstdio>
 #include <iostream>
+#include <map>
 #include <nlohmann/json.hpp>
 #include <string>
 
@@ -92,6 +93,50 @@ typedef enum ADXSPD_ON_OFF {
     ADXSPD_ON = 1,
 } ADXSPD_OnOff_t;
 
+typedef enum ADXSPD_COMPRESSOR {
+    ADXSPD_COMPRESSOR_NONE = 0,
+    ADXSPD_COMPRESSOR_ZLIB = 1,
+    ADXSPD_COMPRESSOR_BLOSC = 2,
+} ADXSPD_Compressor_t;
+
+typedef enum ADXSPD_SHUFFLE_MODE {
+    ADXSPD_SHUFFLE_NONE = 0,
+    ADXSPD_AUTO_SHUFFLE = 1,
+    ADXSPD_SHUFFLE_BIT = 2,
+    ADXSPD_SHUFFLE_BYTE = 3,
+} ADXSPD_ShuffleMode_t;
+
+typedef enum ADXSPD_TRIG_MODE {
+    ADXSPD_TRIG_SOFTWARE = 0,
+    ADXSPD_TRIG_EXT_FRAMES = 1,
+    ADXSPD_TRIG_EXT_SEQ = 2,
+} ADXSPD_TrigMode_t;
+
+
+map<ADXSPD_TrigMode_t, string> ADXSPD_TRIG_MODE_MAP = {
+    {ADXSPD_TRIG_SOFTWARE, "SOFTWARE"},
+    {ADXSPD_TRIG_EXT_FRAMES, "EXT_FRAMES"},
+    {ADXSPD_TRIG_EXT_SEQ, "EXT_SEQ"},
+};
+
+map<ADXSPD_OnOff_t, string> ADXSPD_ON_OFF_MAP = {
+    {ADXSPD_ON, "ON"},
+    {ADXSPD_OFF, "OFF"},
+};
+
+map<ADXSPD_Compressor_t, string> ADXSPD_COMPRESSOR_MAP = {
+    {ADXSPD_COMPRESSOR_NONE, "none"},
+    {ADXSPD_COMPRESSOR_ZLIB, "zlib"},
+    {ADXSPD_COMPRESSOR_BLOSC, "bslz4"},
+};
+
+map<ADXSPD_ShuffleMode_t, string> ADXSPD_SHUFFLE_MODE_MAP = {
+    {ADXSPD_SHUFFLE_NONE, "NONE"},
+    {ADXSPD_AUTO_SHUFFLE, "AUTO"},
+    {ADXSPD_SHUFFLE_BIT, "BIT"},
+    {ADXSPD_SHUFFLE_BYTE, "BYTE"},
+};
+
 class ADXSPDModule;  // Forward declaration of module class
 
 /*
@@ -128,6 +173,9 @@ class ADXSPD : ADDriver {
 
     asynStatus xspdCommand(string command);
 
+    ADXSPD_OnOff_t parseOnOff(string value);
+    ADXSPD_ShuffleMode_t parseShuffleMode(string value);
+
    protected:
 // Load auto-generated parameter string and index definitions
 #include "ADXSPDParamDefs.h"
@@ -135,6 +183,8 @@ class ADXSPD : ADDriver {
    private:
     const char* driverName = "ADXSPD";
     void createAllParams();
+
+    void getInitialState();
 
     bool alive = true;  // Flag to indicate whether our acquisition thread and monitor thread should
                         // keep running
