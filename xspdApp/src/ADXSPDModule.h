@@ -16,7 +16,7 @@ using namespace std;
 
 class ADXSPDModule : public asynPortDriver {
    public:
-    ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* parent, int moduleIndex);
+    ADXSPDModule(const char* portName, string moduleId, ADXSPD* parent);
     ~ADXSPDModule();
 
     // These are the methods that we override from asynPortDriver
@@ -25,7 +25,10 @@ class ADXSPDModule : public asynPortDriver {
     // virtual void report(FILE* fp, int details);
 
     template <typename T>
-    T xspdGetModuleVar(string endpoint);
+    T xspdGetModuleVar(string endpoint, string key = "value");
+
+    template <typename T>
+    T xspdGetModuleEnumVar(string endpoint, string key = "value");
 
     template <typename T>
     asynStatus xspdSetModuleVar(string endpoint, T value);
@@ -41,7 +44,6 @@ class ADXSPDModule : public asynPortDriver {
     const char* driverName = "ADXSPDModule";
     ADXSPD* parent;        // Pointer to the parent ADXSPD driver object
     string moduleId;  // Module ID string
-    int moduleIndex;       // Index of this module in the parent detector
     void createAllParams();
 
     ADXSPDLogLevel getLogLevel() { return this->parent->getLogLevel(); }

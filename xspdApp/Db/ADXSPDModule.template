@@ -1,26 +1,26 @@
 record(ai, "$(P)$(R)BoardTemp_RBV"){
-    field(DESC, "Board Temp readback in C")
+    field(DESC, "Board Temp rb in C")
     field(DTYP, "asynFloat64")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_BOARD_TEMP")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)FPGATemp_RBV"){
-    field(DESC, "FPGA Temp readback in C")
+    field(DESC, "FPGA Temp rb in C")
     field(DTYP, "asynFloat64")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_FPGA_TEMP")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)HumiditySensorTemp_RBV"){
-    field(DESC, "Humidity sensor Temp readback in C")
+    field(DESC, "Humidity sensor Temp rb in C")
     field(DTYP, "asynFloat64")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_HUM_TEMP")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)Humidity_RBV"){
-    field(DESC, "Humidity readback in %")
+    field(DESC, "Humidity rb in %")
     field(DTYP, "asynFloat64")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_HUM")
     field(SCAN, "I/O Intr")
@@ -35,21 +35,21 @@ record(ao, "$(P)$(R)Voltage"){
 }
 
 record(ai, "$(P)$(R)Voltage_RBV"){
-    field(DESC, "Voltage readback in V")
+    field(DESC, "Voltage rb in V")
     field(DTYP, "asynFloat64")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_VOLTAGE")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)SensorCurrent_RBV"){
-    field(DESC, "Sensor current readback in mA")
+    field(DESC, "Sensor current rb in mA")
     field(DTYP, "asynFloat64")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_SENS_CURR")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)SaturationThresh_RBV"){
-    field(DESC, "Saturation threshold readback in counts/sec/pixel")
+    field(DESC, "Saturation threshold rb")
     field(DTYP, "asynFloat64")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_SAT_THRESH")
     field(SCAN, "I/O Intr")
@@ -57,70 +57,70 @@ record(ai, "$(P)$(R)SaturationThresh_RBV"){
 
 
 record(ai, "$(P)$(R)RotationYaw_RBV"){
-    field(DESC, "Rotation yaw readback in degrees")
+    field(DESC, "Rotation yaw rb in degrees")
     field(DTYP, "asynFloat64")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_ROT_YAW")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)RotationPitch_RBV"){
-    field(DESC, "Rotation pitch readback in degrees")
+    field(DESC, "Rotation pitch rb in degrees")
     field(DTYP, "asynFloat64")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_ROT_PITCH")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)RotationRoll_RBV"){
-    field(DESC, "Rotation roll readback in degrees")
+    field(DESC, "Rotation roll rb in degrees")
     field(DTYP, "asynFloat64")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_ROT_ROLL")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)PositionX_RBV"){
-    field(DESC, "Position X readback in mm")
+    field(DESC, "Position X rb in mm")
     field(DTYP, "asynFloat64")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_POS_X")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)PositionY_RBV"){
-    field(DESC, "Position Y readback in mm")
+    field(DESC, "Position Y rb in mm")
     field(DTYP, "asynFloat64")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_POS_Y")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)PositionZ_RBV"){
-    field(DESC, "Position Z readback in mm")
+    field(DESC, "Position Z rb in mm")
     field(DTYP, "asynFloat64")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_POS_Z")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)MaxFrames_RBV"){
-    field(DESC, "Max frames readback")
+    field(DESC, "Max frames rb")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MAX_FRAMES")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)NumSubFrames_RBV"){
-    field(DESC, "Number of sub-frames readback")
+    field(DESC, "Number of sub-frames rb")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_NUM_SUBFRAMES")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)NumConnectors_RBV") {
-    field(DESC, "Number of connectors readback")
+    field(DESC, "Number of connectors rb")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_NUM_CONS")
     field(SCAN, "I/O Intr")
 }
 
 record(bi, "$(P)$(R)InterpolationMode_RBV") {
-    field(DESC, "Interpolation mode readback")
+    field(DESC, "Interpolation mode rb")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_INTERP_MODE")
     field(ZNAM, "Disabled")
@@ -129,7 +129,7 @@ record(bi, "$(P)$(R)InterpolationMode_RBV") {
 }
 
 record(ai, "$(P)$(R)FeaturesBitmask_RBV") {
-    field(DESC, "Features bitmask readback")
+    field(DESC, "Features bitmask rb")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_FEAT_BITMASK")
     field(SCAN, "I/O Intr")
@@ -164,7 +164,7 @@ record(mbbo, "$(P)$(R)CompressLevel"){
 }
 
 record(mbbi, "$(P)$(R)CompressLevel_RBV"){
-    field(DESC, "Compression level readback")
+    field(DESC, "Compression level rb")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_COMPRESS_LEVEL")
     field(ZRVL, "0")
@@ -205,7 +205,7 @@ record(mbbo, "$(P)$(R)Compressor"){
 }
 
 record(mbbi, "$(P)$(R)Compressor_RBV"){
-    field(DESC, "Compressor type readback")
+    field(DESC, "Compressor type rb")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_COMPRESSOR")
     field(ZRVL, "0")
@@ -219,7 +219,7 @@ record(mbbi, "$(P)$(R)Compressor_RBV"){
 
 
 record(bi, "$(P)$(R)RamAllocated_RBV"){
-    field(DESC, "RAM allocated readback")
+    field(DESC, "RAM allocated rb")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_RAM_ALLOCATED")
     field(ZNAM, "No")
@@ -228,28 +228,28 @@ record(bi, "$(P)$(R)RamAllocated_RBV"){
 }
 
 record(stringin, "$(P)$(R)LowThreshFF_RBV"){
-    field(DESC, "Low threshold flatfield pixel mask")
+    field(DESC, "Low threshold ff pixel mask")
     field(DTYP, "asynOctetRead")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_LOW_THRESH_FF")
     field(SCAN, "I/O Intr")
 }
 
 record(stringin, "$(P)$(R)HighThreshFF_RBV"){
-    field(DESC, "High threshold flatfield pixel mask")
+    field(DESC, "High threshold ff pixel mask")
     field(DTYP, "asynOctetRead")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_HIGH_THRESH_FF")
     field(SCAN, "I/O Intr")
 }
 
 record(stringin, "$(P)$(R)LowThreshFFAuthor_RBV"){
-    field(DESC, "Low threshold flatfield pixel mask author")
+    field(DESC, "Low threshold ff author")
     field(DTYP, "asynOctetRead")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_LOW_THRESH_FF_AUTHOR")
     field(SCAN, "I/O Intr")
 }
 
 record(stringin, "$(P)$(R)HighThreshFFAuthor_RBV"){
-    field(DESC, "High threshold flatfield pixel mask author")
+    field(DESC, "High threshold ff author")
     field(DTYP, "asynOctetRead")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_HIGH_THRESH_FF_AUTHOR")
     field(SCAN, "I/O Intr")
@@ -257,28 +257,28 @@ record(stringin, "$(P)$(R)HighThreshFFAuthor_RBV"){
 
 
 record(stringin, "$(P)$(R)LowThreshFFErr_RBV"){
-    field(DESC, "Low threshold flatfield pixel mask error")
+    field(DESC, "Low threshold ff error")
     field(DTYP, "asynOctetRead")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_LOW_THRESH_FF_ERR")
     field(SCAN, "I/O Intr")
 }
 
 record(stringin, "$(P)$(R)HighThreshFFErr_RBV"){
-    field(DESC, "High threshold flatfield pixel mask error")
+    field(DESC, "High threshold ff error")
     field(DTYP, "asynOctetRead")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_HIGH_THRESH_FF_ERR")
     field(SCAN, "I/O Intr")
 }
 
 record(stringin, "$(P)$(R)LowThreshFFDate_RBV"){
-    field(DESC, "Low threshold flatfield pixel mask date")
+    field(DESC, "Low threshold ff date")
     field(DTYP, "asynOctetRead")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_LOW_THRESH_FF_DATE")
     field(SCAN, "I/O Intr")
 }
 
 record(stringin, "$(P)$(R)HighThreshFFDate_RBV"){
-    field(DESC, "High threshold flatfield pixel mask date")
+    field(DESC, "High threshold ff date")
     field(DTYP, "asynOctetRead")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_HIGH_THRESH_FF_DATE")
     field(SCAN, "I/O Intr")
@@ -294,14 +294,14 @@ record(waveform, "$(P)$(R)FFStatus_RBV"){
 }
 
 record(ai, "$(P)$(R)FramesQueued_RBV"){
-    field(DESC, "Frames queued readback")
+    field(DESC, "Frames queued rb")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_FRAMES_QUEUED")
     field(SCAN, "I/O Intr")
 }
 
 record(stringin, "$(P)$(R)PixelMask_RBV"){
-    field(DESC, "Pixel mask readback")
+    field(DESC, "Pixel mask rb")
     field(DTYP, "asynOctetRead")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_PIXEL_MASK")
     field(SCAN, "I/O Intr")
@@ -318,7 +318,7 @@ record(bo, "$(P)$(R)UsePixelMask"){
 }
 
 record(bi, "$(P)$(R)UsePixelMask_RBV"){
-    field(DESC, "Use pixel mask readback")
+    field(DESC, "Use pixel mask rb")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_USE_PIXEL_MASK")
     field(ZNAM, "Disable")
@@ -343,7 +343,7 @@ record(mbbo, "$(P)$(R)ShuffleMode"){
 }
 
 record(mbbi, "$(P)$(R)ShuffleMode_RBV"){
-    field(DESC, "Shuffle mode readback")
+    field(DESC, "Shuffle mode rb")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_SHUFFLE_MODE")
     field(ZRVL, "0")

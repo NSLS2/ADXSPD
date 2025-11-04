@@ -106,16 +106,10 @@ T ADXSPD::xspdGetVar(string endpoint, string key) {
         return T();
     } else {
         if (response.contains(key)) {
-            bool isEnumType = is_enum<T>::value;
-            if (isEnumType) {
-                auto enumValue = magic_enum::enum_cast<T>(response[key].get<string>(), magic_enum::case_insensitive);
-                if (enumValue.has_value()) {
-                    return enumValue.value();
-                } else {
-                    ERR_ARGS("Failed to cast value %s to enum for variable %s",
-                             response[key].get<string>().c_str(), endpoint.c_str());
-                    return T();
-                }
+            if (is_enum<T>::value) {
+                ERR_ARGS("Cannot directly get enum type for variable %s, use xspdGetEnumVar instead",
+                         endpoint.c_str());
+                return T(0);
             }
             return response[key].get<T>();
         } else {
@@ -127,12 +121,40 @@ T ADXSPD::xspdGetVar(string endpoint, string key) {
 }
 
 template <typename T>
+T ADXSPD::xspdGetEnumVar(string endpoint, string key) {
+
+    string resp = xspdGetVar<string>(endpoint, key);
+    if(resp.empty()) {
+        ERR_ARGS("Failed to get enum variable %s", endpoint.c_str());
+        return T(0);
+    }
+
+    auto enumValue = magic_enum::enum_cast<T>(resp, magic_enum::case_insensitive);
+    if (enumValue.has_value()) {
+        return enumValue.value();
+    } else {
+        ERR_ARGS("Failed to cast value %s to enum for variable %s",
+                 resp.c_str(), endpoint.c_str());
+        return T(0);
+    }
+}
+
+template <typename T>
 T ADXSPD::xspdGetDetVar(string endpoint, string key) {
 
     string fullVarEndpoint = this->detectorId + "/" + endpoint;
 
     return xspdGetVar<T>(fullVarEndpoint, key);
 }
+
+template <typename T>
+T ADXSPD::xspdGetDetEnumVar(string endpoint, string key) {
+
+    string fullVarEndpoint = this->detectorId + "/" + endpoint;
+
+    return xspdGetEnumVar<T>(fullVarEndpoint, key);
+}
+
 
 template <typename T>
 T ADXSPD::xspdGetDataPortVar(string endpoint, string key) {
@@ -329,7 +351,7 @@ void ADXSPD::acquisitionThread() {
         // If in single mode, finish acq, if in multiple mode and reached target number
         // complete acquisition.
         if (acquisitionMode == ADImageSingle ||
-            acquisitionMode == ADImageMultiple && collectedImages == targetNumImages) {
+            (acquisitionMode == ADImageMultiple && collectedImages == targetNumImages)) {
             acquireStop();
             collectedImages = 0;
         }
@@ -351,31 +373,20 @@ void ADXSPD::acquisitionThread() {
 
 
 /**
- * Main monitoring function for ADXSPD
+ * @brief Main monitoring loop for ADXSPD
  */
 void ADXSPD::monitorThread() {
-
     while (this->alive) {
-        // string status = xspdGetVar<string>("status");
-        // TODO: Fix this when we figure out why response is a list
-        string status = xspdGet(this->deviceVarUri + "status")[0]["value"].get<string>();
-        DEBUG_ARGS("Device status: %s", status.c_str());
-        if (status.compare("connected")) {
-            setIntegerParam(ADStatus, ADStatusInitializing);
-        } else if (status.compare("ready")) {
-            setIntegerParam(ADStatus, ADStatusIdle);
-        } else {
-            setIntegerParam(ADStatus, ADStatusAcquire);
-        }
+        setIntegerParam(ADStatus, static_cast<int>(xspdGetDetEnumVar<ADXSPDStatus>("status")));
 
         for (auto& module : this->modules) {
             module->checkStatus();
         }
-        // Poll some status variables from the detector here
-        epicsThreadSleep(1.0);
+
+        // TODO: Allow for setting the polling interval via a PV
+        epicsThreadSleep(10.0);
         callParamCallbacks();
     }
-    callParamCallbacks();
 }
 
 
@@ -386,23 +397,24 @@ void ADXSPD::getInitialDetState(){
     setIntegerParam(ADXSPD_RoiRows, xspdGetDetVar<int>("roi_rows"));
     setIntegerParam(ADNumImages, xspdGetDetVar<int>("n_frames"));
     setIntegerParam(ADXSPD_CompressLevel, xspdGetDetVar<int>("compression_level"));
-    setIntegerParam(ADXSPD_Compressor, (int) xspdGetDetVar<ADXSPDCompressor>("compressor"));
+    setIntegerParam(ADXSPD_Compressor, static_cast<int>(xspdGetDetEnumVar<ADXSPDCompressor>("compressor")));
     setDoubleParam(ADXSPD_BeamEnergy, xspdGetDetVar<double>("beam_energy"));
-    setIntegerParam(ADXSPD_GatingMode, (int) xspdGetDetVar<ADXSPDOnOff>("gating_mode"));
-    setIntegerParam(ADXSPD_FFCorrection, (int) xspdGetDetVar<ADXSPDOnOff>("flatfield_correction"));
-    setIntegerParam(ADXSPD_ChargeSumming, (int) xspdGetDetVar<ADXSPDOnOff>("charge_summing"));
-    setIntegerParam(ADTriggerMode, (int) xspdGetDetVar<ADXSPDTrigMode>("trigger_mode"));
+    setIntegerParam(ADXSPD_GatingMode, static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("gating_mode")));
+    setIntegerParam(ADXSPD_FFCorrection, static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("flatfield_correction")));
+    setIntegerParam(ADXSPD_ChargeSumming, static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("charge_summing")));
+    setIntegerParam(ADTriggerMode, static_cast<int>(xspdGetDetEnumVar<ADXSPDTrigMode>("trigger_mode")));
     setIntegerParam(ADXSPD_BitDepth, xspdGetDetVar<int>("bit_depth"));
-    setIntegerParam(ADXSPD_CrCorr, (int) xspdGetDetVar<ADXSPDOnOff>("count_rate_correction"));
-    setIntegerParam(ADXSPD_CounterMode, (int) xspdGetDetVar<ADXSPDCounterMode>("counter_mode"));
-    setIntegerParam(ADXSPD_SaturationFlag, (int) xspdGetDetVar<ADXSPDOnOff>("saturation_flag"));
-    setIntegerParam(ADXSPD_ShuffleMode, (int) xspdGetDetVar<ADXSPDShuffleMode>("shuffle_mode"));
+
+    setIntegerParam(ADXSPD_CrCorr, static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("countrate_correction")));
+    setIntegerParam(ADXSPD_CounterMode, static_cast<int>(xspdGetDetEnumVar<ADXSPDCounterMode>("counter_mode")));
+    setIntegerParam(ADXSPD_SaturationFlag, static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("saturation_flag")));
+    setIntegerParam(ADXSPD_ShuffleMode, static_cast<int>(xspdGetDetEnumVar<ADXSPDShuffleMode>("shuffle_mode")));
 
     setStringParam(ADModel, xspdGetDetVar<string>("type").c_str());
 
     vector<double> thresholds = xspdGetDetVar<vector<double>>("thresholds");
-    setDoubleParam(ADXSPD_LowThreshold, thresholds[0]);
-    setDoubleParam(ADXSPD_HighThreshold, thresholds[1]);
+    if (thresholds.size() > 0) setDoubleParam(ADXSPD_LowThreshold, thresholds[0]);
+    if (thresholds.size() > 1) setDoubleParam(ADXSPD_HighThreshold, thresholds[1]);
 
     setIntegerParam(ADMaxSizeX, xspdGetDataPortVar<int>("frame_width"));
     setIntegerParam(ADMaxSizeY, xspdGetDataPortVar<int>("frame_height"));
@@ -644,12 +656,14 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     // Initialize our modules
     int numModules = detectorInfo["modules"].size();
     setIntegerParam(ADXSPD_NumModules, numModules);
-    for (auto& module : detectorInfo["modules"]) {
-        INFO_ARGS("Found module %s, type %s", module["module"].get<string>().c_str(),
-                  module["firmware"].get<string>().c_str());
-        // TODO: Create module objects here
+    for(int i = 0; i < numModules; i++) {
+        string moduleId = detectorInfo["modules"][i]["module"].get<string>();
+        string modulePortName = string(this->portName) + "_MOD" + to_string(i);
+        this->modules.push_back(
+            new ADXSPDModule(modulePortName.c_str(), moduleId, this));
     }
 
+    this->getInitialDetState();
     callParamCallbacks();
 
     epicsThreadOpts opts;
@@ -692,6 +706,11 @@ ADXSPD::~ADXSPD() {
         INFO("Destroying zmq context...");
         zmq_ctx_destroy(this->zmqContext);
     }
+
+    for (auto& module : this->modules) {
+        delete module;
+    }
+
     INFO("Done.");
 }
 

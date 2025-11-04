@@ -102,7 +102,7 @@ enum class ADXSPDCompressor {
 };
 
 enum class ADXSPDShuffleMode {
-    NONE = 0,
+    NO_SHUFFLE = 0,
     AUTO_SHUFFLE = 1,
     SHUFFLE_BIT = 2,
     SHUFFLE_BYTE = 3,
@@ -119,6 +119,11 @@ enum class ADXSPDCounterMode {
     DUAL = 1,
 };
 
+enum class ADXSPDStatus {
+    CONNECTED = ADStatusInitializing,
+    READY = ADStatusIdle,
+    BUSY = ADStatusAcquire,
+};
 
 class ADXSPDModule;  // Forward declaration of module class
 
@@ -152,13 +157,16 @@ class ADXSPD : ADDriver {
     T xspdGetVar(string endpoint, string key = "value");
 
     template <typename T>
+    T xspdGetEnumVar(string endpoint, string key = "value");
+
+    template <typename T>
     T xspdGetDetVar(string endpoint, string key = "value");
 
     template <typename T>
-    T xspdGetDataPortVar(string endpoint, string key = "value");
+    T xspdGetDetEnumVar(string endpoint, string key = "value");
 
     template <typename T>
-    T xspdGetModuleVar(int moduleIndex, string endpoint, string key = "value");
+    T xspdGetDataPortVar(string endpoint, string key = "value");
 
     template <typename T>
     asynStatus xspdSet(string endpoint, T value);

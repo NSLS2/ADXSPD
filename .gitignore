@@ -20,3 +20,4 @@ venv/
 !.pixi/config.toml
 *.local
 notes.txt
+checkVar.sh

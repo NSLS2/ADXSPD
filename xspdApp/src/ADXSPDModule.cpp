@@ -11,45 +11,58 @@
 
 template <typename T>
 T ADXSPDModule::xspdGetModuleVar(string endpoint, string key) {
-    const char* functionName = "xspdGetModuleVar";
 
     string fullVarEndpoint = this->moduleId + "/" + endpoint;
-
     return this->parent->xspdGetVar<T>(fullVarEndpoint, key);
 }
 
+template <typename T>
+T ADXSPDModule::xspdGetModuleEnumVar(string endpoint, string key) {
+
+    string resp = xspdGetModuleVar<string>(endpoint, key);
+    if(resp.empty()) {
+        ERR_ARGS("Failed to get module enum variable %s", endpoint.c_str());
+        return T(0);
+    }
+
+    auto enumValue = magic_enum::enum_cast<T>(resp, magic_enum::case_insensitive);
+    if (enumValue.has_value()) {
+        return enumValue.value();
+    } else {
+        ERR_ARGS("Failed to cast value %s to enum for variable %s",
+                 resp.c_str(), endpoint.c_str());
+        return T(0);
+    }
+}
+
 void ADXSPDModule::checkStatus() {
-    const char* functionName = "checkStatus";
 
     // Example: Read module temperature and update parameter
-    setDoubleParam(ADXSPDModule_SensCurr, getModuleParam<double>("sensor_current"));
+    setDoubleParam(ADXSPDModule_SensCurr, xspdGetModuleVar<double>("sensor_current"));
 
-    vector<double> temps = getModuleParam<vector<double>>("temperature");
+    vector<double> temps = xspdGetModuleVar<vector<double>>("temperature");
     setDoubleParam(ADXSPDModule_BoardTemp, temps[0]);
     setDoubleParam(ADXSPDModule_FpgaTemp, temps[1]);
     setDoubleParam(ADXSPDModule_HumTemp, temps[2]);
 
-    setDoubleParam(ADXSPDModule_Hum, getModuleParam<double>("humidity"));
+    setDoubleParam(ADXSPDModule_Hum, xspdGetModuleVar<double>("humidity"));
     // Add more status checks as needed
-
-    
 
     callParamCallbacks();
 }
 
 void ADXSPDModule::getInitialModuleState() {
-    const char* functionName = "getInitialModuleState";
 
     this->checkStatus();
 
     // Compression settings
     setIntegerParam(ADXSPDModule_CompressLevel, xspdGetModuleVar<int>("compression_level"));
-    setIntegerParam(ADXSPDModule_Compressor, (int) xspdGetModuleVar<ADXSPDCompressor>("compressor"));
+    setIntegerParam(ADXSPDModule_Compressor, (int) xspdGetModuleEnumVar<ADXSPDCompressor>("compressor"));
 
     setStringParam(ADXSPDModule_FfStatus, xspdGetModuleVar<string>("flatfield_status").c_str());
-    setIntegerParam(ADXSPDModule_InterpMode, (int) xspdGetModuleVar<ADXSPDOnOff>("interpolation"));
+    setIntegerParam(ADXSPDModule_InterpMode, (int) xspdGetModuleEnumVar<ADXSPDOnOff>("interpolation"));
 
-    setIntegerParam(ADXSPDModule_NumCons, xspdGetModuleVar<int>("num_connectors"));
+    setIntegerParam(ADXSPDModule_NumCons, xspdGetModuleVar<int>("n_connectors"));
 
     setIntegerParam(ADXSPDModule_MaxFrames, xspdGetModuleVar<int>("max_frames"));
 
@@ -69,12 +82,10 @@ void ADXSPDModule::getInitialModuleState() {
 
     callParamCallbacks();
 
-
 }
 
-ADXSPDModule::ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* parent,
-                           int moduleIndex)
-    : asynPortDriver(
+ADXSPDModule::ADXSPDModule(const char* portName, string moduleId, ADXSPD* parent)
+    : parent(parent), moduleId(moduleId), asynPortDriver(
           portName, 1, /* maxAddr */
           asynInt32Mask | asynFloat64Mask | asynFloat64ArrayMask | asynDrvUserMask |
               asynOctetMask, /* Interface mask */
@@ -85,18 +96,12 @@ ADXSPDModule::ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* p
           0, /* Default priority */
           0) /* Default stack size*/
 {
-    static const char* functionName = "ADXSPDModule";
-    this->parent = parent;
-    this->moduleId = string(moduleId);
-    this->moduleEndpoint = parent->getDetectorId() + "/" + this->moduleId;
-    this->moduleIndex = moduleIndex;
     this->createAllParams();
 
-    this->getInitialState();
-    INFO_ARGS("Configured ADXSPDModule for module %s (index %d)", moduleId, moduleIndex);
+    this->getInitialModuleState();
+    INFO_ARGS("Configured ADXSPDModule w/ port %s for module %s", portName, moduleId.c_str());
 }
 
 ADXSPDModule::~ADXSPDModule() {
-    const char* functionName = "~ADXSPDModule";
     INFO_ARGS("Destroying module %s", this->moduleId.c_str());
 }
