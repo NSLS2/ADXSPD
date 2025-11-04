@@ -109,6 +109,13 @@ void ADXSPDModule::getInitialModuleState() {
 
 }
 
+int ADXSPDModule::getMaxNumImages() {
+    int numImages = xspdGetModuleVar<int>("max_frames");
+    setIntegerParam(ADXSPDModule_MaxFrames, numImages);
+    callParamCallbacks();
+    return numImages;
+}
+
 ADXSPDModule::ADXSPDModule(const char* portName, string moduleId, ADXSPD* parent)
     : asynPortDriver(
           portName, 1, /* maxAddr */

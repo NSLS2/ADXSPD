@@ -215,6 +215,15 @@ class ADXSPD : ADDriver {
     string dataPortIp;
     int dataPortPort;
 
+    vector<int> onlyIdleParams = {
+        ADTriggerMode,
+        ADAcquireTime,
+        ADXSPD_BitDepth,
+        ADXSPD_Compressor,
+        ADXSPD_ShuffleMode,
+        ADXSPD_CounterMode,
+    };
+
     ADXSPDLogLevel logLevel = ADXSPDLogLevel::DEBUG;  // Logging level for the driver
 };
 

@@ -33,7 +33,7 @@ record(mbbo, "$(P)$(R)ImageMode") {
     field(ONST, "Multiple")
     field(TWVL, "")
     field(TWST, "")
-    field(VAL, "1")
+    field(VAL, "0")
     field(PINI, "NO")
 }
 

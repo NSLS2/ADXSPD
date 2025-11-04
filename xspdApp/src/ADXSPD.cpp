@@ -474,8 +474,11 @@ void ADXSPD::getInitialDetState(){
     setIntegerParam(ADMaxSizeY, maxSizeY);
     setIntegerParam(ADSizeX, maxSizeX);
     setIntegerParam(ADSizeY, maxSizeY);
+    setIntegerParam(ADBinX, 1);
+    setIntegerParam(ADBinY, 1);
     setIntegerParam(ADMinX, 0);
     setIntegerParam(ADMinY, 0);
+    setIntegerParam(NDColorMode, NDColorModeMono);
 
     callParamCallbacks();
 }
@@ -497,6 +500,15 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
     int status = asynSuccess;
     getIntegerParam(ADAcquire, &acquiring);
 
+    const char* paramName;
+    getParamName(function, &paramName);
+
+    if (acquiring && find(this->onlyIdleParams.begin(), this->onlyIdleParams.end(), function) !=
+        this->onlyIdleParams.end()) {
+        ERR_ARGS("Cannot set parameter %s while acquiring", paramName);
+        return asynError;
+    }
+
     // start/stop acquisition
     if (function == ADAcquire) {
         if (value && !acquiring) {
@@ -505,30 +517,42 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             acquireStop();
         }
     } else if (function == ADImageMode) {
-        if (acquiring == 1) {
-            acquireStop();
-            switch(value) {
-                case ADImageSingle:
-                    setIntegerParam(ADNumImages, xspdSetDetVar<int>("n_frames", 1));
-                case ADImageMultiple:
-                    // Leave ADNumImages unchanged
-                    setIntegerParam(ADImageMode, value);
-                    break;
-                case ADImageContinuous:
-                    ERR("Continuous acquisition is not supported!");
-                    break;
+        switch(value) {
+            case ADImageSingle:
+                setIntegerParam(ADNumImages, xspdSetDetVar<int>("n_frames", 1));
+            case ADImageMultiple:
+                // Leave ADNumImages unchanged
+                setIntegerParam(ADImageMode, value);
+                break;
+            case ADImageContinuous:
+                ERR("Continuous acquisition is not supported!");
+                break;
+        }
+    } else if (function == ADNumImages){
+        int maxNumImages = INT_MAX;
+        for (auto& module : this->modules) {
+            int moduleMax = module->getMaxNumImages();
+            if (moduleMax < maxNumImages) {
+                maxNumImages = moduleMax;
             }
         }
+        if (value < 1 || value > maxNumImages) {
+            ERR_ARGS("Invalid number of images: %d (valid range: 1-%d)", value, maxNumImages);
+            return asynError;
+        }
+        setIntegerParam(ADNumImages, xspdSetDetVar<int>("n_frames", value));
+        if (value == 1) setIntegerParam(ADImageMode, ADImageSingle);
+        else setIntegerParam(ADImageMode, ADImageMultiple);
     } else if (function < ADXSPD_FIRST_PARAM) {
         status = ADDriver::writeInt32(pasynUser, value);
     }
     callParamCallbacks();
 
     if (status) {
-        ERR_ARGS("status=%d, function=%d, value=%d", status, function, value);
+        ERR_ARGS("status=%d, parameter=%s, value=%d", status, paramName, value);
         return asynError;
     } else {
-        DEBUG_ARGS("function=%d value=%d", function, value);
+        DEBUG_ARGS("parameter=%s value=%d", paramName, value);
         return asynSuccess;
     }
 }
@@ -547,11 +571,20 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
     int acquiring;
     asynStatus status = asynSuccess;
     getIntegerParam(ADAcquire, &acquiring);
+    double actualValue;
 
-    status = setDoubleParam(function, value);
+    const char* paramName;
+    getParamName(function, &paramName);
+
+    if (acquiring && find(this->onlyIdleParams.begin(), this->onlyIdleParams.end(), function) !=
+        this->onlyIdleParams.end()) {
+        ERR_ARGS("Cannot set parameter %s while acquiring", paramName);
+        return asynError;
+    }
 
     if (function == ADAcquireTime) {
-        if (acquiring) acquireStop();
+        actualValue = xspdSetDetVar<double>("shutter_time", value);
+        setDoubleParam(ADAcquireTime, actualValue);
     } else {
         if (function < ADXSPD_FIRST_PARAM) {
             status = ADDriver::writeFloat64(pasynUser, value);
@@ -560,10 +593,10 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
     callParamCallbacks();
 
     if (status) {
-        ERR_ARGS("status=%d, function=%d, value=%f", status, function, value);
+        ERR_ARGS("status=%d, parameter=%s, value=%f", status, paramName, value);
         return asynError;
     } else {
-        DEBUG_ARGS("function=%d value=%f", function, value);
+        DEBUG_ARGS("parameter=%s value=%f", paramName, value);
         return status;
     }
 }
