@@ -67,7 +67,6 @@ static void monitorThreadC(void* drvPvt) {
  * @return json Parsed JSON response from the API
  */
 json ADXSPD::xspdGet(string uri) {
-    const char* functionName = "xspdGet";
     // Make a GET request to the XSPD API
 
     DEBUG_ARGS("Sending GET request to %s", uri.c_str());
@@ -97,7 +96,6 @@ json ADXSPD::xspdGet(string uri) {
 
 template <typename T>
 T ADXSPD::xspdGetVar(string endpoint, string key) {
-    const char* functionName = "xspdGetVar";
 
     string fullVarEndpoint = this->deviceVarUri + endpoint;
 
@@ -130,7 +128,6 @@ T ADXSPD::xspdGetVar(string endpoint, string key) {
 
 template <typename T>
 T ADXSPD::xspdGetDetVar(string endpoint, string key) {
-    const char* functionName = "xspdGetDetVar";
 
     string fullVarEndpoint = this->detectorId + "/" + endpoint;
 
@@ -139,7 +136,6 @@ T ADXSPD::xspdGetDetVar(string endpoint, string key) {
 
 template <typename T>
 T ADXSPD::xspdGetDataPortVar(string endpoint, string key) {
-    const char* functionName = "xspdGetDataPortVar";
 
     string fullVarEndpoint = this->dataPortId + "/" + endpoint;
 
@@ -156,7 +152,6 @@ T ADXSPD::xspdGetDataPortVar(string endpoint, string key) {
 
 template <typename T>
 asynStatus ADXSPD::xspdSet(string endpoint, T value) {
-    const char* functionName = "xspdSet";
 
     bool isEnumType = is_enum<T>::value;
     string valueString;
@@ -183,7 +178,6 @@ asynStatus ADXSPD::xspdSet(string endpoint, T value) {
 }
 
 asynStatus ADXSPD::xspdCommand(string command) {
-    const char* functionName = "xspdCommand";
 
     json commands = xspdGet(this->deviceUri + "commands");
     bool commandFound = false;
@@ -221,7 +215,6 @@ asynStatus ADXSPD::xspdCommand(string command) {
  * @brief Starts acquisition
  */
 void ADXSPD::acquireStart() {
-    const char* functionName = "acquireStart";
     setIntegerParam(ADAcquire, 1);
     xspdCommand(this->detectorId + "/start");
 }
@@ -230,7 +223,6 @@ void ADXSPD::acquireStart() {
  * @brief stops acquisition by aborting exposure and joinging acq thread
  */
 void ADXSPD::acquireStop() {
-    const char* functionName = "acquireStop";
     setIntegerParam(ADAcquire, 0);
     xspdCommand(this->detectorId + "/stop");
 }
@@ -239,7 +231,6 @@ void ADXSPD::acquireStop() {
  * Main acquisition function for ADXSPD
  */
 void ADXSPD::acquisitionThread() {
-    const char* functionName = "acquisitionThread";
 
     NDArray* pArray = nullptr;
     ADImageMode_t acquisitionMode;
@@ -363,7 +354,6 @@ void ADXSPD::acquisitionThread() {
  * Main monitoring function for ADXSPD
  */
 void ADXSPD::monitorThread() {
-    const char* functionName = "monitorThread";
 
     while (this->alive) {
         // string status = xspdGetVar<string>("status");
@@ -390,7 +380,6 @@ void ADXSPD::monitorThread() {
 
 
 void ADXSPD::getInitialDetState(){
-    const char* functionName = "getInitialDetState";
 
     setDoubleParam(ADAcquireTime, xspdGetDetVar<double>("shutter_time"));
     setIntegerParam(ADXSPD_SummedFrames, xspdGetDetVar<int>("summed_frames"));
@@ -438,7 +427,6 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
     int function = pasynUser->reason;
     int acquiring;
     int status = asynSuccess;
-    static const char* functionName = "writeInt32";
     getIntegerParam(ADAcquire, &acquiring);
 
     // start/stop acquisition
@@ -479,7 +467,6 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
     int function = pasynUser->reason;
     int acquiring;
     asynStatus status = asynSuccess;
-    static const char* functionName = "writeFloat64";
     getIntegerParam(ADAcquire, &acquiring);
 
     status = setDoubleParam(function, value);
@@ -509,7 +496,6 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
  * @param details Level of detail for the report
  */
 void ADXSPD::report(FILE* fp, int details) {
-    const char* functionName = "report";
     if (details > 0) {
         ADDriver::report(fp, details);
     }
@@ -529,7 +515,6 @@ void ADXSPD::report(FILE* fp, int details) {
  */
 ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     : ADDriver(portName, 1, (int) NUM_ADXSPD_PARAMS, 0, 0, 0, 0, 0, 1, 0, 0) {
-    static const char* functionName = "ADXSPD";
     cpr::Response response;
 
     // Create ADXSPD specific parameters
@@ -686,7 +671,6 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
 }
 
 ADXSPD::~ADXSPD() {
-    const char* functionName = "~ADXSPD";
 
     INFO("Shutting down ADXSPD driver...");
 

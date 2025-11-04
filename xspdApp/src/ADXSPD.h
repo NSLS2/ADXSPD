@@ -48,39 +48,39 @@ using namespace std;
 // Error message formatters
 #define ERR(msg)                                      \
     if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) \
-        printf("ERROR | %s::%s: %s\n", driverName, functionName, msg);
+        printf("ERROR | %s::%s: %s\n", driverName, __func__, msg);
 
 #define ERR_ARGS(fmt, ...)                            \
     if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) \
-        printf("ERROR | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
+        printf("ERROR | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
 // Warning message formatters
 #define WARN(msg)                                       \
     if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) \
-        printf("WARNING | %s::%s: %s\n", driverName, functionName, msg);
+        printf("WARNING | %s::%s: %s\n", driverName, __func__, msg);
 
 #define WARN_ARGS(fmt, ...)                             \
     if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) \
-        printf("WARNING | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
+        printf("WARNING | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
 // Info message formatters. Because there is no ASYN trace for info messages, we just use `printf`
 // here.
 #define INFO(msg)                                    \
     if (this->getLogLevel() >= ADXSPDLogLevel::INFO) \
-        printf("INFO | %s::%s: %s\n", driverName, functionName, msg);
+        printf("INFO | %s::%s: %s\n", driverName, __func__, msg);
 
 #define INFO_ARGS(fmt, ...)                          \
     if (this->getLogLevel() >= ADXSPDLogLevel::INFO) \
-        printf("INFO | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
+        printf("INFO | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
 // Debug message formatters
 #define DEBUG(msg)                                    \
     if (this->getLogLevel() >= ADXSPDLogLevel::DEBUG) \
-        printf("DEBUG | %s::%s: %s\n", driverName, functionName, msg);
+        printf("DEBUG | %s::%s: %s\n", driverName, __func__, msg);
 
 #define DEBUG_ARGS(fmt, ...)                          \
     if (this->getLogLevel() >= ADXSPDLogLevel::DEBUG) \
-        printf("DEBUG | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
+        printf("DEBUG | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
 enum class ADXSPDLogLevel {
     NONE = 0,      // No logging
