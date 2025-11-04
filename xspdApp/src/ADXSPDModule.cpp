@@ -10,37 +10,12 @@
 #include "ADXSPDModule.h"
 
 template <typename T>
-T ADXSPDModule::getModuleParam(string endpoint, string key) {
-    const char* functionName = "getModuleParam";
-    string moduleEndpoint = "devices/" + parent->getDeviceId() +
-                            "/variables?path=" + parent->getDetectorId() + "/" + moduleId;
+T ADXSPDModule::xspdGetModuleVar(string endpoint, string key) {
+    const char* functionName = "xspdGetModuleVar";
 
-    json response = parent->xspdGet(moduleEndpoint + "/" + endpoint);
-    if (response.empty() || response.is_null()) {
-        ERR_ARGS("Failed to get module parameter %s for module %s", endpoint.c_str(),
-                 moduleId.c_str());
-        return T();
-    } else if (!response.contains(key)) {
-        ERR_ARGS("Key %s not found in module parameter %s for module %s", key.c_str(),
-                 endpoint.c_str(), moduleId.c_str());
-        return T();
-    } else {
-        return response[key].get<T>();
-    }
-}
+    string fullVarEndpoint = this->moduleId + "/" + endpoint;
 
-template <typename T>
-asynStatus ADXSPDModule::setModuleParam(string endpoint, T value) {
-    const char* functionName = "setModuleParam";
-    string moduleEndpoint = "devices/" + parent->getDeviceId() +
-                            "/variables?path=" + parent->getDetectorId() + "/" + moduleId;
-
-    asynStatus status = parent->xspdSet<T>(moduleEndpoint + "/" + endpoint, value);
-    if (status != asynSuccess) {
-        ERR_ARGS("Failed to set module parameter %s for module %s", endpoint.c_str(),
-                 moduleId.c_str());
-    }
-    return status;
+    return this->parent->xspdGetVar<T>(fullVarEndpoint, key);
 }
 
 void ADXSPDModule::checkStatus() {
@@ -62,15 +37,17 @@ void ADXSPDModule::checkStatus() {
     callParamCallbacks();
 }
 
-void ADXSPDModule::getInitialState() {
-    const char* functionName = "getInitialState";
+void ADXSPDModule::getInitialModuleState() {
+    const char* functionName = "getInitialModuleState";
 
     this->checkStatus();
 
     int compressionLevel = getModuleParam<int>("compression_level");
     setIntegerParam(ADXSPDModule_ModCompressLevel, compressionLevel);
     
-    ADXSPD_Compressor_t compressor;
+    setIntegerParam(ADXSPDModule_ModCompressor, (int) parent->xspdGetModuleVar<ADXSPDCompressor>(
+        moduleIndex, "compressor"));
+    
     string compStr = getModuleParam<string>("compressor");
     if (compStr == "none") {
         compressor = ADXSPD_COMPRESSOR_NONE;

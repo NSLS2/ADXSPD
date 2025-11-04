@@ -20,6 +20,7 @@
 #define ADXSPD_MODIFICATION 1
 
 #include <cpr/cpr.h>
+#include <magic_enum/magic_enum.hpp>
 #include <epicsExit.h>
 #include <epicsExport.h>
 #include <epicsStdio.h>
@@ -33,6 +34,7 @@
 #include <cstddef>
 #include <cstdio>
 #include <iostream>
+#include <type_traits>
 #include <map>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -44,100 +46,77 @@ using json = nlohmann::json;
 using namespace std;
 
 // Error message formatters
-#define ERR(msg)                                       \
-    if (this->getLogLevel() >= ADXSPD_LOG_LEVEL_ERROR) \
+#define ERR(msg)                                      \
+    if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) \
         printf("ERROR | %s::%s: %s\n", driverName, functionName, msg);
 
-#define ERR_ARGS(fmt, ...)                             \
-    if (this->getLogLevel() >= ADXSPD_LOG_LEVEL_ERROR) \
+#define ERR_ARGS(fmt, ...)                            \
+    if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) \
         printf("ERROR | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
 
 // Warning message formatters
-#define WARN(msg)                                        \
-    if (this->getLogLevel() >= ADXSPD_LOG_LEVEL_WARNING) \
+#define WARN(msg)                                       \
+    if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) \
         printf("WARNING | %s::%s: %s\n", driverName, functionName, msg);
 
-#define WARN_ARGS(fmt, ...)                              \
-    if (this->getLogLevel() >= ADXSPD_LOG_LEVEL_WARNING) \
+#define WARN_ARGS(fmt, ...)                             \
+    if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) \
         printf("WARNING | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
 
 // Info message formatters. Because there is no ASYN trace for info messages, we just use `printf`
 // here.
-#define INFO(msg)                                     \
-    if (this->getLogLevel() >= ADXSPD_LOG_LEVEL_INFO) \
+#define INFO(msg)                                    \
+    if (this->getLogLevel() >= ADXSPDLogLevel::INFO) \
         printf("INFO | %s::%s: %s\n", driverName, functionName, msg);
 
-#define INFO_ARGS(fmt, ...)                           \
-    if (this->getLogLevel() >= ADXSPD_LOG_LEVEL_INFO) \
+#define INFO_ARGS(fmt, ...)                          \
+    if (this->getLogLevel() >= ADXSPDLogLevel::INFO) \
         printf("INFO | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
 
 // Debug message formatters
-#define DEBUG(msg)                                     \
-    if (this->getLogLevel() >= ADXSPD_LOG_LEVEL_DEBUG) \
-    printf("DEBUG | %s::%s: %s\n", driverName, functionName, msg)
+#define DEBUG(msg)                                    \
+    if (this->getLogLevel() >= ADXSPDLogLevel::DEBUG) \
+        printf("DEBUG | %s::%s: %s\n", driverName, functionName, msg);
 
-#define DEBUG_ARGS(fmt, ...)                           \
-    if (this->getLogLevel() >= ADXSPD_LOG_LEVEL_DEBUG) \
+#define DEBUG_ARGS(fmt, ...)                          \
+    if (this->getLogLevel() >= ADXSPDLogLevel::DEBUG) \
         printf("DEBUG | %s::%s: " fmt "\n", driverName, functionName, __VA_ARGS__);
 
-typedef enum ADXSPD_LOG_LEVEL {
-    ADXSPD_LOG_LEVEL_NONE = 0,      // No logging
-    ADXSPD_LOG_LEVEL_ERROR = 10,    // Error messages only
-    ADXSPD_LOG_LEVEL_WARNING = 20,  // Warnings and errors
-    ADXSPD_LOG_LEVEL_INFO = 30,     // Info, warnings, and errors
-    ADXSPD_LOG_LEVEL_DEBUG = 40     // Debugging information
-} ADXSPD_LogLevel_t;
-
-typedef enum ADXSPD_ON_OFF {
-    ADXSPD_OFF = 0,
-    ADXSPD_ON = 1,
-} ADXSPD_OnOff_t;
-
-typedef enum ADXSPD_COMPRESSOR {
-    ADXSPD_COMPRESSOR_NONE = 0,
-    ADXSPD_COMPRESSOR_ZLIB = 1,
-    ADXSPD_COMPRESSOR_BLOSC = 2,
-} ADXSPD_Compressor_t;
-
-typedef enum ADXSPD_SHUFFLE_MODE {
-    ADXSPD_SHUFFLE_NONE = 0,
-    ADXSPD_AUTO_SHUFFLE = 1,
-    ADXSPD_SHUFFLE_BIT = 2,
-    ADXSPD_SHUFFLE_BYTE = 3,
-} ADXSPD_ShuffleMode_t;
-
-typedef enum ADXSPD_TRIG_MODE {
-    ADXSPD_TRIG_SOFTWARE = 0,
-    ADXSPD_TRIG_EXT_FRAMES = 1,
-    ADXSPD_TRIG_EXT_SEQ = 2,
-} ADXSPD_TrigMode_t;
-
-
-map<ADXSPD_TrigMode_t, string> ADXSPD_TRIG_MODE_MAP = {
-    {ADXSPD_TRIG_SOFTWARE, "SOFTWARE"},
-    {ADXSPD_TRIG_EXT_FRAMES, "EXT_FRAMES"},
-    {ADXSPD_TRIG_EXT_SEQ, "EXT_SEQ"},
+enum class ADXSPDLogLevel {
+    NONE = 0,      // No logging
+    ERROR = 10,    // Error messages only
+    WARNING = 20,  // Warnings and errors
+    INFO = 30,     // Info, warnings, and errors
+    DEBUG = 40     // Debugging information
 };
 
-map<ADXSPD_OnOff_t, string> ADXSPD_ON_OFF_MAP = {
-    {ADXSPD_ON, "ON"},
-    {ADXSPD_OFF, "OFF"},
+enum class ADXSPDOnOff {
+    OFF = 0,
+    ON = 1,
 };
 
-map<ADXSPD_Compressor_t, string> ADXSPD_COMPRESSOR_MAP = {
-    {ADXSPD_COMPRESSOR_NONE, "none"},
-    {ADXSPD_COMPRESSOR_ZLIB, "zlib"},
-    {ADXSPD_COMPRESSOR_BLOSC, "bslz4"},
+enum class ADXSPDCompressor {
+    NONE = 0,
+    ZLIB = 1,
+    BLOSC = 2,
 };
 
-map<ADXSPD_ShuffleMode_t, string> ADXSPD_SHUFFLE_MODE_MAP = {
-    {ADXSPD_SHUFFLE_NONE, "NONE"},
-    {ADXSPD_AUTO_SHUFFLE, "AUTO"},
-    {ADXSPD_SHUFFLE_BIT, "BIT"},
-    {ADXSPD_SHUFFLE_BYTE, "BYTE"},
+enum class ADXSPDShuffleMode {
+    NONE = 0,
+    AUTO_SHUFFLE = 1,
+    SHUFFLE_BIT = 2,
+    SHUFFLE_BYTE = 3,
 };
+
+enum class ADXSPDTrigMode {
+    SOFTWARE = 0,
+    EXT_FRAMES = 1,
+    EXT_SEQ = 2,
+};
+
 
 class ADXSPDModule;  // Forward declaration of module class
+
 
 /*
  * Class definition of the ADXSPD driver
@@ -159,7 +138,7 @@ class ADXSPD : ADDriver {
     void acquisitionThread();
     void monitorThread();
 
-    ADXSPD_LogLevel_t getLogLevel() { return this->logLevel; }
+    ADXSPDLogLevel getLogLevel() { return this->logLevel; }
     string getDeviceId() { return this->deviceId; }
     string getDetectorId() { return this->detectorId; }
 
@@ -169,12 +148,18 @@ class ADXSPD : ADDriver {
     T xspdGetVar(string endpoint, string key = "value");
 
     template <typename T>
+    T xspdGetDetVar(string endpoint, string key = "value");
+
+    template <typename T>
+    T xspdGetDataPortVar(string endpoint, string key = "value");
+
+    template <typename T>
+    T xspdGetModuleVar(int moduleIndex, string endpoint, string key = "value");
+
+    template <typename T>
     asynStatus xspdSet(string endpoint, T value);
 
     asynStatus xspdCommand(string command);
-
-    ADXSPD_OnOff_t parseOnOff(string value);
-    ADXSPD_ShuffleMode_t parseShuffleMode(string value);
 
    protected:
 // Load auto-generated parameter string and index definitions
@@ -184,7 +169,6 @@ class ADXSPD : ADDriver {
     const char* driverName = "ADXSPD";
     void createAllParams();
 
-    void getInitialState();
 
     bool alive = true;  // Flag to indicate whether our acquisition thread and monitor thread should
                         // keep running
@@ -198,7 +182,7 @@ class ADXSPD : ADDriver {
     void acquireStop();
     vector<ADXSPDModule*> modules;
 
-    void getDetectorConfiguration();
+    void getInitialDetState();
     void checkOnOffVariable(string endpoint, int paramIndex);
 
     string apiUri;      // IP address and port for the device
@@ -210,7 +194,7 @@ class ADXSPD : ADDriver {
     string dataPortIp;
     int dataPortPort;
 
-    ADXSPD_LogLevel_t logLevel = ADXSPD_LOG_LEVEL_DEBUG;  // Logging level for the driver
+    ADXSPDLogLevel logLevel = ADXSPDLogLevel::DEBUG;  // Logging level for the driver
 };
 
 #endif

@@ -31,7 +31,7 @@ class ADXSPDModule : public asynPortDriver {
     asynStatus setModuleParam(string endpoint, T value);
 
     void checkStatus();
-    void getInitialState();
+    void getInitialModuleState();
 
    protected:
     // Module parameters
@@ -41,11 +41,10 @@ class ADXSPDModule : public asynPortDriver {
     const char* driverName = "ADXSPDModule";
     ADXSPD* parent;        // Pointer to the parent ADXSPD driver object
     string moduleId;  // Module ID string
-    string moduleEndpoint;  // Full API endpoint for this module
     int moduleIndex;       // Index of this module in the parent detector
     void createAllParams();
 
-    ADXSPD_LogLevel_t getLogLevel() { return this->parent->getLogLevel(); }
+    ADXSPDLogLevel getLogLevel() { return this->parent->getLogLevel(); }
 };
 
 #endif
