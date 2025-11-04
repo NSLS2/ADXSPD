@@ -25,10 +25,10 @@ class ADXSPDModule : public asynPortDriver {
     // virtual void report(FILE* fp, int details);
 
     template <typename T>
-    T getModuleParam(string endpoint);
+    T xspdGetModuleVar(string endpoint);
 
     template <typename T>
-    asynStatus setModuleParam(string endpoint, T value);
+    asynStatus xspdSetModuleVar(string endpoint, T value);
 
     void checkStatus();
     void getInitialModuleState();

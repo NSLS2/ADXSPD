@@ -22,14 +22,14 @@ void ADXSPDModule::checkStatus() {
     const char* functionName = "checkStatus";
 
     // Example: Read module temperature and update parameter
-    setDoubleParam(ADXSPDModule_ModSensCurr, getModuleParam<double>("sensor_current"));
+    setDoubleParam(ADXSPDModule_SensCurr, getModuleParam<double>("sensor_current"));
 
     vector<double> temps = getModuleParam<vector<double>>("temperature");
-    setDoubleParam(ADXSPDModule_ModBoardTemp, temps[0]);
-    setDoubleParam(ADXSPDModule_ModFpgaTemp, temps[1]);
-    setDoubleParam(ADXSPDModule_ModHumTemp, temps[2]);
+    setDoubleParam(ADXSPDModule_BoardTemp, temps[0]);
+    setDoubleParam(ADXSPDModule_FpgaTemp, temps[1]);
+    setDoubleParam(ADXSPDModule_HumTemp, temps[2]);
 
-    setDoubleParam(ADXSPDModule_ModHum, getModuleParam<double>("humidity"));
+    setDoubleParam(ADXSPDModule_Hum, getModuleParam<double>("humidity"));
     // Add more status checks as needed
 
     
@@ -42,58 +42,30 @@ void ADXSPDModule::getInitialModuleState() {
 
     this->checkStatus();
 
-    int compressionLevel = getModuleParam<int>("compression_level");
-    setIntegerParam(ADXSPDModule_ModCompressLevel, compressionLevel);
+    // Compression settings
+    setIntegerParam(ADXSPDModule_CompressLevel, xspdGetModuleVar<int>("compression_level"));
+    setIntegerParam(ADXSPDModule_Compressor, (int) xspdGetModuleVar<ADXSPDCompressor>("compressor"));
+
+    setStringParam(ADXSPDModule_FfStatus, xspdGetModuleVar<string>("flatfield_status").c_str());
+    setIntegerParam(ADXSPDModule_InterpMode, (int) xspdGetModuleVar<ADXSPDOnOff>("interpolation"));
+
+    setIntegerParam(ADXSPDModule_NumCons, xspdGetModuleVar<int>("num_connectors"));
+
+    setIntegerParam(ADXSPDModule_MaxFrames, xspdGetModuleVar<int>("max_frames"));
+
+    vector<double> position = xspdGetModuleVar<vector<double>>("position");
+    setDoubleParam(ADXSPDModule_PosX, position[0]);
+    setDoubleParam(ADXSPDModule_PosY, position[1]);
+    setDoubleParam(ADXSPDModule_PosZ, position[2]);
     
-    setIntegerParam(ADXSPDModule_ModCompressor, (int) parent->xspdGetModuleVar<ADXSPDCompressor>(
-        moduleIndex, "compressor"));
-    
-    string compStr = getModuleParam<string>("compressor");
-    if (compStr == "none") {
-        compressor = ADXSPD_COMPRESSOR_NONE;
-    } else if (compStr == "zlib") {
-        compressor = ADXSPD_COMPRESSOR_ZLIB;
-    } else if (compStr == "bslz4") {
-        compressor = ADXSPD_COMPRESSOR_BLOSC;
-    } else {
-        ERR_ARGS("Unknown compressor string '%s' for module %s", compStr.c_str(),
-                 moduleId.c_str());
-        compressor = ADXSPD_COMPRESSOR_NONE;
-    }
+    setIntegerParam(ADXSPDModule_RamAllocated, xspdGetModuleVar<int>("ram_allocated"));
 
-    ADXSPD_OnOff_t flatfieldEnabled =
-        parent->parseOnOff(getModuleParam<string>("flatfield_enabled"));
-    setIntegerParam(ADXSPDModule_ModFlatfieldEnabled, flatfieldEnabled);
+    vector<double> rotation = xspdGetModuleVar<vector<double>>("rotation");
+    setDoubleParam(ADXSPDModule_RotYaw, rotation[0]);
+    setDoubleParam(ADXSPDModule_RotPitch, rotation[1]);
+    setDoubleParam(ADXSPDModule_RotRoll, rotation[2]);
 
-    string flatfieldStatus = getModuleParam<string>("flatfield_status");
-    setStringParam(ADXSPDModule_ModFlatfieldStatus, flatfieldStatus.c_str());
-
-    ADXSPD_OnOff_t interpolation =
-        parent->parseOnOff(getModuleParam<string>("interpolation"));
-    setIntegerParam(ADXSPDModule_ModInterpMode, interpolation);
-
-    int nConnectors = getModuleParam<int>("n_connectors");
-    setIntegerParam(ADXSPDModule_ModNumConnectors, nConnectors);
-
-    int maxFrames = getModuleParam<int>("max_frames");
-    setIntegerParam(ADXSPDModule_ModMaxFrames, maxFrames);
-
-    vector<double> position = getModuleParam<vector<double>>("position");
-    setDoubleParam(ADXSPDModule_ModPosX, position[0]);
-    setDoubleParam(ADXSPDModule_ModPosY, position[1]);
-    setDoubleParam(ADXSPDModule_ModPosZ, position[2]);
-    
-    ADXSPD_OnOff_t ramAllocated = 
-        parent->parseOnOff(getModuleParam<string>("ram_allocated"));
-    setIntegerParam(ADXSPDModule_ModRamAllocated, ramAllocated);
-
-    vector<double> rotation = getModuleParam<vector<double>>("rotation");
-    setDoubleParam(ADXSPDModule_ModRotX, rotation[0]);
-    setDoubleParam(ADXSPDModule_ModRotY, rotation[1]);
-    setDoubleParam(ADXSPDModule_ModRotZ, rotation[2]);
-
-    int satThreshold = getModuleParam<int>("saturation_threshold");
-    setIntegerParam(ADXSPDModule_ModSatThreshold, satThreshold);
+    setIntegerParam(ADXSPDModule_SatThresh, xspdGetModuleVar<int>("saturation_threshold"));
 
     callParamCallbacks();
 

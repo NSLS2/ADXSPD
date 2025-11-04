@@ -114,9 +114,13 @@ enum class ADXSPDTrigMode {
     EXT_SEQ = 2,
 };
 
+enum class ADXSPDCounterMode {
+    SINGLE = 0,
+    DUAL = 1,
+};
+
 
 class ADXSPDModule;  // Forward declaration of module class
-
 
 /*
  * Class definition of the ADXSPD driver

@@ -14,13 +14,20 @@ void ADXSPD::createAllParams() {
     createParam(ADXSPD_ChargeSummingString, asynParamInt32, &ADXSPD_ChargeSumming);
     createParam(ADXSPD_FFCorrectionString, asynParamInt32, &ADXSPD_FFCorrection);
     createParam(ADXSPD_GatingModeString, asynParamInt32, &ADXSPD_GatingMode);
-    createParam(ADXSPD_DetectorStateString, asynParamInt32, &ADXSPD_DetectorState);
-    createParam(ADXSPD_HighThresholdString, asynParamFloat64, &ADXSPD_HighThreshold);
-    createParam(ADXSPD_LowThresholdString, asynParamFloat64, &ADXSPD_LowThreshold);
     createParam(ADXSPD_TriggerModeString, asynParamInt32, &ADXSPD_TriggerMode);
     createParam(ADXSPD_CounterModeString, asynParamInt32, &ADXSPD_CounterMode);
     createParam(ADXSPD_ResetString, asynParamInt32, &ADXSPD_Reset);
     createParam(ADXSPD_GenerateFlatfieldString, asynParamInt32, &ADXSPD_GenerateFlatfield);
     createParam(ADXSPD_FlatfieldStatusString, asynParamOctet, &ADXSPD_FlatfieldStatus);
     createParam(ADXSPD_ShuffleModeString, asynParamInt32, &ADXSPD_ShuffleMode);
+    createParam(ADXSPD_SummedFramesString, asynParamFloat64, &ADXSPD_SummedFrames);
+    createParam(ADXSPD_RoiRowsString, asynParamInt32, &ADXSPD_RoiRows);
+    createParam(ADXSPD_LowThresholdString, asynParamFloat64, &ADXSPD_LowThreshold);
+    createParam(ADXSPD_HighThresholdString, asynParamFloat64, &ADXSPD_HighThreshold);
+    createParam(ADXSPD_FramesQueuedString, asynParamInt32, &ADXSPD_FramesQueued);
+    createParam(ADXSPD_PixelMaskString, asynParamOctet, &ADXSPD_PixelMask);
+    createParam(ADXSPD_GenFlatfieldString, asynParamInt32, &ADXSPD_GenFlatfield);
+    createParam(ADXSPD_ResetDetectorString, asynParamInt32, &ADXSPD_ResetDetector);
+    createParam(ADXSPD_BitDepthString, asynParamInt32, &ADXSPD_BitDepth);
+    createParam(ADXSPD_CrCorrString, asynParamInt32, &ADXSPD_CrCorr);
 }

@@ -15,15 +15,22 @@
 #define ADXSPD_ChargeSummingString "XSPD_CHARGE_SUMMING"
 #define ADXSPD_FFCorrectionString "XSPD_F_F_CORRECTION"
 #define ADXSPD_GatingModeString "XSPD_GATING_MODE"
-#define ADXSPD_DetectorStateString "XSPD_DETECTOR_STATE"
-#define ADXSPD_HighThresholdString "XSPD_HIGH_THRESHOLD"
-#define ADXSPD_LowThresholdString "XSPD_LOW_THRESHOLD"
 #define ADXSPD_TriggerModeString "XSPD_TRIGGER_MODE"
 #define ADXSPD_CounterModeString "XSPD_COUNTER_MODE"
 #define ADXSPD_ResetString "XSPD_RESET"
 #define ADXSPD_GenerateFlatfieldString "XSPD_GENERATE_FLATFIELD"
 #define ADXSPD_FlatfieldStatusString "XSPD_FLATFIELD_STATUS"
 #define ADXSPD_ShuffleModeString "XSPD_SHUFFLE_MODE"
+#define ADXSPD_SummedFramesString "XSPD_SUMMED_FRAMES"
+#define ADXSPD_RoiRowsString "XSPD_ROI_ROWS"
+#define ADXSPD_LowThresholdString "XSPD_LOW_THRESHOLD"
+#define ADXSPD_HighThresholdString "XSPD_HIGH_THRESHOLD"
+#define ADXSPD_FramesQueuedString "XSPD_FRAMES_QUEUED"
+#define ADXSPD_PixelMaskString "XSPD_PIXEL_MASK"
+#define ADXSPD_GenFlatfieldString "XSPD_GEN_FLATFIELD"
+#define ADXSPD_ResetDetectorString "XSPD_RESET_DETECTOR"
+#define ADXSPD_BitDepthString "XSPD_BIT_DEPTH"
+#define ADXSPD_CrCorrString "XSPD_CR_CORR"
 
 // Parameter index definitions
 int ADXSPD_ApiVersion;
@@ -36,18 +43,25 @@ int ADXSPD_SaturationFlag;
 int ADXSPD_ChargeSumming;
 int ADXSPD_FFCorrection;
 int ADXSPD_GatingMode;
-int ADXSPD_DetectorState;
-int ADXSPD_HighThreshold;
-int ADXSPD_LowThreshold;
 int ADXSPD_TriggerMode;
 int ADXSPD_CounterMode;
 int ADXSPD_Reset;
 int ADXSPD_GenerateFlatfield;
 int ADXSPD_FlatfieldStatus;
 int ADXSPD_ShuffleMode;
+int ADXSPD_SummedFrames;
+int ADXSPD_RoiRows;
+int ADXSPD_LowThreshold;
+int ADXSPD_HighThreshold;
+int ADXSPD_FramesQueued;
+int ADXSPD_PixelMask;
+int ADXSPD_GenFlatfield;
+int ADXSPD_ResetDetector;
+int ADXSPD_BitDepth;
+int ADXSPD_CrCorr;
 
 #define ADXSPD_FIRST_PARAM ADXSPD_ApiVersion
-#define ADXSPD_LAST_PARAM ADXSPD_ShuffleMode
+#define ADXSPD_LAST_PARAM ADXSPD_CrCorr
 
 #define NUM_ADXSPD_PARAMS ((int)(&ADXSPD_LAST_PARAM - &ADXSPD_FIRST_PARAM + 1))
 

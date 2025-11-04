@@ -110,7 +110,7 @@ T ADXSPD::xspdGetVar(string endpoint, string key) {
         if (response.contains(key)) {
             bool isEnumType = is_enum<T>::value;
             if (isEnumType) {
-                auto enumValue = magic_enum::enum_cast<T>(response[key].get<string>());
+                auto enumValue = magic_enum::enum_cast<T>(response[key].get<string>(), magic_enum::case_insensitive);
                 if (enumValue.has_value()) {
                     return enumValue.value();
                 } else {
@@ -159,10 +159,11 @@ asynStatus ADXSPD::xspdSet(string endpoint, T value) {
     const char* functionName = "xspdSet";
 
     bool isEnumType = is_enum<T>::value;
+    string valueString;
     if (isEnumType) {
-        auto valueString = magic_enum::enum_name(value);
+        valueString = magic_enum::enum_name(value);
     } else {
-        string valueString = to_string(value);
+        valueString = to_string(value);
     }
 
     // Make a PUT request to the XSPD API
@@ -392,18 +393,32 @@ void ADXSPD::getInitialDetState(){
     const char* functionName = "getInitialDetState";
 
     setDoubleParam(ADAcquireTime, xspdGetDetVar<double>("shutter_time"));
+    setIntegerParam(ADXSPD_SummedFrames, xspdGetDetVar<int>("summed_frames"));
+    setIntegerParam(ADXSPD_RoiRows, xspdGetDetVar<int>("roi_rows"));
+    setIntegerParam(ADNumImages, xspdGetDetVar<int>("n_frames"));
+    setIntegerParam(ADXSPD_CompressLevel, xspdGetDetVar<int>("compression_level"));
+    setIntegerParam(ADXSPD_Compressor, (int) xspdGetDetVar<ADXSPDCompressor>("compressor"));
+    setDoubleParam(ADXSPD_BeamEnergy, xspdGetDetVar<double>("beam_energy"));
+    setIntegerParam(ADXSPD_GatingMode, (int) xspdGetDetVar<ADXSPDOnOff>("gating_mode"));
+    setIntegerParam(ADXSPD_FFCorrection, (int) xspdGetDetVar<ADXSPDOnOff>("flatfield_correction"));
+    setIntegerParam(ADXSPD_ChargeSumming, (int) xspdGetDetVar<ADXSPDOnOff>("charge_summing"));
+    setIntegerParam(ADTriggerMode, (int) xspdGetDetVar<ADXSPDTrigMode>("trigger_mode"));
+    setIntegerParam(ADXSPD_BitDepth, xspdGetDetVar<int>("bit_depth"));
+    setIntegerParam(ADXSPD_CrCorr, (int) xspdGetDetVar<ADXSPDOnOff>("count_rate_correction"));
+    setIntegerParam(ADXSPD_CounterMode, (int) xspdGetDetVar<ADXSPDCounterMode>("counter_mode"));
+    setIntegerParam(ADXSPD_SaturationFlag, (int) xspdGetDetVar<ADXSPDOnOff>("saturation_flag"));
+    setIntegerParam(ADXSPD_ShuffleMode, (int) xspdGetDetVar<ADXSPDShuffleMode>("shuffle_mode"));
 
-    // setIntegerParam(ADXSPD_SummedFrames, xspdGetDetVar<int>("/summed_frames"));
-    // setIntegerParam(ADXSPD_ROIRows, xspdGetDetVar<int>("/roi_rows"));
-    setIntegerParam(ADNumImages, xspdGetDetVar<int>("/n_frames"));
-    setIntegerParam(ADXSPD_CompressLevel, xspdGetDetVar<int>("/compression_level"));
-    setIntegerParam(ADXSPD_Compressor, (int) xspdGetDetVar<ADXSPDCompressor>("/compressor"));
-    setDoubleParam(ADXSPD_BeamEnergy, xspdGetDetVar<double>("/beam_energy"));
-    setIntegerParam(ADXSPD_GatingMode, (int) xspdGetDetVar<ADXSPDOnOff>("/gating_mode"));
-    setIntegerParam(ADXSPD_FFCorrection, (int) xspdGetDetVar<ADXSPDOnOff>("/flatfield_correction"));
-    setIntegerParam(ADXSPD_ChargeSumming, (int) xspdGetDetVar<ADXSPDOnOff>("/charge_summing"));
-    setIntegerParam(ADTriggerMode, (int) xspdGetDetVar<ADXSPDTrigMode>("/trigger_mode"));
+    setStringParam(ADModel, xspdGetDetVar<string>("type").c_str());
 
+    vector<double> thresholds = xspdGetDetVar<vector<double>>("thresholds");
+    setDoubleParam(ADXSPD_LowThreshold, thresholds[0]);
+    setDoubleParam(ADXSPD_HighThreshold, thresholds[1]);
+
+    setIntegerParam(ADMaxSizeX, xspdGetDataPortVar<int>("frame_width"));
+    setIntegerParam(ADMaxSizeY, xspdGetDataPortVar<int>("frame_height"));
+    setIntegerParam(ADMinX, 0);
+    setIntegerParam(ADMinY, 0);
 
     callParamCallbacks();
 }
@@ -639,12 +654,7 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     setStringParam(ADModel, this->detectorId.c_str());
     setStringParam(ADSDKVersion, info["libxsp version"].get<string>().c_str());
 
-    int maxSizeX = xspdGetVar<int>(this->dataPortId + "/frame_width");
-    int maxSizeY = xspdGetVar<int>(this->dataPortId + "/frame_height");
-    setIntegerParam(ADMaxSizeX, maxSizeX);
-    setIntegerParam(ADMaxSizeY, maxSizeY);
-    setIntegerParam(ADMinX, 0);
-    setIntegerParam(ADMinY, 0);
+
 
     // Initialize our modules
     int numModules = detectorInfo["modules"].size();
