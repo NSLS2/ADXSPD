@@ -19,3 +19,4 @@ venv/
 .pixi/*
 !.pixi/config.toml
 *.local
+notes.txt

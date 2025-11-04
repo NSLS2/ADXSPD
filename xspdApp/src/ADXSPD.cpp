@@ -130,7 +130,7 @@ template <typename T>
 T ADXSPD::xspdGetVar(string endpoint, string key) {
     const char* functionName = "xspdGetVar";
 
-    string fullVarEndpoint = this->apiUri + "/devices/" + this->deviceId + "/variables?path=" + endpoint;
+    string fullVarEndpoint = this->deviceVarUri + endpoint;
 
     json response = xspdGet(fullVarEndpoint);
     if (response.is_null() || response.empty()) {
@@ -176,10 +176,10 @@ asynStatus ADXSPD::xspdSet(string endpoint, T value) {
 asynStatus ADXSPD::xspdCommand(string command) {
     const char* functionName = "xspdCommand";
 
-    json commands = xspdGetVar<json>("commands");
+    json commands = xspdGet(this->deviceUri + "commands");
     bool commandFound = false;
-    for (auto& cmd : commands["data"]) {
-        if (cmd["name"] == command) {
+    for (auto& cmd : commands) {
+        if (cmd["path"] == command) {
             DEBUG_ARGS("Found command %s in device commands", command.c_str());
             commandFound = true;
             break;
@@ -190,11 +190,11 @@ asynStatus ADXSPD::xspdCommand(string command) {
         return asynError;
     }
 
-    // Make a POST request to the XSPD API
-    string requestUri = this->apiUri + "/devices/" + this->deviceId + "/command?path=" + command;
-    DEBUG_ARGS("Sending POST request to %s", requestUri.c_str());
+    // Make a PUT request to the XSPD API
+    string requestUri = this->deviceUri + "command?path=" + command;
+    DEBUG_ARGS("Sending PUT request to %s", requestUri.c_str());
 
-    cpr::Response response = cpr::Post(cpr::Url(requestUri));
+    cpr::Response response = cpr::Put(cpr::Url(requestUri));
 
     if (response.status_code != 200) {
         ERR_ARGS("Failed to send command %s: %s", command.c_str(), response.error.message.c_str());
@@ -214,6 +214,7 @@ asynStatus ADXSPD::xspdCommand(string command) {
 void ADXSPD::acquireStart() {
     const char* functionName = "acquireStart";
     setIntegerParam(ADAcquire, 1);
+    xspdCommand(this->detectorId + "/start");
 }
 
 /**
@@ -222,6 +223,7 @@ void ADXSPD::acquireStart() {
 void ADXSPD::acquireStop() {
     const char* functionName = "acquireStop";
     setIntegerParam(ADAcquire, 0);
+    xspdCommand(this->detectorId + "/stop");
 }
 
 /**
@@ -233,10 +235,11 @@ void ADXSPD::acquisitionThread() {
     NDArray* pArray = nullptr;
     ADImageMode_t acquisitionMode;
     NDArrayInfo arrayInfo;
-    NDDataType_t dataType;
+    // TODO: Support other data types
+    NDDataType_t dataType = NDUInt16;  // XSPD produces 16-bit unsigned integer data
     NDColorMode_t colorMode = NDColorModeMono;  // Only monochrome is supported.
 
-    getIntegerParam(NDDataType, (int*) &dataType);
+    // getIntegerParam(NDDataType, (int*) &dataType);
     getIntegerParam(ADImageMode, (int*) &acquisitionMode);
 
     int dims[2];
@@ -249,54 +252,95 @@ void ADXSPD::acquisitionThread() {
         int targetNumImages;
         getIntegerParam(ADNumImages, &targetNumImages);
         // Get a new frame using the vendor SDK here here
+        vector<zmq_msg_t> frameMessages;
+        int more;
+        size_t moreSize = sizeof(more);
+        do {
+            zmq_msg_t messagePart;
+            zmq_msg_init(&messagePart);
 
-        // Allocate the NDArray of the correct size
-        this->pArrays[0] = pNDArrayPool->alloc(2, (size_t*) dims, dataType, 0, NULL);
-        if (this->pArrays[0] != NULL) {
-            pArray = this->pArrays[0];
+            int rc = zmq_msg_recv(&messagePart, this->zmqSubscriber, 0);
+            if (rc == -1) {
+                ERR("Failed to receive ZMQ message");
+                break;
+            }
+
+            frameMessages.push_back(messagePart);
+            printf("Received message part of size %zu\n", zmq_msg_size(&messagePart));
+
+            zmq_getsockopt(this->zmqSubscriber, ZMQ_RCVMORE, &more, &moreSize);
+        } while (more);
+
+        if (frameMessages.size() != 3) {
+            ERR_ARGS("Expected 3 message parts for frame, got %zu", frameMessages.size());
+            continue;
         } else {
-            this->pArrays[0]->release();
-            ERR("Failed to allocate array!");
-            setIntegerParam(ADStatus, ADStatusError);
-            callParamCallbacks();
-            break;
+
+            uint16_t frameNumber = *((uint16_t*) zmq_msg_data(&frameMessages[1]));
+            uint16_t triggerNumber = *((uint16_t*) zmq_msg_data(&frameMessages[1]) + 1);
+            uint16_t statusCode = *((uint16_t*) zmq_msg_data(&frameMessages[1]) + 2);
+            uint16_t size = *((uint16_t*) zmq_msg_data(&frameMessages[1]) + 3);
+
+            DEBUG_ARGS("Received frame number %d, trigger number %d, status code %d, size %d",
+                       frameNumber, triggerNumber, statusCode, size);
+
+            // The third message part contains the frame data
+            // TODO: This assumes no compression; handle compressed data later
+            size_t frameSizeBytes = zmq_msg_size(&frameMessages[2]);
+
+            // Allocate the NDArray of the correct size
+            this->pArrays[0] = pNDArrayPool->alloc(2, (size_t*) dims, dataType, frameSizeBytes, NULL);
+            if (this->pArrays[0] != NULL) {
+                pArray = this->pArrays[0];
+            } else {
+                this->pArrays[0]->release();
+                ERR("Failed to allocate array!");
+                setIntegerParam(ADStatus, ADStatusError);
+                callParamCallbacks();
+                break;
+            }
+
+            collectedImages += 1;
+            setIntegerParam(ADNumImagesCounter, collectedImages);
+            updateTimeStamp(&pArray->epicsTS);
+
+            // Set array size PVs based on collected frame
+            pArray->getInfo(&arrayInfo);
+            setIntegerParam(NDArraySize, (int) arrayInfo.totalBytes);
+            setIntegerParam(NDArraySizeX, arrayInfo.xSize);
+            setIntegerParam(NDArraySizeY, arrayInfo.ySize);
+
+            // Copy data from new frame to pArray
+            // memcpy(pArray->pData, POINTER_TO_FRAME_DATA, arrayInfo.totalBytes);
+
+            // increment the array counter
+            int arrayCounter;
+            getIntegerParam(NDArrayCounter, &arrayCounter);
+            arrayCounter++;
+            setIntegerParam(NDArrayCounter, arrayCounter);
+
+            // set the image unique ID to the number in the sequence
+            pArray->uniqueId = arrayCounter;
+            pArray->pAttributeList->add("ColorMode", "Color Mode", NDAttrInt32, &colorMode);
+
+            getAttributes(pArray->pAttributeList);
+            doCallbacksGenericPointer(pArray, NDArrayData, 0);
+
+            // If in single mode, finish acq, if in multiple mode and reached target number
+            // complete acquisition.
+            if (acquisitionMode == ADImageSingle ||
+                acquisitionMode == ADImageMultiple && collectedImages == targetNumImages) {
+                acquireStop();
+                collectedImages = 0;
+            }
+            // Release the array
+            pArray->release();
         }
 
-        collectedImages += 1;
-        setIntegerParam(ADNumImagesCounter, collectedImages);
-        updateTimeStamp(&pArray->epicsTS);
-
-        // Set array size PVs based on collected frame
-        pArray->getInfo(&arrayInfo);
-        setIntegerParam(NDArraySize, (int) arrayInfo.totalBytes);
-        setIntegerParam(NDArraySizeX, arrayInfo.xSize);
-        setIntegerParam(NDArraySizeY, arrayInfo.ySize);
-
-        // Copy data from new frame to pArray
-        // memcpy(pArray->pData, POINTER_TO_FRAME_DATA, arrayInfo.totalBytes);
-
-        // increment the array counter
-        int arrayCounter;
-        getIntegerParam(NDArrayCounter, &arrayCounter);
-        arrayCounter++;
-        setIntegerParam(NDArrayCounter, arrayCounter);
-
-        // set the image unique ID to the number in the sequence
-        pArray->uniqueId = arrayCounter;
-        pArray->pAttributeList->add("ColorMode", "Color Mode", NDAttrInt32, &colorMode);
-
-        getAttributes(pArray->pAttributeList);
-        doCallbacksGenericPointer(pArray, NDArrayData, 0);
-
-        // If in single mode, finish acq, if in multiple mode and reached target number
-        // complete acquisition.
-        if (acquisitionMode == ADImageSingle ||
-            acquisitionMode == ADImageMultiple && collectedImages == targetNumImages) {
-            acquireStop();
-            collectedImages = 0;
+        // Release ZMQ messages
+        for (auto& msgPart : frameMessages) {
+            zmq_msg_close(&msgPart);
         }
-        // Release the array
-        pArray->release();
 
         // refresh all PVs
         callParamCallbacks();
@@ -319,7 +363,10 @@ void ADXSPD::monitorThread() {
     const char* functionName = "monitorThread";
 
     while (this->alive) {
-        string status = xspdGetVar<string>("status");
+        // string status = xspdGetVar<string>("status");
+        // TODO: Fix this when we figure out why response is a list
+        string status = xspdGet(this->deviceVarUri + "status")[0]["value"].get<string>();
+        DEBUG_ARGS("Device status: %s", status.c_str());
         if (status.compare("connected")) {
             setIntegerParam(ADStatus, ADStatusInitializing);
         } else if (status.compare("ready")) {
@@ -335,6 +382,48 @@ void ADXSPD::monitorThread() {
         epicsThreadSleep(1.0);
         callParamCallbacks();
     }
+    callParamCallbacks();
+}
+
+void ADXSPD::checkOnOffVariable(string endpoint, int paramIndex) {
+    const char* functionName = "checkOnOffVariable";
+
+    string value = xspdGetVar<string>(endpoint);
+    if (value == "ON") {
+        setIntegerParam(paramIndex, ADXSPD_ON);
+    } else {
+        setIntegerParam(paramIndex, ADXSPD_OFF);
+    }
+}
+
+void ADXSPD::getDetectorConfiguration(){
+    const char* functionName = "getDetectorConfiguration";
+
+    // setDoubleParam(ADXSPD_ShutterTime, xspdGetVar<double>(this->detectorId + "/shutter_time"));
+    // setIntegerParam(ADXSPD_SummedFrames, xspdGetVar<int>(this->detectorId + "/summed_frames"));
+    // setIntegerParam(ADXSPD_ROIRows, xspdGetVar<int>(this->detectorId + "/roi_rows"));
+    setIntegerParam(ADNumImages, xspdGetVar<int>(this->detectorId + "/n_frames"));
+    setIntegerParam(ADXSPD_CompressLevel, xspdGetVar<int>(this->detectorId + "/compression_level"));
+    setDoubleParam(ADXSPD_BeamEnergy, xspdGetVar<double>(this->detectorId + "/beam_energy"));
+
+    checkOnOffVariable(this->detectorId + "/gating_mode", ADXSPD_GatingMode);
+    checkOnOffVariable(this->detectorId + "/flatfield_correction", ADXSPD_FFCorrection);
+    // checkOnOffVariable(this->detectorId + "/countrate_correction", ADXSPD_CountrateCorrection);
+    checkOnOffVariable(this->detectorId + "/charge_summing", ADXSPD_ChargeSumming);
+
+
+
+    string trigModeStr = xspdGetVar<string>(this->detectorId + "/trigger_mode");
+    if(trigModeStr == "EXT_FRAMES"){
+        setIntegerParam(ADXSPD_TriggerMode, (int) ADXSPD_TRIG_MODE_EXT_FRAMES);
+    } else if (trigModeStr == "EXT_SEQUENCE") {
+        setIntegerParam(ADXSPD_TriggerMode, (int) ADXSPD_TRIG_MODE_EXT_SEQUENCE);
+    } else {
+        setIntegerParam(ADXSPD_TriggerMode, (int) ADXSPD_TRIG_MODE_SOFTWARE);
+    }
+
+
+    callParamCallbacks();
 }
 
 //-------------------------------------------------------------------------
@@ -507,16 +596,14 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     }
 
     this->deviceId = requestedDevice["id"].get<string>();
+    this->deviceUri = this->apiUri + "/devices/" + this->deviceId + "/";
+    this->deviceVarUri = this->deviceUri + "variables?path=";
     setStringParam(ADSerialNumber, this->deviceId.c_str());
 
     INFO_ARGS("Retrieving info for device with ID %s...", this->deviceId.c_str());
 
-    json deviceInfo = xspdGet(this->apiUri + "/devices/" + this->deviceId);
-    if (deviceInfo.is_null() || deviceInfo.empty()) {
-        ERR_ARGS("Failed to get device info from %s",
-                 (this->apiUri + "/devices/" + this->deviceId).c_str());
-        return;
-    }
+    json deviceInfo = xspdGet(this->deviceUri);
+    if (deviceInfo.is_null() || deviceInfo.empty()) return;
 
     if(!deviceInfo.contains("system") || !deviceInfo["system"].contains("data-ports") || deviceInfo["system"]["data-ports"].empty()) {
         ERR_ARGS("No system/data-ports info found for device ID %s", this->deviceId.c_str());
@@ -534,8 +621,6 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     this->dataPortId = dataPortInfo["id"].get<string>();
     this->dataPortIp = dataPortInfo["ip"].get<string>();
     this->dataPortPort = dataPortInfo["port"].get<int>();
-    INFO_ARGS("Found data port w/ id %s bound to %s:%d", this->dataPortId.c_str(),
-              this->dataPortIp.c_str(), this->dataPortPort);
 
     this->zmqContext = zmq_ctx_new();
     this->zmqSubscriber = zmq_socket(this->zmqContext, ZMQ_SUB);
@@ -554,6 +639,9 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
                  this->dataPortIp.c_str(), this->dataPortPort);
         return;
     }
+
+    INFO_ARGS("Connected to data port zmq socket at %s:%d", this->dataPortIp.c_str(),
+              this->dataPortPort);
 
     json info = xspdGetVar<json>("info");
     if (info.empty() || !info.contains("detectors") || info["detectors"].empty()) {

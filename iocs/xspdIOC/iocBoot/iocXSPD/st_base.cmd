@@ -28,6 +28,7 @@ ADXSPDConfig("$(PORT)", "http://localhost:8008")
 # epicsThreadSleep(3)
 
 dbLoadRecords("$(ADXSPD)/db/ADXSPD.template","P=$(PREFIX),R=cam1:,PORT=$(PORT),ADDR=0,TIMEOUT=1")
+dbLoadRecords("$(ADXSPD)/db/ADXSPDModule.template", "P=$(PREFIX), R=cam1:,PORT=$(PORT),MODULE=0,ADDR=0,TIMEOUT=1")
 
 # Load all other plugins using commonPlugins.cmd
 < $(ADCORE)/iocBoot/commonPlugins.cmd

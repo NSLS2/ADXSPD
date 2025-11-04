@@ -198,11 +198,16 @@ class ADXSPD : ADDriver {
     void acquireStop();
     vector<ADXSPDModule*> modules;
 
-    std::string apiUri;      // IP address and port for the device
-    std::string deviceId;    // Device ID for the XSPD device
-    std::string detectorId;  // Detector ID
-    std::string dataPortId;
-    std::string dataPortIp;
+    void getDetectorConfiguration();
+    void checkOnOffVariable(string endpoint, int paramIndex);
+
+    string apiUri;      // IP address and port for the device
+    string deviceUri;   // Base URI for the device
+    string deviceVarUri; // Base URI for device variables
+    string deviceId;    // Device ID for the XSPD device
+    string detectorId;  // Detector ID
+    string dataPortId;
+    string dataPortIp;
     int dataPortPort;
 
     ADXSPD_LogLevel_t logLevel = ADXSPD_LOG_LEVEL_DEBUG;  // Logging level for the driver
