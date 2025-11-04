@@ -263,6 +263,7 @@ asynStatus ADXSPD::xspdCommand(string command) {
  */
 void ADXSPD::acquireStart() {
     setIntegerParam(ADAcquire, 1);
+    setIntegerParam(ADNumImagesCounter, 0);
     xspdCommand(this->detectorId + "/start");
 }
 
@@ -289,15 +290,17 @@ void ADXSPD::acquisitionThread() {
     // getIntegerParam(NDDataType, (int*) &dataType);
     getIntegerParam(ADImageMode, (int*) &acquisitionMode);
 
-    int dims[2];
-    getIntegerParam(ADSizeX, &dims[0]);
-    getIntegerParam(ADSizeY, &dims[1]);
+    size_t dims[2];
+    getIntegerParam(ADSizeX, (int*) &dims[0]);
+    getIntegerParam(ADSizeY, (int*) &dims[1]);
 
-    int collectedImages = 0;
+    int collectedImages;
 
     while (this->alive) {
         int targetNumImages;
         getIntegerParam(ADNumImages, &targetNumImages);
+        getIntegerParam(ADNumImagesCounter, &collectedImages);
+
         // Get a new frame using the vendor SDK here here
         vector<zmq_msg_t> frameMessages;
         int more;
@@ -338,7 +341,7 @@ void ADXSPD::acquisitionThread() {
             getIntegerParam(NDDataType, (int*) &dataType);
 
             // Allocate the NDArray of the correct size
-            this->pArrays[0] = pNDArrayPool->alloc(2, (size_t*) dims, dataType, frameSizeBytes, zmq_msg_data(&frameMessages[2]));
+            this->pArrays[0] = pNDArrayPool->alloc(2, (size_t*) dims, dataType, frameSizeBytes, NULL);
 
             if (this->pArrays[0] != NULL) {
                 pArray = this->pArrays[0];
@@ -361,7 +364,7 @@ void ADXSPD::acquisitionThread() {
             setIntegerParam(NDArraySizeY, arrayInfo.ySize);
 
             // Copy data from new frame to pArray
-            // memcpy(pArray->pData, POINTER_TO_FRAME_DATA, arrayInfo.totalBytes);
+            memcpy(pArray->pData, zmq_msg_data(&frameMessages[2]), arrayInfo.totalBytes);
 
             // increment the array counter
             int arrayCounter;
@@ -381,7 +384,6 @@ void ADXSPD::acquisitionThread() {
             if (acquisitionMode == ADImageSingle ||
                 (acquisitionMode == ADImageMultiple && collectedImages == targetNumImages)) {
                 acquireStop();
-                collectedImages = 0;
             }
             // Release the array
             pArray->release();
