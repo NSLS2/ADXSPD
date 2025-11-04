@@ -71,7 +71,9 @@ json ADXSPD::xspdGet(string uri) {
 
     DEBUG_ARGS("Sending GET request to %s", uri.c_str());
 
+    this->lock();
     cpr::Response response = cpr::Get(cpr::Url(uri));
+    this->unlock();
 
     if (response.status_code != 200) {
         ERR_ARGS("Failed to get data from %s: %s", uri.c_str(), response.error.message.c_str());
@@ -172,7 +174,10 @@ T ADXSPD::xspdSetVar(string endpoint, T value, string rbKey) {
     DEBUG_ARGS("Sending PUT request to %s with value %s", requestUri.c_str(),
                to_string(value).c_str());
 
+    this->lock();
     cpr::Response response = cpr::Put(cpr::Url(requestUri));
+    this->unlock();
+
     json respJson = json::parse(response.text, nullptr, true, false, true);
 
     if (response.status_code != 200) {
@@ -232,7 +237,9 @@ asynStatus ADXSPD::xspdCommand(string command) {
     string requestUri = this->deviceUri + "command?path=" + command;
     DEBUG_ARGS("Sending PUT request to %s", requestUri.c_str());
 
+    this->lock();
     cpr::Response response = cpr::Put(cpr::Url(requestUri));
+    this->unlock();
 
     if (response.status_code != 200) {
         ERR_ARGS("Failed to send command %s: %s", command.c_str(), response.error.message.c_str());
@@ -252,7 +259,9 @@ asynStatus ADXSPD::xspdCommand(string command) {
 void ADXSPD::acquireStart() {
     setIntegerParam(ADAcquire, 1);
     setIntegerParam(ADNumImagesCounter, 0);
+    callParamCallbacks();
     xspdCommand(this->detectorId + "/start");
+
 }
 
 /**
@@ -271,11 +280,8 @@ void ADXSPD::acquisitionThread() {
     ADImageMode_t acquisitionMode;
     NDArrayInfo arrayInfo;
     // TODO: Support other data types
-    NDDataType_t dataType;                      // XSPD produces 16-bit unsigned integer data
+    NDDataType_t dataType;
     NDColorMode_t colorMode = NDColorModeMono;  // Only monochrome is supported.
-
-    // getIntegerParam(NDDataType, (int*) &dataType);
-    getIntegerParam(ADImageMode, (int*) &acquisitionMode);
 
     size_t dims[2];
     getIntegerParam(ADSizeX, (int*) &dims[0]);
@@ -283,10 +289,27 @@ void ADXSPD::acquisitionThread() {
 
     int collectedImages;
 
+    void* zmqSubscriber = zmq_socket(this->zmqContext, ZMQ_SUB);
+    int rc = zmq_connect(
+        zmqSubscriber,
+        (string("tcp://") + this->dataPortIp + ":" + to_string(this->dataPortPort)).c_str());
+    if (rc != 0) {
+        ERR_ARGS("Failed to connect to data port zmq socket at %s:%d", this->dataPortIp.c_str(),
+                 this->dataPortPort);
+        return;
+    }
+    // Subscribe to all messages
+    rc = zmq_setsockopt(zmqSubscriber, ZMQ_SUBSCRIBE, "", 0);
+    if (rc != 0) {
+        ERR_ARGS("Failed to set zmq socket options for data port at %s:%d",
+                 this->dataPortIp.c_str(), this->dataPortPort);
+        return;
+    }
+
+    INFO_ARGS("Connected to data port zmq socket at %s:%d", this->dataPortIp.c_str(),
+              this->dataPortPort);
+
     while (this->alive) {
-        int targetNumImages;
-        getIntegerParam(ADNumImages, &targetNumImages);
-        getIntegerParam(ADNumImagesCounter, &collectedImages);
 
         // Get a new frame using the vendor SDK here here
         vector<zmq_msg_t> frameMessages;
@@ -296,8 +319,18 @@ void ADXSPD::acquisitionThread() {
             zmq_msg_t messagePart;
             zmq_msg_init(&messagePart);
 
-            int rc = zmq_msg_recv(&messagePart, this->zmqSubscriber, 0);
+            int rc = zmq_msg_recv(&messagePart, zmqSubscriber, 0);
             if (rc == -1) {
+                if (errno == ETERM) {
+                    // Context terminated, exit thread
+                    INFO("ZMQ context terminated, exiting acquisition thread...");
+                    zmq_msg_close(&messagePart);
+                    for(auto& msgPart : frameMessages) {
+                        zmq_msg_close(&msgPart);
+                    }
+                    zmq_close(zmqSubscriber);
+                    return;
+                }
                 ERR("Failed to receive ZMQ message");
                 break;
             }
@@ -305,8 +338,14 @@ void ADXSPD::acquisitionThread() {
             frameMessages.push_back(messagePart);
             printf("Received message part of size %zu\n", zmq_msg_size(&messagePart));
 
-            zmq_getsockopt(this->zmqSubscriber, ZMQ_RCVMORE, &more, &moreSize);
+            zmq_getsockopt(zmqSubscriber, ZMQ_RCVMORE, &more, &moreSize);
         } while (more);
+
+        getIntegerParam(ADImageMode, (int*) &acquisitionMode);
+
+        int targetNumImages;
+        getIntegerParam(ADNumImages, &targetNumImages);
+        getIntegerParam(ADNumImagesCounter, &collectedImages);
 
         if (frameMessages.size() != 3) {
             ERR_ARGS("Expected 3 message parts for frame, got %zu", frameMessages.size());
@@ -386,7 +425,10 @@ void ADXSPD::acquisitionThread() {
         callParamCallbacks();
     }
 
-    callParamCallbacks();
+    if(zmqSubscriber != nullptr) {
+        INFO("Closing zmq subscriber socket...");
+        zmq_close(zmqSubscriber);
+    }
 }
 
 /**
@@ -394,10 +436,18 @@ void ADXSPD::acquisitionThread() {
  */
 void ADXSPD::monitorThread() {
     while (this->alive) {
-        setIntegerParam(ADStatus, static_cast<int>(xspdGetDetEnumVar<ADXSPDStatus>("status")));
+        ADXSPDStatus status =
+            xspdGetDetEnumVar<ADXSPDStatus>("status");
+        setIntegerParam(ADStatus, static_cast<int>(status));
 
-        for (auto& module : this->modules) {
-            module->checkStatus();
+        if (status != ADXSPDStatus::BUSY) {
+            // Lock the driver here, so we can't start
+            // an acquisition while reading module statuses
+            this->lock();
+            for (auto& module : this->modules) {
+                module->checkStatus();
+            }
+            this->unlock();
         }
 
         // TODO: Allow for setting the polling interval via a PV
@@ -422,7 +472,7 @@ NDDataType_t ADXSPD::getDataTypeForBitDepth(int bitDepth) {
 }
 
 void ADXSPD::getInitialDetState() {
-    setDoubleParam(ADAcquireTime, xspdGetDetVar<double>("shutter_time"));
+    setDoubleParam(ADAcquireTime, xspdGetDetVar<double>("shutter_time") / 1000.0);  // XSPD API uses milliseconds
     setIntegerParam(ADXSPD_SummedFrames, xspdGetDetVar<int>("summed_frames"));
     setIntegerParam(ADXSPD_RoiRows, xspdGetDetVar<int>("roi_rows"));
 
@@ -583,7 +633,8 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
     }
 
     if (function == ADAcquireTime) {
-        actualValue = xspdSetDetVar<double>("shutter_time", value);
+        actualValue = xspdSetDetVar<double>("shutter_time", value * 1000.0) /
+                      1000.0;  // XSPD API uses milliseconds
         setDoubleParam(ADAcquireTime, actualValue);
     } else {
         if (function < ADXSPD_FIRST_PARAM) {
@@ -718,25 +769,6 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     this->dataPortPort = dataPortInfo["port"].get<int>();
 
     this->zmqContext = zmq_ctx_new();
-    this->zmqSubscriber = zmq_socket(this->zmqContext, ZMQ_SUB);
-    int rc = zmq_connect(
-        this->zmqSubscriber,
-        (string("tcp://") + this->dataPortIp + ":" + to_string(this->dataPortPort)).c_str());
-    if (rc != 0) {
-        ERR_ARGS("Failed to connect to data port zmq socket at %s:%d", this->dataPortIp.c_str(),
-                 this->dataPortPort);
-        return;
-    }
-    // Subscribe to all messages
-    rc = zmq_setsockopt(this->zmqSubscriber, ZMQ_SUBSCRIBE, "", 0);
-    if (rc != 0) {
-        ERR_ARGS("Failed to set zmq socket options for data port at %s:%d",
-                 this->dataPortIp.c_str(), this->dataPortPort);
-        return;
-    }
-
-    INFO_ARGS("Connected to data port zmq socket at %s:%d", this->dataPortIp.c_str(),
-              this->dataPortPort);
 
     json info = xspdGetVar<json>("info");
     if (info.empty() || !info.contains("detectors") || info["detectors"].empty()) {
@@ -793,23 +825,28 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
 ADXSPD::~ADXSPD() {
     INFO("Shutting down ADXSPD driver...");
 
-    this->alive = false;
-    if (this->acquisitionThreadId != NULL) {
-        INFO("Waiting for acquisition thread to join...");
-        epicsThreadMustJoin(this->acquisitionThreadId);
+    int acquiring;
+    getIntegerParam(ADAcquire, &acquiring);
+    if (acquiring) {
+        INFO("Stopping acquisition...");
+        acquireStop();
     }
+
+    this->alive = false;
+
     if (this->monitorThreadId != NULL) {
         INFO("Waiting for monitoring thread to join...");
         epicsThreadMustJoin(this->monitorThreadId);
-    }
-    if (this->zmqSubscriber != NULL) {
-        INFO("Closing zmq subscriber socket...");
-        zmq_close(this->zmqSubscriber);
     }
 
     if (this->zmqContext != NULL) {
         INFO("Destroying zmq context...");
         zmq_ctx_destroy(this->zmqContext);
+    }
+
+    if (this->acquisitionThreadId != NULL) {
+        INFO("Waiting for acquisition thread to join...");
+        epicsThreadMustJoin(this->acquisitionThreadId);
     }
 
     for (auto& module : this->modules) {

@@ -196,7 +196,6 @@ class ADXSPD : ADDriver {
     epicsThreadId monitorThreadId;
 
     void* zmqContext;
-    void* zmqSubscriber;
 
     void acquireStart();
     void acquireStop();
