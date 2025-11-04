@@ -206,7 +206,7 @@ T ADXSPD::xspdSetEnumVar(string endpoint, T value, string rbKey) {
         ERR_ARGS("Failed to convert enum value to string for variable %s", endpoint.c_str());
         return T(0);
     }
-    string rbAsStr = xspdSetVar<string>(endpoint, enumString, rbKey);
+    string rbAsStr = xspdSetVar<string>(endpoint, string(enumString), rbKey);
 
     auto enumValue = magic_enum::enum_cast<T>(rbAsStr, magic_enum::case_insensitive);
     if (enumValue.has_value()) {
@@ -595,6 +595,44 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             setIntegerParam(ADImageMode, ADImageMultiple);
     } else if (function < ADXSPD_FIRST_PARAM) {
         status = ADDriver::writeInt32(pasynUser, value);
+    } else {
+        int actualValue;
+        string endpoint;
+        if(function == ADXSPD_BitDepth) {
+            actualValue = xspdSetDetVar<int>("bit_depth", value);
+        } else if(function == ADXSPD_SummedFrames) {
+            actualValue = xspdSetDetVar<int>("summed_frames", value);
+        } else if(function == ADXSPD_RoiRows) {
+            actualValue = xspdSetDetVar<int>("roi_rows", value);
+        } else if(function == ADXSPD_CompressLevel) {
+            actualValue = xspdSetDetVar<int>("compression_level", value);
+        } else if(function == ADXSPD_GatingMode) {
+            actualValue = xspdSetDetVar<int>("gating_mode", value);
+            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDOnOff>("gating_mode", static_cast<ADXSPDOnOff>(value)));
+        } else if(function == ADXSPD_FFCorrection) {
+            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDOnOff>("flatfield_correction", static_cast<ADXSPDOnOff>(value)));
+        } else if(function == ADXSPD_ChargeSumming) {
+            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDOnOff>("charge_summing", static_cast<ADXSPDOnOff>(value)));
+        } else if(function == ADTriggerMode) {
+            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDTrigMode>("trigger_mode", static_cast<ADXSPDTrigMode>(value)));
+        } else if(function == ADXSPD_CrCorr) {
+            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDOnOff>("countrate_correction", static_cast<ADXSPDOnOff>(value)));
+        } else if(function == ADXSPD_CounterMode) {
+            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDCounterMode>("counter_mode", static_cast<ADXSPDCounterMode>(value)));
+        } else if(function == ADXSPD_SaturationFlag) {
+            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDOnOff>("saturation_flag", static_cast<ADXSPDOnOff>(value)));
+        } else if(function == ADXSPD_ShuffleMode) {
+            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDShuffleMode>("shuffle_mode", static_cast<ADXSPDShuffleMode>(value)));
+        } else {
+            WARN_ARGS("Unhandled parameter write event for param %s", paramName);
+            return asynError;
+        }
+
+        setIntegerParam(function, actualValue);
+        if(actualValue != value) {
+            WARN_ARGS("Requested value %d for parameter %s, but set value is %d", value, paramName, actualValue);
+            status = asynError;
+        }
     }
     callParamCallbacks();
 
@@ -605,6 +643,55 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
         DEBUG_ARGS("parameter=%s value=%d", paramName, value);
         return asynSuccess;
     }
+}
+
+
+double ADXSPD::setThreshold(ADXSPDThreshold threshold, double value) {
+
+    string thresholdName = (threshold == ADXSPDThreshold::LOW) ? "Low" : "High";
+
+    vector<double> thresholds = xspdGetDetVar<vector<double>>("thresholds");
+    if (thresholds.size() == 0 && threshold != ADXSPDThreshold::LOW) {
+        ERR("Must set low threshold before setting high threshold");
+        return 0.0;
+    }
+
+    switch(thresholds.size()) {
+        case 2:
+            thresholds[static_cast<int>(threshold)] = value;
+            break;
+        case 1:
+            if (threshold == ADXSPDThreshold::LOW) {
+                thresholds[0] = value;
+            } else {
+                thresholds.push_back(value);
+            }
+            break;
+        case 0:
+            thresholds.push_back(value);
+            break;
+        default:
+            break;
+    }
+
+    string thresholdsStr = "";
+    for (size_t i = 0; i < thresholds.size(); i++) {
+        thresholdsStr += to_string(thresholds[i]);
+        if (i < thresholds.size() - 1) {
+            thresholdsStr += ",";
+        }
+    }
+
+    // Thresholds set as comma-separated string, read as vector<double>
+    string rbThresholdsStr = xspdSetDetVar<string>("thresholds", thresholdsStr, "thresholds");
+    vector<double> rbThresholds = json::parse(rbThresholdsStr.c_str()).get<vector<double>>();
+
+    if(rbThresholds.size() <= static_cast<size_t>(threshold)) {
+        ERR_ARGS("Failed to set %s threshold, readback size is less than expected", thresholdName.c_str());
+        return 0.0;
+    }
+
+    return rbThresholds[static_cast<size_t>(threshold)];
 }
 
 /*
@@ -636,11 +723,29 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
         actualValue = xspdSetDetVar<double>("shutter_time", value * 1000.0) /
                       1000.0;  // XSPD API uses milliseconds
         setDoubleParam(ADAcquireTime, actualValue);
+    } else if (function < ADXSPD_FIRST_PARAM) {
+        status = ADDriver::writeFloat64(pasynUser, value);
     } else {
-        if (function < ADXSPD_FIRST_PARAM) {
-            status = ADDriver::writeFloat64(pasynUser, value);
+        double actualValue;
+        string endpoint;
+        if(function == ADXSPD_BeamEnergy) {
+            endpoint = "beam_energy";
+            actualValue = xspdSetDetVar<double>(endpoint, value);
+        } else if(function == ADXSPD_LowThreshold) {
+            double actualValue = setThreshold(ADXSPDThreshold::LOW, value);
+        } else if(function == ADXSPD_HighThreshold) {
+            double actualValue = setThreshold(ADXSPDThreshold::HIGH, value);
+        } else {
+            WARN_ARGS("Unhandled parameter write event for param %s", paramName);
+            return asynError;
+        }
+        setDoubleParam(function, actualValue);
+        if(actualValue != value) {
+            WARN_ARGS("Requested value %f for parameter %s, but set value is %f", value, paramName, actualValue);
+            status = asynError;
         }
     }
+
     callParamCallbacks();
 
     if (status) {

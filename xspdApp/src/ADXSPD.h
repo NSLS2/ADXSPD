@@ -125,6 +125,11 @@ enum class ADXSPDStatus {
     BUSY = ADStatusAcquire,
 };
 
+enum class ADXSPDThreshold {
+    LOW = 0,
+    HIGH = 1,
+};
+
 class ADXSPDModule;  // Forward declaration of module class
 
 /*
@@ -203,6 +208,8 @@ class ADXSPD : ADDriver {
 
     void getInitialDetState();
     NDDataType_t getDataTypeForBitDepth(int bitDepth);
+
+    double setThreshold(ADXSPDThreshold thresholdType, double value);
 
     string apiUri;        // IP address and port for the device
     string deviceUri;     // Base URI for the device
