@@ -11,16 +11,14 @@
 
 template <typename T>
 T ADXSPDModule::xspdGetModuleVar(string endpoint, string key) {
-
     string fullVarEndpoint = this->moduleId + "/" + endpoint;
     return this->parent->xspdGetVar<T>(fullVarEndpoint, key);
 }
 
 template <typename T>
 T ADXSPDModule::xspdGetModuleEnumVar(string endpoint, string key) {
-
     string resp = xspdGetModuleVar<string>(endpoint, key);
-    if(resp.empty()) {
+    if (resp.empty()) {
         ERR_ARGS("Failed to get module enum variable %s", endpoint.c_str());
         return T(0);
     }
@@ -29,14 +27,12 @@ T ADXSPDModule::xspdGetModuleEnumVar(string endpoint, string key) {
     if (enumValue.has_value()) {
         return enumValue.value();
     } else {
-        ERR_ARGS("Failed to cast value %s to enum for variable %s",
-                 resp.c_str(), endpoint.c_str());
+        ERR_ARGS("Failed to cast value %s to enum for variable %s", resp.c_str(), endpoint.c_str());
         return T(0);
     }
 }
 
 void ADXSPDModule::checkStatus() {
-
     // Example: Read module temperature and update parameter
     setDoubleParam(ADXSPDModule_SensCurr, xspdGetModuleVar<double>("sensor_current"));
 
@@ -52,15 +48,16 @@ void ADXSPDModule::checkStatus() {
 }
 
 void ADXSPDModule::getInitialModuleState() {
-
     this->checkStatus();
 
     // Compression settings
     setIntegerParam(ADXSPDModule_CompressLevel, xspdGetModuleVar<int>("compression_level"));
-    setIntegerParam(ADXSPDModule_Compressor, (int) xspdGetModuleEnumVar<ADXSPDCompressor>("compressor"));
+    setIntegerParam(ADXSPDModule_Compressor,
+                    (int) xspdGetModuleEnumVar<ADXSPDCompressor>("compressor"));
 
     setStringParam(ADXSPDModule_FfStatus, xspdGetModuleVar<string>("flatfield_status").c_str());
-    setIntegerParam(ADXSPDModule_InterpMode, (int) xspdGetModuleEnumVar<ADXSPDOnOff>("interpolation"));
+    setIntegerParam(ADXSPDModule_InterpMode,
+                    (int) xspdGetModuleEnumVar<ADXSPDOnOff>("interpolation"));
 
     setIntegerParam(ADXSPDModule_NumCons, xspdGetModuleVar<int>("n_connectors"));
 
@@ -106,7 +103,6 @@ void ADXSPDModule::getInitialModuleState() {
     // }
 
     callParamCallbacks();
-
 }
 
 int ADXSPDModule::getMaxNumImages() {
@@ -126,7 +122,9 @@ ADXSPDModule::ADXSPDModule(const char* portName, string moduleId, ADXSPD* parent
           0, /* asynFlags.  This driver does not block and it is not multi-device, so flag is 0 */
           1, /* Autoconnect */
           0, /* Default priority */
-          0), parent(parent), moduleId(moduleId) /* Default stack size*/
+          0),
+      parent(parent),
+      moduleId(moduleId) /* Default stack size*/
 {
     this->createAllParams();
 
@@ -134,6 +132,4 @@ ADXSPDModule::ADXSPDModule(const char* portName, string moduleId, ADXSPD* parent
     INFO_ARGS("Configured ADXSPDModule w/ port %s for module %s", portName, moduleId.c_str());
 }
 
-ADXSPDModule::~ADXSPDModule() {
-    INFO_ARGS("Destroying module %s", this->moduleId.c_str());
-}
+ADXSPDModule::~ADXSPDModule() { INFO_ARGS("Destroying module %s", this->moduleId.c_str()); }

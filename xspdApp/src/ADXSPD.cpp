@@ -74,8 +74,7 @@ json ADXSPD::xspdGet(string uri) {
     cpr::Response response = cpr::Get(cpr::Url(uri));
 
     if (response.status_code != 200) {
-        ERR_ARGS("Failed to get data from %s: %s", uri.c_str(),
-                 response.error.message.c_str());
+        ERR_ARGS("Failed to get data from %s: %s", uri.c_str(), response.error.message.c_str());
         return json();
     }
 
@@ -96,7 +95,6 @@ json ADXSPD::xspdGet(string uri) {
 
 template <typename T>
 T ADXSPD::xspdGetVar(string endpoint, string key) {
-
     string fullVarEndpoint = this->deviceVarUri + endpoint;
 
     json response = xspdGet(fullVarEndpoint);
@@ -107,14 +105,14 @@ T ADXSPD::xspdGetVar(string endpoint, string key) {
     } else {
         if (response.contains(key)) {
             if (is_enum<T>::value) {
-                ERR_ARGS("Cannot directly get enum type for variable %s, use xspdGetEnumVar instead",
-                         endpoint.c_str());
+                ERR_ARGS(
+                    "Cannot directly get enum type for variable %s, use xspdGetEnumVar instead",
+                    endpoint.c_str());
                 return T(0);
             }
             return response[key].get<T>();
         } else {
-            ERR_ARGS("Key %s not found in response for variable %s",
-                     key.c_str(), endpoint.c_str());
+            ERR_ARGS("Key %s not found in response for variable %s", key.c_str(), endpoint.c_str());
             return T();
         }
     }
@@ -122,9 +120,8 @@ T ADXSPD::xspdGetVar(string endpoint, string key) {
 
 template <typename T>
 T ADXSPD::xspdGetEnumVar(string endpoint, string key) {
-
     string resp = xspdGetVar<string>(endpoint, key);
-    if(resp.empty()) {
+    if (resp.empty()) {
         ERR_ARGS("Failed to get enum variable %s", endpoint.c_str());
         return T(0);
     }
@@ -133,15 +130,13 @@ T ADXSPD::xspdGetEnumVar(string endpoint, string key) {
     if (enumValue.has_value()) {
         return enumValue.value();
     } else {
-        ERR_ARGS("Failed to cast value %s to enum for variable %s",
-                 resp.c_str(), endpoint.c_str());
+        ERR_ARGS("Failed to cast value %s to enum for variable %s", resp.c_str(), endpoint.c_str());
         return T(0);
     }
 }
 
 template <typename T>
 T ADXSPD::xspdGetDetVar(string endpoint, string key) {
-
     string fullVarEndpoint = this->detectorId + "/" + endpoint;
 
     return xspdGetVar<T>(fullVarEndpoint, key);
@@ -149,16 +144,13 @@ T ADXSPD::xspdGetDetVar(string endpoint, string key) {
 
 template <typename T>
 T ADXSPD::xspdGetDetEnumVar(string endpoint, string key) {
-
     string fullVarEndpoint = this->detectorId + "/" + endpoint;
 
     return xspdGetEnumVar<T>(fullVarEndpoint, key);
 }
 
-
 template <typename T>
 T ADXSPD::xspdGetDataPortVar(string endpoint, string key) {
-
     string fullVarEndpoint = this->dataPortId + "/" + endpoint;
 
     return xspdGetVar<T>(fullVarEndpoint, key);
@@ -174,7 +166,6 @@ T ADXSPD::xspdGetDataPortVar(string endpoint, string key) {
 
 template <typename T>
 T ADXSPD::xspdSetVar(string endpoint, T value, string rbKey) {
-
     // Make a PUT request to the XSPD API
     string requestUri = this->apiUri + "/devices/" + this->deviceId +
                         "/variables?path=" + endpoint + "&value=" + to_string(value);
@@ -197,7 +188,6 @@ T ADXSPD::xspdSetVar(string endpoint, T value, string rbKey) {
 
 template <typename T>
 T ADXSPD::xspdSetDetVar(string endpoint, T value, string rbKey) {
-
     string fullVarEndpoint = this->deviceId + "/" + endpoint;
 
     return xspdSetVar<T>(fullVarEndpoint, value, rbKey);
@@ -205,7 +195,6 @@ T ADXSPD::xspdSetDetVar(string endpoint, T value, string rbKey) {
 
 template <typename T>
 T ADXSPD::xspdSetEnumVar(string endpoint, T value, string rbKey) {
-
     // Convert enum to string
     auto enumString = magic_enum::enum_name(value);
     if (enumString.empty()) {
@@ -218,14 +207,13 @@ T ADXSPD::xspdSetEnumVar(string endpoint, T value, string rbKey) {
     if (enumValue.has_value()) {
         return enumValue.value();
     } else {
-        ERR_ARGS("Failed to cast readback value %s to enum for variable %s",
-                 rbAsStr.c_str(), endpoint.c_str());
+        ERR_ARGS("Failed to cast readback value %s to enum for variable %s", rbAsStr.c_str(),
+                 endpoint.c_str());
         return T(0);
     }
 }
 
 asynStatus ADXSPD::xspdCommand(string command) {
-
     json commands = xspdGet(this->deviceUri + "commands");
     bool commandFound = false;
     for (auto& cmd : commands) {
@@ -241,7 +229,7 @@ asynStatus ADXSPD::xspdCommand(string command) {
     }
 
     // Make a PUT request to the XSPD API
-    string requestUri = this->deviceUri + "command?path=" +  command;
+    string requestUri = this->deviceUri + "command?path=" + command;
     DEBUG_ARGS("Sending PUT request to %s", requestUri.c_str());
 
     cpr::Response response = cpr::Put(cpr::Url(requestUri));
@@ -279,12 +267,11 @@ void ADXSPD::acquireStop() {
  * Main acquisition function for ADXSPD
  */
 void ADXSPD::acquisitionThread() {
-
     NDArray* pArray = nullptr;
     ADImageMode_t acquisitionMode;
     NDArrayInfo arrayInfo;
     // TODO: Support other data types
-    NDDataType_t dataType;  // XSPD produces 16-bit unsigned integer data
+    NDDataType_t dataType;                      // XSPD produces 16-bit unsigned integer data
     NDColorMode_t colorMode = NDColorModeMono;  // Only monochrome is supported.
 
     // getIntegerParam(NDDataType, (int*) &dataType);
@@ -325,7 +312,6 @@ void ADXSPD::acquisitionThread() {
             ERR_ARGS("Expected 3 message parts for frame, got %zu", frameMessages.size());
             continue;
         } else {
-
             uint16_t frameNumber = *((uint16_t*) zmq_msg_data(&frameMessages[1]));
             uint16_t triggerNumber = *((uint16_t*) zmq_msg_data(&frameMessages[1]) + 1);
             uint16_t statusCode = *((uint16_t*) zmq_msg_data(&frameMessages[1]) + 2);
@@ -335,13 +321,15 @@ void ADXSPD::acquisitionThread() {
             // TODO: This assumes no compression; handle compressed data later
             size_t frameSizeBytes = zmq_msg_size(&frameMessages[2]);
 
-            DEBUG_ARGS("Received frame number %d, trigger number %d, status code %d, size %d, %ld bytes",
-                       frameNumber, triggerNumber, statusCode, size, frameSizeBytes);
+            DEBUG_ARGS(
+                "Received frame number %d, trigger number %d, status code %d, size %d, %ld bytes",
+                frameNumber, triggerNumber, statusCode, size, frameSizeBytes);
 
             getIntegerParam(NDDataType, (int*) &dataType);
 
             // Allocate the NDArray of the correct size
-            this->pArrays[0] = pNDArrayPool->alloc(2, (size_t*) dims, dataType, frameSizeBytes, NULL);
+            this->pArrays[0] =
+                pNDArrayPool->alloc(2, (size_t*) dims, dataType, frameSizeBytes, NULL);
 
             if (this->pArrays[0] != NULL) {
                 pArray = this->pArrays[0];
@@ -401,7 +389,6 @@ void ADXSPD::acquisitionThread() {
     callParamCallbacks();
 }
 
-
 /**
  * @brief Main monitoring loop for ADXSPD
  */
@@ -420,7 +407,7 @@ void ADXSPD::monitorThread() {
 }
 
 NDDataType_t ADXSPD::getDataTypeForBitDepth(int bitDepth) {
-    switch(bitDepth) {
+    switch (bitDepth) {
         case 1:
         case 6:
             return NDUInt8;
@@ -434,9 +421,7 @@ NDDataType_t ADXSPD::getDataTypeForBitDepth(int bitDepth) {
     }
 }
 
-
-void ADXSPD::getInitialDetState(){
-
+void ADXSPD::getInitialDetState() {
     setDoubleParam(ADAcquireTime, xspdGetDetVar<double>("shutter_time"));
     setIntegerParam(ADXSPD_SummedFrames, xspdGetDetVar<int>("summed_frames"));
     setIntegerParam(ADXSPD_RoiRows, xspdGetDetVar<int>("roi_rows"));
@@ -444,25 +429,36 @@ void ADXSPD::getInitialDetState(){
     // Set ADNumImages and ADImageMode based on n_frames
     int numImages = xspdGetDetVar<int>("n_frames");
     setIntegerParam(ADNumImages, numImages);
-    if (numImages == 1) setIntegerParam(ADImageMode, ADImageSingle);
-    else setIntegerParam(ADImageMode, ADImageMultiple);
+    if (numImages == 1)
+        setIntegerParam(ADImageMode, ADImageSingle);
+    else
+        setIntegerParam(ADImageMode, ADImageMultiple);
 
     setIntegerParam(ADXSPD_CompressLevel, xspdGetDetVar<int>("compression_level"));
-    setIntegerParam(ADXSPD_Compressor, static_cast<int>(xspdGetDetEnumVar<ADXSPDCompressor>("compressor")));
+    setIntegerParam(ADXSPD_Compressor,
+                    static_cast<int>(xspdGetDetEnumVar<ADXSPDCompressor>("compressor")));
     setDoubleParam(ADXSPD_BeamEnergy, xspdGetDetVar<double>("beam_energy"));
-    setIntegerParam(ADXSPD_GatingMode, static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("gating_mode")));
-    setIntegerParam(ADXSPD_FFCorrection, static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("flatfield_correction")));
-    setIntegerParam(ADXSPD_ChargeSumming, static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("charge_summing")));
-    setIntegerParam(ADTriggerMode, static_cast<int>(xspdGetDetEnumVar<ADXSPDTrigMode>("trigger_mode")));
+    setIntegerParam(ADXSPD_GatingMode,
+                    static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("gating_mode")));
+    setIntegerParam(ADXSPD_FFCorrection,
+                    static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("flatfield_correction")));
+    setIntegerParam(ADXSPD_ChargeSumming,
+                    static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("charge_summing")));
+    setIntegerParam(ADTriggerMode,
+                    static_cast<int>(xspdGetDetEnumVar<ADXSPDTrigMode>("trigger_mode")));
 
     int bitDepth = xspdGetDetVar<int>("bit_depth");
     setIntegerParam(ADXSPD_BitDepth, bitDepth);
     setIntegerParam(NDDataType, static_cast<int>(getDataTypeForBitDepth(bitDepth)));
 
-    setIntegerParam(ADXSPD_CrCorr, static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("countrate_correction")));
-    setIntegerParam(ADXSPD_CounterMode, static_cast<int>(xspdGetDetEnumVar<ADXSPDCounterMode>("counter_mode")));
-    setIntegerParam(ADXSPD_SaturationFlag, static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("saturation_flag")));
-    setIntegerParam(ADXSPD_ShuffleMode, static_cast<int>(xspdGetDetEnumVar<ADXSPDShuffleMode>("shuffle_mode")));
+    setIntegerParam(ADXSPD_CrCorr,
+                    static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("countrate_correction")));
+    setIntegerParam(ADXSPD_CounterMode,
+                    static_cast<int>(xspdGetDetEnumVar<ADXSPDCounterMode>("counter_mode")));
+    setIntegerParam(ADXSPD_SaturationFlag,
+                    static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("saturation_flag")));
+    setIntegerParam(ADXSPD_ShuffleMode,
+                    static_cast<int>(xspdGetDetEnumVar<ADXSPDShuffleMode>("shuffle_mode")));
 
     setStringParam(ADModel, xspdGetDetVar<string>("type").c_str());
 
@@ -506,7 +502,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
     getParamName(function, &paramName);
 
     if (acquiring && find(this->onlyIdleParams.begin(), this->onlyIdleParams.end(), function) !=
-        this->onlyIdleParams.end()) {
+                         this->onlyIdleParams.end()) {
         ERR_ARGS("Cannot set parameter %s while acquiring", paramName);
         return asynError;
     }
@@ -519,7 +515,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             acquireStop();
         }
     } else if (function == ADImageMode) {
-        switch(value) {
+        switch (value) {
             case ADImageSingle:
                 setIntegerParam(ADNumImages, xspdSetDetVar<int>("n_frames", 1));
             case ADImageMultiple:
@@ -530,7 +526,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
                 ERR("Continuous acquisition is not supported!");
                 break;
         }
-    } else if (function == ADNumImages){
+    } else if (function == ADNumImages) {
         int maxNumImages = INT_MAX;
         for (auto& module : this->modules) {
             int moduleMax = module->getMaxNumImages();
@@ -543,8 +539,10 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             return asynError;
         }
         setIntegerParam(ADNumImages, xspdSetDetVar<int>("n_frames", value));
-        if (value == 1) setIntegerParam(ADImageMode, ADImageSingle);
-        else setIntegerParam(ADImageMode, ADImageMultiple);
+        if (value == 1)
+            setIntegerParam(ADImageMode, ADImageSingle);
+        else
+            setIntegerParam(ADImageMode, ADImageMultiple);
     } else if (function < ADXSPD_FIRST_PARAM) {
         status = ADDriver::writeInt32(pasynUser, value);
     }
@@ -579,7 +577,7 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
     getParamName(function, &paramName);
 
     if (acquiring && find(this->onlyIdleParams.begin(), this->onlyIdleParams.end(), function) !=
-        this->onlyIdleParams.end()) {
+                         this->onlyIdleParams.end()) {
         ERR_ARGS("Cannot set parameter %s while acquiring", paramName);
         return asynError;
     }
@@ -637,7 +635,7 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     // Sets driver version PV (version numbers defined in header file)
     char versionString[25];
     snprintf(versionString, sizeof(versionString), "%d.%d.%d", ADXSPD_VERSION, ADXSPD_REVISION,
-                  ADXSPD_MODIFICATION);
+             ADXSPD_MODIFICATION);
     setStringParam(NDDriverVersion, versionString);
 
     // Initialize vendor SDK and connect to the device here
@@ -700,7 +698,8 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     json deviceInfo = xspdGet(this->deviceUri);
     if (deviceInfo.is_null() || deviceInfo.empty()) return;
 
-    if(!deviceInfo.contains("system") || !deviceInfo["system"].contains("data-ports") || deviceInfo["system"]["data-ports"].empty()) {
+    if (!deviceInfo.contains("system") || !deviceInfo["system"].contains("data-ports") ||
+        deviceInfo["system"]["data-ports"].empty()) {
         ERR_ARGS("No system/data-ports info found for device ID %s", this->deviceId.c_str());
         return;
     }
@@ -708,7 +707,8 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     // Always use the first data port (i.e. image stitching xspd-side)
     json dataPortInfo = deviceInfo["system"]["data-ports"][0];
 
-    if (!dataPortInfo.contains("id") || !dataPortInfo.contains("ip") || !dataPortInfo.contains("port")) {
+    if (!dataPortInfo.contains("id") || !dataPortInfo.contains("ip") ||
+        !dataPortInfo.contains("port")) {
         ERR_ARGS("Incomplete data port info for device ID %s", this->deviceId.c_str());
         return;
     }
@@ -753,23 +753,20 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     setStringParam(ADModel, this->detectorId.c_str());
     setStringParam(ADSDKVersion, info["libxsp version"].get<string>().c_str());
 
-
-
     // Initialize our modules
     int numModules = detectorInfo["modules"].size();
     setIntegerParam(ADXSPD_NumModules, numModules);
-    for(int i = 0; i < numModules; i++) {
+    for (int i = 0; i < numModules; i++) {
         json moduleInfo = detectorInfo["modules"][i];
 
         // Set firmware version from first module
-        if(i == 0 && moduleInfo.contains("firmware")) setStringParam(ADFirmwareVersion, moduleInfo["firmware"].get<string>().c_str());
+        if (i == 0 && moduleInfo.contains("firmware"))
+            setStringParam(ADFirmwareVersion, moduleInfo["firmware"].get<string>().c_str());
 
         string moduleId = moduleInfo["module"].get<string>();
         string modulePortName = string(this->portName) + "_MOD" + to_string(i + 1);
-        INFO_ARGS("Initializing module %s on port %s", moduleId.c_str(),
-                  modulePortName.c_str());
-        this->modules.push_back(
-            new ADXSPDModule(modulePortName.c_str(), moduleId, this));
+        INFO_ARGS("Initializing module %s on port %s", moduleId.c_str(), modulePortName.c_str());
+        this->modules.push_back(new ADXSPDModule(modulePortName.c_str(), moduleId, this));
     }
 
     this->getInitialDetState();
@@ -794,7 +791,6 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
 }
 
 ADXSPD::~ADXSPD() {
-
     INFO("Shutting down ADXSPD driver...");
 
     this->alive = false;

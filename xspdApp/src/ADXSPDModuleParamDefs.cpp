@@ -27,12 +27,15 @@ void ADXSPDModule::createAllParams() {
     createParam(ADXSPDModule_RamAllocatedString, asynParamInt32, &ADXSPDModule_RamAllocated);
     createParam(ADXSPDModule_LowThreshFfString, asynParamOctet, &ADXSPDModule_LowThreshFf);
     createParam(ADXSPDModule_HighThreshFfString, asynParamOctet, &ADXSPDModule_HighThreshFf);
-    createParam(ADXSPDModule_LowThreshFfAuthorString, asynParamOctet, &ADXSPDModule_LowThreshFfAuthor);
-    createParam(ADXSPDModule_HighThreshFfAuthorString, asynParamOctet, &ADXSPDModule_HighThreshFfAuthor);
+    createParam(ADXSPDModule_LowThreshFfAuthorString, asynParamOctet,
+                &ADXSPDModule_LowThreshFfAuthor);
+    createParam(ADXSPDModule_HighThreshFfAuthorString, asynParamOctet,
+                &ADXSPDModule_HighThreshFfAuthor);
     createParam(ADXSPDModule_LowThreshFfErrString, asynParamOctet, &ADXSPDModule_LowThreshFfErr);
     createParam(ADXSPDModule_HighThreshFfErrString, asynParamOctet, &ADXSPDModule_HighThreshFfErr);
     createParam(ADXSPDModule_LowThreshFfDateString, asynParamOctet, &ADXSPDModule_LowThreshFfDate);
-    createParam(ADXSPDModule_HighThreshFfDateString, asynParamOctet, &ADXSPDModule_HighThreshFfDate);
+    createParam(ADXSPDModule_HighThreshFfDateString, asynParamOctet,
+                &ADXSPDModule_HighThreshFfDate);
     createParam(ADXSPDModule_FfStatusString, asynParamOctet, &ADXSPDModule_FfStatus);
     createParam(ADXSPDModule_FramesQueuedString, asynParamInt32, &ADXSPDModule_FramesQueued);
     createParam(ADXSPDModule_PixelMaskString, asynParamOctet, &ADXSPDModule_PixelMask);

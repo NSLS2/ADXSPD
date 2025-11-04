@@ -20,7 +20,6 @@
 #define ADXSPD_MODIFICATION 1
 
 #include <cpr/cpr.h>
-#include <magic_enum/magic_enum.hpp>
 #include <epicsExit.h>
 #include <epicsExport.h>
 #include <epicsStdio.h>
@@ -34,10 +33,11 @@
 #include <cstddef>
 #include <cstdio>
 #include <iostream>
-#include <type_traits>
+#include <magic_enum/magic_enum.hpp>
 #include <map>
 #include <nlohmann/json.hpp>
 #include <string>
+#include <type_traits>
 
 #include "ADDriver.h"
 #include "epicsThread.h"
@@ -190,7 +190,6 @@ class ADXSPD : ADDriver {
     const char* driverName = "ADXSPD";
     void createAllParams();
 
-
     bool alive = true;  // Flag to indicate whether our acquisition thread and monitor thread should
                         // keep running
     epicsThreadId acquisitionThreadId;
@@ -206,22 +205,18 @@ class ADXSPD : ADDriver {
     void getInitialDetState();
     NDDataType_t getDataTypeForBitDepth(int bitDepth);
 
-    string apiUri;      // IP address and port for the device
-    string deviceUri;   // Base URI for the device
-    string deviceVarUri; // Base URI for device variables
-    string deviceId;    // Device ID for the XSPD device
-    string detectorId;  // Detector ID
+    string apiUri;        // IP address and port for the device
+    string deviceUri;     // Base URI for the device
+    string deviceVarUri;  // Base URI for device variables
+    string deviceId;      // Device ID for the XSPD device
+    string detectorId;    // Detector ID
     string dataPortId;
     string dataPortIp;
     int dataPortPort;
 
     vector<int> onlyIdleParams = {
-        ADTriggerMode,
-        ADAcquireTime,
-        ADXSPD_BitDepth,
-        ADXSPD_Compressor,
-        ADXSPD_ShuffleMode,
-        ADXSPD_CounterMode,
+        ADTriggerMode,     ADAcquireTime,      ADXSPD_BitDepth,
+        ADXSPD_Compressor, ADXSPD_ShuffleMode, ADXSPD_CounterMode,
     };
 
     ADXSPDLogLevel logLevel = ADXSPDLogLevel::DEBUG;  // Logging level for the driver

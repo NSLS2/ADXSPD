@@ -50,7 +50,7 @@ class ADXSPDModule : public asynPortDriver {
 
    private:
     const char* driverName = "ADXSPDModule";
-    ADXSPD* parent;        // Pointer to the parent ADXSPD driver object
+    ADXSPD* parent;   // Pointer to the parent ADXSPD driver object
     string moduleId;  // Module ID string
     void createAllParams();
 
