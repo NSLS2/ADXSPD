@@ -20,7 +20,7 @@ void ADXSPD::createAllParams() {
     createParam(ADXSPD_GenerateFlatfieldString, asynParamInt32, &ADXSPD_GenerateFlatfield);
     createParam(ADXSPD_FlatfieldStatusString, asynParamOctet, &ADXSPD_FlatfieldStatus);
     createParam(ADXSPD_ShuffleModeString, asynParamInt32, &ADXSPD_ShuffleMode);
-    createParam(ADXSPD_SummedFramesString, asynParamFloat64, &ADXSPD_SummedFrames);
+    createParam(ADXSPD_SummedFramesString, asynParamInt32, &ADXSPD_SummedFrames);
     createParam(ADXSPD_RoiRowsString, asynParamInt32, &ADXSPD_RoiRows);
     createParam(ADXSPD_LowThresholdString, asynParamFloat64, &ADXSPD_LowThreshold);
     createParam(ADXSPD_HighThresholdString, asynParamFloat64, &ADXSPD_HighThreshold);

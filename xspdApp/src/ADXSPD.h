@@ -169,7 +169,16 @@ class ADXSPD : ADDriver {
     T xspdGetDataPortVar(string endpoint, string key = "value");
 
     template <typename T>
-    asynStatus xspdSet(string endpoint, T value);
+    T xspdSetVar(string endpoint, T value, string rbKey = "value");
+
+    template <typename T>
+    T xspdSetDetVar(string endpoint, T value, string rbKey = "value");
+
+    template <typename T>
+    T xspdSetEnumVar(string endpoint, T value, string rbKey = "value");
+
+    template <typename T>
+    T xspdSetDetEnumVar(string endpoint, T value, string rbKey = "value");
 
     asynStatus xspdCommand(string command);
 
@@ -195,7 +204,7 @@ class ADXSPD : ADDriver {
     vector<ADXSPDModule*> modules;
 
     void getInitialDetState();
-    void checkOnOffVariable(string endpoint, int paramIndex);
+    NDDataType_t getDataTypeForBitDepth(int bitDepth);
 
     string apiUri;      // IP address and port for the device
     string deviceUri;   // Base URI for the device

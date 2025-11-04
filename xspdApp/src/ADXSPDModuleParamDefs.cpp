@@ -10,7 +10,7 @@ void ADXSPDModule::createAllParams() {
     createParam(ADXSPDModule_HumString, asynParamFloat64, &ADXSPDModule_Hum);
     createParam(ADXSPDModule_VoltageString, asynParamFloat64, &ADXSPDModule_Voltage);
     createParam(ADXSPDModule_SensCurrString, asynParamFloat64, &ADXSPDModule_SensCurr);
-    createParam(ADXSPDModule_SatThreshString, asynParamFloat64, &ADXSPDModule_SatThresh);
+    createParam(ADXSPDModule_SatThreshString, asynParamInt32, &ADXSPDModule_SatThresh);
     createParam(ADXSPDModule_RotYawString, asynParamFloat64, &ADXSPDModule_RotYaw);
     createParam(ADXSPDModule_RotPitchString, asynParamFloat64, &ADXSPDModule_RotPitch);
     createParam(ADXSPDModule_RotRollString, asynParamFloat64, &ADXSPDModule_RotRoll);

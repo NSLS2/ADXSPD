@@ -21,3 +21,4 @@ venv/
 *.local
 notes.txt
 checkVar.sh
+setVar.sh

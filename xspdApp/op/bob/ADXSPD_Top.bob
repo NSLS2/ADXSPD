@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Saved on 2025-11-04 12:21:59 by jwlodek-->
+<!--Saved on 2025-11-04 14:14:11 by jwlodek-->
 <display version="2.0.0">
   <name>ADXSPD Top</name>
   <macros>
@@ -32,6 +32,10 @@
   </widget>
   <widget type="embedded" version="2.0.0">
     <name>Embedded Display_2</name>
+    <macros>
+      <R>mod1:</R>
+      <P>DEV:XSPD1:</P>
+    </macros>
     <file>ADXSPDModule.bob</file>
     <x>1300</x>
     <y>30</y>

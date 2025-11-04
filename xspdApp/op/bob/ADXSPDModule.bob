@@ -2,12 +2,12 @@
   <display version="2.0.0">
     <name>ADXSPDModule</name>
     <widget type="label" version="2.0.0">
-      <name>bee42458</name>
+      <name>54b39808</name>
       <x>10</x>
       <y>20</y>
       <width>150</width>
       <height>20</height>
-      <text>Board Temp readback in C</text>
+      <text>Board Temp rb in C</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -19,7 +19,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>4909a2bc</name>
+      <name>01270204</name>
       <x>170</x>
       <y>20</y>
       <width>150</width>
@@ -36,12 +36,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>66766787</name>
+      <name>4fd61fce</name>
       <x>10</x>
       <y>50</y>
       <width>150</width>
       <height>20</height>
-      <text>FPGA Temp readback in C</text>
+      <text>FPGA Temp rb in C</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -53,7 +53,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>8dea97e4</name>
+      <name>f57f3527</name>
       <x>170</x>
       <y>50</y>
       <width>150</width>
@@ -70,12 +70,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>1a3ba926</name>
+      <name>d20b2045</name>
       <x>10</x>
       <y>80</y>
       <width>150</width>
       <height>20</height>
-      <text>Humidity sensor Temp readback in C</text>
+      <text>Humidity sensor Temp rb in C</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -87,7 +87,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>1650114b</name>
+      <name>ee43e262</name>
       <x>170</x>
       <y>80</y>
       <width>150</width>
@@ -104,12 +104,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>33791fac</name>
+      <name>4bbb539a</name>
       <x>10</x>
       <y>110</y>
       <width>150</width>
       <height>20</height>
-      <text>Humidity readback in %</text>
+      <text>Humidity rb in %</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -121,7 +121,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>04f644f5</name>
+      <name>47801413</name>
       <x>170</x>
       <y>110</y>
       <width>150</width>
@@ -138,7 +138,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>3eba072b</name>
+      <name>db5e2eb6</name>
       <x>10</x>
       <y>140</y>
       <width>150</width>
@@ -155,7 +155,7 @@
       </font>
     </widget>
     <widget type="textentry" version="2.0.0">
-      <name>3f288624</name>
+      <name>39e3eedd</name>
       <x>170</x>
       <y>140</y>
       <width>150</width>
@@ -172,7 +172,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>b3dd466f</name>
+      <name>9cf06fe2</name>
       <x>330</x>
       <y>140</y>
       <width>150</width>
@@ -189,12 +189,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>15a8858c</name>
+      <name>1a3a3c19</name>
       <x>10</x>
       <y>170</y>
       <width>150</width>
       <height>20</height>
-      <text>Sensor current readback in mA</text>
+      <text>Sensor current rb in mA</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -206,7 +206,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>3ddf6505</name>
+      <name>aad4fe6f</name>
       <x>170</x>
       <y>170</y>
       <width>150</width>
@@ -223,12 +223,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>378af3c1</name>
+      <name>c96a1359</name>
       <x>10</x>
       <y>200</y>
       <width>150</width>
       <height>20</height>
-      <text>Saturation threshold readback in counts/sec/pixel</text>
+      <text>Saturation threshold rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -240,7 +240,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>efa7d3de</name>
+      <name>17715c43</name>
       <x>170</x>
       <y>200</y>
       <width>150</width>
@@ -257,12 +257,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>273cd389</name>
+      <name>f64e0a75</name>
       <x>10</x>
       <y>230</y>
       <width>150</width>
       <height>20</height>
-      <text>Rotation yaw readback in degrees</text>
+      <text>Rotation yaw rb in degrees</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -274,7 +274,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>5dafcbb5</name>
+      <name>2fd9199f</name>
       <x>170</x>
       <y>230</y>
       <width>150</width>
@@ -291,12 +291,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>b34118d2</name>
+      <name>11e11e29</name>
       <x>10</x>
       <y>260</y>
       <width>150</width>
       <height>20</height>
-      <text>Rotation pitch readback in degrees</text>
+      <text>Rotation pitch rb in degrees</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -308,7 +308,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>e8c10fd4</name>
+      <name>6c953cec</name>
       <x>170</x>
       <y>260</y>
       <width>150</width>
@@ -325,12 +325,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>a6df8da4</name>
+      <name>27cedf4c</name>
       <x>10</x>
       <y>290</y>
       <width>150</width>
       <height>20</height>
-      <text>Rotation roll readback in degrees</text>
+      <text>Rotation roll rb in degrees</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -342,7 +342,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>005f65bc</name>
+      <name>69be499e</name>
       <x>170</x>
       <y>290</y>
       <width>150</width>
@@ -359,12 +359,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>021e1f55</name>
+      <name>7e3b0d5a</name>
       <x>10</x>
       <y>320</y>
       <width>150</width>
       <height>20</height>
-      <text>Position X readback in mm</text>
+      <text>Position X rb in mm</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -376,7 +376,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>303ad588</name>
+      <name>e1e687f8</name>
       <x>170</x>
       <y>320</y>
       <width>150</width>
@@ -393,12 +393,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>f5697aed</name>
+      <name>70cdd2b3</name>
       <x>10</x>
       <y>350</y>
       <width>150</width>
       <height>20</height>
-      <text>Position Y readback in mm</text>
+      <text>Position Y rb in mm</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -410,7 +410,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>ff8977aa</name>
+      <name>d9313333</name>
       <x>170</x>
       <y>350</y>
       <width>150</width>
@@ -427,12 +427,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>f883c81c</name>
+      <name>cfd2a5e3</name>
       <x>10</x>
       <y>380</y>
       <width>150</width>
       <height>20</height>
-      <text>Position Z readback in mm</text>
+      <text>Position Z rb in mm</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -444,7 +444,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>56340748</name>
+      <name>0cde01d1</name>
       <x>170</x>
       <y>380</y>
       <width>150</width>
@@ -461,12 +461,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>3498daea</name>
+      <name>1b1d496a</name>
       <x>10</x>
       <y>410</y>
       <width>150</width>
       <height>20</height>
-      <text>Max frames readback</text>
+      <text>Max frames rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -478,7 +478,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>a80b6dbe</name>
+      <name>a29f9f61</name>
       <x>170</x>
       <y>410</y>
       <width>150</width>
@@ -495,12 +495,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>f33e8170</name>
+      <name>b771038a</name>
       <x>10</x>
       <y>440</y>
       <width>150</width>
       <height>20</height>
-      <text>Number of sub-frames readback</text>
+      <text>Number of sub-frames rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -512,7 +512,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>18266073</name>
+      <name>ac8a13f9</name>
       <x>170</x>
       <y>440</y>
       <width>150</width>
@@ -529,12 +529,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>08421d09</name>
+      <name>eb92add2</name>
       <x>10</x>
       <y>470</y>
       <width>150</width>
       <height>20</height>
-      <text>Number of connectors readback</text>
+      <text>Number of connectors rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -546,7 +546,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>0e715487</name>
+      <name>3e91de01</name>
       <x>170</x>
       <y>470</y>
       <width>150</width>
@@ -563,12 +563,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>6ecfc355</name>
+      <name>1353e4af</name>
       <x>10</x>
       <y>500</y>
       <width>150</width>
       <height>20</height>
-      <text>Interpolation mode readback</text>
+      <text>Interpolation mode rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -580,7 +580,7 @@
       </font>
     </widget>
     <widget type="led" version="2.0.0">
-      <name>334cb23c</name>
+      <name>3a3a8e12</name>
       <x>170</x>
       <y>500</y>
       <width>20</width>
@@ -594,12 +594,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>e9f3c56e</name>
+      <name>23324fd1</name>
       <x>10</x>
       <y>530</y>
       <width>150</width>
       <height>20</height>
-      <text>Features bitmask readback</text>
+      <text>Features bitmask rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -611,7 +611,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>c52c1bce</name>
+      <name>6549ddc5</name>
       <x>170</x>
       <y>530</y>
       <width>150</width>
@@ -628,7 +628,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>ae6a7ab0</name>
+      <name>36a535d2</name>
       <x>10</x>
       <y>560</y>
       <width>150</width>
@@ -645,7 +645,7 @@
       </font>
     </widget>
     <widget type="combo" version="2.0.0">
-      <name>31cff9ae</name>
+      <name>8f8a0386</name>
       <x>170</x>
       <y>560</y>
       <width>150</width>
@@ -662,7 +662,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>ffa0a708</name>
+      <name>44cdff21</name>
       <x>330</x>
       <y>560</y>
       <width>150</width>
@@ -679,7 +679,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>2d6ae8cb</name>
+      <name>37db59de</name>
       <x>10</x>
       <y>590</y>
       <width>150</width>
@@ -696,7 +696,7 @@
       </font>
     </widget>
     <widget type="combo" version="2.0.0">
-      <name>f0951ca0</name>
+      <name>a50c9687</name>
       <x>170</x>
       <y>590</y>
       <width>150</width>
@@ -713,7 +713,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>0ce78554</name>
+      <name>04e4ef62</name>
       <x>330</x>
       <y>590</y>
       <width>150</width>
@@ -730,12 +730,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>9deb3660</name>
+      <name>b080b9e8</name>
       <x>10</x>
       <y>620</y>
       <width>150</width>
       <height>20</height>
-      <text>RAM allocated readback</text>
+      <text>RAM allocated rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -747,7 +747,7 @@
       </font>
     </widget>
     <widget type="led" version="2.0.0">
-      <name>ad983e11</name>
+      <name>c71c12b5</name>
       <x>170</x>
       <y>620</y>
       <width>20</width>
@@ -761,12 +761,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>d28d8e52</name>
+      <name>fcaf50b6</name>
       <x>10</x>
       <y>650</y>
       <width>150</width>
       <height>20</height>
-      <text>Low threshold flatfield pixel mask</text>
+      <text>Low threshold ff pixel mask</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -778,7 +778,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>558d98d1</name>
+      <name>2f68fe38</name>
       <x>170</x>
       <y>650</y>
       <width>150</width>
@@ -795,12 +795,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>bb9c2dc1</name>
+      <name>1fca62ab</name>
       <x>10</x>
       <y>680</y>
       <width>150</width>
       <height>20</height>
-      <text>High threshold flatfield pixel mask</text>
+      <text>High threshold ff pixel mask</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -812,7 +812,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>0c622ebe</name>
+      <name>66c82b42</name>
       <x>170</x>
       <y>680</y>
       <width>150</width>
@@ -829,12 +829,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>37a67fae</name>
+      <name>2742ea0f</name>
       <x>10</x>
       <y>710</y>
       <width>150</width>
       <height>20</height>
-      <text>Low threshold flatfield pixel mask author</text>
+      <text>Low threshold ff author</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -846,7 +846,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>ece24aa3</name>
+      <name>172305cc</name>
       <x>170</x>
       <y>710</y>
       <width>150</width>
@@ -863,12 +863,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>af9ad2c5</name>
+      <name>0b9a1ad9</name>
       <x>10</x>
       <y>740</y>
       <width>150</width>
       <height>20</height>
-      <text>High threshold flatfield pixel mask author</text>
+      <text>High threshold ff author</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -880,7 +880,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>9f7414e3</name>
+      <name>36ba6295</name>
       <x>170</x>
       <y>740</y>
       <width>150</width>
@@ -897,12 +897,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>1a936d1e</name>
+      <name>a620ee30</name>
       <x>10</x>
       <y>770</y>
       <width>150</width>
       <height>20</height>
-      <text>Low threshold flatfield pixel mask error</text>
+      <text>Low threshold ff error</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -914,7 +914,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>cd4a21ec</name>
+      <name>eebc5794</name>
       <x>170</x>
       <y>770</y>
       <width>150</width>
@@ -931,12 +931,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>96a6eb16</name>
+      <name>cf8fa946</name>
       <x>10</x>
       <y>800</y>
       <width>150</width>
       <height>20</height>
-      <text>High threshold flatfield pixel mask error</text>
+      <text>High threshold ff error</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -948,7 +948,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>2d057cde</name>
+      <name>89710fb2</name>
       <x>170</x>
       <y>800</y>
       <width>150</width>
@@ -965,12 +965,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>fa779774</name>
+      <name>2303938b</name>
       <x>10</x>
       <y>830</y>
       <width>150</width>
       <height>20</height>
-      <text>Low threshold flatfield pixel mask date</text>
+      <text>Low threshold ff date</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -982,7 +982,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>91d91bea</name>
+      <name>a1f52d45</name>
       <x>170</x>
       <y>830</y>
       <width>150</width>
@@ -999,12 +999,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>792414f8</name>
+      <name>364f5c57</name>
       <x>10</x>
       <y>860</y>
       <width>150</width>
       <height>20</height>
-      <text>High threshold flatfield pixel mask date</text>
+      <text>High threshold ff date</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1016,7 +1016,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>97d22288</name>
+      <name>eebca95d</name>
       <x>170</x>
       <y>860</y>
       <width>150</width>
@@ -1033,12 +1033,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>a64f7b1e</name>
+      <name>ecab8196</name>
       <x>10</x>
       <y>890</y>
       <width>150</width>
       <height>20</height>
-      <text>Frames queued readback</text>
+      <text>Frames queued rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1050,7 +1050,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>f613ce4a</name>
+      <name>315468c4</name>
       <x>170</x>
       <y>890</y>
       <width>150</width>
@@ -1067,12 +1067,12 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>9f4d756c</name>
+      <name>0f1732e9</name>
       <x>10</x>
       <y>920</y>
       <width>150</width>
       <height>20</height>
-      <text>Pixel mask readback</text>
+      <text>Pixel mask rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1084,7 +1084,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>5864cb70</name>
+      <name>8764b63b</name>
       <x>170</x>
       <y>920</y>
       <width>150</width>
@@ -1101,7 +1101,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>764ec86e</name>
+      <name>3fa321fb</name>
       <x>10</x>
       <y>950</y>
       <width>150</width>
@@ -1118,7 +1118,7 @@
       </font>
     </widget>
     <widget type="choice" version="2.0.0">
-      <name>0bac57ff</name>
+      <name>de6846b8</name>
       <x>170</x>
       <y>950</y>
       <width>150</width>
@@ -1135,7 +1135,7 @@
       </font>
     </widget>
     <widget type="led" version="2.0.0">
-      <name>9d5322b2</name>
+      <name>62922f92</name>
       <x>330</x>
       <y>950</y>
       <width>20</width>
@@ -1149,7 +1149,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>59eedf5e</name>
+      <name>8b361698</name>
       <x>10</x>
       <y>980</y>
       <width>150</width>
@@ -1166,7 +1166,7 @@
       </font>
     </widget>
     <widget type="combo" version="2.0.0">
-      <name>4ab0d021</name>
+      <name>2255acc0</name>
       <x>170</x>
       <y>980</y>
       <width>150</width>
@@ -1183,7 +1183,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>5706fa77</name>
+      <name>3934861f</name>
       <x>330</x>
       <y>980</y>
       <width>150</width>
@@ -1200,7 +1200,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>0023ccb0</name>
+      <name>f4bba864</name>
       <x>10</x>
       <y>1010</y>
       <width>150</width>
@@ -1217,7 +1217,7 @@
       </font>
     </widget>
     <widget type="led" version="2.0.0">
-      <name>a7fd036d</name>
+      <name>8c2ff94a</name>
       <x>170</x>
       <y>1010</y>
       <width>20</width>
@@ -1231,7 +1231,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>10c6a2ec</name>
+      <name>e6f6d46f</name>
       <x>10</x>
       <y>1040</y>
       <width>150</width>
@@ -1248,7 +1248,7 @@
       </font>
     </widget>
     <widget type="led" version="2.0.0">
-      <name>1510b5c7</name>
+      <name>7b41b94f</name>
       <x>170</x>
       <y>1040</y>
       <width>20</width>
@@ -1262,7 +1262,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>4df1e719</name>
+      <name>154a3eb8</name>
       <x>10</x>
       <y>1070</y>
       <width>150</width>
@@ -1279,7 +1279,7 @@
       </font>
     </widget>
     <widget type="led" version="2.0.0">
-      <name>fafb25f7</name>
+      <name>b0ca31bc</name>
       <x>170</x>
       <y>1070</y>
       <width>20</width>
@@ -1293,7 +1293,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>9cee64a1</name>
+      <name>b5555ade</name>
       <x>10</x>
       <y>1100</y>
       <width>150</width>
@@ -1310,7 +1310,7 @@
       </font>
     </widget>
     <widget type="led" version="2.0.0">
-      <name>8fa22f10</name>
+      <name>4a57c7c8</name>
       <x>170</x>
       <y>1100</y>
       <width>20</width>

@@ -70,8 +70,9 @@ void ADXSPDModule::getInitialModuleState() {
     setDoubleParam(ADXSPDModule_PosX, position[0]);
     setDoubleParam(ADXSPDModule_PosY, position[1]);
     setDoubleParam(ADXSPDModule_PosZ, position[2]);
-    
-    setIntegerParam(ADXSPDModule_RamAllocated, xspdGetModuleVar<int>("ram_allocated"));
+
+    // TODO: ram_allocated endpoint doesn't seem to work
+    // setIntegerParam(ADXSPDModule_RamAllocated, xspdGetModuleVar<int>("ram_allocated"));
 
     vector<double> rotation = xspdGetModuleVar<vector<double>>("rotation");
     setDoubleParam(ADXSPDModule_RotYaw, rotation[0]);
@@ -80,12 +81,36 @@ void ADXSPDModule::getInitialModuleState() {
 
     setIntegerParam(ADXSPDModule_SatThresh, xspdGetModuleVar<int>("saturation_threshold"));
 
+    // vector<string> features = xspdGetModuleVar<vector<string>>("features");
+    // for(auto& featureStr : features) {
+    //     auto feature = magic_enum::enum_cast<ADXSPDModuleFeature>("FEAT_" + featureStr);
+    //     if (!feature.has_value()) {
+    //         ERR_ARGS("Unknown module feature: %s", featureStr.c_str());
+    //         continue;
+    //     }
+    //     // TODO: Make these into a bitmask parameter?
+    //     switch(feature.value()) {
+    //         case ADXSPDModuleFeature::FEAT_HV:
+    //             setIntegerParam(ADXSPDModule_HvSup,1);
+    //             break;
+    //         case ADXSPDModuleFeature::FEAT_1_6_BIT:
+    //             setIntegerParam(ADXSPDModule_16bitSup,1);
+    //             break;
+    //         case ADXSPDModuleFeature::FEAT_MEDIPIX_DAC_IO:
+    //             setIntegerParam(ADXSPDModule_MpixDacIoSup,1);
+    //             break;
+    //         case ADXSPDModuleFeature::FEAT_EXTENDED_GATING:
+    //             setIntegerParam(ADXSPDModule_ExtGatingSup,1);
+    //             break;
+    //     }
+    // }
+
     callParamCallbacks();
 
 }
 
 ADXSPDModule::ADXSPDModule(const char* portName, string moduleId, ADXSPD* parent)
-    : parent(parent), moduleId(moduleId), asynPortDriver(
+    : asynPortDriver(
           portName, 1, /* maxAddr */
           asynInt32Mask | asynFloat64Mask | asynFloat64ArrayMask | asynDrvUserMask |
               asynOctetMask, /* Interface mask */
@@ -94,7 +119,7 @@ ADXSPDModule::ADXSPDModule(const char* portName, string moduleId, ADXSPD* parent
           0, /* asynFlags.  This driver does not block and it is not multi-device, so flag is 0 */
           1, /* Autoconnect */
           0, /* Default priority */
-          0) /* Default stack size*/
+          0), parent(parent), moduleId(moduleId) /* Default stack size*/
 {
     this->createAllParams();
 

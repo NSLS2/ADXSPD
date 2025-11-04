@@ -14,6 +14,13 @@
 
 using namespace std;
 
+enum class ADXSPDModuleFeature {
+    FEAT_HV = 0,
+    FEAT_1_6_BIT = 1,
+    FEAT_MEDIPIX_DAC_IO = 2,
+    FEAT_EXTENDED_GATING = 3,
+};
+
 class ADXSPDModule : public asynPortDriver {
    public:
     ADXSPDModule(const char* portName, string moduleId, ADXSPD* parent);

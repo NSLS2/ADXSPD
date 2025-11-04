@@ -1,6 +1,7 @@
 record(ai, "$(P)$(R)BoardTemp_RBV"){
     field(DESC, "Board Temp rb in C")
     field(DTYP, "asynFloat64")
+    field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_BOARD_TEMP")
     field(SCAN, "I/O Intr")
 }
@@ -8,6 +9,7 @@ record(ai, "$(P)$(R)BoardTemp_RBV"){
 record(ai, "$(P)$(R)FPGATemp_RBV"){
     field(DESC, "FPGA Temp rb in C")
     field(DTYP, "asynFloat64")
+    field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_FPGA_TEMP")
     field(SCAN, "I/O Intr")
 }
@@ -15,6 +17,7 @@ record(ai, "$(P)$(R)FPGATemp_RBV"){
 record(ai, "$(P)$(R)HumiditySensorTemp_RBV"){
     field(DESC, "Humidity sensor Temp rb in C")
     field(DTYP, "asynFloat64")
+    field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_HUM_TEMP")
     field(SCAN, "I/O Intr")
 }
@@ -22,6 +25,7 @@ record(ai, "$(P)$(R)HumiditySensorTemp_RBV"){
 record(ai, "$(P)$(R)Humidity_RBV"){
     field(DESC, "Humidity rb in %")
     field(DTYP, "asynFloat64")
+    field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_HUM")
     field(SCAN, "I/O Intr")
 }
@@ -29,6 +33,7 @@ record(ai, "$(P)$(R)Humidity_RBV"){
 record(ao, "$(P)$(R)Voltage"){
     field(DESC, "Voltage in V")
     field(DTYP, "asynFloat64")
+    field(PREC, "1")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_VOLTAGE")
     field(VAL, "0.0")
     field(PINI, "NO")
@@ -37,6 +42,7 @@ record(ao, "$(P)$(R)Voltage"){
 record(ai, "$(P)$(R)Voltage_RBV"){
     field(DESC, "Voltage rb in V")
     field(DTYP, "asynFloat64")
+    field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_VOLTAGE")
     field(SCAN, "I/O Intr")
 }
@@ -44,13 +50,14 @@ record(ai, "$(P)$(R)Voltage_RBV"){
 record(ai, "$(P)$(R)SensorCurrent_RBV"){
     field(DESC, "Sensor current rb in mA")
     field(DTYP, "asynFloat64")
+    field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_SENS_CURR")
     field(SCAN, "I/O Intr")
 }
 
 record(ai, "$(P)$(R)SaturationThresh_RBV"){
     field(DESC, "Saturation threshold rb")
-    field(DTYP, "asynFloat64")
+    field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_SAT_THRESH")
     field(SCAN, "I/O Intr")
 }
@@ -59,6 +66,7 @@ record(ai, "$(P)$(R)SaturationThresh_RBV"){
 record(ai, "$(P)$(R)RotationYaw_RBV"){
     field(DESC, "Rotation yaw rb in degrees")
     field(DTYP, "asynFloat64")
+    field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_ROT_YAW")
     field(SCAN, "I/O Intr")
 }
@@ -66,6 +74,7 @@ record(ai, "$(P)$(R)RotationYaw_RBV"){
 record(ai, "$(P)$(R)RotationPitch_RBV"){
     field(DESC, "Rotation pitch rb in degrees")
     field(DTYP, "asynFloat64")
+    field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_ROT_PITCH")
     field(SCAN, "I/O Intr")
 }
@@ -73,6 +82,7 @@ record(ai, "$(P)$(R)RotationPitch_RBV"){
 record(ai, "$(P)$(R)RotationRoll_RBV"){
     field(DESC, "Rotation roll rb in degrees")
     field(DTYP, "asynFloat64")
+    field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_ROT_ROLL")
     field(SCAN, "I/O Intr")
 }
@@ -80,6 +90,7 @@ record(ai, "$(P)$(R)RotationRoll_RBV"){
 record(ai, "$(P)$(R)PositionX_RBV"){
     field(DESC, "Position X rb in mm")
     field(DTYP, "asynFloat64")
+    field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_POS_X")
     field(SCAN, "I/O Intr")
 }
@@ -87,6 +98,7 @@ record(ai, "$(P)$(R)PositionX_RBV"){
 record(ai, "$(P)$(R)PositionY_RBV"){
     field(DESC, "Position Y rb in mm")
     field(DTYP, "asynFloat64")
+    field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_POS_Y")
     field(SCAN, "I/O Intr")
 }
@@ -94,6 +106,7 @@ record(ai, "$(P)$(R)PositionY_RBV"){
 record(ai, "$(P)$(R)PositionZ_RBV"){
     field(DESC, "Position Z rb in mm")
     field(DTYP, "asynFloat64")
+    field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_POS_Z")
     field(SCAN, "I/O Intr")
 }
