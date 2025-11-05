@@ -106,13 +106,18 @@ T ADXSPD::xspdGetVar(string endpoint, string key) {
         return T();
     } else {
         if (response.contains(key)) {
-            if (is_enum<T>::value) {
-                ERR_ARGS(
-                    "Cannot directly get enum type for variable %s, use xspdGetEnumVar instead",
-                    endpoint.c_str());
-                return T(0);
+            if constexpr (is_enum<T>::value) {
+                string valAsStr = response[key].get<string>();
+                auto enumValue = magic_enum::enum_cast<T>(valAsStr, magic_enum::case_insensitive);
+                if (enumValue.has_value()) {
+                    return enumValue.value();
+                } else {
+                    ERR_ARGS("Failed to cast value %s to enum for variable %s", valAsStr.c_str(), endpoint.c_str());
+                    return T(0);
+                }
+            } else {
+                return response[key].get<T>();
             }
-            return response[key].get<T>();
         } else {
             ERR_ARGS("Key %s not found in response for variable %s", key.c_str(), endpoint.c_str());
             return T();
@@ -121,34 +126,10 @@ T ADXSPD::xspdGetVar(string endpoint, string key) {
 }
 
 template <typename T>
-T ADXSPD::xspdGetEnumVar(string endpoint, string key) {
-    string resp = xspdGetVar<string>(endpoint, key);
-    if (resp.empty()) {
-        ERR_ARGS("Failed to get enum variable %s", endpoint.c_str());
-        return T(0);
-    }
-
-    auto enumValue = magic_enum::enum_cast<T>(resp, magic_enum::case_insensitive);
-    if (enumValue.has_value()) {
-        return enumValue.value();
-    } else {
-        ERR_ARGS("Failed to cast value %s to enum for variable %s", resp.c_str(), endpoint.c_str());
-        return T(0);
-    }
-}
-
-template <typename T>
 T ADXSPD::xspdGetDetVar(string endpoint, string key) {
     string fullVarEndpoint = this->detectorId + "/" + endpoint;
 
     return xspdGetVar<T>(fullVarEndpoint, key);
-}
-
-template <typename T>
-T ADXSPD::xspdGetDetEnumVar(string endpoint, string key) {
-    string fullVarEndpoint = this->detectorId + "/" + endpoint;
-
-    return xspdGetEnumVar<T>(fullVarEndpoint, key);
 }
 
 template <typename T>
@@ -165,27 +146,60 @@ T ADXSPD::xspdGetDataPortVar(string endpoint, string key) {
  * @param value The value to set
  * @return asynStatus success if the request was successful, else failure
  */
-
 template <typename T>
 T ADXSPD::xspdSetVar(string endpoint, T value, string rbKey) {
-    // Make a PUT request to the XSPD API
+
+    string valueAsStr;
+    if constexpr (std::is_same_v<T, std::string>) {
+        valueAsStr = value;
+    } else if constexpr(std::is_enum<T>::value) {
+        auto enumString = magic_enum::enum_name(value);
+        if (enumString.empty()) {
+            ERR_ARGS("Failed to convert enum value to string for variable %s", endpoint.c_str());
+            return T(0);
+        }
+        valueAsStr = string(enumString);
+    } else {
+        valueAsStr = to_string(value);
+    }
+
     string requestUri = this->apiUri + "/devices/" + this->deviceId +
-                        "/variables?path=" + endpoint + "&value=" + to_string(value);
+                        "/variables?path=" + endpoint + "&value=" + valueAsStr;
+
     DEBUG_ARGS("Sending PUT request to %s with value %s", requestUri.c_str(),
-               to_string(value).c_str());
+           valueAsStr.c_str());
 
     this->lock();
     cpr::Response response = cpr::Put(cpr::Url(requestUri));
     this->unlock();
 
+    if (response.status_code != 200) {
+        ERR_ARGS("Failed to set variable %s", endpoint.c_str());
+        return T();
+    }
+    cout << response.text << endl;
+
     json respJson = json::parse(response.text, nullptr, true, false, true);
 
-    if (response.status_code != 200) {
-        ERR_ARGS("Failed to set data for %s: %s", endpoint.c_str(), response.error.message.c_str());
+    if (respJson.is_null() || respJson.empty()) {
+        ERR_ARGS("Empty JSON response when setting variable %s", endpoint.c_str());
         return T();
     } else if (!rbKey.empty() && respJson.contains(rbKey)) {
         // Handle readback key if provided
-        return respJson[rbKey].get<T>();
+        if constexpr (std::is_enum<T>::value) {
+            auto enumValue = magic_enum::enum_cast<T>(respJson[rbKey].get<std::string>(),
+                                                      magic_enum::case_insensitive);
+            if (enumValue.has_value()) {
+                return enumValue.value();
+            } else {
+                ERR_ARGS("Failed to cast readback value %s to enum for variable %s",
+                         respJson[rbKey].get<std::string>().c_str(), endpoint.c_str());
+                return T(0);
+            }
+        }
+        else {
+            return respJson[rbKey].get<T>();
+        }
     }
 
     return T();
@@ -193,30 +207,30 @@ T ADXSPD::xspdSetVar(string endpoint, T value, string rbKey) {
 
 template <typename T>
 T ADXSPD::xspdSetDetVar(string endpoint, T value, string rbKey) {
-    string fullVarEndpoint = this->deviceId + "/" + endpoint;
+    string fullVarEndpoint = this->detectorId + "/" + endpoint;
 
     return xspdSetVar<T>(fullVarEndpoint, value, rbKey);
 }
 
-template <typename T>
-T ADXSPD::xspdSetEnumVar(string endpoint, T value, string rbKey) {
-    // Convert enum to string
-    auto enumString = magic_enum::enum_name(value);
-    if (enumString.empty()) {
-        ERR_ARGS("Failed to convert enum value to string for variable %s", endpoint.c_str());
-        return T(0);
-    }
-    string rbAsStr = xspdSetVar<string>(endpoint, string(enumString), rbKey);
+// template <typename T>
+// T ADXSPD::xspdSetEnumVar(string endpoint, T value, string rbKey) {
+//     // Convert enum to string
+//     auto enumString = magic_enum::enum_name(value);
+//     if (enumString.empty()) {
+//         ERR_ARGS("Failed to convert enum value to string for variable %s", endpoint.c_str());
+//         return T(0);
+//     }
+//     string rbAsStr = xspdSetVar<string>(endpoint, string(enumString), rbKey);
 
-    auto enumValue = magic_enum::enum_cast<T>(rbAsStr, magic_enum::case_insensitive);
-    if (enumValue.has_value()) {
-        return enumValue.value();
-    } else {
-        ERR_ARGS("Failed to cast readback value %s to enum for variable %s", rbAsStr.c_str(),
-                 endpoint.c_str());
-        return T(0);
-    }
-}
+//     auto enumValue = magic_enum::enum_cast<T>(rbAsStr, magic_enum::case_insensitive);
+//     if (enumValue.has_value()) {
+//         return enumValue.value();
+//     } else {
+//         ERR_ARGS("Failed to cast readback value %s to enum for variable %s", rbAsStr.c_str(),
+//                  endpoint.c_str());
+//         return T(0);
+//     }
+// }
 
 asynStatus ADXSPD::xspdCommand(string command) {
     json commands = xspdGet(this->deviceUri + "commands");
@@ -282,6 +296,7 @@ void ADXSPD::acquisitionThread() {
     // TODO: Support other data types
     NDDataType_t dataType;
     NDColorMode_t colorMode = NDColorModeMono;  // Only monochrome is supported.
+    ADXSPDCounterMode counterMode;
 
     size_t dims[2];
     getIntegerParam(ADSizeX, (int*) &dims[0]);
@@ -342,6 +357,7 @@ void ADXSPD::acquisitionThread() {
         } while (more);
 
         getIntegerParam(ADImageMode, (int*) &acquisitionMode);
+        getIntegerParam(ADXSPD_CounterMode, (int*) &counterMode);
 
         int targetNumImages;
         getIntegerParam(ADNumImages, &targetNumImages);
@@ -409,7 +425,7 @@ void ADXSPD::acquisitionThread() {
             // If in single mode, finish acq, if in multiple mode and reached target number
             // complete acquisition.
             if (acquisitionMode == ADImageSingle ||
-                (acquisitionMode == ADImageMultiple && collectedImages == targetNumImages)) {
+                (acquisitionMode == ADImageMultiple && collectedImages == (targetNumImages * pow(2, (int) counterMode)))) {
                 acquireStop();
             }
             // Release the array
@@ -437,7 +453,7 @@ void ADXSPD::acquisitionThread() {
 void ADXSPD::monitorThread() {
     while (this->alive) {
         ADXSPDStatus status =
-            xspdGetDetEnumVar<ADXSPDStatus>("status");
+            xspdGetDetVar<ADXSPDStatus>("status");
         setIntegerParam(ADStatus, static_cast<int>(status));
 
         if (status != ADXSPDStatus::BUSY) {
@@ -486,29 +502,29 @@ void ADXSPD::getInitialDetState() {
 
     setIntegerParam(ADXSPD_CompressLevel, xspdGetDetVar<int>("compression_level"));
     setIntegerParam(ADXSPD_Compressor,
-                    static_cast<int>(xspdGetDetEnumVar<ADXSPDCompressor>("compressor")));
+                    static_cast<int>(xspdGetDetVar<ADXSPDCompressor>("compressor")));
     setDoubleParam(ADXSPD_BeamEnergy, xspdGetDetVar<double>("beam_energy"));
     setIntegerParam(ADXSPD_GatingMode,
-                    static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("gating_mode")));
+                    static_cast<int>(xspdGetDetVar<ADXSPDOnOff>("gating_mode")));
     setIntegerParam(ADXSPD_FFCorrection,
-                    static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("flatfield_correction")));
+                    static_cast<int>(xspdGetDetVar<ADXSPDOnOff>("flatfield_correction")));
     setIntegerParam(ADXSPD_ChargeSumming,
-                    static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("charge_summing")));
+                    static_cast<int>(xspdGetDetVar<ADXSPDOnOff>("charge_summing")));
     setIntegerParam(ADTriggerMode,
-                    static_cast<int>(xspdGetDetEnumVar<ADXSPDTrigMode>("trigger_mode")));
+                    static_cast<int>(xspdGetDetVar<ADXSPDTrigMode>("trigger_mode")));
 
     int bitDepth = xspdGetDetVar<int>("bit_depth");
     setIntegerParam(ADXSPD_BitDepth, bitDepth);
     setIntegerParam(NDDataType, static_cast<int>(getDataTypeForBitDepth(bitDepth)));
 
     setIntegerParam(ADXSPD_CrCorr,
-                    static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("countrate_correction")));
+                    static_cast<int>(xspdGetDetVar<ADXSPDOnOff>("countrate_correction")));
     setIntegerParam(ADXSPD_CounterMode,
-                    static_cast<int>(xspdGetDetEnumVar<ADXSPDCounterMode>("counter_mode")));
+                    static_cast<int>(xspdGetDetVar<ADXSPDCounterMode>("counter_mode")));
     setIntegerParam(ADXSPD_SaturationFlag,
-                    static_cast<int>(xspdGetDetEnumVar<ADXSPDOnOff>("saturation_flag")));
+                    static_cast<int>(xspdGetDetVar<ADXSPDOnOff>("saturation_flag")));
     setIntegerParam(ADXSPD_ShuffleMode,
-                    static_cast<int>(xspdGetDetEnumVar<ADXSPDShuffleMode>("shuffle_mode")));
+                    static_cast<int>(xspdGetDetVar<ADXSPDShuffleMode>("shuffle_mode")));
 
     setStringParam(ADModel, xspdGetDetVar<string>("type").c_str());
 
@@ -608,21 +624,21 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             actualValue = xspdSetDetVar<int>("compression_level", value);
         } else if(function == ADXSPD_GatingMode) {
             actualValue = xspdSetDetVar<int>("gating_mode", value);
-            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDOnOff>("gating_mode", static_cast<ADXSPDOnOff>(value)));
+            actualValue = static_cast<int>(xspdSetDetVar<ADXSPDOnOff>("gating_mode", static_cast<ADXSPDOnOff>(value)));
         } else if(function == ADXSPD_FFCorrection) {
-            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDOnOff>("flatfield_correction", static_cast<ADXSPDOnOff>(value)));
+            actualValue = static_cast<int>(xspdSetDetVar<ADXSPDOnOff>("flatfield_correction", static_cast<ADXSPDOnOff>(value)));
         } else if(function == ADXSPD_ChargeSumming) {
-            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDOnOff>("charge_summing", static_cast<ADXSPDOnOff>(value)));
+            actualValue = static_cast<int>(xspdSetDetVar<ADXSPDOnOff>("charge_summing", static_cast<ADXSPDOnOff>(value)));
         } else if(function == ADTriggerMode) {
-            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDTrigMode>("trigger_mode", static_cast<ADXSPDTrigMode>(value)));
+            actualValue = static_cast<int>(xspdSetDetVar<ADXSPDTrigMode>("trigger_mode", static_cast<ADXSPDTrigMode>(value)));
         } else if(function == ADXSPD_CrCorr) {
-            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDOnOff>("countrate_correction", static_cast<ADXSPDOnOff>(value)));
+            actualValue = static_cast<int>(xspdSetDetVar<ADXSPDOnOff>("countrate_correction", static_cast<ADXSPDOnOff>(value)));
         } else if(function == ADXSPD_CounterMode) {
-            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDCounterMode>("counter_mode", static_cast<ADXSPDCounterMode>(value)));
+            actualValue = static_cast<int>(xspdSetDetVar<ADXSPDCounterMode>("counter_mode", static_cast<ADXSPDCounterMode>(value)));
         } else if(function == ADXSPD_SaturationFlag) {
-            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDOnOff>("saturation_flag", static_cast<ADXSPDOnOff>(value)));
+            actualValue = static_cast<int>(xspdSetDetVar<ADXSPDOnOff>("saturation_flag", static_cast<ADXSPDOnOff>(value)));
         } else if(function == ADXSPD_ShuffleMode) {
-            actualValue = static_cast<int>(xspdSetEnumVar<ADXSPDShuffleMode>("shuffle_mode", static_cast<ADXSPDShuffleMode>(value)));
+            actualValue = static_cast<int>(xspdSetDetVar<ADXSPDShuffleMode>("shuffle_mode", static_cast<ADXSPDShuffleMode>(value)));
         } else {
             WARN_ARGS("Unhandled parameter write event for param %s", paramName);
             return asynError;

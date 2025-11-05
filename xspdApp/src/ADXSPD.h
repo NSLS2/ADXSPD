@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <zmq.h>
 
+#include <cmath>
 #include <cstddef>
 #include <cstdio>
 #include <iostream>
@@ -162,13 +163,7 @@ class ADXSPD : ADDriver {
     T xspdGetVar(string endpoint, string key = "value");
 
     template <typename T>
-    T xspdGetEnumVar(string endpoint, string key = "value");
-
-    template <typename T>
     T xspdGetDetVar(string endpoint, string key = "value");
-
-    template <typename T>
-    T xspdGetDetEnumVar(string endpoint, string key = "value");
 
     template <typename T>
     T xspdGetDataPortVar(string endpoint, string key = "value");
@@ -178,12 +173,6 @@ class ADXSPD : ADDriver {
 
     template <typename T>
     T xspdSetDetVar(string endpoint, T value, string rbKey = "value");
-
-    template <typename T>
-    T xspdSetEnumVar(string endpoint, T value, string rbKey = "value");
-
-    template <typename T>
-    T xspdSetDetEnumVar(string endpoint, T value, string rbKey = "value");
 
     asynStatus xspdCommand(string command);
 
