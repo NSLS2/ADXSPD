@@ -33,6 +33,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <magic_enum/magic_enum.hpp>
 #include <map>
