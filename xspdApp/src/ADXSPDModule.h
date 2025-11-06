@@ -12,9 +12,18 @@
 
 #include "ADXSPD.h"
 
+using namespace std;
+
+enum class ADXSPDModuleFeature {
+    FEAT_HV = 0,
+    FEAT_1_6_BIT = 1,
+    FEAT_MEDIPIX_DAC_IO = 2,
+    FEAT_EXTENDED_GATING = 3,
+};
+
 class ADXSPDModule : public asynPortDriver {
    public:
-    ADXSPDModule(const char* portName, const char* moduleId, ADXSPD* parent, int moduleIndex);
+    ADXSPDModule(const char* portName, string moduleId, ADXSPD* parent);
     ~ADXSPDModule();
 
     // These are the methods that we override from asynPortDriver
@@ -23,8 +32,17 @@ class ADXSPDModule : public asynPortDriver {
     // virtual void report(FILE* fp, int details);
 
     template <typename T>
-    T getModuleParam(string endpoint);
+    T xspdGetModuleVar(string endpoint, string key = "value");
+
+    template <typename T>
+    T xspdGetModuleEnumVar(string endpoint, string key = "value");
+
+    template <typename T>
+    asynStatus xspdSetModuleVar(string endpoint, T value);
+
     void checkStatus();
+    void getInitialModuleState();
+    int getMaxNumImages();
 
    protected:
     // Module parameters
@@ -32,12 +50,11 @@ class ADXSPDModule : public asynPortDriver {
 
    private:
     const char* driverName = "ADXSPDModule";
-    ADXSPD* parent;        // Pointer to the parent ADXSPD driver object
-    std::string moduleId;  // Module ID string
-    int moduleIndex;       // Index of this module in the parent detector
+    ADXSPD* parent;   // Pointer to the parent ADXSPD driver object
+    string moduleId;  // Module ID string
     void createAllParams();
 
-    ADXSPD_LogLevel_t getLogLevel() { return this->parent->getLogLevel(); }
+    ADXSPDLogLevel getLogLevel() { return this->parent->getLogLevel(); }
 };
 
 #endif

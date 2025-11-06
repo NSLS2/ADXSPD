@@ -4,22 +4,45 @@
 #include "ADXSPDModule.h"
 
 void ADXSPDModule::createAllParams() {
-    createParam(ADXSPDModule_ModBoardTempString, asynParamFloat64, &ADXSPDModule_ModBoardTemp);
-    createParam(ADXSPDModule_ModFpgaTempString, asynParamFloat64, &ADXSPDModule_ModFpgaTemp);
-    createParam(ADXSPDModule_ModHumTempString, asynParamFloat64, &ADXSPDModule_ModHumTemp);
-    createParam(ADXSPDModule_ModHumString, asynParamFloat64, &ADXSPDModule_ModHum);
-    createParam(ADXSPDModule_ModVoltageString, asynParamFloat64, &ADXSPDModule_ModVoltage);
-    createParam(ADXSPDModule_ModSensCurrString, asynParamFloat64, &ADXSPDModule_ModSensCurr);
-    createParam(ADXSPDModule_ModSatThreshString, asynParamFloat64, &ADXSPDModule_ModSatThresh);
-    createParam(ADXSPDModule_ModRotYawString, asynParamFloat64, &ADXSPDModule_ModRotYaw);
-    createParam(ADXSPDModule_ModRotPitchString, asynParamFloat64, &ADXSPDModule_ModRotPitch);
-    createParam(ADXSPDModule_ModRotRollString, asynParamFloat64, &ADXSPDModule_ModRotRoll);
-    createParam(ADXSPDModule_ModPosXString, asynParamFloat64, &ADXSPDModule_ModPosX);
-    createParam(ADXSPDModule_ModPosYString, asynParamFloat64, &ADXSPDModule_ModPosY);
-    createParam(ADXSPDModule_ModPosZString, asynParamFloat64, &ADXSPDModule_ModPosZ);
-    createParam(ADXSPDModule_ModMaxFramesString, asynParamInt32, &ADXSPDModule_ModMaxFrames);
-    createParam(ADXSPDModule_ModNumSubframesString, asynParamInt32, &ADXSPDModule_ModNumSubframes);
-    createParam(ADXSPDModule_ModNumConsString, asynParamInt32, &ADXSPDModule_ModNumCons);
-    createParam(ADXSPDModule_ModInterpModeString, asynParamInt32, &ADXSPDModule_ModInterpMode);
-    createParam(ADXSPDModule_ModFeatBitmaskString, asynParamInt32, &ADXSPDModule_ModFeatBitmask);
+    createParam(ADXSPDModule_BoardTempString, asynParamFloat64, &ADXSPDModule_BoardTemp);
+    createParam(ADXSPDModule_FpgaTempString, asynParamFloat64, &ADXSPDModule_FpgaTemp);
+    createParam(ADXSPDModule_HumTempString, asynParamFloat64, &ADXSPDModule_HumTemp);
+    createParam(ADXSPDModule_HumString, asynParamFloat64, &ADXSPDModule_Hum);
+    createParam(ADXSPDModule_VoltageString, asynParamFloat64, &ADXSPDModule_Voltage);
+    createParam(ADXSPDModule_SensCurrString, asynParamFloat64, &ADXSPDModule_SensCurr);
+    createParam(ADXSPDModule_SatThreshString, asynParamInt32, &ADXSPDModule_SatThresh);
+    createParam(ADXSPDModule_RotYawString, asynParamFloat64, &ADXSPDModule_RotYaw);
+    createParam(ADXSPDModule_RotPitchString, asynParamFloat64, &ADXSPDModule_RotPitch);
+    createParam(ADXSPDModule_RotRollString, asynParamFloat64, &ADXSPDModule_RotRoll);
+    createParam(ADXSPDModule_PosXString, asynParamFloat64, &ADXSPDModule_PosX);
+    createParam(ADXSPDModule_PosYString, asynParamFloat64, &ADXSPDModule_PosY);
+    createParam(ADXSPDModule_PosZString, asynParamFloat64, &ADXSPDModule_PosZ);
+    createParam(ADXSPDModule_MaxFramesString, asynParamInt32, &ADXSPDModule_MaxFrames);
+    createParam(ADXSPDModule_NumSubframesString, asynParamInt32, &ADXSPDModule_NumSubframes);
+    createParam(ADXSPDModule_NumConsString, asynParamInt32, &ADXSPDModule_NumCons);
+    createParam(ADXSPDModule_InterpModeString, asynParamInt32, &ADXSPDModule_InterpMode);
+    createParam(ADXSPDModule_FeatBitmaskString, asynParamInt32, &ADXSPDModule_FeatBitmask);
+    createParam(ADXSPDModule_CompressLevelString, asynParamInt32, &ADXSPDModule_CompressLevel);
+    createParam(ADXSPDModule_CompressorString, asynParamInt32, &ADXSPDModule_Compressor);
+    createParam(ADXSPDModule_RamAllocatedString, asynParamInt32, &ADXSPDModule_RamAllocated);
+    createParam(ADXSPDModule_LowThreshFfString, asynParamOctet, &ADXSPDModule_LowThreshFf);
+    createParam(ADXSPDModule_HighThreshFfString, asynParamOctet, &ADXSPDModule_HighThreshFf);
+    createParam(ADXSPDModule_LowThreshFfAuthorString, asynParamOctet,
+                &ADXSPDModule_LowThreshFfAuthor);
+    createParam(ADXSPDModule_HighThreshFfAuthorString, asynParamOctet,
+                &ADXSPDModule_HighThreshFfAuthor);
+    createParam(ADXSPDModule_LowThreshFfErrString, asynParamOctet, &ADXSPDModule_LowThreshFfErr);
+    createParam(ADXSPDModule_HighThreshFfErrString, asynParamOctet, &ADXSPDModule_HighThreshFfErr);
+    createParam(ADXSPDModule_LowThreshFfDateString, asynParamOctet, &ADXSPDModule_LowThreshFfDate);
+    createParam(ADXSPDModule_HighThreshFfDateString, asynParamOctet,
+                &ADXSPDModule_HighThreshFfDate);
+    createParam(ADXSPDModule_FfStatusString, asynParamOctet, &ADXSPDModule_FfStatus);
+    createParam(ADXSPDModule_FramesQueuedString, asynParamInt32, &ADXSPDModule_FramesQueued);
+    createParam(ADXSPDModule_PixelMaskString, asynParamOctet, &ADXSPDModule_PixelMask);
+    createParam(ADXSPDModule_UsePixelMaskString, asynParamInt32, &ADXSPDModule_UsePixelMask);
+    createParam(ADXSPDModule_ShuffleModeString, asynParamInt32, &ADXSPDModule_ShuffleMode);
+    createParam(ADXSPDModule_HvSupString, asynParamInt32, &ADXSPDModule_HvSup);
+    createParam(ADXSPDModule_16bitSupString, asynParamInt32, &ADXSPDModule_16bitSup);
+    createParam(ADXSPDModule_MpixDacIoSupString, asynParamInt32, &ADXSPDModule_MpixDacIoSup);
+    createParam(ADXSPDModule_ExtGatingSupString, asynParamInt32, &ADXSPDModule_ExtGatingSup);
 }

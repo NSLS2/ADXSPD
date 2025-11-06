@@ -11,6 +11,8 @@ include $(TOP)/configure/CONFIG
 # Create and install (or just install)
 # databases, templates, subtitutions
 DB += ADXSPD.template
+DB += ADXSPDModule.template
+DB += ADXSPD_settings.req
 
 #-------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add

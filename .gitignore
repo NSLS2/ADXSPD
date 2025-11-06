@@ -23,3 +23,6 @@ a.out
 .pixi/*
 !.pixi/config.toml
 *.local
+notes.txt
+checkVar.sh
+setVar.sh

@@ -5,6 +5,7 @@ include $(TOP)/configure/CONFIG
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
 #=============================
 
+# json parsing library
 SRC_DIRS += ../json
 
 INC += nlohmann/json.hpp
@@ -50,11 +51,20 @@ INC += crow/middlewares/session.h
 INC += crow/middlewares/utf-8.h
 endif
 
-SRC_DIRS += ../cpr
+# Library for simplifying enum -> string bidirectional conversions
+SRC_DIRS += ../magic_enum
 
-ifeq (windows-x64, $(findstring windows-x64, $(T_A)))
-USR_CPPFLAGS += -D__X64
-endif
+INC += magic_enum/magic_enum_containers.hpp
+INC += magic_enum/magic_enum_flags.hpp
+INC += magic_enum/magic_enum_format.hpp
+INC += magic_enum/magic_enum_fuse.hpp
+INC += magic_enum/magic_enum.hpp
+INC += magic_enum/magic_enum_iostream.hpp
+INC += magic_enum/magic_enum_switch.hpp
+INC += magic_enum/magic_enum_utility.hpp
+
+# C++ Requests, library for managing REST API calls
+SRC_DIRS += ../cpr
 
 USR_CPPFLAGS += -std=c++11
 
