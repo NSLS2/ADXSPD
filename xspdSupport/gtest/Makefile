@@ -2,6 +2,7 @@ TOP=../..
 
 include $(TOP)/configure/CONFIG
 
+# Google unit testing and mocking framework
 DIRS := $(DIRS) gtest
 DIRS := $(DIRS) gmock
 
