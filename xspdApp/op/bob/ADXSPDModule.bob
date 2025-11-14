@@ -2,7 +2,7 @@
   <display version="2.0.0">
     <name>ADXSPDModule</name>
     <widget type="label" version="2.0.0">
-      <name>54b39808</name>
+      <name>02c81008</name>
       <x>10</x>
       <y>20</y>
       <width>150</width>
@@ -19,7 +19,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>01270204</name>
+      <name>ea1276a9</name>
       <x>170</x>
       <y>20</y>
       <width>150</width>
@@ -36,7 +36,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>4fd61fce</name>
+      <name>8309d5fe</name>
       <x>10</x>
       <y>50</y>
       <width>150</width>
@@ -53,7 +53,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>f57f3527</name>
+      <name>fb504888</name>
       <x>170</x>
       <y>50</y>
       <width>150</width>
@@ -70,7 +70,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>d20b2045</name>
+      <name>a24424a7</name>
       <x>10</x>
       <y>80</y>
       <width>150</width>
@@ -87,7 +87,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>ee43e262</name>
+      <name>73dee15a</name>
       <x>170</x>
       <y>80</y>
       <width>150</width>
@@ -104,7 +104,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>4bbb539a</name>
+      <name>6f576605</name>
       <x>10</x>
       <y>110</y>
       <width>150</width>
@@ -121,7 +121,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>47801413</name>
+      <name>3a63680d</name>
       <x>170</x>
       <y>110</y>
       <width>150</width>
@@ -138,7 +138,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>db5e2eb6</name>
+      <name>c56d2dfe</name>
       <x>10</x>
       <y>140</y>
       <width>150</width>
@@ -155,7 +155,7 @@
       </font>
     </widget>
     <widget type="textentry" version="2.0.0">
-      <name>39e3eedd</name>
+      <name>76ea60ba</name>
       <x>170</x>
       <y>140</y>
       <width>150</width>
@@ -172,7 +172,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>9cf06fe2</name>
+      <name>9fe053bb</name>
       <x>330</x>
       <y>140</y>
       <width>150</width>
@@ -189,7 +189,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>1a3a3c19</name>
+      <name>7d4d5128</name>
       <x>10</x>
       <y>170</y>
       <width>150</width>
@@ -206,7 +206,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>aad4fe6f</name>
+      <name>d2d66cbe</name>
       <x>170</x>
       <y>170</y>
       <width>150</width>
@@ -223,7 +223,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>c96a1359</name>
+      <name>921a36a7</name>
       <x>10</x>
       <y>200</y>
       <width>150</width>
@@ -240,7 +240,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>17715c43</name>
+      <name>e96bc573</name>
       <x>170</x>
       <y>200</y>
       <width>150</width>
@@ -257,7 +257,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>f64e0a75</name>
+      <name>4ce08bb5</name>
       <x>10</x>
       <y>230</y>
       <width>150</width>
@@ -274,7 +274,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>2fd9199f</name>
+      <name>40c37a69</name>
       <x>170</x>
       <y>230</y>
       <width>150</width>
@@ -291,7 +291,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>11e11e29</name>
+      <name>18408af3</name>
       <x>10</x>
       <y>260</y>
       <width>150</width>
@@ -308,7 +308,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>6c953cec</name>
+      <name>c2e45133</name>
       <x>170</x>
       <y>260</y>
       <width>150</width>
@@ -325,7 +325,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>27cedf4c</name>
+      <name>ee336312</name>
       <x>10</x>
       <y>290</y>
       <width>150</width>
@@ -342,7 +342,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>69be499e</name>
+      <name>d462fe46</name>
       <x>170</x>
       <y>290</y>
       <width>150</width>
@@ -359,7 +359,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>7e3b0d5a</name>
+      <name>ea067235</name>
       <x>10</x>
       <y>320</y>
       <width>150</width>
@@ -376,7 +376,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>e1e687f8</name>
+      <name>db2eca9a</name>
       <x>170</x>
       <y>320</y>
       <width>150</width>
@@ -393,7 +393,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>70cdd2b3</name>
+      <name>f0ebeed8</name>
       <x>10</x>
       <y>350</y>
       <width>150</width>
@@ -410,7 +410,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>d9313333</name>
+      <name>2e3fdbe5</name>
       <x>170</x>
       <y>350</y>
       <width>150</width>
@@ -427,7 +427,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>cfd2a5e3</name>
+      <name>28b1c77a</name>
       <x>10</x>
       <y>380</y>
       <width>150</width>
@@ -444,7 +444,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>0cde01d1</name>
+      <name>6a148c40</name>
       <x>170</x>
       <y>380</y>
       <width>150</width>
@@ -461,7 +461,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>1b1d496a</name>
+      <name>f7143212</name>
       <x>10</x>
       <y>410</y>
       <width>150</width>
@@ -478,7 +478,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>a29f9f61</name>
+      <name>5cc19f9e</name>
       <x>170</x>
       <y>410</y>
       <width>150</width>
@@ -495,7 +495,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>b771038a</name>
+      <name>02fb64e3</name>
       <x>10</x>
       <y>440</y>
       <width>150</width>
@@ -512,7 +512,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>ac8a13f9</name>
+      <name>1e73f8d8</name>
       <x>170</x>
       <y>440</y>
       <width>150</width>
@@ -529,7 +529,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>eb92add2</name>
+      <name>60c01d6f</name>
       <x>10</x>
       <y>470</y>
       <width>150</width>
@@ -546,7 +546,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>3e91de01</name>
+      <name>aefd5c5d</name>
       <x>170</x>
       <y>470</y>
       <width>150</width>
@@ -563,7 +563,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>1353e4af</name>
+      <name>55abf8b9</name>
       <x>10</x>
       <y>500</y>
       <width>150</width>
@@ -580,7 +580,7 @@
       </font>
     </widget>
     <widget type="led" version="2.0.0">
-      <name>3a3a8e12</name>
+      <name>fd1f41ad</name>
       <x>170</x>
       <y>500</y>
       <width>20</width>
@@ -594,7 +594,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>23324fd1</name>
+      <name>6a654f46</name>
       <x>10</x>
       <y>530</y>
       <width>150</width>
@@ -611,7 +611,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>6549ddc5</name>
+      <name>368c9082</name>
       <x>170</x>
       <y>530</y>
       <width>150</width>
@@ -628,7 +628,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>36a535d2</name>
+      <name>675128c1</name>
       <x>10</x>
       <y>560</y>
       <width>150</width>
@@ -645,7 +645,7 @@
       </font>
     </widget>
     <widget type="combo" version="2.0.0">
-      <name>8f8a0386</name>
+      <name>f7774b25</name>
       <x>170</x>
       <y>560</y>
       <width>150</width>
@@ -662,7 +662,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>44cdff21</name>
+      <name>5dacc508</name>
       <x>330</x>
       <y>560</y>
       <width>150</width>
@@ -679,7 +679,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>37db59de</name>
+      <name>71e48d4d</name>
       <x>10</x>
       <y>590</y>
       <width>150</width>
@@ -696,7 +696,7 @@
       </font>
     </widget>
     <widget type="combo" version="2.0.0">
-      <name>a50c9687</name>
+      <name>be68dfa8</name>
       <x>170</x>
       <y>590</y>
       <width>150</width>
@@ -713,7 +713,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>04e4ef62</name>
+      <name>d845fea5</name>
       <x>330</x>
       <y>590</y>
       <width>150</width>
@@ -730,7 +730,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>b080b9e8</name>
+      <name>483e16f5</name>
       <x>10</x>
       <y>620</y>
       <width>150</width>
@@ -747,7 +747,7 @@
       </font>
     </widget>
     <widget type="led" version="2.0.0">
-      <name>c71c12b5</name>
+      <name>1a92b688</name>
       <x>170</x>
       <y>620</y>
       <width>20</width>
@@ -761,7 +761,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>fcaf50b6</name>
+      <name>7433ce6e</name>
       <x>10</x>
       <y>650</y>
       <width>150</width>
@@ -778,7 +778,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>2f68fe38</name>
+      <name>50b13e83</name>
       <x>170</x>
       <y>650</y>
       <width>150</width>
@@ -795,7 +795,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>1fca62ab</name>
+      <name>d7a0c0fd</name>
       <x>10</x>
       <y>680</y>
       <width>150</width>
@@ -812,7 +812,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>66c82b42</name>
+      <name>ba0dd7dc</name>
       <x>170</x>
       <y>680</y>
       <width>150</width>
@@ -829,7 +829,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>2742ea0f</name>
+      <name>08d149ae</name>
       <x>10</x>
       <y>710</y>
       <width>150</width>
@@ -846,7 +846,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>172305cc</name>
+      <name>a9032658</name>
       <x>170</x>
       <y>710</y>
       <width>150</width>
@@ -863,7 +863,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>0b9a1ad9</name>
+      <name>57a60c81</name>
       <x>10</x>
       <y>740</y>
       <width>150</width>
@@ -880,7 +880,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>36ba6295</name>
+      <name>85ec5131</name>
       <x>170</x>
       <y>740</y>
       <width>150</width>
@@ -897,7 +897,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>a620ee30</name>
+      <name>0faeb7aa</name>
       <x>10</x>
       <y>770</y>
       <width>150</width>
@@ -914,7 +914,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>eebc5794</name>
+      <name>6fabc379</name>
       <x>170</x>
       <y>770</y>
       <width>150</width>
@@ -931,7 +931,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>cf8fa946</name>
+      <name>b87e5cb2</name>
       <x>10</x>
       <y>800</y>
       <width>150</width>
@@ -948,7 +948,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>89710fb2</name>
+      <name>7e74ca42</name>
       <x>170</x>
       <y>800</y>
       <width>150</width>
@@ -965,7 +965,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>2303938b</name>
+      <name>1809c845</name>
       <x>10</x>
       <y>830</y>
       <width>150</width>
@@ -982,7 +982,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>a1f52d45</name>
+      <name>0063b3b2</name>
       <x>170</x>
       <y>830</y>
       <width>150</width>
@@ -999,7 +999,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>364f5c57</name>
+      <name>04af1369</name>
       <x>10</x>
       <y>860</y>
       <width>150</width>
@@ -1016,7 +1016,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>eebca95d</name>
+      <name>aa47d8a9</name>
       <x>170</x>
       <y>860</y>
       <width>150</width>
@@ -1033,7 +1033,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>ecab8196</name>
+      <name>cc3f880a</name>
       <x>10</x>
       <y>890</y>
       <width>150</width>
@@ -1050,7 +1050,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>315468c4</name>
+      <name>7c1667be</name>
       <x>170</x>
       <y>890</y>
       <width>150</width>
@@ -1067,7 +1067,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>0f1732e9</name>
+      <name>e086418d</name>
       <x>10</x>
       <y>920</y>
       <width>150</width>
@@ -1084,7 +1084,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>8764b63b</name>
+      <name>b3f71ce4</name>
       <x>170</x>
       <y>920</y>
       <width>150</width>
@@ -1101,7 +1101,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>3fa321fb</name>
+      <name>a80172ad</name>
       <x>10</x>
       <y>950</y>
       <width>150</width>
@@ -1118,7 +1118,7 @@
       </font>
     </widget>
     <widget type="choice" version="2.0.0">
-      <name>de6846b8</name>
+      <name>c44f95b8</name>
       <x>170</x>
       <y>950</y>
       <width>150</width>
@@ -1135,7 +1135,7 @@
       </font>
     </widget>
     <widget type="led" version="2.0.0">
-      <name>62922f92</name>
+      <name>e2b2e02a</name>
       <x>330</x>
       <y>950</y>
       <width>20</width>
@@ -1149,7 +1149,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>8b361698</name>
+      <name>a3732741</name>
       <x>10</x>
       <y>980</y>
       <width>150</width>
@@ -1166,7 +1166,7 @@
       </font>
     </widget>
     <widget type="combo" version="2.0.0">
-      <name>2255acc0</name>
+      <name>7dc4beb0</name>
       <x>170</x>
       <y>980</y>
       <width>150</width>
@@ -1183,7 +1183,7 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>3934861f</name>
+      <name>869f057b</name>
       <x>330</x>
       <y>980</y>
       <width>150</width>
@@ -1200,7 +1200,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>f4bba864</name>
+      <name>db16297e</name>
       <x>10</x>
       <y>1010</y>
       <width>150</width>
@@ -1217,7 +1217,7 @@
       </font>
     </widget>
     <widget type="led" version="2.0.0">
-      <name>8c2ff94a</name>
+      <name>defdc2e7</name>
       <x>170</x>
       <y>1010</y>
       <width>20</width>
@@ -1231,7 +1231,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>e6f6d46f</name>
+      <name>55de828f</name>
       <x>10</x>
       <y>1040</y>
       <width>150</width>
@@ -1248,7 +1248,7 @@
       </font>
     </widget>
     <widget type="led" version="2.0.0">
-      <name>7b41b94f</name>
+      <name>fdeabed1</name>
       <x>170</x>
       <y>1040</y>
       <width>20</width>
@@ -1262,7 +1262,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>154a3eb8</name>
+      <name>5345ab18</name>
       <x>10</x>
       <y>1070</y>
       <width>150</width>
@@ -1279,7 +1279,7 @@
       </font>
     </widget>
     <widget type="led" version="2.0.0">
-      <name>b0ca31bc</name>
+      <name>45dcc242</name>
       <x>170</x>
       <y>1070</y>
       <width>20</width>
@@ -1293,7 +1293,7 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>b5555ade</name>
+      <name>470087ce</name>
       <x>10</x>
       <y>1100</y>
       <width>150</width>
@@ -1310,7 +1310,7 @@
       </font>
     </widget>
     <widget type="led" version="2.0.0">
-      <name>4a57c7c8</name>
+      <name>65ccc857</name>
       <x>170</x>
       <y>1100</y>
       <width>20</width>

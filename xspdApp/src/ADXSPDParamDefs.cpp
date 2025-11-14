@@ -14,7 +14,6 @@ void ADXSPD::createAllParams() {
     createParam(ADXSPD_ChargeSummingString, asynParamInt32, &ADXSPD_ChargeSumming);
     createParam(ADXSPD_FFCorrectionString, asynParamInt32, &ADXSPD_FFCorrection);
     createParam(ADXSPD_GatingModeString, asynParamInt32, &ADXSPD_GatingMode);
-    createParam(ADXSPD_TriggerModeString, asynParamInt32, &ADXSPD_TriggerMode);
     createParam(ADXSPD_CounterModeString, asynParamInt32, &ADXSPD_CounterMode);
     createParam(ADXSPD_ResetString, asynParamInt32, &ADXSPD_Reset);
     createParam(ADXSPD_GenerateFlatfieldString, asynParamInt32, &ADXSPD_GenerateFlatfield);
@@ -30,4 +29,5 @@ void ADXSPD::createAllParams() {
     createParam(ADXSPD_ResetDetectorString, asynParamInt32, &ADXSPD_ResetDetector);
     createParam(ADXSPD_BitDepthString, asynParamInt32, &ADXSPD_BitDepth);
     createParam(ADXSPD_CrCorrString, asynParamInt32, &ADXSPD_CrCorr);
+    createParam(ADXSPD_StatusIntervalString, asynParamFloat64, &ADXSPD_StatusInterval);
 }

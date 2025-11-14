@@ -40,6 +40,7 @@
 #include <nlohmann/json.hpp>
 #include <string>
 #include <type_traits>
+#include <zlib.h>
 
 #include "ADDriver.h"
 #include "epicsThread.h"
@@ -131,6 +132,8 @@ enum class ADXSPDThreshold {
     LOW = 0,
     HIGH = 1,
 };
+
+#define ADXSPD_MIN_STATUS_POLL_INTERVAL 0.5  // Minimum status poll interval in seconds
 
 class ADXSPDModule;  // Forward declaration of module class
 

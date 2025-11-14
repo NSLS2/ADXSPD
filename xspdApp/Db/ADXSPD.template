@@ -24,30 +24,14 @@ include "ADBase.template"
 # ADBase record overrides
 
 record(mbbo, "$(P)$(R)ImageMode") {
-    field(DESC, "Image acquisition mode")
-    field(DTYP, "asynInt32")
-    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))IMAGE_MODE")
-    field(ZRVL, "0")
-    field(ZRST, "Single")
-    field(ONVL, "1")
-    field(ONST, "Multiple")
     field(TWVL, "")
     field(TWST, "")
-    field(VAL, "0")
-    field(PINI, "NO")
+    field(VAL, "1")
 }
 
 record(mbbi, "$(P)$(R)ImageMode_RBV") {
-    field(DESC, "Image acquisition mode readback")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))IMAGE_MODE")
-    field(ZRVL, "0")
-    field(ZRST, "Single")
-    field(ONVL, "1")
-    field(ONST, "Multiple")
     field(TWVL, "")
     field(TWST, "")
-    field(SCAN, "I/O Intr")
 }
 
 record(mbbo, "$(P)$(R)TriggerMode") {
@@ -61,7 +45,7 @@ record(mbbo, "$(P)$(R)TriggerMode") {
     field(TWVL, "2")
     field(TWST, "External Sequence")
     field(VAL, "0")
-    field(PINI, "NO")
+    field(PINI, "YES")
 }
 
 record(mbbi, "$(P)$(R)TriggerMode_RBV") {
@@ -517,5 +501,24 @@ record(bi, "$(P)$(R)CountrateCorrection_RBV"){
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CR_CORR")
     field(ZNAM, "Disabled")
     field(ONAM, "Enabled")
+    field(SCAN, "I/O Intr")
+}
+
+record(ao, "$(P)$(R)StatusInterval"){
+    field(DESC, "Status update interval in s")
+    field(DTYP, "asynFloat64")
+    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_STATUS_INTERVAL")
+    field(VAL, "5")
+    field(LOLO, "0.5")
+    field(EGU, "s")
+    field(PINI, "YES")
+}
+
+record(ai, "$(P)$(R)StatusInterval_RBV"){
+    field(DESC, "Status update interval readback in s")
+    field(DTYP, "asynFloat64")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_STATUS_INTERVAL")
+    field(EGU, "s")
+    field(VAL, "5")
     field(SCAN, "I/O Intr")
 }

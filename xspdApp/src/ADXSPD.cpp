@@ -406,21 +406,52 @@ void ADXSPD::acquisitionThread() {
             setIntegerParam(NDArraySizeX, arrayInfo.xSize);
             setIntegerParam(NDArraySizeY, arrayInfo.ySize);
 
-            // Copy data from new frame to pArray
-            memcpy(pArray->pData, zmq_msg_data(&frameMessages[2]), arrayInfo.totalBytes);
+            // Decompress data if compressed
+            ADXSPDCompressor compressor;
+            getIntegerParam(ADXSPD_Compressor, (int*) &compressor);
 
-            // increment the array counter
-            int arrayCounter;
-            getIntegerParam(NDArrayCounter, &arrayCounter);
-            arrayCounter++;
-            setIntegerParam(NDArrayCounter, arrayCounter);
+            bool decompressOK = true;
+            if (compressor == ADXSPDCompressor::ZLIB) {
+                // Decompress using zlib
+                size_t decompressedSize;
+                int zlibStatus = uncompress((Bytef*) pArray->pData, &decompressedSize,
+                                           (Bytef*) zmq_msg_data(&frameMessages[2]),
+                                           frameSizeBytes);
+                if (zlibStatus != Z_OK) {
+                    ERR_ARGS("Failed to decompress frame data with zlib, status code %d",
+                             zlibStatus);
+                    pArray->release();
+                    continue;
+                }
+                if (decompressedSize != arrayInfo.totalBytes) {
+                    ERR_ARGS("Decompressed size %lu does not match expected size %lu",
+                             decompressedSize, arrayInfo.totalBytes);
+                    pArray->release();
+                    continue;
+                }
+            } else if (compressor == ADXSPDCompressor::BLOSC) {
+                // TODO: Decompress using Blosc
+                ERR("BLOSC decompression not yet implemented");
+                decompressOK = false;
+            } else {
+                // Copy data from new frame to pArray
+                memcpy(pArray->pData, zmq_msg_data(&frameMessages[2]), arrayInfo.totalBytes);
+            }
 
-            // set the image unique ID to the number in the sequence
-            pArray->uniqueId = static_cast<int>(frameNumber);
-            pArray->pAttributeList->add("ColorMode", "Color Mode", NDAttrInt32, &colorMode);
+            if (decompressOK) {
+                // increment the array counter
+                int arrayCounter;
+                getIntegerParam(NDArrayCounter, &arrayCounter);
+                arrayCounter++;
+                setIntegerParam(NDArrayCounter, arrayCounter);
 
-            getAttributes(pArray->pAttributeList);
-            doCallbacksGenericPointer(pArray, NDArrayData, 0);
+                // set the image unique ID to the number in the sequence
+                pArray->uniqueId = static_cast<int>(frameNumber);
+                pArray->pAttributeList->add("ColorMode", "Color Mode", NDAttrInt32, &colorMode);
+
+                getAttributes(pArray->pAttributeList);
+                doCallbacksGenericPointer(pArray, NDArrayData, 0);
+            }
 
             // If in single mode, finish acq, if in multiple mode and reached target number
             // complete acquisition.
@@ -451,7 +482,14 @@ void ADXSPD::acquisitionThread() {
  * @brief Main monitoring loop for ADXSPD
  */
 void ADXSPD::monitorThread() {
+    double pollInterval;
     while (this->alive) {
+
+        getDoubleParam(ADXSPD_StatusInterval, &pollInterval);
+
+        // Don't allow polling faster than minimum interval
+        if (pollInterval <= ADXSPD_MIN_STATUS_POLL_INTERVAL) pollInterval = ADXSPD_MIN_STATUS_POLL_INTERVAL;
+
         ADXSPDStatus status =
             xspdGetDetVar<ADXSPDStatus>("status");
         setIntegerParam(ADStatus, static_cast<int>(status));
@@ -467,7 +505,7 @@ void ADXSPD::monitorThread() {
         }
 
         // TODO: Allow for setting the polling interval via a PV
-        epicsThreadSleep(10.0);
+        epicsThreadSleep(pollInterval);
         callParamCallbacks();
     }
 }
@@ -612,10 +650,11 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
     } else if (function < ADXSPD_FIRST_PARAM) {
         status = ADDriver::writeInt32(pasynUser, value);
     } else {
-        int actualValue;
+        int actualValue = value;
         string endpoint;
         if(function == ADXSPD_BitDepth) {
             actualValue = xspdSetDetVar<int>("bit_depth", value);
+            setIntegerParam(NDDataType, static_cast<int>(getDataTypeForBitDepth(actualValue)));
         } else if(function == ADXSPD_SummedFrames) {
             actualValue = xspdSetDetVar<int>("summed_frames", value);
         } else if(function == ADXSPD_RoiRows) {
@@ -639,9 +678,6 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             actualValue = static_cast<int>(xspdSetDetVar<ADXSPDOnOff>("saturation_flag", static_cast<ADXSPDOnOff>(value)));
         } else if(function == ADXSPD_ShuffleMode) {
             actualValue = static_cast<int>(xspdSetDetVar<ADXSPDShuffleMode>("shuffle_mode", static_cast<ADXSPDShuffleMode>(value)));
-        } else {
-            WARN_ARGS("Unhandled parameter write event for param %s", paramName);
-            return asynError;
         }
 
         setIntegerParam(function, actualValue);
@@ -742,18 +778,17 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
     } else if (function < ADXSPD_FIRST_PARAM) {
         status = ADDriver::writeFloat64(pasynUser, value);
     } else {
-        double actualValue;
+        double actualValue = value;
         string endpoint;
         if(function == ADXSPD_BeamEnergy) {
             endpoint = "beam_energy";
             actualValue = xspdSetDetVar<double>(endpoint, value);
         } else if(function == ADXSPD_LowThreshold) {
-            double actualValue = setThreshold(ADXSPDThreshold::LOW, value);
+            actualValue = setThreshold(ADXSPDThreshold::LOW, value);
         } else if(function == ADXSPD_HighThreshold) {
-            double actualValue = setThreshold(ADXSPDThreshold::HIGH, value);
-        } else {
-            WARN_ARGS("Unhandled parameter write event for param %s", paramName);
-            return asynError;
+            actualValue = setThreshold(ADXSPDThreshold::HIGH, value);
+        } else if (function == ADXSPD_StatusInterval && value < ADXSPD_MIN_STATUS_POLL_INTERVAL) {
+            actualValue = ADXSPD_MIN_STATUS_POLL_INTERVAL;
         }
         setDoubleParam(function, actualValue);
         if(actualValue != value) {
