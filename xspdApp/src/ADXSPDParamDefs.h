@@ -5,8 +5,6 @@
 // Generated from ADXSPD.template
 
 // String definitions for parameters
-#define ADXSPD_TriggerModeString "XSPD_TRIGGER_MODE"
-#define ADXSPD_ModeString "TRIGGER_MODE"
 #define ADXSPD_ApiVersionString "XSPD_API_VERSION"
 #define ADXSPD_VersionString "XSPD_VERSION"
 #define ADXSPD_NumModulesString "XSPD_NUM_MODULES"
@@ -35,8 +33,6 @@
 #define ADXSPD_StatusIntervalString "XSPD_STATUS_INTERVAL"
 
 // Parameter index definitions
-int ADXSPD_TriggerMode;
-int ADXSPD_Mode;
 int ADXSPD_ApiVersion;
 int ADXSPD_Version;
 int ADXSPD_NumModules;
@@ -64,7 +60,7 @@ int ADXSPD_BitDepth;
 int ADXSPD_CrCorr;
 int ADXSPD_StatusInterval;
 
-#define ADXSPD_FIRST_PARAM ADXSPD_TriggerMode
+#define ADXSPD_FIRST_PARAM ADXSPD_ApiVersion
 #define ADXSPD_LAST_PARAM ADXSPD_StatusInterval
 
 #define NUM_ADXSPD_PARAMS ((int)(&ADXSPD_LAST_PARAM - &ADXSPD_FIRST_PARAM + 1))

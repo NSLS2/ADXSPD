@@ -2,112 +2,10 @@
   <display version="2.0.0">
     <name>ADXSPD</name>
     <widget type="label" version="2.0.0">
-      <name>8b5487ff</name>
+      <name>e37f5f68</name>
       <x>10</x>
       <y>20</y>
-      <width>150</width>
-      <height>20</height>
-      <text>ImageMode</text>
-      <foreground_color>
-        <color red="0" blue="0" green="0" alpha="255"/>
-      </foreground_color>
-      <background_color>
-        <color red="187" blue="187" green="187" alpha="255"/>
-      </background_color>
-      <font>
-        <font family="Liberation Sans" size="16" style="REGULAR"/>
-      </font>
-    </widget>
-    <widget type="combo" version="2.0.0">
-      <name>ff25181d</name>
-      <x>170</x>
-      <y>20</y>
-      <width>150</width>
-      <height>20</height>
-      <pv_name>$(P)$(R)ImageMode</pv_name>
-      <foreground_color>
-        <color red="0" blue="0" green="0" alpha="255"/>
-      </foreground_color>
-      <background_color>
-        <color red="115" blue="255" green="223" alpha="255"/>
-      </background_color>
-      <font>
-        <font family="Liberation Sans" size="16" style="REGULAR"/>
-      </font>
-    </widget>
-    <widget type="textupdate" version="2.0.0">
-      <name>33b72a3d</name>
-      <x>330</x>
-      <y>20</y>
-      <width>150</width>
-      <height>20</height>
-      <pv_name>$(P)$(R)ImageMode_RBV</pv_name>
-      <foreground_color>
-        <color red="10" blue="184" green="0" alpha="255"/>
-      </foreground_color>
-      <background_color>
-        <color red="187" blue="187" green="187" alpha="255"/>
-      </background_color>
-      <font>
-        <font family="Liberation Sans" size="16" style="REGULAR"/>
-      </font>
-    </widget>
-    <widget type="label" version="2.0.0">
-      <name>23db2fcb</name>
-      <x>10</x>
-      <y>50</y>
-      <width>150</width>
-      <height>20</height>
-      <text>Trigger mode</text>
-      <foreground_color>
-        <color red="0" blue="0" green="0" alpha="255"/>
-      </foreground_color>
-      <background_color>
-        <color red="187" blue="187" green="187" alpha="255"/>
-      </background_color>
-      <font>
-        <font family="Liberation Sans" size="16" style="REGULAR"/>
-      </font>
-    </widget>
-    <widget type="combo" version="2.0.0">
-      <name>e9c5f76e</name>
-      <x>170</x>
-      <y>50</y>
-      <width>150</width>
-      <height>20</height>
-      <pv_name>$(P)$(R)TriggerMode</pv_name>
-      <foreground_color>
-        <color red="0" blue="0" green="0" alpha="255"/>
-      </foreground_color>
-      <background_color>
-        <color red="115" blue="255" green="223" alpha="255"/>
-      </background_color>
-      <font>
-        <font family="Liberation Sans" size="16" style="REGULAR"/>
-      </font>
-    </widget>
-    <widget type="textupdate" version="2.0.0">
-      <name>7748174e</name>
-      <x>330</x>
-      <y>50</y>
-      <width>150</width>
-      <height>20</height>
-      <pv_name>$(P)$(R)TriggerMode_RBV</pv_name>
-      <foreground_color>
-        <color red="10" blue="184" green="0" alpha="255"/>
-      </foreground_color>
-      <background_color>
-        <color red="187" blue="187" green="187" alpha="255"/>
-      </background_color>
-      <font>
-        <font family="Liberation Sans" size="16" style="REGULAR"/>
-      </font>
-    </widget>
-    <widget type="label" version="2.0.0">
-      <name>22490289</name>
-      <x>10</x>
-      <y>80</y>
-      <width>150</width>
+      <width>120</width>
       <height>20</height>
       <text>XSPD API Version</text>
       <foreground_color>
@@ -121,10 +19,10 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>adf82e94</name>
-      <x>170</x>
-      <y>80</y>
-      <width>150</width>
+      <name>00a5d5bd</name>
+      <x>140</x>
+      <y>20</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)APIVersion_RBV</pv_name>
       <foreground_color>
@@ -138,10 +36,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>98188ecc</name>
+      <name>f5cd0fea</name>
       <x>10</x>
-      <y>110</y>
-      <width>150</width>
+      <y>50</y>
+      <width>120</width>
       <height>20</height>
       <text>XSPD Version</text>
       <foreground_color>
@@ -155,10 +53,10 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>23e389e4</name>
-      <x>170</x>
-      <y>110</y>
-      <width>150</width>
+      <name>e4622951</name>
+      <x>140</x>
+      <y>50</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)XSPDVersion_RBV</pv_name>
       <foreground_color>
@@ -172,10 +70,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>8fd1eb4d</name>
+      <name>1cbcef60</name>
       <x>10</x>
-      <y>140</y>
-      <width>150</width>
+      <y>80</y>
+      <width>120</width>
       <height>20</height>
       <text>Number of modules</text>
       <foreground_color>
@@ -189,10 +87,10 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>1d09e858</name>
-      <x>170</x>
-      <y>140</y>
-      <width>150</width>
+      <name>51bb2550</name>
+      <x>140</x>
+      <y>80</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)NumModules_RBV</pv_name>
       <foreground_color>
@@ -206,10 +104,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>cbbb2ace</name>
+      <name>70ee02fa</name>
       <x>10</x>
-      <y>170</y>
-      <width>150</width>
+      <y>110</y>
+      <width>120</width>
       <height>20</height>
       <text>Compression level</text>
       <foreground_color>
@@ -223,10 +121,10 @@
       </font>
     </widget>
     <widget type="combo" version="2.0.0">
-      <name>d6aecfe0</name>
-      <x>170</x>
-      <y>170</y>
-      <width>150</width>
+      <name>09e4f2e3</name>
+      <x>140</x>
+      <y>110</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)CompressLevel</pv_name>
       <foreground_color>
@@ -240,10 +138,10 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>e6cfcff2</name>
-      <x>330</x>
-      <y>170</y>
-      <width>150</width>
+      <name>13aaaf28</name>
+      <x>270</x>
+      <y>110</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)CompressLevel_RBV</pv_name>
       <foreground_color>
@@ -257,10 +155,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>30ea2f3f</name>
+      <name>7ed18005</name>
       <x>10</x>
-      <y>200</y>
-      <width>150</width>
+      <y>140</y>
+      <width>120</width>
       <height>20</height>
       <text>Compressor type</text>
       <foreground_color>
@@ -274,10 +172,10 @@
       </font>
     </widget>
     <widget type="combo" version="2.0.0">
-      <name>88e64471</name>
-      <x>170</x>
-      <y>200</y>
-      <width>150</width>
+      <name>e39c9e0b</name>
+      <x>140</x>
+      <y>140</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)Compressor</pv_name>
       <foreground_color>
@@ -291,10 +189,10 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>13a82803</name>
-      <x>330</x>
-      <y>200</y>
-      <width>150</width>
+      <name>4bef8787</name>
+      <x>270</x>
+      <y>140</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)Compressor_RBV</pv_name>
       <foreground_color>
@@ -308,10 +206,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>8a3c9d52</name>
+      <name>6f6ba212</name>
       <x>10</x>
-      <y>230</y>
-      <width>150</width>
+      <y>170</y>
+      <width>120</width>
       <height>20</height>
       <text>Beam energy in keV</text>
       <foreground_color>
@@ -325,10 +223,10 @@
       </font>
     </widget>
     <widget type="textentry" version="2.0.0">
-      <name>004bf8a6</name>
-      <x>170</x>
-      <y>230</y>
-      <width>150</width>
+      <name>72655590</name>
+      <x>140</x>
+      <y>170</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)BeamEnergy</pv_name>
       <foreground_color>
@@ -342,10 +240,10 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>f2044c16</name>
-      <x>330</x>
-      <y>230</y>
-      <width>150</width>
+      <name>20d807f3</name>
+      <x>270</x>
+      <y>170</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)BeamEnergy_RBV</pv_name>
       <foreground_color>
@@ -359,10 +257,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>ac2bbf5d</name>
+      <name>00f05a5f</name>
       <x>10</x>
-      <y>260</y>
-      <width>150</width>
+      <y>200</y>
+      <width>120</width>
       <height>20</height>
       <text>Saturation flag enable</text>
       <foreground_color>
@@ -376,10 +274,10 @@
       </font>
     </widget>
     <widget type="choice" version="2.0.0">
-      <name>7103ff94</name>
-      <x>170</x>
-      <y>260</y>
-      <width>150</width>
+      <name>a27c60dd</name>
+      <x>140</x>
+      <y>200</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)SaturationFlag</pv_name>
       <foreground_color>
@@ -392,25 +290,28 @@
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
     </widget>
-    <widget type="led" version="2.0.0">
-      <name>b7103c27</name>
-      <x>330</x>
-      <y>260</y>
-      <width>20</width>
+    <widget type="textupdate" version="2.0.0">
+      <name>56281699</name>
+      <x>270</x>
+      <y>200</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)SaturationFlag_RBV</pv_name>
       <foreground_color>
-        <color red="0" blue="0" green="0" alpha="255"/>
+        <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
       <font>
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>61317ca5</name>
+      <name>ad50130c</name>
       <x>10</x>
-      <y>290</y>
-      <width>150</width>
+      <y>230</y>
+      <width>120</width>
       <height>20</height>
       <text>Charge summing enable</text>
       <foreground_color>
@@ -424,10 +325,10 @@
       </font>
     </widget>
     <widget type="choice" version="2.0.0">
-      <name>367ccb9f</name>
-      <x>170</x>
-      <y>290</y>
-      <width>150</width>
+      <name>5a9ddeec</name>
+      <x>140</x>
+      <y>230</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)ChargeSumming</pv_name>
       <foreground_color>
@@ -440,25 +341,28 @@
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
     </widget>
-    <widget type="led" version="2.0.0">
-      <name>dc8bc239</name>
-      <x>330</x>
-      <y>290</y>
-      <width>20</width>
+    <widget type="textupdate" version="2.0.0">
+      <name>9d51d005</name>
+      <x>270</x>
+      <y>230</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)ChargeSumming_RBV</pv_name>
       <foreground_color>
-        <color red="0" blue="0" green="0" alpha="255"/>
+        <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
       <font>
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>2f4b6d85</name>
+      <name>6678ea3e</name>
       <x>10</x>
-      <y>320</y>
-      <width>150</width>
+      <y>260</y>
+      <width>120</width>
       <height>20</height>
       <text>Flat field correction enable</text>
       <foreground_color>
@@ -472,10 +376,10 @@
       </font>
     </widget>
     <widget type="choice" version="2.0.0">
-      <name>d37fabcf</name>
-      <x>170</x>
-      <y>320</y>
-      <width>150</width>
+      <name>913bf6bf</name>
+      <x>140</x>
+      <y>260</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)FlatFieldCorrection</pv_name>
       <foreground_color>
@@ -488,25 +392,28 @@
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
     </widget>
-    <widget type="led" version="2.0.0">
-      <name>06107a1e</name>
-      <x>330</x>
-      <y>320</y>
-      <width>20</width>
+    <widget type="textupdate" version="2.0.0">
+      <name>0da59a80</name>
+      <x>270</x>
+      <y>260</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)FlatFieldCorrection_RBV</pv_name>
       <foreground_color>
-        <color red="0" blue="0" green="0" alpha="255"/>
+        <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
       <font>
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>9911f94e</name>
+      <name>a9822704</name>
       <x>10</x>
-      <y>350</y>
-      <width>150</width>
+      <y>290</y>
+      <width>120</width>
       <height>20</height>
       <text>Gating mode enable</text>
       <foreground_color>
@@ -520,10 +427,10 @@
       </font>
     </widget>
     <widget type="choice" version="2.0.0">
-      <name>454fdc3f</name>
-      <x>170</x>
-      <y>350</y>
-      <width>150</width>
+      <name>1766c851</name>
+      <x>140</x>
+      <y>290</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)GatingMode</pv_name>
       <foreground_color>
@@ -536,25 +443,28 @@
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
     </widget>
-    <widget type="led" version="2.0.0">
-      <name>2d8e85c8</name>
-      <x>330</x>
-      <y>350</y>
-      <width>20</width>
+    <widget type="textupdate" version="2.0.0">
+      <name>63ada0fa</name>
+      <x>270</x>
+      <y>290</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)GatingMode_RBV</pv_name>
       <foreground_color>
-        <color red="0" blue="0" green="0" alpha="255"/>
+        <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
       <font>
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>24659e71</name>
+      <name>9e2609ac</name>
       <x>10</x>
-      <y>380</y>
-      <width>150</width>
+      <y>320</y>
+      <width>120</width>
       <height>20</height>
       <text>Counter mode</text>
       <foreground_color>
@@ -568,10 +478,10 @@
       </font>
     </widget>
     <widget type="choice" version="2.0.0">
-      <name>4311e244</name>
-      <x>170</x>
-      <y>380</y>
-      <width>150</width>
+      <name>33f8ab46</name>
+      <x>140</x>
+      <y>320</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)CounterMode</pv_name>
       <foreground_color>
@@ -584,25 +494,28 @@
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
     </widget>
-    <widget type="led" version="2.0.0">
-      <name>c885942f</name>
-      <x>330</x>
-      <y>380</y>
-      <width>20</width>
+    <widget type="textupdate" version="2.0.0">
+      <name>98838080</name>
+      <x>270</x>
+      <y>320</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)CounterMode_RBV</pv_name>
       <foreground_color>
-        <color red="0" blue="0" green="0" alpha="255"/>
+        <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
       <font>
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>cd2e750e</name>
+      <name>cf0045a2</name>
       <x>10</x>
-      <y>410</y>
-      <width>150</width>
+      <y>350</y>
+      <width>120</width>
       <height>20</height>
       <text>Reset detector</text>
       <foreground_color>
@@ -616,10 +529,10 @@
       </font>
     </widget>
     <widget type="choice" version="2.0.0">
-      <name>d96d055e</name>
-      <x>170</x>
-      <y>410</y>
-      <width>150</width>
+      <name>c1c5e98c</name>
+      <x>140</x>
+      <y>350</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)Reset</pv_name>
       <foreground_color>
@@ -633,10 +546,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>a188c55b</name>
+      <name>caee6e1c</name>
       <x>10</x>
-      <y>440</y>
-      <width>150</width>
+      <y>380</y>
+      <width>120</width>
       <height>20</height>
       <text>Generate flatfield</text>
       <foreground_color>
@@ -650,10 +563,10 @@
       </font>
     </widget>
     <widget type="choice" version="2.0.0">
-      <name>bd7d4191</name>
-      <x>170</x>
-      <y>440</y>
-      <width>150</width>
+      <name>fb346b54</name>
+      <x>140</x>
+      <y>380</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)GenerateFlatfield</pv_name>
       <foreground_color>
@@ -667,10 +580,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>1c1c3262</name>
+      <name>61505807</name>
       <x>10</x>
-      <y>470</y>
-      <width>150</width>
+      <y>410</y>
+      <width>120</width>
       <height>20</height>
       <text>Shuffle mode</text>
       <foreground_color>
@@ -684,10 +597,10 @@
       </font>
     </widget>
     <widget type="combo" version="2.0.0">
-      <name>c817184d</name>
-      <x>170</x>
-      <y>470</y>
-      <width>150</width>
+      <name>65bfbe94</name>
+      <x>140</x>
+      <y>410</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)ShuffleMode</pv_name>
       <foreground_color>
@@ -701,10 +614,10 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>5b2f6460</name>
-      <x>330</x>
-      <y>470</y>
-      <width>150</width>
+      <name>1e98926f</name>
+      <x>270</x>
+      <y>410</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)ShuffleMode_RBV</pv_name>
       <foreground_color>
@@ -718,10 +631,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>4503bc1c</name>
+      <name>dd4578f0</name>
       <x>10</x>
-      <y>500</y>
-      <width>150</width>
+      <y>440</y>
+      <width>120</width>
       <height>20</height>
       <text>Number of frames to sum</text>
       <foreground_color>
@@ -735,10 +648,10 @@
       </font>
     </widget>
     <widget type="textentry" version="2.0.0">
-      <name>87f9e26c</name>
-      <x>170</x>
-      <y>500</y>
-      <width>150</width>
+      <name>b6093d9b</name>
+      <x>140</x>
+      <y>440</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)SummedFrames</pv_name>
       <foreground_color>
@@ -752,10 +665,10 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>d059dbc7</name>
-      <x>330</x>
-      <y>500</y>
-      <width>150</width>
+      <name>4c3f0a4a</name>
+      <x>270</x>
+      <y>440</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)SummedFrames_RBV</pv_name>
       <foreground_color>
@@ -769,10 +682,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>a8c93ded</name>
+      <name>b6ca611c</name>
       <x>10</x>
-      <y>530</y>
-      <width>150</width>
+      <y>470</y>
+      <width>120</width>
       <height>20</height>
       <text>ROI rows</text>
       <foreground_color>
@@ -786,10 +699,10 @@
       </font>
     </widget>
     <widget type="textentry" version="2.0.0">
-      <name>aa8b4932</name>
-      <x>170</x>
-      <y>530</y>
-      <width>150</width>
+      <name>b551699b</name>
+      <x>140</x>
+      <y>470</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)ROIRows</pv_name>
       <foreground_color>
@@ -803,10 +716,10 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>a5b55004</name>
-      <x>330</x>
-      <y>530</y>
-      <width>150</width>
+      <name>b3663fec</name>
+      <x>270</x>
+      <y>470</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)ROIRows_RBV</pv_name>
       <foreground_color>
@@ -820,10 +733,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>78a96750</name>
+      <name>dc5a4e86</name>
       <x>10</x>
-      <y>560</y>
-      <width>150</width>
+      <y>500</y>
+      <width>120</width>
       <height>20</height>
       <text>Low threshold</text>
       <foreground_color>
@@ -837,10 +750,10 @@
       </font>
     </widget>
     <widget type="textentry" version="2.0.0">
-      <name>ce48a56b</name>
-      <x>170</x>
-      <y>560</y>
-      <width>150</width>
+      <name>c13b73be</name>
+      <x>140</x>
+      <y>500</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)LowThreshold</pv_name>
       <foreground_color>
@@ -854,10 +767,10 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>da2df746</name>
-      <x>330</x>
-      <y>560</y>
-      <width>150</width>
+      <name>98b1c470</name>
+      <x>270</x>
+      <y>500</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)LowThreshold_RBV</pv_name>
       <foreground_color>
@@ -871,10 +784,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>734962e6</name>
+      <name>b88b45bd</name>
       <x>10</x>
-      <y>590</y>
-      <width>150</width>
+      <y>530</y>
+      <width>120</width>
       <height>20</height>
       <text>High threshold</text>
       <foreground_color>
@@ -888,10 +801,10 @@
       </font>
     </widget>
     <widget type="textentry" version="2.0.0">
-      <name>6d486e76</name>
-      <x>170</x>
-      <y>590</y>
-      <width>150</width>
+      <name>5ca0a41a</name>
+      <x>140</x>
+      <y>530</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)HighThreshold</pv_name>
       <foreground_color>
@@ -905,10 +818,10 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>fada7b28</name>
-      <x>330</x>
-      <y>590</y>
-      <width>150</width>
+      <name>ab9c7f75</name>
+      <x>270</x>
+      <y>530</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)HighThreshold_RBV</pv_name>
       <foreground_color>
@@ -922,10 +835,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>3ce9265e</name>
+      <name>a2372272</name>
       <x>10</x>
-      <y>620</y>
-      <width>150</width>
+      <y>560</y>
+      <width>120</width>
       <height>20</height>
       <text>Number of frames queued</text>
       <foreground_color>
@@ -939,10 +852,10 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>2d9b9ed3</name>
-      <x>170</x>
-      <y>620</y>
-      <width>150</width>
+      <name>844a32bf</name>
+      <x>140</x>
+      <y>560</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)FramesQueued_RBV</pv_name>
       <foreground_color>
@@ -956,10 +869,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>63f6cccc</name>
+      <name>764f6214</name>
       <x>10</x>
-      <y>650</y>
-      <width>150</width>
+      <y>590</y>
+      <width>120</width>
       <height>20</height>
       <text>Pixel mask file path</text>
       <foreground_color>
@@ -973,10 +886,10 @@
       </font>
     </widget>
     <widget type="textentry" version="2.0.0">
-      <name>2b208dc7</name>
-      <x>170</x>
-      <y>650</y>
-      <width>150</width>
+      <name>95346b0b</name>
+      <x>140</x>
+      <y>590</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)PixelMask</pv_name>
       <foreground_color>
@@ -990,10 +903,10 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>c8caeead</name>
-      <x>330</x>
-      <y>650</y>
-      <width>150</width>
+      <name>fea90e19</name>
+      <x>270</x>
+      <y>590</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)PixelMask_RBV</pv_name>
       <foreground_color>
@@ -1007,10 +920,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>599c3d78</name>
+      <name>12addd24</name>
       <x>10</x>
-      <y>680</y>
-      <width>150</width>
+      <y>620</y>
+      <width>120</width>
       <height>20</height>
       <text>Generate flatfield</text>
       <foreground_color>
@@ -1024,10 +937,10 @@
       </font>
     </widget>
     <widget type="choice" version="2.0.0">
-      <name>60e1a979</name>
-      <x>170</x>
-      <y>680</y>
-      <width>150</width>
+      <name>3924bb4e</name>
+      <x>140</x>
+      <y>620</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)GenerateFF</pv_name>
       <foreground_color>
@@ -1041,10 +954,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>ce905d57</name>
+      <name>44c8c1e6</name>
       <x>10</x>
-      <y>710</y>
-      <width>150</width>
+      <y>650</y>
+      <width>120</width>
       <height>20</height>
       <text>Reset detector</text>
       <foreground_color>
@@ -1058,10 +971,10 @@
       </font>
     </widget>
     <widget type="choice" version="2.0.0">
-      <name>21f5003b</name>
-      <x>170</x>
-      <y>710</y>
-      <width>150</width>
+      <name>a7fbfe31</name>
+      <x>140</x>
+      <y>650</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)ResetDetector</pv_name>
       <foreground_color>
@@ -1075,10 +988,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>1a8f9227</name>
+      <name>83a6eec2</name>
       <x>10</x>
-      <y>740</y>
-      <width>150</width>
+      <y>680</y>
+      <width>120</width>
       <height>20</height>
       <text>Bit depth</text>
       <foreground_color>
@@ -1092,10 +1005,10 @@
       </font>
     </widget>
     <widget type="combo" version="2.0.0">
-      <name>47853205</name>
-      <x>170</x>
-      <y>740</y>
-      <width>150</width>
+      <name>04271c49</name>
+      <x>140</x>
+      <y>680</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)BitDepth</pv_name>
       <foreground_color>
@@ -1109,10 +1022,10 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>fe82bda6</name>
-      <x>330</x>
-      <y>740</y>
-      <width>150</width>
+      <name>d8eaa3d7</name>
+      <x>270</x>
+      <y>680</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)BitDepth_RBV</pv_name>
       <foreground_color>
@@ -1126,10 +1039,10 @@
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>2e8219d0</name>
+      <name>dccd23a0</name>
       <x>10</x>
-      <y>770</y>
-      <width>150</width>
+      <y>710</y>
+      <width>120</width>
       <height>20</height>
       <text>Count rate correction enable</text>
       <foreground_color>
@@ -1143,10 +1056,10 @@
       </font>
     </widget>
     <widget type="choice" version="2.0.0">
-      <name>e856da41</name>
-      <x>170</x>
-      <y>770</y>
-      <width>150</width>
+      <name>02ce2ee0</name>
+      <x>140</x>
+      <y>710</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)CountrateCorrection</pv_name>
       <foreground_color>
@@ -1159,25 +1072,28 @@
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
     </widget>
-    <widget type="led" version="2.0.0">
-      <name>3f9c7064</name>
-      <x>330</x>
-      <y>770</y>
-      <width>20</width>
+    <widget type="textupdate" version="2.0.0">
+      <name>e0246db6</name>
+      <x>270</x>
+      <y>710</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)CountrateCorrection_RBV</pv_name>
       <foreground_color>
-        <color red="0" blue="0" green="0" alpha="255"/>
+        <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
       <font>
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
     </widget>
     <widget type="label" version="2.0.0">
-      <name>ba328cb9</name>
+      <name>fcc2ef19</name>
       <x>10</x>
-      <y>800</y>
-      <width>150</width>
+      <y>740</y>
+      <width>120</width>
       <height>20</height>
       <text>Status update interval in s</text>
       <foreground_color>
@@ -1191,10 +1107,10 @@
       </font>
     </widget>
     <widget type="textentry" version="2.0.0">
-      <name>48396eb9</name>
-      <x>170</x>
-      <y>800</y>
-      <width>150</width>
+      <name>bea66023</name>
+      <x>140</x>
+      <y>740</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)StatusInterval</pv_name>
       <foreground_color>
@@ -1208,10 +1124,10 @@
       </font>
     </widget>
     <widget type="textupdate" version="2.0.0">
-      <name>f3def6d9</name>
-      <x>330</x>
-      <y>800</y>
-      <width>150</width>
+      <name>8052c22e</name>
+      <x>270</x>
+      <y>740</y>
+      <width>120</width>
       <height>20</height>
       <pv_name>$(P)$(R)StatusInterval_RBV</pv_name>
       <foreground_color>
@@ -1227,6 +1143,6 @@
     <background_color>
       <color red="187" blue="187" green="187" alpha="255"/>
     </background_color>
-    <height>840</height>
-    <width>490</width>
+    <height>780</height>
+    <width>400</width>
   </display>

@@ -57,6 +57,16 @@ using namespace std;
     if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) \
         printf("ERROR | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
+#define ERR_TO_STATUS(fmt, ...)                     \
+    if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) { \
+        char errMsg[256];                              \
+        snprintf(errMsg, sizeof(errMsg), fmt, __VA_ARGS__); \
+        printf("ERROR | %s::%s: %s\n", driverName, __func__, errMsg); \
+        setStringParam(ADStatusMessage, errMsg);          \
+        setIntegerParam(ADStatus, ADStatusError);         \
+        callParamCallbacks();                             \
+    }
+
 // Warning message formatters
 #define WARN(msg)                                       \
     if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) \
@@ -66,8 +76,16 @@ using namespace std;
     if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) \
         printf("WARNING | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
-// Info message formatters. Because there is no ASYN trace for info messages, we just use `printf`
-// here.
+#define WARN_TO_STATUS(fmt, ...)                      \
+    if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) { \
+        char warnMsg[256];                               \
+        snprintf(warnMsg, sizeof(warnMsg), fmt, __VA_ARGS__); \
+        printf("WARNING | %s::%s: %s\n", driverName, __func__, warnMsg); \
+        setStringParam(ADStatusMessage, warnMsg);          \
+        callParamCallbacks();                             \
+    }
+
+// Info message formatters
 #define INFO(msg)                                    \
     if (this->getLogLevel() >= ADXSPDLogLevel::INFO) \
         printf("INFO | %s::%s: %s\n", driverName, __func__, msg);
@@ -75,6 +93,15 @@ using namespace std;
 #define INFO_ARGS(fmt, ...)                          \
     if (this->getLogLevel() >= ADXSPDLogLevel::INFO) \
         printf("INFO | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
+
+#define INFO_TO_STATUS(fmt, ...)                      \
+    if (this->getLogLevel() >= ADXSPDLogLevel::INFO) { \
+        char infoMsg[256];                               \
+        snprintf(infoMsg, sizeof(infoMsg), fmt, __VA_ARGS__); \
+        printf("INFO | %s::%s: %s\n", driverName, __func__, infoMsg); \
+        setStringParam(ADStatusMessage, infoMsg);          \
+        callParamCallbacks();                             \
+    }
 
 // Debug message formatters
 #define DEBUG(msg)                                    \

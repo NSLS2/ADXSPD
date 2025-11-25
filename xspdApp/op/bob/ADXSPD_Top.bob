@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Saved on 2025-11-04 14:14:11 by jwlodek-->
+<!--Saved on 2025-11-14 10:08:36 by jwlodek-->
 <display version="2.0.0">
   <name>ADXSPD Top</name>
   <macros>
@@ -17,8 +17,7 @@
     <file>ADXSPD.bob</file>
     <x>740</x>
     <y>40</y>
-    <width>490</width>
-    <height>780</height>
+    <height>840</height>
     <resize>2</resize>
   </widget>
   <widget type="embedded" version="2.0.0">
@@ -37,9 +36,8 @@
       <P>DEV:XSPD1:</P>
     </macros>
     <file>ADXSPDModule.bob</file>
-    <x>1300</x>
+    <x>1160</x>
     <y>30</y>
-    <width>490</width>
     <height>1140</height>
     <resize>2</resize>
   </widget>

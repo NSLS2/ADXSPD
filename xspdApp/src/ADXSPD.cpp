@@ -177,7 +177,7 @@ T ADXSPD::xspdSetVar(string endpoint, T value, string rbKey) {
         ERR_ARGS("Failed to set variable %s", endpoint.c_str());
         return T();
     }
-    cout << response.text << endl;
+    DEBUG_ARGS("Received response: %s", response.text.c_str());
 
     json respJson = json::parse(response.text, nullptr, true, false, true);
 
@@ -607,7 +607,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
 
     if (acquiring && find(this->onlyIdleParams.begin(), this->onlyIdleParams.end(), function) !=
                          this->onlyIdleParams.end()) {
-        ERR_ARGS("Cannot set parameter %s while acquiring", paramName);
+        ERR_TO_STATUS("Cannot set parameter %s while acquiring", paramName);
         return asynError;
     }
 
@@ -639,7 +639,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             }
         }
         if (value < 1 || value > maxNumImages) {
-            ERR_ARGS("Invalid number of images: %d (valid range: 1-%d)", value, maxNumImages);
+            ERR_TO_STATUS("Invalid number of images: %d (valid range: 1-%d)", value, maxNumImages);
             return asynError;
         }
         setIntegerParam(ADNumImages, xspdSetDetVar<int>("n_frames", value));
@@ -685,6 +685,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             WARN_ARGS("Requested value %d for parameter %s, but set value is %d", value, paramName, actualValue);
             status = asynError;
         }
+
     }
     callParamCallbacks();
 
@@ -767,7 +768,7 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
 
     if (acquiring && find(this->onlyIdleParams.begin(), this->onlyIdleParams.end(), function) !=
                          this->onlyIdleParams.end()) {
-        ERR_ARGS("Cannot set parameter %s while acquiring", paramName);
+        ERR_TO_STATUS("Cannot set param %s while acquiring", paramName);
         return asynError;
     }
 
