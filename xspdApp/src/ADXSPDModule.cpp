@@ -132,4 +132,7 @@ ADXSPDModule::ADXSPDModule(const char* portName, string moduleId, ADXSPD* parent
     INFO_ARGS("Configured ADXSPDModule w/ port %s for module %s", portName, moduleId.c_str());
 }
 
-ADXSPDModule::~ADXSPDModule() { INFO_ARGS("Destroying module %s", this->moduleId.c_str()); }
+ADXSPDModule::~ADXSPDModule() {
+    INFO_ARGS("Destroying module %s", this->moduleId.c_str());
+    this->shutdownPortDriver();
+}

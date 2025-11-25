@@ -11,7 +11,6 @@ DIRS := $(DIRS) cpr
 
 ifeq ($(BUILD_TESTS), YES)
 DIRS := $(DIRS) gtest
-DIRS := $(DIRS) crow
 endif
 
 #=============================

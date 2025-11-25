@@ -51,11 +51,11 @@ using namespace std;
 // Error message formatters
 #define ERR(msg)                                      \
     if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) \
-        printf("ERROR | %s::%s: %s\n", driverName, __func__, msg);
+        fprintf(stderr, "ERROR | %s::%s: %s\n", driverName, __func__, msg);
 
 #define ERR_ARGS(fmt, ...)                            \
     if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) \
-        printf("ERROR | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
+        fprintf(stderr, "ERROR | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
 #define ERR_TO_STATUS(fmt, ...)                     \
     if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) { \
@@ -70,11 +70,11 @@ using namespace std;
 // Warning message formatters
 #define WARN(msg)                                       \
     if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) \
-        printf("WARNING | %s::%s: %s\n", driverName, __func__, msg);
+        fprintf(stderr, "WARNING | %s::%s: %s\n", driverName, __func__, msg);
 
 #define WARN_ARGS(fmt, ...)                             \
     if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) \
-        printf("WARNING | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
+        fprintf(stderr, "WARNING | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
 #define WARN_TO_STATUS(fmt, ...)                      \
     if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) { \
@@ -88,11 +88,11 @@ using namespace std;
 // Info message formatters
 #define INFO(msg)                                    \
     if (this->getLogLevel() >= ADXSPDLogLevel::INFO) \
-        printf("INFO | %s::%s: %s\n", driverName, __func__, msg);
+        fprintf(stdout, "INFO | %s::%s: %s\n", driverName, __func__, msg);
 
 #define INFO_ARGS(fmt, ...)                          \
     if (this->getLogLevel() >= ADXSPDLogLevel::INFO) \
-        printf("INFO | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
+        fprintf(stdout, "INFO | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
 #define INFO_TO_STATUS(fmt, ...)                      \
     if (this->getLogLevel() >= ADXSPDLogLevel::INFO) { \
@@ -106,11 +106,11 @@ using namespace std;
 // Debug message formatters
 #define DEBUG(msg)                                    \
     if (this->getLogLevel() >= ADXSPDLogLevel::DEBUG) \
-        printf("DEBUG | %s::%s: %s\n", driverName, __func__, msg);
+        fprintf(stdout, "DEBUG | %s::%s: %s\n", driverName, __func__, msg);
 
 #define DEBUG_ARGS(fmt, ...)                          \
     if (this->getLogLevel() >= ADXSPDLogLevel::DEBUG) \
-        printf("DEBUG | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
+        fprintf(stdout, "DEBUG | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
 enum class ADXSPDLogLevel {
     NONE = 0,      // No logging
@@ -170,7 +170,7 @@ class ADXSPDModule;  // Forward declaration of module class
 class ADXSPD : ADDriver {
    public:
     // Constructor for the ADXSPD driver
-    ADXSPD(const char* portName, const char* ipPort, const char* deviceId);
+    ADXSPD(const char* portName, const char* ipPort, const char* deviceId = nullptr);
 
     // ADDriver overrides
     virtual asynStatus writeInt32(asynUser* pasynUser, epicsInt32 value);
@@ -207,6 +207,13 @@ class ADXSPD : ADDriver {
 
     asynStatus xspdCommand(string command);
 
+    double setThreshold(ADXSPDThreshold thresholdType, double value);
+    void getInitialDetState();
+    void acquireStart();
+    void acquireStop();
+    NDDataType_t getDataTypeForBitDepth(int bitDepth);
+
+
    protected:
 // Load auto-generated parameter string and index definitions
 #include "ADXSPDParamDefs.h"
@@ -222,14 +229,10 @@ class ADXSPD : ADDriver {
 
     void* zmqContext;
 
-    void acquireStart();
-    void acquireStop();
+
     vector<ADXSPDModule*> modules;
 
-    void getInitialDetState();
-    NDDataType_t getDataTypeForBitDepth(int bitDepth);
 
-    double setThreshold(ADXSPDThreshold thresholdType, double value);
 
     string apiUri;        // IP address and port for the device
     string deviceUri;     // Base URI for the device

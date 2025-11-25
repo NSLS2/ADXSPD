@@ -212,25 +212,6 @@ T ADXSPD::xspdSetDetVar(string endpoint, T value, string rbKey) {
     return xspdSetVar<T>(fullVarEndpoint, value, rbKey);
 }
 
-// template <typename T>
-// T ADXSPD::xspdSetEnumVar(string endpoint, T value, string rbKey) {
-//     // Convert enum to string
-//     auto enumString = magic_enum::enum_name(value);
-//     if (enumString.empty()) {
-//         ERR_ARGS("Failed to convert enum value to string for variable %s", endpoint.c_str());
-//         return T(0);
-//     }
-//     string rbAsStr = xspdSetVar<string>(endpoint, string(enumString), rbKey);
-
-//     auto enumValue = magic_enum::enum_cast<T>(rbAsStr, magic_enum::case_insensitive);
-//     if (enumValue.has_value()) {
-//         return enumValue.value();
-//     } else {
-//         ERR_ARGS("Failed to cast readback value %s to enum for variable %s", rbAsStr.c_str(),
-//                  endpoint.c_str());
-//         return T(0);
-//     }
-// }
 
 asynStatus ADXSPD::xspdCommand(string command) {
     json commands = xspdGet(this->deviceUri + "commands");
@@ -520,8 +501,7 @@ NDDataType_t ADXSPD::getDataTypeForBitDepth(int bitDepth) {
         case 24:
             return NDUInt32;
         default:
-            ERR_ARGS("Unsupported bit depth: %d", bitDepth);
-            return NDUInt8;
+            throw std::invalid_argument("Unsupported bit depth");
     }
 }
 
@@ -825,6 +805,7 @@ void ADXSPD::report(FILE* fp, int details) {
 // ADXSPD Constructor/Destructor
 //----------------------------------------------------------------------------
 
+
 /**
  * Constructor for the ADXSPD driver
  *
@@ -851,10 +832,8 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     INFO_ARGS("Connecting to XSPD api at %s", baseApiUri.c_str());
 
     json xspdVersionInfo = xspdGet(baseApiUri);
-    if (xspdVersionInfo.empty()) {
-        ERR("Failed to retrieve XSPD version information.");
-        return;
-    }
+    if (xspdVersionInfo.empty())
+        throw std::runtime_error("Failed to connect to XSPD API.");
 
     string apiVersion = xspdVersionInfo["api version"].get<string>();
     string xspdVersion = xspdVersionInfo["xspd version"].get<string>();
@@ -865,16 +844,12 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     this->apiUri = baseApiUri + "/v" + apiVersion;
 
     json devices = xspdGet(this->apiUri + "/devices");
-    if (devices.is_null() || devices.empty() || !devices.contains("devices")) {
-        ERR("Failed to retrieve device list from XSPD API.");
-        return;
-    }
+    if (devices.is_null() || devices.empty() || !devices.contains("devices"))
+        throw std::runtime_error("Failed to retrieve device list from XSPD API.");
 
     json deviceList = devices["devices"];
-    if (deviceList.empty()) {
-        ERR("No devices found!");
-        return;
-    }
+    if (deviceList.empty())
+        throw std::runtime_error("No devices found in XSPD API device list.");
 
     json requestedDevice = json();
     INFO_ARGS("Found %ld device(s)", deviceList.size());
@@ -891,35 +866,30 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
         }
     }
 
-    if (requestedDevice.empty()) {
-        ERR_ARGS("Device with ID %s not found in device list!", deviceId);
-        return;
-    }
+    if (requestedDevice.empty())
+        throw std::runtime_error("Requested device ID not found in XSPD API device list.");
 
     this->deviceId = requestedDevice["id"].get<string>();
-    this->deviceUri = this->apiUri + "/devices/" + this->deviceId + "/";
-    this->deviceVarUri = this->deviceUri + "variables?path=";
+    this->deviceUri = this->apiUri + "/devices/" + this->deviceId;
+    this->deviceVarUri = this->deviceUri + "/variables?path=";
     setStringParam(ADSerialNumber, this->deviceId.c_str());
 
     INFO_ARGS("Retrieving info for device with ID %s...", this->deviceId.c_str());
 
     json deviceInfo = xspdGet(this->deviceUri);
-    if (deviceInfo.is_null() || deviceInfo.empty()) return;
+    if (deviceInfo.is_null() || deviceInfo.empty()) 
+        throw std::runtime_error("Failed to retrieve device info from XSPD API.");
 
     if (!deviceInfo.contains("system") || !deviceInfo["system"].contains("data-ports") ||
-        deviceInfo["system"]["data-ports"].empty()) {
-        ERR_ARGS("No system/data-ports info found for device ID %s", this->deviceId.c_str());
-        return;
-    }
+        deviceInfo["system"]["data-ports"].empty())
+        throw std::runtime_error("No data port information found for device in XSPD API.");
 
     // Always use the first data port (i.e. image stitching xspd-side)
     json dataPortInfo = deviceInfo["system"]["data-ports"][0];
 
     if (!dataPortInfo.contains("id") || !dataPortInfo.contains("ip") ||
-        !dataPortInfo.contains("port")) {
-        ERR_ARGS("Incomplete data port info for device ID %s", this->deviceId.c_str());
-        return;
-    }
+        !dataPortInfo.contains("port"))
+        throw std::runtime_error("Incomplete data port info for device in XSPD API.");
 
     this->dataPortId = dataPortInfo["id"].get<string>();
     this->dataPortIp = dataPortInfo["ip"].get<string>();
@@ -928,52 +898,54 @@ ADXSPD::ADXSPD(const char* portName, const char* ipPort, const char* deviceId)
     this->zmqContext = zmq_ctx_new();
 
     json info = xspdGetVar<json>("info");
-    if (info.empty() || !info.contains("detectors") || info["detectors"].empty()) {
-        ERR_ARGS("Failed to retrieve device info for device ID %s", this->deviceId.c_str());
-        return;
-    }
+    if (info.empty() || !info.contains("detectors") || info["detectors"].empty())
+        throw std::runtime_error("No detector information found for device in XSPD API.");
 
     // For now only support single-detector devices
     json detectorInfo = info["detectors"][0];
+    if (!detectorInfo.contains("detector-id"))
+        throw std::runtime_error("Failed to find detector ID in XSPD API.");
+
     this->detectorId = detectorInfo["detector-id"].get<string>();
 
     // Retrieve device information and populate all PVs.
     setStringParam(ADManufacturer, "X-Spectrum GmbH");
     setStringParam(ADModel, this->detectorId.c_str());
-    setStringParam(ADSDKVersion, info["libxsp version"].get<string>().c_str());
+    if (info.contains("libxsp version"))
+        setStringParam(ADSDKVersion, info["libxsp version"].get<string>().c_str());
 
-    // Initialize our modules
-    int numModules = detectorInfo["modules"].size();
-    setIntegerParam(ADXSPD_NumModules, numModules);
-    for (int i = 0; i < numModules; i++) {
-        json moduleInfo = detectorInfo["modules"][i];
+    // // Initialize our modules
+    // int numModules = detectorInfo["modules"].size();
+    // setIntegerParam(ADXSPD_NumModules, numModules);
+    // for (int i = 0; i < numModules; i++) {
+    //     json moduleInfo = detectorInfo["modules"][i];
 
-        // Set firmware version from first module
-        if (i == 0 && moduleInfo.contains("firmware"))
-            setStringParam(ADFirmwareVersion, moduleInfo["firmware"].get<string>().c_str());
+    //     // Set firmware version from first module
+    //     if (i == 0 && moduleInfo.contains("firmware"))
+    //         setStringParam(ADFirmwareVersion, moduleInfo["firmware"].get<string>().c_str());
 
-        string moduleId = moduleInfo["module"].get<string>();
-        string modulePortName = string(this->portName) + "_MOD" + to_string(i + 1);
-        INFO_ARGS("Initializing module %s on port %s", moduleId.c_str(), modulePortName.c_str());
-        this->modules.push_back(new ADXSPDModule(modulePortName.c_str(), moduleId, this));
-    }
+    //     string moduleId = moduleInfo["module"].get<string>();
+    //     string modulePortName = string(this->portName) + "_MOD" + to_string(i + 1);
+    //     INFO_ARGS("Initializing module %s on port %s", moduleId.c_str(), modulePortName.c_str());
+    //     this->modules.push_back(new ADXSPDModule(modulePortName.c_str(), moduleId, this));
+    // }
 
-    this->getInitialDetState();
-    callParamCallbacks();
+    // this->getInitialDetState();
+    // callParamCallbacks();
 
-    epicsThreadOpts opts;
-    opts.priority = epicsThreadPriorityHigh;
-    opts.stackSize = epicsThreadGetStackSize(epicsThreadStackBig);
-    opts.joinable = 1;
-    this->acquisitionThreadId = epicsThreadCreateOpt(
-        "acquisitionThread", (EPICSTHREADFUNC) acquisitionThreadC, this, &opts);
+    // epicsThreadOpts opts;
+    // opts.priority = epicsThreadPriorityHigh;
+    // opts.stackSize = epicsThreadGetStackSize(epicsThreadStackBig);
+    // opts.joinable = 1;
+    // this->acquisitionThreadId = epicsThreadCreateOpt(
+    //     "acquisitionThread", (EPICSTHREADFUNC) acquisitionThreadC, this, &opts);
 
-    epicsThreadOpts monitorOpts;
-    monitorOpts.priority = epicsThreadPriorityMedium;
-    monitorOpts.stackSize = epicsThreadGetStackSize(epicsThreadStackMedium);
-    monitorOpts.joinable = 1;
-    this->monitorThreadId =
-        epicsThreadCreateOpt("monitorThread", (EPICSTHREADFUNC) monitorThreadC, this, &monitorOpts);
+    // epicsThreadOpts monitorOpts;
+    // monitorOpts.priority = epicsThreadPriorityMedium;
+    // monitorOpts.stackSize = epicsThreadGetStackSize(epicsThreadStackMedium);
+    // monitorOpts.joinable = 1;
+    // this->monitorThreadId =
+    //     epicsThreadCreateOpt("monitorThread", (EPICSTHREADFUNC) monitorThreadC, this, &monitorOpts);
 
     // when epics is exited, delete the instance of this class
     epicsAtExit(exitCallbackC, this);
@@ -1009,6 +981,8 @@ ADXSPD::~ADXSPD() {
     for (auto& module : this->modules) {
         delete module;
     }
+
+    this->shutdownPortDriver();
 
     INFO("Done.");
 }
