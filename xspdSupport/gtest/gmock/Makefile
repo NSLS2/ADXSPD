@@ -12,6 +12,7 @@ INC += gmock/gmock-function-mocker.h
 INC += gmock/gmock-matchers.h
 INC += gmock/gmock.h
 INC += gmock/gmock-more-actions.h
+INC += gmock/gmock-more-matchers.h
 INC += gmock/gmock-nice-strict.h
 INC += gmock/gmock-spec-builders.h
 INC += gmock/internal/gmock-internal-utils.h

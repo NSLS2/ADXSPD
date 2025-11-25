@@ -71,11 +71,12 @@ data_port_variables: Dict[str, Any] = {
 
 modules_variables: List[Dict[str, Any]] = [
 	{
-		"module": "mod-1",
+		"module": "xspdsim/1",
 		"firmware": "1.0.0",
 		"compression_level": 1,
 		"status": "ready",
 		"max_frames": 1000,
+		"sensor_current": 0.5,
 	}
 ]
 
@@ -98,12 +99,15 @@ def build_info_payload() -> Dict[str, Any]:
 def get_var(path: str) -> Dict[str, Any]:
 	if path == "info":
 		return {"value": build_info_payload()}
-	if path.startswith(args.detector_id + "/"):
+	elif path.startswith(args.detector_id + "/xspdsim/1/"):
+		key = path.split("/", 1)[1]
+		return {"value": modules_variables.get(key, 0.0)}
+	elif path.startswith(args.detector_id + "/"):
 		key = path.split("/", 1)[1]
 		if key == "thresholds":
 			return {"value": detector_variables.get(key, [])}
 		return {"value": detector_variables.get(key)}
-	if path.startswith(args.data_port_id + "/"):
+	elif path.startswith(args.data_port_id + "/"):
 		key = path.split("/", 1)[1]
 		return {"value": data_port_variables.get(key)}
 	# Fallback
@@ -210,7 +214,7 @@ def list_devices():
 	return jsonify({"devices": [{"id": args.device_id}]})
 
 
-@app.get(f"/api/v1/devices/{args.device_id}/")
+@app.get(f"/api/v1/devices/{args.device_id}")
 def device_info():
 	return jsonify({
 		"system": {
