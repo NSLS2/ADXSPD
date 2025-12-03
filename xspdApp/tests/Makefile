@@ -3,11 +3,14 @@ include $(TOP)/configure/CONFIG
 
 #----------------------------------------
 
+USR_CPPFLAGS += -std=c++17
+
 PROD_IOC = ADXSPDTests
 
-
 ADXSPDTests_SRCS += ADXSPDTestMain.cpp
-ADXSPDTests_SRCS += ADXSPDTestUtils.cpp
+# ADXSPDTests_SRCS += ADXSPDTestUtils.cpp
+ADXSPDTests_SRCS += XSPDAPITest.cpp
+ADXSPDTests_SRCS += MockXSPDAPI.cpp
 
 # Add additional test source files here
 # ADXSPDTests_SRCS +=
@@ -21,7 +24,7 @@ else
   ADXSPDTests_SYS_LIBS  += zmq
 endif
 
-ADXSPDTests_SYS_LIBS += curl z boost_system
+ADXSPDTests_SYS_LIBS += curl z
 
 include $(TOP)/configure/RULES
 #----------------------------------------

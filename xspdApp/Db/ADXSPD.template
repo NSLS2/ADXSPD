@@ -149,8 +149,8 @@ record(mbbo, "$(P)$(R)Compressor"){
     field(ONST, "zlib")
     field(TWVL, "2")
     field(TWST, "blosc")
-    field(VAL, "1")
-    field(PINI, "YES")
+    field(VAL, "0")
+    field(PINI, "NO")
 }
 
 record(mbbi, "$(P)$(R)Compressor_RBV"){
@@ -206,6 +206,7 @@ record(bo, "$(P)$(R)ChargeSumming"){
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHARGE_SUMMING")
     field(ZNAM, "Disabled")
     field(ONAM, "Enabled")
+    field(VAL, "0")
     field(PINI, "NO")
 }
 

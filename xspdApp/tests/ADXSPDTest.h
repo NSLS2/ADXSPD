@@ -4,12 +4,10 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <cstdlib>
-#include <boost/process.hpp>
 #include "ADXSPD.h"
+#include "cpr/cpr.h"
 
-using ::testing::_;
 using ::testing::DoAll;
-using ::testing::InSequence;
 using ::testing::Invoke;
 using ::testing::Return;
 using ::testing::SetArgPointee;
@@ -25,24 +23,30 @@ using ::testing::StrictMock;
 class ADXSPDTest : public ::testing::Test {
    protected:
 
+   void SetUpTestSuite() {
+        // this->simulatedXSPDService = boost::process::child(".pixi/envs/default/bin/python3 sim/xspdSimulator.py",
+        //                                    boost::process::std_out > boost::process::null,
+        //                                    boost::process::std_err > boost::process::null);
+        // // Give the simulated service some time to start up
+            
+        //     epicsThreadSleep(0.25);
+    }
+
     void SetUp() override {
 
-                this->simulatedXSPDService = boost::process::child(".pixi/envs/default/bin/python3 sim/xspdSimulator.py",
-                                                   boost::process::std_out > boost::process::null,
-                                                   boost::process::std_err > boost::process::null);
-        // Give the simulated service some time to start up
-            
-            epicsThreadSleep(0.25);
-        this->xspdDriver = new ADXSPD(this->getUniquePortName().c_str(), "http://localhost:8000");
+
+        // this->xspdDriver = new ADXSPD(this->getUniquePortName().c_str(), "http://localhost:8000");
     }
 
     void TearDown() override {
         // Code here will be called immediately after each test (right
         // before the destructor).
-        delete this->xspdDriver;
+        // delete this->xspdDriver;
+        //cpr::Response r = cpr::Post(cpr::Url{"http://localhost:8000/simreset"});
+    }
 
-        this->simulatedXSPDService.terminate();
-
+    void TearDownTestSuite() {
+        // this->simulatedXSPDService.terminate();
     }
 
 
@@ -51,7 +55,6 @@ class ADXSPDTest : public ::testing::Test {
         return "ADXSPD_TEST_PORT_" + std::to_string(portCounter++);
     }
 
-     boost::process::child simulatedXSPDService;
     ADXSPD* xspdDriver;
 
 //     template<typename T>

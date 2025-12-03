@@ -9,39 +9,17 @@
 
 #include "ADXSPDModule.h"
 
-template <typename T>
-T ADXSPDModule::xspdGetModuleVar(string endpoint, string key) {
-    string fullVarEndpoint = this->moduleId + "/" + endpoint;
-    return this->parent->xspdGetVar<T>(fullVarEndpoint, key);
-}
-
-template <typename T>
-T ADXSPDModule::xspdGetModuleEnumVar(string endpoint, string key) {
-    string resp = xspdGetModuleVar<string>(endpoint, key);
-    if (resp.empty()) {
-        ERR_ARGS("Failed to get module enum variable %s", endpoint.c_str());
-        return T(0);
-    }
-
-    auto enumValue = magic_enum::enum_cast<T>(resp, magic_enum::case_insensitive);
-    if (enumValue.has_value()) {
-        return enumValue.value();
-    } else {
-        ERR_ARGS("Failed to cast value %s to enum for variable %s", resp.c_str(), endpoint.c_str());
-        return T(0);
-    }
-}
 
 void ADXSPDModule::checkStatus() {
     // Example: Read module temperature and update parameter
-    setDoubleParam(ADXSPDModule_SensCurr, xspdGetModuleVar<double>("sensor_current"));
+    setDoubleParam(ADXSPDModule_SensCurr, this->module->GetVar<double>("sensor_current"));
 
-    vector<double> temps = xspdGetModuleVar<vector<double>>("temperature");
+    vector<double> temps = this->module->GetVar<vector<double>>("temperature");
     setDoubleParam(ADXSPDModule_BoardTemp, temps[0]);
     setDoubleParam(ADXSPDModule_FpgaTemp, temps[1]);
     setDoubleParam(ADXSPDModule_HumTemp, temps[2]);
 
-    setDoubleParam(ADXSPDModule_Hum, xspdGetModuleVar<double>("humidity"));
+    setDoubleParam(ADXSPDModule_Hum, this->module->GetVar<double>("humidity"));
     // Add more status checks as needed
 
     callParamCallbacks();
@@ -51,34 +29,34 @@ void ADXSPDModule::getInitialModuleState() {
     this->checkStatus();
 
     // Compression settings
-    setIntegerParam(ADXSPDModule_CompressLevel, xspdGetModuleVar<int>("compression_level"));
+    setIntegerParam(ADXSPDModule_CompressLevel, this->module->GetVar<int>("compression_level"));
     setIntegerParam(ADXSPDModule_Compressor,
-                    (int) xspdGetModuleEnumVar<ADXSPDCompressor>("compressor"));
+                    (int) this->module->GetVar<XSPD::Compressor>("compressor"));
 
-    setStringParam(ADXSPDModule_FfStatus, xspdGetModuleVar<string>("flatfield_status").c_str());
+    setStringParam(ADXSPDModule_FfStatus, this->module->GetVar<string>("flatfield_status").c_str());
     setIntegerParam(ADXSPDModule_InterpMode,
-                    (int) xspdGetModuleEnumVar<ADXSPDOnOff>("interpolation"));
+                    (int) this->module->GetVar<XSPD::OnOff>("interpolation"));
 
-    setIntegerParam(ADXSPDModule_NumCons, xspdGetModuleVar<int>("n_connectors"));
+    setIntegerParam(ADXSPDModule_NumCons, this->module->GetVar<int>("n_connectors"));
 
-    setIntegerParam(ADXSPDModule_MaxFrames, xspdGetModuleVar<int>("max_frames"));
+    setIntegerParam(ADXSPDModule_MaxFrames, this->module->GetVar<int>("max_frames"));
 
-    vector<double> position = xspdGetModuleVar<vector<double>>("position");
+    vector<double> position = this->module->GetVar<vector<double>>("position");
     setDoubleParam(ADXSPDModule_PosX, position[0]);
     setDoubleParam(ADXSPDModule_PosY, position[1]);
     setDoubleParam(ADXSPDModule_PosZ, position[2]);
 
     // TODO: ram_allocated endpoint doesn't seem to work
-    // setIntegerParam(ADXSPDModule_RamAllocated, xspdGetModuleVar<int>("ram_allocated"));
+    // setIntegerParam(ADXSPDModule_RamAllocated, this->module->GetVar<int>("ram_allocated"));
 
-    vector<double> rotation = xspdGetModuleVar<vector<double>>("rotation");
+    vector<double> rotation = this->module->GetVar<vector<double>>("rotation");
     setDoubleParam(ADXSPDModule_RotYaw, rotation[0]);
     setDoubleParam(ADXSPDModule_RotPitch, rotation[1]);
     setDoubleParam(ADXSPDModule_RotRoll, rotation[2]);
 
-    setIntegerParam(ADXSPDModule_SatThresh, xspdGetModuleVar<int>("saturation_threshold"));
+    setIntegerParam(ADXSPDModule_SatThresh, this->module->GetVar<int>("saturation_threshold"));
 
-    // vector<string> features = xspdGetModuleVar<vector<string>>("features");
+    // vector<string> features = this->module->GetVar<vector<string>>("features");
     // for(auto& featureStr : features) {
     //     auto feature = magic_enum::enum_cast<ADXSPDModuleFeature>("FEAT_" + featureStr);
     //     if (!feature.has_value()) {
@@ -106,13 +84,13 @@ void ADXSPDModule::getInitialModuleState() {
 }
 
 int ADXSPDModule::getMaxNumImages() {
-    int numImages = xspdGetModuleVar<int>("max_frames");
+    int numImages = this->module->GetVar<int>("max_frames");
     setIntegerParam(ADXSPDModule_MaxFrames, numImages);
     callParamCallbacks();
     return numImages;
 }
 
-ADXSPDModule::ADXSPDModule(const char* portName, string moduleId, ADXSPD* parent)
+ADXSPDModule::ADXSPDModule(const char* portName, XSPD::Module* module, ADXSPD* parent)
     : asynPortDriver(
           portName, 1, /* maxAddr */
           asynInt32Mask | asynFloat64Mask | asynFloat64ArrayMask | asynDrvUserMask |
@@ -124,15 +102,15 @@ ADXSPDModule::ADXSPDModule(const char* portName, string moduleId, ADXSPD* parent
           0, /* Default priority */
           0),
       parent(parent),
-      moduleId(moduleId) /* Default stack size*/
+      module(module) /* Default stack size*/
 {
     this->createAllParams();
 
     this->getInitialModuleState();
-    INFO_ARGS("Configured ADXSPDModule w/ port %s for module %s", portName, moduleId.c_str());
+    INFO_ARGS("Configured ADXSPDModule w/ port %s for module %s", portName, module->GetId().c_str());
 }
 
 ADXSPDModule::~ADXSPDModule() {
-    INFO_ARGS("Destroying module %s", this->moduleId.c_str());
+    INFO_ARGS("Destroying module %s", this->module->GetId().c_str());
     this->shutdownPortDriver();
 }

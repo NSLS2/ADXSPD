@@ -16,8 +16,8 @@
 
 // version numbers
 #define ADXSPD_VERSION 0
-#define ADXSPD_REVISION 0
-#define ADXSPD_MODIFICATION 1
+#define ADXSPD_REVISION 1
+#define ADXSPD_MODIFICATION 0
 
 #include <cpr/cpr.h>
 #include <epicsExit.h>
@@ -37,13 +37,13 @@
 #include <iostream>
 #include <magic_enum/magic_enum.hpp>
 #include <map>
-#include <nlohmann/json.hpp>
 #include <string>
 #include <type_traits>
 #include <zlib.h>
 
 #include "ADDriver.h"
-#include "epicsThread.h"
+#include "XSPDAPI.h"
+#include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 using namespace std;
@@ -120,45 +120,6 @@ enum class ADXSPDLogLevel {
     DEBUG = 40     // Debugging information
 };
 
-enum class ADXSPDOnOff {
-    OFF = 0,
-    ON = 1,
-};
-
-enum class ADXSPDCompressor {
-    NONE = 0,
-    ZLIB = 1,
-    BLOSC = 2,
-};
-
-enum class ADXSPDShuffleMode {
-    NO_SHUFFLE = 0,
-    AUTO_SHUFFLE = 1,
-    SHUFFLE_BIT = 2,
-    SHUFFLE_BYTE = 3,
-};
-
-enum class ADXSPDTrigMode {
-    SOFTWARE = 0,
-    EXT_FRAMES = 1,
-    EXT_SEQ = 2,
-};
-
-enum class ADXSPDCounterMode {
-    SINGLE = 0,
-    DUAL = 1,
-};
-
-enum class ADXSPDStatus {
-    CONNECTED = ADStatusInitializing,
-    READY = ADStatusIdle,
-    BUSY = ADStatusAcquire,
-};
-
-enum class ADXSPDThreshold {
-    LOW = 0,
-    HIGH = 1,
-};
 
 #define ADXSPD_MIN_STATUS_POLL_INTERVAL 0.5  // Minimum status poll interval in seconds
 
@@ -170,7 +131,7 @@ class ADXSPDModule;  // Forward declaration of module class
 class ADXSPD : ADDriver {
    public:
     // Constructor for the ADXSPD driver
-    ADXSPD(const char* portName, const char* ipPort, const char* deviceId = nullptr);
+    ADXSPD(const char* portName, const char* ip, int portNum, const char* deviceId = nullptr);
 
     // ADDriver overrides
     virtual asynStatus writeInt32(asynUser* pasynUser, epicsInt32 value);
@@ -185,35 +146,16 @@ class ADXSPD : ADDriver {
     void monitorThread();
 
     ADXSPDLogLevel getLogLevel() { return this->logLevel; }
-    string getDeviceId() { return this->deviceId; }
-    string getDetectorId() { return this->detectorId; }
 
-    json xspdGet(string uri);
-
-    template <typename T>
-    T xspdGetVar(string endpoint, string key = "value");
-
-    template <typename T>
-    T xspdGetDetVar(string endpoint, string key = "value");
-
-    template <typename T>
-    T xspdGetDataPortVar(string endpoint, string key = "value");
-
-    template <typename T>
-    T xspdSetVar(string endpoint, T value, string rbKey = "value");
-
-    template <typename T>
-    T xspdSetDetVar(string endpoint, T value, string rbKey = "value");
-
-    asynStatus xspdCommand(string command);
-
-    double setThreshold(ADXSPDThreshold thresholdType, double value);
+    double setThreshold(XSPD::Threshold thresholdType, double value);
     void getInitialDetState();
-    void acquireStart();
-    void acquireStop();
+    asynStatus acquireStart();
+    asynStatus acquireStop();
     NDDataType_t getDataTypeForBitDepth(int bitDepth);
 
-
+    template <typename T>
+    void subtractFrames(T* currentFrame, T* previousFrame, T* outputFrame, size_t numBytes);
+    
    protected:
 // Load auto-generated parameter string and index definitions
 #include "ADXSPDParamDefs.h"
@@ -231,8 +173,8 @@ class ADXSPD : ADDriver {
 
 
     vector<ADXSPDModule*> modules;
-
-
+    XSPD::API* pApi;
+    XSPD::Detector* pDetector;
 
     string apiUri;        // IP address and port for the device
     string deviceUri;     // Base URI for the device
@@ -249,6 +191,7 @@ class ADXSPD : ADDriver {
     };
 
     ADXSPDLogLevel logLevel = ADXSPDLogLevel::DEBUG;  // Logging level for the driver
+
 };
 
 #endif
