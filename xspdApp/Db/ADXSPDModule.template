@@ -161,33 +161,33 @@ record(ai, "$(P)$(R)FeaturesBitmask_RBV") {
     field(SCAN, "I/O Intr")
 }
 
-record(mbbo, "$(P)$(R)CompressLevel"){
-    field(DESC, "Compression level")
-    field(DTYP, "asynInt32")
-    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_COMPRESS_LEVEL")
-    field(ZRVL, "0")
-    field(ZRST, "0")
-    field(ONVL, "1")
-    field(ONST, "1")
-    field(TWST, "2")
-    field(TWVL, "2")
-    field(THST, "3")
-    field(THVL, "3")
-    field(FRST, "4")
-    field(FRVL, "4")
-    field(FVST, "5")
-    field(FVVL, "5")
-    field(SXST, "6")
-    field(SXVL, "6")
-    field(SVST, "7")
-    field(SVVL, "7")
-    field(EIST, "8")
-    field(EIVL, "8")
-    field(NIST, "9")
-    field(NIVL, "9")
-    field(VAL, "1")
-    field(PINI, "YES")
-}
+# record(mbbo, "$(P)$(R)CompressLevel"){
+#     field(DESC, "Compression level")
+#     field(DTYP, "asynInt32")
+#     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_COMPRESS_LEVEL")
+#     field(ZRVL, "0")
+#     field(ZRST, "0")
+#     field(ONVL, "1")
+#     field(ONST, "1")
+#     field(TWST, "2")
+#     field(TWVL, "2")
+#     field(THST, "3")
+#     field(THVL, "3")
+#     field(FRST, "4")
+#     field(FRVL, "4")
+#     field(FVST, "5")
+#     field(FVVL, "5")
+#     field(SXST, "6")
+#     field(SXVL, "6")
+#     field(SVST, "7")
+#     field(SVVL, "7")
+#     field(EIST, "8")
+#     field(EIVL, "8")
+#     field(NIST, "9")
+#     field(NIVL, "9")
+#     field(VAL, "1")
+#     field(PINI, "YES")
+# }
 
 record(mbbi, "$(P)$(R)CompressLevel_RBV"){
     field(DESC, "Compression level rb")
@@ -214,20 +214,6 @@ record(mbbi, "$(P)$(R)CompressLevel_RBV"){
     field(NIST, "9")
     field(NIVL, "9")
     field(SCAN, "I/O Intr")
-}
-
-record(mbbo, "$(P)$(R)Compressor"){
-    field(DESC, "Compressor type")
-    field(DTYP, "asynInt32")
-    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_COMPRESSOR")
-    field(ZRVL, "0")
-    field(ZRST, "None")
-    field(ONVL, "1")
-    field(ONST, "zlib")
-    field(TWVL, "2")
-    field(TWST, "blosc")
-    field(VAL, "1")
-    field(PINI, "YES")
 }
 
 record(mbbi, "$(P)$(R)Compressor_RBV"){
