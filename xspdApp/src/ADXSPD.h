@@ -147,7 +147,6 @@ class ADXSPD : ADDriver {
 
     ADXSPDLogLevel getLogLevel() { return this->logLevel; }
 
-    double setThreshold(XSPD::Threshold thresholdType, double value);
     void getInitialDetState();
     asynStatus acquireStart();
     asynStatus acquireStop();

@@ -204,6 +204,9 @@ public:
     Detector(API* api, string detectorId): api(api), detectorId(detectorId) {}
     virtual ~Detector() = default;
     string GetId() { return this->detectorId; }
+
+    double SetThreshold(XSPD::Threshold threshold, double value);
+
     vector<Module*> GetModules() {
         return this->modules;
     }

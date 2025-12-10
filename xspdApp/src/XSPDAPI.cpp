@@ -199,3 +199,44 @@ void XSPD::API::ExecCommand(string command) {
 
     Put("devices/" + this->deviceId + "/commands?path=" + command);
 }
+
+
+double XSPD::Detector::SetThreshold(XSPD::Threshold threshold, double value) {
+
+    string thresholdName = (threshold == XSPD::Threshold::LOW) ? "Low" : "High";
+
+    vector<double> thresholds = this->GetVar<vector<double>>("thresholds");
+    if (thresholds.size() == 0 && threshold != XSPD::Threshold::LOW)
+        throw runtime_error("Must set low threshold before setting high threshold");
+
+    switch(thresholds.size()) {
+        case 2:
+            thresholds[static_cast<int>(threshold)] = value;
+            break;
+        case 1:
+            if (threshold == XSPD::Threshold::LOW) {
+                thresholds[0] = value;
+                break;
+            }
+        default:
+            thresholds.push_back(value);
+            break;
+    }
+
+    string thresholdsStr = "";
+    for (auto & threshold : thresholds) {
+        thresholdsStr += to_string(threshold);
+        if (&threshold != &thresholds.back()) {
+            thresholdsStr += ",";
+        }
+    }
+
+    // Thresholds set as comma-separated string, read as vector<double>
+    string rbThresholdsStr = this->SetVar<string>("thresholds", thresholdsStr, "thresholds");
+    vector<double> rbThresholds = json::parse(rbThresholdsStr.c_str()).get<vector<double>>();
+
+    if(rbThresholds.size() <= static_cast<size_t>(threshold))
+        throw runtime_error("Failed to set " + thresholdName + " threshold, readback size is less than expected");
+
+    return rbThresholds[static_cast<size_t>(threshold)];
+}

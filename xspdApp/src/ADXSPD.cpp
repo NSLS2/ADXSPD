@@ -726,8 +726,6 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
                 actualValue = this->pDetector->SetVar<int>("summed_frames", value);
             } else if(function == ADXSPD_RoiRows) {
                 actualValue = this->pDetector->SetVar<int>("roi_rows", value);
-            } else if(function == ADXSPD_CompressLevel) {
-                actualValue = this->pDetector->SetVar<int>("compression_level", value);
             } else if(function == ADXSPD_GatingMode) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>("gating_mode", static_cast<XSPD::OnOff>(value)));
             } else if(function == ADXSPD_FFCorrection) {
@@ -744,8 +742,6 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>("saturation_flag", static_cast<XSPD::OnOff>(value)));
             } else if(function == ADXSPD_ShuffleMode) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::ShuffleMode>("shuffle_mode", static_cast<XSPD::ShuffleMode>(value)));
-            } else if(function == ADXSPD_Compressor) {
-                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::Compressor>("compressor", static_cast<XSPD::Compressor>(value)));
             } else if(function == ADXSPD_StatusInterval) {
                 if (value < ADXSPD_MIN_STATUS_POLL_INTERVAL) {
                     actualValue = ADXSPD_MIN_STATUS_POLL_INTERVAL;
@@ -777,53 +773,6 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
 }
 
 
-double ADXSPD::setThreshold(XSPD::Threshold threshold, double value) {
-
-    string thresholdName = (threshold == XSPD::Threshold::LOW) ? "Low" : "High";
-
-    vector<double> thresholds = this->pDetector->GetVar<vector<double>>("thresholds");
-    if (thresholds.size() == 0 && threshold != XSPD::Threshold::LOW) {
-        ERR("Must set low threshold before setting high threshold");
-        return 0.0;
-    }
-
-    switch(thresholds.size()) {
-        case 2:
-            thresholds[static_cast<int>(threshold)] = value;
-            break;
-        case 1:
-            if (threshold == XSPD::Threshold::LOW) {
-                thresholds[0] = value;
-            } else {
-                thresholds.push_back(value);
-            }
-            break;
-        case 0:
-            thresholds.push_back(value);
-            break;
-        default:
-            break;
-    }
-
-    string thresholdsStr = "";
-    for (size_t i = 0; i < thresholds.size(); i++) {
-        thresholdsStr += to_string(thresholds[i]);
-        if (i < thresholds.size() - 1) {
-            thresholdsStr += ",";
-        }
-    }
-
-    // Thresholds set as comma-separated string, read as vector<double>
-    string rbThresholdsStr = this->pDetector->SetVar<string>("thresholds", thresholdsStr, "thresholds");
-    vector<double> rbThresholds = json::parse(rbThresholdsStr.c_str()).get<vector<double>>();
-
-    if(rbThresholds.size() <= static_cast<size_t>(threshold)) {
-        ERR_ARGS("Failed to set %s threshold, readback size is less than expected", thresholdName.c_str());
-        return 0.0;
-    }
-
-    return rbThresholds[static_cast<size_t>(threshold)];
-}
 
 /*
  * Function overwriting ADDriver base function.
@@ -863,9 +812,9 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
             endpoint = "beam_energy";
             actualValue = this->pDetector->SetVar<double>(endpoint, value);
         } else if(function == ADXSPD_LowThreshold) {
-            actualValue = setThreshold(XSPD::Threshold::LOW, value);
+            actualValue = this->pDetector->SetThreshold(XSPD::Threshold::LOW, value);
         } else if(function == ADXSPD_HighThreshold) {
-            actualValue = setThreshold(XSPD::Threshold::HIGH, value);
+            actualValue = this->pDetector->SetThreshold(XSPD::Threshold::HIGH, value);
         } else if (function == ADXSPD_StatusInterval && value < ADXSPD_MIN_STATUS_POLL_INTERVAL) {
             actualValue = ADXSPD_MIN_STATUS_POLL_INTERVAL;
         }
