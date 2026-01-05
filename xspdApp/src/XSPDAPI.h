@@ -1,32 +1,29 @@
 #ifndef XSPD_API_H
 #define XSPD_API_H
 
-#include <string>
-#include <magic_enum/magic_enum.hpp>
-#include "nlohmann/json.hpp"
 #include <cpr/cpr.h>
-#include <map>
+
 #include <iostream>
+#include <magic_enum/magic_enum.hpp>
+#include <map>
+#include <string>
+
+#include "nlohmann/json.hpp"
 
 using json = nlohmann::json;
-using std::string;
-using std::is_enum;
-using std::runtime_error;
 using std::invalid_argument;
-using std::out_of_range;
-using std::to_string;
-using std::stoi;
-using std::vector;
+using std::is_enum;
 using std::map;
+using std::out_of_range;
+using std::runtime_error;
+using std::stoi;
+using std::string;
+using std::to_string;
+using std::vector;
 
 namespace XSPD {
 
-enum class RequestType {
-    GET,
-    PUT,
-    POST,
-    DELETE
-};
+enum class RequestType { GET, PUT, POST, DELETE };
 
 enum class OnOff {
     OFF = 0,
@@ -75,12 +72,11 @@ enum class ModuleFeature {
     FEAT_EXTENDED_GATING = 3,
 };
 
-
 class Detector;
 
 class API {
-public:
-    API(string hostname, int portNum): baseUri(hostname + ":" + std::to_string(portNum)) {}
+   public:
+    API(string hostname, int portNum) : baseUri(hostname + ":" + std::to_string(portNum)) {}
     Detector* Initialize(string deviceId = "");
     virtual ~API() {}
 
@@ -107,17 +103,19 @@ public:
         string valueAsStr;
         if constexpr (std::is_same_v<T, string>) {
             valueAsStr = value;
-        } else if constexpr(is_enum<T>::value) {
+        } else if constexpr (is_enum<T>::value) {
             auto enumString = magic_enum::enum_name(value);
             if (enumString.empty()) {
-                throw runtime_error("Failed to convert enum value to string for variable " + varPath);
+                throw runtime_error("Failed to convert enum value to string for variable " +
+                                    varPath);
             }
             valueAsStr = string(enumString);
         } else {
             valueAsStr = to_string(value);
         }
 
-        json response = this->Put("devices/" + this->deviceId + "/variables?path=" + varPath + "&value=" + valueAsStr);
+        json response = this->Put("devices/" + this->deviceId + "/variables?path=" + varPath +
+                                  "&value=" + valueAsStr);
         return ReadVarFromResp<T>(response, varPath, rbKey);
     }
 
@@ -133,7 +131,7 @@ public:
                     return enumValue.value();
                 } else {
                     throw runtime_error("Failed to cast value " + valAsStr +
-                                             " to enum for variable " + varName);
+                                        " to enum for variable " + varName);
                 }
             } else {
                 return response[key].get<T>();
@@ -142,20 +140,18 @@ public:
         throw out_of_range("Key " + key + " not found in response for variable " + varName);
     }
 
-
-private:
-
+   private:
     string baseUri, apiVersion, xspdVersion, deviceId, libxspVersion;
     Detector* detector = nullptr;
 };
 
-
 class DataPort {
-public:
-    DataPort(API* api, string dataPortId, string ip, int port): api(api), dataPortId(dataPortId), ip(ip), port(port) {}
+   public:
+    DataPort(API* api, string dataPortId, string ip, int port)
+        : api(api), dataPortId(dataPortId), ip(ip), port(port) {}
     virtual ~DataPort() = default;
     string GetId() { return this->dataPortId; }
-    string GetURI () { return "tcp://" + this->ip + ":" + std::to_string(this->port); }
+    string GetURI() { return "tcp://" + this->ip + ":" + std::to_string(this->port); }
 
     template <typename T>
     T GetVar(string varName, string key = "value") {
@@ -167,7 +163,7 @@ public:
         return this->api->SetVar<T>(this->dataPortId + "/" + varName, value, rbKey);
     }
 
-private:
+   private:
     API* api;
     string dataPortId;
     string ip;
@@ -175,8 +171,9 @@ private:
 };
 
 class Module {
-public:
-    Module(API* api, string moduleId, string moduleFirmware, vector<string> chipIds): api(api), moduleId(moduleId), moduleFirmware(moduleFirmware), chipIds(chipIds) {}
+   public:
+    Module(API* api, string moduleId, string moduleFirmware, vector<string> chipIds)
+        : api(api), moduleId(moduleId), moduleFirmware(moduleFirmware), chipIds(chipIds) {}
     virtual ~Module() = default;
     string GetId() { return this->moduleId; }
     string GetFirmware() { return this->moduleFirmware; }
@@ -192,7 +189,7 @@ public:
         return this->api->SetVar<T>(this->moduleId + "/" + varName, value, rbKey);
     }
 
-private:
+   private:
     API* api;
     string moduleId;
     string moduleFirmware;
@@ -200,16 +197,21 @@ private:
 };
 
 class Detector {
-public:
-    Detector(API* api, string detectorId): api(api), detectorId(detectorId) {}
+   public:
+    Detector(API* api, string detectorId) : api(api), detectorId(detectorId) {}
     virtual ~Detector() = default;
     string GetId() { return this->detectorId; }
 
     double SetThreshold(XSPD::Threshold threshold, double value);
 
-    vector<Module*> GetModules() {
-        return this->modules;
+    Status UpdateStatus() {
+        this->status = this->GetVar<Status>("status");
+        return this->status;
     }
+
+    Status GetStatus() { return this->status; }
+
+    vector<Module*> GetModules() { return this->modules; }
 
     vector<string> GetDataPortIds() {
         vector<string> dpIds;
@@ -219,14 +221,11 @@ public:
         return dpIds;
     }
 
-    void RegisterModule(Module* module) {
-        this->modules.push_back(module);
-    }
+    void RegisterModule(Module* module) { this->modules.push_back(module); }
 
     void RegisterDataPort(DataPort* dataPort) {
         this->dataPorts[dataPort->GetId()] = dataPort;
-        if (this->activeDataPort == nullptr)
-            this->activeDataPort = dataPort;
+        if (this->activeDataPort == nullptr) this->activeDataPort = dataPort;
     }
 
     string GetFirmwareVersion() {
@@ -241,15 +240,14 @@ public:
                     break;
                 }
             }
-            if (identicalFW) return fwVersion;
-            else return "Multiple versions";
+            if (identicalFW)
+                return fwVersion;
+            else
+                return "Multiple versions";
         }
     };
 
-    DataPort* GetActiveDataPort() {
-        return this->activeDataPort;
-    }
-
+    DataPort* GetActiveDataPort() { return this->activeDataPort; }
 
     template <typename T>
     T GetVar(string varName, string key = "value") {
@@ -261,16 +259,15 @@ public:
         return this->api->SetVar<T>(this->detectorId + "/" + varName, value, rbKey);
     }
 
-    void ExecCommand(string command) {
-        this->api->ExecCommand(this->detectorId + "/" + command);
-    }
+    void ExecCommand(string command) { this->api->ExecCommand(this->detectorId + "/" + command); }
 
-private:
+   private:
+    Status status;
     API* api;
     string detectorId;
     vector<Module*> modules;
     map<string, DataPort*> dataPorts;
     DataPort* activeDataPort = nullptr;
 };
-};
-#endif // ADXSPDAPI_H
+};      // namespace XSPD
+#endif  // ADXSPDAPI_H

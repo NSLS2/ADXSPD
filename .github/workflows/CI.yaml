@@ -28,7 +28,7 @@ jobs:
 
       - name: Run Linting Checks
         run: pixi run lint
-  
+
   prepare-image:
     name: Prepare EPICS Container Image
     runs-on: ubuntu-latest

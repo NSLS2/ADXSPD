@@ -25,7 +25,8 @@ using json = nlohmann::json;
  * found)
  * @return int asynStatus code
  */
-extern "C" int ADXSPDConfig(const char* portName, const char* ip, int portNum, const char* deviceId) {
+extern "C" int ADXSPDConfig(const char* portName, const char* ip, int portNum,
+                            const char* deviceId) {
     new ADXSPD(portName, ip, portNum, deviceId);
     return asynSuccess;
 }
@@ -60,180 +61,6 @@ static void monitorThreadC(void* drvPvt) {
     pPvt->monitorThread();
 }
 
-// /**
-//  * @brief Makes a GET request to the XSPD API and returns the parsed JSON response
-//  *
-//  * @param uri The full URI to make the GET request to
-//  * @return json Parsed JSON response from the API
-//  */
-// json ADXSPD::xspdGet(string uri) {
-//     // Make a GET request to the XSPD API
-
-//     DEBUG_ARGS("Sending GET request to %s", uri.c_str());
-
-//     this->lock();
-//     cpr::Response response = cpr::Get(cpr::Url(uri));
-//     this->unlock();
-
-//     if (response.status_code != 200)
-//         throw std::runtime_error("Failed to get data from " + uri + ": " + response.error.message +
-//                                  "Status code: " + std::to_string(response.status_code));
-
-//     try {
-//         json parsedResponse = json::parse(response.text, nullptr, true, false, true);
-//         if (parsedResponse.empty() || parsedResponse.is_null())
-//             throw std::runtime_error("Empty JSON response from " + uri);
-
-//         DEBUG_ARGS("Recv response for endpoint %s: %s", uri.c_str(),
-//                    parsedResponse.dump(4).c_str());
-//         return parsedResponse;
-//     } catch (json::parse_error& e) {
-//         throw std::runtime_error("Failed to parse JSON response from " + uri + ": " + e.what());
-//     }
-// }
-
-// template <typename T>
-// T ADXSPD::xspdGetVar(string endpoint, string key) {
-//     string fullVarEndpoint = this->deviceVarUri + endpoint;
-
-//     json response = xspdGet(fullVarEndpoint);
-
-//     if (response.contains(key)) {
-//         if constexpr (is_enum<T>::value) {
-//             string valAsStr = response[key].get<string>();
-//             auto enumValue = magic_enum::enum_cast<T>(valAsStr, magic_enum::case_insensitive);
-//             if (enumValue.has_value()) {
-//                 return enumValue.value();
-//             } else {
-//                 throw std::runtime_error("Failed to cast value " + valAsStr +
-//                                          " to enum for variable " + endpoint);
-//             }
-//         } else {
-//             return response[key].get<T>();
-//         }
-//     }
-//     throw std::out_of_range("Key " + key + " not found in response for variable " + endpoint);
-// }
-
-// template <typename T>
-// T ADXSPD::this->pDetector->GetVar(string endpoint, string key) {
-//     string fullVarEndpoint = this->detectorId + "/" + endpoint;
-
-//     return xspdGetVar<T>(fullVarEndpoint, key);
-// }
-
-// template <typename T>
-// T ADXSPD::xspdGetDataPortVar(string endpoint, string key) {
-//     string fullVarEndpoint = this->dataPortId + "/" + endpoint;
-
-//     return xspdGetVar<T>(fullVarEndpoint, key);
-// }
-
-// /**
-//  * @brief Makes a PUT request to the XSPD API to set a variable value
-//  *
-//  * @param endpoint The API endpoint to set
-//  * @param value The value to set
-//  * @return asynStatus success if the request was successful, else failure
-//  */
-// template <typename T>
-// T ADXSPD::xspdSetVar(string endpoint, T value, string rbKey) {
-
-//     string valueAsStr;
-//     if constexpr (std::is_same_v<T, std::string>) {
-//         valueAsStr = value;
-//     } else if constexpr(std::is_enum<T>::value) {
-//         auto enumString = magic_enum::enum_name(value);
-//         if (enumString.empty()) {
-//             ERR_ARGS("Failed to convert enum value to string for variable %s", endpoint.c_str());
-//             return T(0);
-//         }
-//         valueAsStr = string(enumString);
-//     } else {
-//         valueAsStr = to_string(value);
-//     }
-
-//     string requestUri = this->apiUri + "/devices/" + this->deviceId +
-//                         "/variables?path=" + endpoint + "&value=" + valueAsStr;
-
-//     DEBUG_ARGS("Sending PUT request to %s with value %s", requestUri.c_str(),
-//            valueAsStr.c_str());
-
-//     this->lock();
-//     cpr::Response response = cpr::Put(cpr::Url(requestUri));
-//     this->unlock();
-
-//     if (response.status_code != 200) {
-//         ERR_ARGS("Failed to set variable %s", endpoint.c_str());
-//         return T();
-//     }
-//     DEBUG_ARGS("Received response: %s", response.text.c_str());
-
-//     json respJson = json::parse(response.text, nullptr, true, false, true);
-
-//     if (respJson.is_null() || respJson.empty()) {
-//         ERR_ARGS("Empty JSON response when setting variable %s", endpoint.c_str());
-//         return T();
-//     } else if (!rbKey.empty() && respJson.contains(rbKey)) {
-//         // Handle readback key if provided
-//         if constexpr (std::is_enum<T>::value) {
-//             auto enumValue = magic_enum::enum_cast<T>(respJson[rbKey].get<std::string>(),
-//                                                       magic_enum::case_insensitive);
-//             if (enumValue.has_value()) {
-//                 return enumValue.value();
-//             } else {
-//                 ERR_ARGS("Failed to cast readback value %s to enum for variable %s",
-//                          respJson[rbKey].get<std::string>().c_str(), endpoint.c_str());
-//                 return T(0);
-//             }
-//         }
-//         else {
-//             return respJson[rbKey].get<T>();
-//         }
-//     }
-
-//     return T();
-// }
-
-// template <typename T>
-// T ADXSPD::this->pDetector->SetVar(string endpoint, T value, string rbKey) {
-//     string fullVarEndpoint = this->detectorId + "/" + endpoint;
-
-//     return xspdSetVar<T>(fullVarEndpoint, value, rbKey);
-// }
-
-
-// asynStatus ADXSPD::xspdCommand(string command) {
-//     json commands = xspdGet(this->deviceUri + "commands");
-//     bool commandFound = false;
-//     for (auto& cmd : commands) {
-//         if (cmd["path"] == command) {
-//             DEBUG_ARGS("Found command %s in device commands", command.c_str());
-//             commandFound = true;
-//             break;
-//         }
-//     }
-//     if (!commandFound) {
-//         ERR_ARGS("Command %s not found in device commands", command.c_str());
-//         return asynError;
-//     }
-
-//     // Make a PUT request to the XSPD API
-//     string requestUri = this->deviceUri + "command?path=" + command;
-//     DEBUG_ARGS("Sending PUT request to %s", requestUri.c_str());
-
-//     this->lock();
-//     cpr::Response response = cpr::Put(cpr::Url(requestUri));
-//     this->unlock();
-
-//     if (response.status_code != 200) {
-//         ERR_ARGS("Failed to send command %s: %s", command.c_str(), response.error.message.c_str());
-//         return asynError;
-//     }
-
-//     return asynSuccess;
-// }
-
 // -----------------------------------------------------------------------
 // ADXSPD Acquisition Functions
 // -----------------------------------------------------------------------
@@ -263,7 +90,6 @@ asynStatus ADXSPD::acquireStart() {
     }
     this->unlock();
     return asynSuccess;
-
 }
 
 /**
@@ -281,13 +107,10 @@ asynStatus ADXSPD::acquireStop() {
 }
 
 template <typename T>
-void ADXSPD::subtractFrames(void* currentFrame, void* previousFrame, void* outputFrame, size_t numBytes) {
+void ADXSPD::subtractFrames(T* currentFrame, T* previousFrame, T* outputFrame, size_t numBytes) {
     size_t numElements = numBytes / sizeof(T);
-    T* current = static_cast<T*>(currentFrame);
-    T* previous = static_cast<T*>(previousFrame);
-    T* output = static_cast<T*>(outputFrame);
     for (size_t i = 0; i < numElements; i++) {
-        output[i] = std::max(0, (int)current[i] - (int)previous[i]);
+        outputFrame[i] = std::max(T(0), currentFrame[i] - previousFrame[i]);
     }
 }
 
@@ -311,9 +134,7 @@ void ADXSPD::acquisitionThread() {
     int collectedImages;
 
     void* zmqSubscriber = zmq_socket(this->zmqContext, ZMQ_SUB);
-    int rc = zmq_connect(
-        zmqSubscriber,
-        this->pDetector->GetActiveDataPort()->GetURI().c_str());
+    int rc = zmq_connect(zmqSubscriber, this->pDetector->GetActiveDataPort()->GetURI().c_str());
     if (rc != 0) {
         ERR_ARGS("Failed to connect to data port zmq socket at %s:%d", this->dataPortIp.c_str(),
                  this->dataPortPort);
@@ -330,8 +151,8 @@ void ADXSPD::acquisitionThread() {
     INFO_ARGS("Connected to data port zmq socket at %s:%d", this->dataPortIp.c_str(),
               this->dataPortPort);
 
-    while (this->alive) {
-
+    // Run acquisition loop forever, until zmq context is terminated in the destructor
+    while (true) {
         vector<zmq_msg_t> frameMessages;
         int more;
         size_t moreSize = sizeof(more);
@@ -345,9 +166,10 @@ void ADXSPD::acquisitionThread() {
                     // Context terminated, exit thread
                     INFO("ZMQ context terminated, exiting acquisition thread...");
                     zmq_msg_close(&messagePart);
-                    for(auto& msgPart : frameMessages) {
+                    for (auto& msgPart : frameMessages) {
                         zmq_msg_close(&msgPart);
                     }
+                    frameMessages.clear();
                     zmq_close(zmqSubscriber);
                     return;
                 }
@@ -410,7 +232,6 @@ void ADXSPD::acquisitionThread() {
             setIntegerParam(ADNumImagesCounter, collectedImages);
             updateTimeStamp(&pArray->epicsTS);
 
-
             // Set array size PVs based on collected frame
             pArray->getInfo(&arrayInfo);
             setIntegerParam(NDArraySize, (int) arrayInfo.totalBytes);
@@ -419,12 +240,11 @@ void ADXSPD::acquisitionThread() {
 
             getIntegerParam(NDArrayCallbacks, &arrayCallbacks);
 
-
             // Decompress data if compressed
             XSPD::Compressor compressor;
             getIntegerParam(ADXSPD_Compressor, (int*) &compressor);
 
-            if(counterMode == XSPD::CounterMode::DUAL)
+            if (counterMode == XSPD::CounterMode::DUAL)
                 frameBuffer = calloc(1, arrayInfo.totalBytes);
             else
                 frameBuffer = pArray->pData;
@@ -433,9 +253,9 @@ void ADXSPD::acquisitionThread() {
             if (compressor == XSPD::Compressor::ZLIB) {
                 // Decompress using zlib
                 size_t decompressedSize;
-                int zlibStatus = uncompress((Bytef*) frameBuffer, &decompressedSize,
-                                           (Bytef*) zmq_msg_data(&frameMessages[2]),
-                                           frameSizeBytes);
+                int zlibStatus =
+                    uncompress((Bytef*) frameBuffer, &decompressedSize,
+                               (Bytef*) zmq_msg_data(&frameMessages[2]), frameSizeBytes);
                 if (zlibStatus != Z_OK) {
                     ERR_ARGS("Failed to decompress frame data with zlib, status code %d",
                              zlibStatus);
@@ -455,18 +275,18 @@ void ADXSPD::acquisitionThread() {
 
             bool subtractOk = true;
             if (counterMode == XSPD::CounterMode::DUAL && prevFrameBuffer != nullptr) {
-                switch(dataType) {
+                switch (dataType) {
                     case NDUInt8:
                         this->subtractFrames<uint8_t>(frameBuffer, prevFrameBuffer, pArray->pData,
-                                                     arrayInfo.totalBytes);
+                                                      arrayInfo.totalBytes);
                         break;
                     case NDUInt16:
                         this->subtractFrames<uint16_t>(frameBuffer, prevFrameBuffer, pArray->pData,
-                                                      arrayInfo.totalBytes);
+                                                       arrayInfo.totalBytes);
                         break;
                     case NDUInt32:
                         this->subtractFrames<uint32_t>(frameBuffer, prevFrameBuffer, pArray->pData,
-                                                      arrayInfo.totalBytes);
+                                                       arrayInfo.totalBytes);
                         break;
                     default:
                         ERR("Unsupported data type for frame subtraction");
@@ -495,14 +315,14 @@ void ADXSPD::acquisitionThread() {
 
                 getAttributes(pArray->pAttributeList);
 
-                if(arrayCallbacks)
-                    doCallbacksGenericPointer(pArray, NDArrayData, 0);
+                if (arrayCallbacks) doCallbacksGenericPointer(pArray, NDArrayData, 0);
             }
 
             // If in single mode, finish acq, if in multiple mode and reached target number
             // complete acquisition.
             if (acquisitionMode == ADImageSingle ||
-                (acquisitionMode == ADImageMultiple && collectedImages == (targetNumImages * pow(2, (int) counterMode)))) {
+                (acquisitionMode == ADImageMultiple &&
+                 collectedImages == (targetNumImages * pow(2, (int) counterMode)))) {
                 acquireStop();
             }
             pArray->release();
@@ -517,7 +337,7 @@ void ADXSPD::acquisitionThread() {
         callParamCallbacks();
     }
 
-    if(zmqSubscriber != nullptr) {
+    if (zmqSubscriber != nullptr) {
         INFO("Closing zmq subscriber socket...");
         zmq_close(zmqSubscriber);
     }
@@ -528,17 +348,16 @@ void ADXSPD::acquisitionThread() {
  */
 void ADXSPD::monitorThread() {
     double pollInterval;
-    while (this->alive) {
-
+    while (true) {
         getDoubleParam(ADXSPD_StatusInterval, &pollInterval);
 
         // Don't allow polling faster than minimum interval
-        if (pollInterval <= ADXSPD_MIN_STATUS_POLL_INTERVAL) pollInterval = ADXSPD_MIN_STATUS_POLL_INTERVAL;
+        if (pollInterval <= ADXSPD_MIN_STATUS_POLL_INTERVAL)
+            pollInterval = ADXSPD_MIN_STATUS_POLL_INTERVAL;
 
-        XSPD::Status status =
-            this->pDetector->GetVar<XSPD::Status>("status");
+        XSPD::Status status = this->pDetector->GetVar<XSPD::Status>("status");
         int adStatus = ADStatusIdle;
-        switch(status) {
+        switch (status) {
             case XSPD::Status::READY:
                 break;
             case XSPD::Status::BUSY:
@@ -585,7 +404,8 @@ NDDataType_t ADXSPD::getDataTypeForBitDepth(int bitDepth) {
 
 void ADXSPD::getInitialDetState() {
     try {
-        setDoubleParam(ADAcquireTime, this->pDetector->GetVar<double>("shutter_time") / 1000.0);  // XSPD API uses milliseconds
+        setDoubleParam(ADAcquireTime, this->pDetector->GetVar<double>("shutter_time") /
+                                          1000.0);  // XSPD API uses milliseconds
         setIntegerParam(ADXSPD_SummedFrames, this->pDetector->GetVar<int>("summed_frames"));
 
         // Set ADNumImages and ADImageMode based on n_frames
@@ -602,25 +422,30 @@ void ADXSPD::getInitialDetState() {
         setDoubleParam(ADXSPD_BeamEnergy, this->pDetector->GetVar<double>("beam_energy"));
         setIntegerParam(ADXSPD_GatingMode,
                         static_cast<int>(this->pDetector->GetVar<XSPD::OnOff>("gating_mode")));
-        setIntegerParam(ADXSPD_FFCorrection,
-                        static_cast<int>(this->pDetector->GetVar<XSPD::OnOff>("flatfield_correction")));
+        setIntegerParam(
+            ADXSPD_FFCorrection,
+            static_cast<int>(this->pDetector->GetVar<XSPD::OnOff>("flatfield_correction")));
         setIntegerParam(ADXSPD_ChargeSumming,
                         static_cast<int>(this->pDetector->GetVar<XSPD::OnOff>("charge_summing")));
-        setIntegerParam(ADTriggerMode,
-                        static_cast<int>(this->pDetector->GetVar<XSPD::TriggerMode>("trigger_mode")));
+        setIntegerParam(
+            ADTriggerMode,
+            static_cast<int>(this->pDetector->GetVar<XSPD::TriggerMode>("trigger_mode")));
 
         int bitDepth = this->pDetector->GetVar<int>("bit_depth");
         setIntegerParam(ADXSPD_BitDepth, bitDepth);
         setIntegerParam(NDDataType, static_cast<int>(getDataTypeForBitDepth(bitDepth)));
 
-        setIntegerParam(ADXSPD_CrCorr,
-                        static_cast<int>(this->pDetector->GetVar<XSPD::OnOff>("countrate_correction")));
-        setIntegerParam(ADXSPD_CounterMode,
-                        static_cast<int>(this->pDetector->GetVar<XSPD::CounterMode>("counter_mode")));
+        setIntegerParam(
+            ADXSPD_CrCorr,
+            static_cast<int>(this->pDetector->GetVar<XSPD::OnOff>("countrate_correction")));
+        setIntegerParam(
+            ADXSPD_CounterMode,
+            static_cast<int>(this->pDetector->GetVar<XSPD::CounterMode>("counter_mode")));
         setIntegerParam(ADXSPD_SaturationFlag,
                         static_cast<int>(this->pDetector->GetVar<XSPD::OnOff>("saturation_flag")));
-        setIntegerParam(ADXSPD_ShuffleMode,
-                        static_cast<int>(this->pDetector->GetVar<XSPD::ShuffleMode>("shuffle_mode")));
+        setIntegerParam(
+            ADXSPD_ShuffleMode,
+            static_cast<int>(this->pDetector->GetVar<XSPD::ShuffleMode>("shuffle_mode")));
 
         setStringParam(ADModel, this->pDetector->GetVar<string>("type").c_str());
 
@@ -719,38 +544,47 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
         try {
             int actualValue = value;
             string endpoint;
-            if(function == ADXSPD_BitDepth) {
+            if (function == ADXSPD_BitDepth) {
                 actualValue = this->pDetector->SetVar<int>("bit_depth", value);
                 setIntegerParam(NDDataType, static_cast<int>(getDataTypeForBitDepth(actualValue)));
-            } else if(function == ADXSPD_SummedFrames) {
+            } else if (function == ADXSPD_SummedFrames) {
                 actualValue = this->pDetector->SetVar<int>("summed_frames", value);
-            } else if(function == ADXSPD_RoiRows) {
+            } else if (function == ADXSPD_RoiRows) {
                 actualValue = this->pDetector->SetVar<int>("roi_rows", value);
-            } else if(function == ADXSPD_GatingMode) {
-                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>("gating_mode", static_cast<XSPD::OnOff>(value)));
-            } else if(function == ADXSPD_FFCorrection) {
-                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>("flatfield_correction", static_cast<XSPD::OnOff>(value)));
-            } else if(function == ADXSPD_ChargeSumming) {
-                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>("charge_summing", static_cast<XSPD::OnOff>(value)));
-            } else if(function == ADTriggerMode) {
-                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::TriggerMode>("trigger_mode", static_cast<XSPD::TriggerMode>(value)));
-            } else if(function == ADXSPD_CrCorr) {
-                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>("countrate_correction", static_cast<XSPD::OnOff>(value)));
-            } else if(function == ADXSPD_CounterMode) {
-                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::CounterMode>("counter_mode", static_cast<XSPD::CounterMode>(value)));
-            } else if(function == ADXSPD_SaturationFlag) {
-                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>("saturation_flag", static_cast<XSPD::OnOff>(value)));
-            } else if(function == ADXSPD_ShuffleMode) {
-                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::ShuffleMode>("shuffle_mode", static_cast<XSPD::ShuffleMode>(value)));
-            } else if(function == ADXSPD_StatusInterval) {
+            } else if (function == ADXSPD_GatingMode) {
+                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
+                    "gating_mode", static_cast<XSPD::OnOff>(value)));
+            } else if (function == ADXSPD_FFCorrection) {
+                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
+                    "flatfield_correction", static_cast<XSPD::OnOff>(value)));
+            } else if (function == ADXSPD_ChargeSumming) {
+                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
+                    "charge_summing", static_cast<XSPD::OnOff>(value)));
+            } else if (function == ADTriggerMode) {
+                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::TriggerMode>(
+                    "trigger_mode", static_cast<XSPD::TriggerMode>(value)));
+            } else if (function == ADXSPD_CrCorr) {
+                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
+                    "countrate_correction", static_cast<XSPD::OnOff>(value)));
+            } else if (function == ADXSPD_CounterMode) {
+                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::CounterMode>(
+                    "counter_mode", static_cast<XSPD::CounterMode>(value)));
+            } else if (function == ADXSPD_SaturationFlag) {
+                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
+                    "saturation_flag", static_cast<XSPD::OnOff>(value)));
+            } else if (function == ADXSPD_ShuffleMode) {
+                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::ShuffleMode>(
+                    "shuffle_mode", static_cast<XSPD::ShuffleMode>(value)));
+            } else if (function == ADXSPD_StatusInterval) {
                 if (value < ADXSPD_MIN_STATUS_POLL_INTERVAL) {
                     actualValue = ADXSPD_MIN_STATUS_POLL_INTERVAL;
                 }
             }
 
             setIntegerParam(function, actualValue);
-            if(actualValue != value) {
-                WARN_ARGS("Requested value %d for parameter %s, but set value is %d", value, paramName, actualValue);
+            if (actualValue != value) {
+                WARN_ARGS("Requested value %d for parameter %s, but set value is %d", value,
+                          paramName, actualValue);
                 status = asynError;
             }
         } catch (std::invalid_argument& e) {
@@ -771,8 +605,6 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
         return asynSuccess;
     }
 }
-
-
 
 /*
  * Function overwriting ADDriver base function.
@@ -808,19 +640,20 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
     } else {
         double actualValue = value;
         string endpoint;
-        if(function == ADXSPD_BeamEnergy) {
+        if (function == ADXSPD_BeamEnergy) {
             endpoint = "beam_energy";
             actualValue = this->pDetector->SetVar<double>(endpoint, value);
-        } else if(function == ADXSPD_LowThreshold) {
+        } else if (function == ADXSPD_LowThreshold) {
             actualValue = this->pDetector->SetThreshold(XSPD::Threshold::LOW, value);
-        } else if(function == ADXSPD_HighThreshold) {
+        } else if (function == ADXSPD_HighThreshold) {
             actualValue = this->pDetector->SetThreshold(XSPD::Threshold::HIGH, value);
         } else if (function == ADXSPD_StatusInterval && value < ADXSPD_MIN_STATUS_POLL_INTERVAL) {
             actualValue = ADXSPD_MIN_STATUS_POLL_INTERVAL;
         }
         setDoubleParam(function, actualValue);
-        if(actualValue != value) {
-            WARN_ARGS("Requested value %f for parameter %s, but set value is %f", value, paramName, actualValue);
+        if (actualValue != value) {
+            WARN_ARGS("Requested value %f for parameter %s, but set value is %f", value, paramName,
+                      actualValue);
             status = asynError;
         }
     }
@@ -852,7 +685,6 @@ void ADXSPD::report(FILE* fp, int details) {
 // ADXSPD Constructor/Destructor
 //----------------------------------------------------------------------------
 
-
 /**
  * Constructor for the ADXSPD driver
  *
@@ -864,9 +696,7 @@ void ADXSPD::report(FILE* fp, int details) {
  */
 ADXSPD::ADXSPD(const char* portName, const char* ip, int portNum, const char* deviceId)
     : ADDriver(portName, 1, (int) NUM_ADXSPD_PARAMS, 0, 0, 0, 0, 0, 1, 0, 0) {
-    cpr::Response response;
-
-    // Create ADXSPD specific parameters
+    // Create ADXSPD specific asyn parameters
     createAllParams();
 
     // Sets driver version PV (version numbers defined in header file)
@@ -897,7 +727,7 @@ ADXSPD::ADXSPD(const char* portName, const char* ip, int portNum, const char* de
     setStringParam(ADSDKVersion, this->pApi->GetLibXSPVersion().c_str());
     setStringParam(ADFirmwareVersion, this->pDetector->GetFirmwareVersion().c_str());
 
-    // // Initialize our modules
+    // Initialize our modules
     vector<XSPD::Module*> moduleList = this->pDetector->GetModules();
     int numModules = (int) moduleList.size();
     setIntegerParam(ADXSPD_NumModules, numModules);
@@ -976,7 +806,8 @@ static const iocshArg XSPDConfigArg2 = {"Port Number", iocshArgInt};
 static const iocshArg XSPDConfigArg3 = {"Device ID", iocshArgString};
 
 /* Array of config args */
-static const iocshArg* const XSPDConfigArgs[] = {&XSPDConfigArg0, &XSPDConfigArg1, &XSPDConfigArg2, &XSPDConfigArg3};
+static const iocshArg* const XSPDConfigArgs[] = {&XSPDConfigArg0, &XSPDConfigArg1, &XSPDConfigArg2,
+                                                 &XSPDConfigArg3};
 /* what function to call at config */
 static void configXSPDCallFunc(const iocshArgBuf* args) {
     ADXSPDConfig(args[0].sval, args[1].sval, args[2].ival, args[3].sval);

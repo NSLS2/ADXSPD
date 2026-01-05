@@ -1,8 +1,8 @@
-#include "ADXSPDTest.h"
 #include <nlohmann/json.hpp>
 
-TEST_F(ADXSPDTest, TestXSPDGet) {
+#include "ADXSPDTest.h"
 
+TEST_F(ADXSPDTest, TestXSPDGet) {
     json resp = xspdDriver->xspdGet("localhost:8000/api");
     EXPECT_FALSE(resp.is_null());
     EXPECT_TRUE(resp.contains("api version"));
@@ -12,7 +12,6 @@ TEST_F(ADXSPDTest, TestXSPDGet) {
 }
 
 TEST_F(ADXSPDTest, TestXSPDGetInvalidEndpoint) {
-
     json resp = xspdDriver->xspdGet("localhost:8000/api/invalid_endpoint");
     EXPECT_TRUE(resp.is_null());
 }

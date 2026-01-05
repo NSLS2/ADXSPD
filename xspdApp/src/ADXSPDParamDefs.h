@@ -63,6 +63,6 @@ int ADXSPD_StatusInterval;
 #define ADXSPD_FIRST_PARAM ADXSPD_ApiVersion
 #define ADXSPD_LAST_PARAM ADXSPD_StatusInterval
 
-#define NUM_ADXSPD_PARAMS ((int)(&ADXSPD_LAST_PARAM - &ADXSPD_FIRST_PARAM + 1))
+#define NUM_ADXSPD_PARAMS ((int) (&ADXSPD_LAST_PARAM - &ADXSPD_FIRST_PARAM + 1))
 
 #endif

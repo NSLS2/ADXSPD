@@ -14,8 +14,6 @@
 
 using namespace std;
 
-
-
 class ADXSPDModule : public asynPortDriver {
    public:
     ADXSPDModule(const char* portName, XSPD::Module* module, ADXSPD* parent);
@@ -36,7 +34,7 @@ class ADXSPDModule : public asynPortDriver {
 
    private:
     const char* driverName = "ADXSPDModule";
-    ADXSPD* parent;   // Pointer to the parent ADXSPD driver object
+    ADXSPD* parent;        // Pointer to the parent ADXSPD driver object
     XSPD::Module* module;  // Pointer to the XSPD module object
     void createAllParams();
 

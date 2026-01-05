@@ -9,7 +9,6 @@
 
 #include "ADXSPDModule.h"
 
-
 void ADXSPDModule::checkStatus() {
     // Example: Read module temperature and update parameter
     setDoubleParam(ADXSPDModule_SensCurr, this->module->GetVar<double>("sensor_current"));
@@ -107,7 +106,8 @@ ADXSPDModule::ADXSPDModule(const char* portName, XSPD::Module* module, ADXSPD* p
     this->createAllParams();
 
     this->getInitialModuleState();
-    INFO_ARGS("Configured ADXSPDModule w/ port %s for module %s", portName, module->GetId().c_str());
+    INFO_ARGS("Configured ADXSPDModule w/ port %s for module %s", portName,
+              module->GetId().c_str());
 }
 
 ADXSPDModule::~ADXSPDModule() {

@@ -28,6 +28,7 @@
 #include <epicsTime.h>
 #include <iocsh.h>
 #include <stdlib.h>
+#include <zlib.h>
 #include <zmq.h>
 
 #include <cmath>
@@ -37,13 +38,12 @@
 #include <iostream>
 #include <magic_enum/magic_enum.hpp>
 #include <map>
+#include <nlohmann/json.hpp>
 #include <string>
 #include <type_traits>
-#include <zlib.h>
 
 #include "ADDriver.h"
 #include "XSPDAPI.h"
-#include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 using namespace std;
@@ -57,14 +57,14 @@ using namespace std;
     if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) \
         fprintf(stderr, "ERROR | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
-#define ERR_TO_STATUS(fmt, ...)                     \
-    if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) { \
-        char errMsg[256];                              \
-        snprintf(errMsg, sizeof(errMsg), fmt, __VA_ARGS__); \
+#define ERR_TO_STATUS(fmt, ...)                                       \
+    if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) {               \
+        char errMsg[256];                                             \
+        snprintf(errMsg, sizeof(errMsg), fmt, __VA_ARGS__);           \
         printf("ERROR | %s::%s: %s\n", driverName, __func__, errMsg); \
-        setStringParam(ADStatusMessage, errMsg);          \
-        setIntegerParam(ADStatus, ADStatusError);         \
-        callParamCallbacks();                             \
+        setStringParam(ADStatusMessage, errMsg);                      \
+        setIntegerParam(ADStatus, ADStatusError);                     \
+        callParamCallbacks();                                         \
     }
 
 // Warning message formatters
@@ -76,13 +76,13 @@ using namespace std;
     if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) \
         fprintf(stderr, "WARNING | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
-#define WARN_TO_STATUS(fmt, ...)                      \
-    if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) { \
-        char warnMsg[256];                               \
-        snprintf(warnMsg, sizeof(warnMsg), fmt, __VA_ARGS__); \
+#define WARN_TO_STATUS(fmt, ...)                                         \
+    if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) {                \
+        char warnMsg[256];                                               \
+        snprintf(warnMsg, sizeof(warnMsg), fmt, __VA_ARGS__);            \
         printf("WARNING | %s::%s: %s\n", driverName, __func__, warnMsg); \
-        setStringParam(ADStatusMessage, warnMsg);          \
-        callParamCallbacks();                             \
+        setStringParam(ADStatusMessage, warnMsg);                        \
+        callParamCallbacks();                                            \
     }
 
 // Info message formatters
@@ -94,13 +94,13 @@ using namespace std;
     if (this->getLogLevel() >= ADXSPDLogLevel::INFO) \
         fprintf(stdout, "INFO | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
-#define INFO_TO_STATUS(fmt, ...)                      \
-    if (this->getLogLevel() >= ADXSPDLogLevel::INFO) { \
-        char infoMsg[256];                               \
-        snprintf(infoMsg, sizeof(infoMsg), fmt, __VA_ARGS__); \
+#define INFO_TO_STATUS(fmt, ...)                                      \
+    if (this->getLogLevel() >= ADXSPDLogLevel::INFO) {                \
+        char infoMsg[256];                                            \
+        snprintf(infoMsg, sizeof(infoMsg), fmt, __VA_ARGS__);         \
         printf("INFO | %s::%s: %s\n", driverName, __func__, infoMsg); \
-        setStringParam(ADStatusMessage, infoMsg);          \
-        callParamCallbacks();                             \
+        setStringParam(ADStatusMessage, infoMsg);                     \
+        callParamCallbacks();                                         \
     }
 
 // Debug message formatters
@@ -119,7 +119,6 @@ enum class ADXSPDLogLevel {
     INFO = 30,     // Info, warnings, and errors
     DEBUG = 40     // Debugging information
 };
-
 
 #define ADXSPD_MIN_STATUS_POLL_INTERVAL 0.5  // Minimum status poll interval in seconds
 
@@ -154,7 +153,7 @@ class ADXSPD : ADDriver {
 
     template <typename T>
     void subtractFrames(T* currentFrame, T* previousFrame, T* outputFrame, size_t numBytes);
-    
+
    protected:
 // Load auto-generated parameter string and index definitions
 #include "ADXSPDParamDefs.h"
@@ -163,13 +162,10 @@ class ADXSPD : ADDriver {
     const char* driverName = "ADXSPD";
     void createAllParams();
 
-    bool alive = true;  // Flag to indicate whether our acquisition thread and monitor thread should
-                        // keep running
     epicsThreadId acquisitionThreadId;
     epicsThreadId monitorThreadId;
 
     void* zmqContext;
-
 
     vector<ADXSPDModule*> modules;
     XSPD::API* pApi;
@@ -185,12 +181,10 @@ class ADXSPD : ADDriver {
     int dataPortPort;
 
     vector<int> onlyIdleParams = {
-        ADTriggerMode,     ADAcquireTime,      ADXSPD_BitDepth,
-        ADXSPD_Compressor, ADXSPD_ShuffleMode, ADXSPD_CounterMode,
+        ADTriggerMode, ADAcquireTime, ADXSPD_BitDepth, ADXSPD_ShuffleMode, ADXSPD_CounterMode,
     };
 
     ADXSPDLogLevel logLevel = ADXSPDLogLevel::DEBUG;  // Logging level for the driver
-
 };
 
 #endif
