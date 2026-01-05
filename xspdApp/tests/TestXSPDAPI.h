@@ -1,5 +1,5 @@
-#ifndef ADXSPDAPITEST_H
-#define ADXSPDAPITEST_H
+#ifndef TEST_XSPDAPI_H
+#define TEST_XSPDAPI_H
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -24,7 +24,7 @@ using ::testing::StrictMock;
  *  Author: Jakub Wlodek
  */
 
-class XSPDAPITest : public ::testing::Test {
+class TestXSPDAPI : public ::testing::Test {
    protected:
     void SetUp() override {
         mockXSPDAPI = new StrictMock<MockXSPDAPI>();

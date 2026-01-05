@@ -5,26 +5,26 @@ include $(TOP)/configure/CONFIG
 
 USR_CPPFLAGS += -std=c++17
 
-PROD_IOC = ADXSPDTests
+PROD_IOC = TestADXSPD
 
-ADXSPDTests_SRCS += ADXSPDTestMain.cpp
-# ADXSPDTests_SRCS += ADXSPDTestUtils.cpp
-ADXSPDTests_SRCS += XSPDAPITest.cpp
-ADXSPDTests_SRCS += MockXSPDAPI.cpp
+TestADXSPD_SRCS += TestADXSPDMain.cpp
+# TestADXSPD_SRCS += ADXSPDTestUtils.cpp
+TestADXSPD_SRCS += TestXSPDAPI.cpp
+TestADXSPD_SRCS += MockXSPDAPI.cpp
 
 # Add additional test source files here
-# ADXSPDTests_SRCS +=
+# TestADXSPD_SRCS +=
 
-ADXSPDTests_LIBS += ADXSPD ADBase asyn cpr gtest gmock $(EPICS_BASE_IOC_LIBS) xml2
+TestADXSPD_LIBS += ADXSPD ADBase asyn cpr gtest gmock $(EPICS_BASE_IOC_LIBS) xml2
 
 ifdef ZMQ_LIB
   zmq_DIR        += $(ZMQ_LIB)
-  ADXSPDTests_LIBS      += zmq
+  TestADXSPD_LIBS      += zmq
 else
-  ADXSPDTests_SYS_LIBS  += zmq
+  TestADXSPD_SYS_LIBS  += zmq
 endif
 
-ADXSPDTests_SYS_LIBS += curl z
+TestADXSPD_SYS_LIBS += curl z
 
 include $(TOP)/configure/RULES
 #----------------------------------------

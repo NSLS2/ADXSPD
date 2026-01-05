@@ -1,5 +1,5 @@
-#ifndef MOCK_XSPD_API_H
-#define MOCK_XSPD_API_H
+#ifndef MOCK_XSPDAPI_H
+#define MOCK_XSPDAPI_H
 
 #include <gmock/gmock.h>
 

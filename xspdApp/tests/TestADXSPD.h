@@ -1,5 +1,5 @@
-#ifndef ADXSPD_TESTS_XSPD_SERVICE_H
-#define ADXSPD_TESTS_XSPD_SERVICE_H
+#ifndef TEST_ADXSPD_H
+#define TEST_ADXSPD_H
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -22,7 +22,7 @@ using ::testing::StrictMock;
  *  Author: Jakub Wlodek
  */
 
-class ADXSPDTest : public ::testing::Test {
+class TestADXSPD : public ::testing::Test {
    protected:
     void SetUpTestSuite() {
         // this->simulatedXSPDService = boost::process::child(".pixi/envs/default/bin/python3
@@ -52,7 +52,7 @@ class ADXSPDTest : public ::testing::Test {
 
     std::string getUniquePortName() {
         static int portCounter = 0;
-        return "ADXSPD_TEST_PORT_" + std::to_string(portCounter++);
+        return "XSPD" + std::to_string(portCounter++);
     }
 
     ADXSPD* xspdDriver;

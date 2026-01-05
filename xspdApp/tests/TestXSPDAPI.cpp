@@ -1,9 +1,14 @@
-#include "XSPDAPITest.h"
+#include "TestXSPDAPI.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-void XSPDAPITest::MockIntialziationSeq(std::string deviceId) {
+/**
+ * @brief Mocks the sequence of API calls made during initialization
+ *
+ * @param deviceId The device ID to initialize with
+ */
+void TestXSPDAPI::MockIntialziationSeq(std::string deviceId) {
     InSequence seq;
     this->MockGetRequest(this->expectedApiUri, this->sampleApiResponse);
     this->MockGetRequest(this->expectedDeviceUri, this->sampleDeviceList);
@@ -12,12 +17,19 @@ void XSPDAPITest::MockIntialziationSeq(std::string deviceId) {
     this->MockGetRequest(this->expectedDeviceUri + deviceId, this->sampleDeviceInfo);
 }
 
-XSPD::Detector* XSPDAPITest::MockInitialization(std::string deviceId) {
+/**
+ * @brief Mocks the initialization process and returns the initialized Detector object
+ *
+ * @param deviceId The device ID to initialize with
+ * @return XSPD::Detector* Pointer to the initialized Detector object
+ */
+XSPD::Detector* TestXSPDAPI::MockInitialization(std::string deviceId) {
     this->MockIntialziationSeq(deviceId);
     return this->mockXSPDAPI->Initialize(deviceId);
 }
 
-TEST_F(XSPDAPITest, TestGetDeviceAtIndex) {
+/** */
+TEST_F(TestXSPDAPI, TestGetDeviceAtIndex) {
     this->MockRepeatedGetRequest(this->expectedDeviceUri, this->sampleDeviceList);
     std::string deviceId = mockXSPDAPI->GetDeviceAtIndex(0);
     ASSERT_EQ(deviceId, "device123");
@@ -26,28 +38,28 @@ TEST_F(XSPDAPITest, TestGetDeviceAtIndex) {
     ASSERT_EQ(deviceId, "device456");
 }
 
-TEST_F(XSPDAPITest, TestDeviceExists) {
+TEST_F(TestXSPDAPI, TestDeviceExists) {
     this->MockRepeatedGetRequest(this->expectedDeviceUri, this->sampleDeviceList);
     ASSERT_EQ(mockXSPDAPI->DeviceExists("device123"), true);
     ASSERT_EQ(mockXSPDAPI->DeviceExists("device456"), true);
     ASSERT_EQ(mockXSPDAPI->DeviceExists("device789"), false);
 }
 
-TEST_F(XSPDAPITest, TestAPIInitInvalidDeviceId) {
+TEST_F(TestXSPDAPI, TestAPIInitInvalidDeviceId) {
     this->MockRepeatedGetRequest(this->expectedDeviceUri, this->sampleDeviceList);
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("device789"); },
                 testing::ThrowsMessage<std::invalid_argument>(
                     testing::HasSubstr("Device with ID device789 does not exist.")));
 }
 
-TEST_F(XSPDAPITest, TestAPIInitDeviceIndexOutOfRange) {
+TEST_F(TestXSPDAPI, TestAPIInitDeviceIndexOutOfRange) {
     this->MockRepeatedGetRequest(this->expectedDeviceUri, this->sampleDeviceList);
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("5"); },
                 testing::ThrowsMessage<std::out_of_range>(
                     testing::HasSubstr("Device index 5 is out of range.")));
 }
 
-TEST_F(XSPDAPITest, TestAPIInitNoDetectors) {
+TEST_F(TestXSPDAPI, TestAPIInitNoDetectors) {
     InSequence seq;
     this->MockGetRequest(this->expectedApiUri, this->sampleApiResponse);
     this->MockGetRequest(this->expectedDeviceUri, this->sampleDeviceList);
@@ -57,7 +69,7 @@ TEST_F(XSPDAPITest, TestAPIInitNoDetectors) {
                     testing::HasSubstr("No detectors information found for device ID device123")));
 }
 
-TEST_F(XSPDAPITest, TestAPIInitNoDataPorts) {
+TEST_F(TestXSPDAPI, TestAPIInitNoDataPorts) {
     InSequence seq;
     this->MockGetRequest(this->expectedApiUri, this->sampleApiResponse);
     this->MockGetRequest(this->expectedDeviceUri, this->sampleDeviceList);
@@ -69,7 +81,7 @@ TEST_F(XSPDAPITest, TestAPIInitNoDataPorts) {
                     testing::HasSubstr("No data-ports information found for device ID device123")));
 }
 
-TEST_F(XSPDAPITest, TestAPIInitNoDeviceId) {
+TEST_F(TestXSPDAPI, TestAPIInitNoDeviceId) {
     this->MockIntialziationSeq();
     XSPD::Detector* pdet = this->mockXSPDAPI->Initialize();
     ASSERT_EQ(this->mockXSPDAPI->GetDeviceId(), "device123");
@@ -77,7 +89,7 @@ TEST_F(XSPDAPITest, TestAPIInitNoDeviceId) {
     ASSERT_EQ(pdet->GetActiveDataPort()->GetId(), "port01");
 }
 
-TEST_F(XSPDAPITest, TestAPIInitDeviceIndex) {
+TEST_F(TestXSPDAPI, TestAPIInitDeviceIndex) {
     this->MockIntialziationSeq();
     XSPD::Detector* pdet = this->mockXSPDAPI->Initialize("0");
     ASSERT_EQ(this->mockXSPDAPI->GetDeviceId(), "device123");
@@ -85,7 +97,7 @@ TEST_F(XSPDAPITest, TestAPIInitDeviceIndex) {
     ASSERT_EQ(pdet->GetActiveDataPort()->GetId(), "port01");
 }
 
-TEST_F(XSPDAPITest, TestAPIInitDeviceId) {
+TEST_F(TestXSPDAPI, TestAPIInitDeviceId) {
     this->MockIntialziationSeq();
     XSPD::Detector* pdet = this->mockXSPDAPI->Initialize("device123");
     ASSERT_EQ(this->mockXSPDAPI->GetDeviceId(), "device123");
@@ -93,20 +105,20 @@ TEST_F(XSPDAPITest, TestAPIInitDeviceId) {
     ASSERT_EQ(pdet->GetActiveDataPort()->GetId(), "port01");
 }
 
-TEST_F(XSPDAPITest, TestGetXSPDVersion) {
+TEST_F(TestXSPDAPI, TestGetXSPDVersion) {
     this->MockGetRequest(this->expectedApiUri, sampleApiResponse);
     std::string xspdVersion = mockXSPDAPI->GetXSPDVersion();
     ASSERT_EQ(xspdVersion, "1.2.3");
 }
 
-TEST_F(XSPDAPITest, TestGetValidEndpoint) {
+TEST_F(TestXSPDAPI, TestGetValidEndpoint) {
     this->MockGetRequest("http://localhost:8080/api/v1/test-endpoint", json{{"key", "value"}});
 
     json response = mockXSPDAPI->Get("test-endpoint");
     ASSERT_EQ(response["key"], "value");
 }
 
-TEST_F(XSPDAPITest, TestGetInvalidResponseCode) {
+TEST_F(TestXSPDAPI, TestGetInvalidResponseCode) {
     EXPECT_CALL(*mockXSPDAPI, SubmitRequest("http://localhost:8080/api/v1/invalid-endpoint",
                                             XSPD::RequestType::GET))
         .WillOnce(testing::Throw(std::runtime_error("Failed to get data from invalid-endpoint")));
@@ -116,21 +128,21 @@ TEST_F(XSPDAPITest, TestGetInvalidResponseCode) {
         testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr("Failed to get data from")));
 }
 
-TEST_F(XSPDAPITest, TestReadVarFromRespValidInt) {
+TEST_F(TestXSPDAPI, TestReadVarFromRespValidInt) {
     json response = json{{"status", 1}};
 
     int status = mockXSPDAPI->ReadVarFromResp<int>(response, "status", "status");
     ASSERT_EQ(status, 1);
 }
 
-TEST_F(XSPDAPITest, TestReadVarFromRespValidString) {
+TEST_F(TestXSPDAPI, TestReadVarFromRespValidString) {
     json response = json{{"message", "success"}};
 
     std::string message = mockXSPDAPI->ReadVarFromResp<std::string>(response, "message", "message");
     ASSERT_EQ(message, "success");
 }
 
-TEST_F(XSPDAPITest, TestReadVarFromRespKeyNotFound) {
+TEST_F(TestXSPDAPI, TestReadVarFromRespKeyNotFound) {
     json response = json{{"status", 1}};
 
     EXPECT_THAT(
@@ -139,7 +151,7 @@ TEST_F(XSPDAPITest, TestReadVarFromRespKeyNotFound) {
             testing::HasSubstr("not found in response for variable")));
 }
 
-TEST_F(XSPDAPITest, TestReadVarFromRespEnumValid) {
+TEST_F(TestXSPDAPI, TestReadVarFromRespEnumValid) {
     json response = json{{"enumKey", "ON"}};
 
     XSPD::OnOff enumValue =
@@ -147,7 +159,7 @@ TEST_F(XSPDAPITest, TestReadVarFromRespEnumValid) {
     ASSERT_EQ(enumValue, XSPD::OnOff::ON);
 }
 
-TEST_F(XSPDAPITest, TestReadVarFromRespEnumInvalid) {
+TEST_F(TestXSPDAPI, TestReadVarFromRespEnumInvalid) {
     json response = json{{"enumKey", "HI"}};
 
     ASSERT_THAT(
@@ -155,7 +167,7 @@ TEST_F(XSPDAPITest, TestReadVarFromRespEnumInvalid) {
         testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr("Failed to cast value")));
 }
 
-TEST_F(XSPDAPITest, TestReadVarFromRespVectorOfDoublesValid) {
+TEST_F(TestXSPDAPI, TestReadVarFromRespVectorOfDoublesValid) {
     json response = json{{"values", json::array({1.1, 2.2, 3.3})}};
 
     std::vector<double> values =
@@ -166,7 +178,7 @@ TEST_F(XSPDAPITest, TestReadVarFromRespVectorOfDoublesValid) {
     ASSERT_DOUBLE_EQ(values[2], 3.3);
 }
 
-TEST_F(XSPDAPITest, TestReadVarFromRespVectorOfIntsValid) {
+TEST_F(TestXSPDAPI, TestReadVarFromRespVectorOfIntsValid) {
     json response = json{{"values", json::array({1, 2, 3, 4})}};
 
     std::vector<int> values =
@@ -178,7 +190,7 @@ TEST_F(XSPDAPITest, TestReadVarFromRespVectorOfIntsValid) {
     ASSERT_EQ(values[3], 4);
 }
 
-TEST_F(XSPDAPITest, TestGetIntDetectorVar) {
+TEST_F(TestXSPDAPI, TestGetIntDetectorVar) {
     json response = json{{"value", 42}};
 
     EXPECT_CALL(
