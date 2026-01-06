@@ -381,6 +381,7 @@ void ADXSPD::monitorThread() {
     while (true) {
         getDoubleParam(ADXSPD_StatusInterval, &pollInterval);
 
+
         // Don't allow polling faster than minimum interval
         if (pollInterval <= ADXSPD_MIN_STATUS_POLL_INTERVAL)
             pollInterval = ADXSPD_MIN_STATUS_POLL_INTERVAL;
@@ -413,7 +414,11 @@ void ADXSPD::monitorThread() {
         }
 
         // TODO: Allow for setting the polling interval via a PV
-        epicsThreadSleep(pollInterval);
+        if(epicsEventWaitWithTimeout(this->shutdownEventId, pollInterval) == epicsEventWaitOK) {
+            INFO("Shutdown event received, exiting monitor thread...");
+            break;
+        }
+
         callParamCallbacks();
     }
 }
@@ -768,6 +773,10 @@ ADXSPD::ADXSPD(const char* portName, const char* ip, int portNum, const char* de
 
     this->getInitialDetState();
 
+    // Create a shutdown event so we can signal to other threads to exit.
+    this->shutdownEventId = epicsEventCreate(epicsEventEmpty);
+
+    // Spawn our acquisition thread
     epicsThreadOpts opts;
     opts.priority = epicsThreadPriorityHigh;
     opts.stackSize = epicsThreadGetStackSize(epicsThreadStackBig);
@@ -775,6 +784,7 @@ ADXSPD::ADXSPD(const char* portName, const char* ip, int portNum, const char* de
     this->acquisitionThreadId = epicsThreadCreateOpt(
         "acquisitionThread", (EPICSTHREADFUNC) acquisitionThreadC, this, &opts);
 
+    // Spawn our monitoring thread
     epicsThreadOpts monitorOpts;
     monitorOpts.priority = epicsThreadPriorityMedium;
     monitorOpts.stackSize = epicsThreadGetStackSize(epicsThreadStackMedium);
@@ -786,6 +796,9 @@ ADXSPD::ADXSPD(const char* portName, const char* ip, int portNum, const char* de
     epicsAtExit(exitCallbackC, this);
 }
 
+/**
+ * @brief Destructor for the ADXSPD driver
+ */
 ADXSPD::~ADXSPD() {
     INFO("Shutting down ADXSPD driver...");
 
@@ -796,17 +809,20 @@ ADXSPD::~ADXSPD() {
         acquireStop();
     }
 
-    if (this->monitorThreadId != NULL) {
+    INFO("Signaling shutdown event...");
+    epicsEventSignal(this->shutdownEventId);
+
+    if (this->monitorThreadId != nullptr) {
         INFO("Waiting for monitoring thread to join...");
         epicsThreadMustJoin(this->monitorThreadId);
     }
 
-    if (this->zmqContext != NULL) {
+    if (this->zmqContext != nullptr) {
         INFO("Destroying zmq context...");
         zmq_ctx_destroy(this->zmqContext);
     }
 
-    if (this->acquisitionThreadId != NULL) {
+    if (this->acquisitionThreadId != nullptr) {
         INFO("Waiting for acquisition thread to join...");
         epicsThreadMustJoin(this->acquisitionThreadId);
     }

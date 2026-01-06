@@ -166,6 +166,8 @@ class ADXSPD : ADDriver {
     epicsThreadId acquisitionThreadId;
     epicsThreadId monitorThreadId;
 
+    epicsEventId shutdownEventId;
+
     void* zmqContext;
 
     vector<ADXSPDModule*> modules;
