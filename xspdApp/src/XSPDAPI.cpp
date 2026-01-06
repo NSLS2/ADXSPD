@@ -118,21 +118,43 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
     return this->detector;
 }
 
+/**
+ * @brief Retrieves the libxsp version
+ * 
+ * @return string The libxsp version string
+ */
 string XSPD::API::GetLibXSPVersion() {
     if (this->libxspVersion.empty()) throw runtime_error("XSPD API not initialized");
     return this->libxspVersion;
 }
 
+/**
+ * @brief Retrieves the API version
+ * 
+ * @return string The API version string
+ */
 string XSPD::API::GetApiVersion() {
     if (this->apiVersion.empty()) throw runtime_error("XSPD API not initialized");
     return this->apiVersion;
 }
 
+/**
+ * @brief Retrieves the XSPD version
+ * 
+ * @return string The XSPD version string
+ */
 string XSPD::API::GetXSPDVersion() {
     if (this->xspdVersion.empty()) throw runtime_error("XSPD API not initialized");
     return this->xspdVersion;
 }
 
+/**
+ * @brief Submits an HTTP request to the XSPD API and returns the parsed JSON response
+ *
+ * @param uri The full URI to make the request to
+ * @param reqType The type of HTTP request (GET, PUT, etc.)
+ * @return json Parsed JSON response from the API
+ */
 json XSPD::API::SubmitRequest(string uri, XSPD::RequestType reqType) {
     cpr::Response response;
     string verbMsg;

@@ -8,7 +8,7 @@ version = "0.1.0"
 [tasks]
 lint = "pre-commit run --all-files"
 build = "make -sj"
-make-paramdefs = "dbtools-gen-paramdefs xspdApp/Db xspdApp/src"
+make-paramdefs = "dbtools-gen-paramdefs xspdApp/Db xspdApp/src && pre-commit run --all-files"
 make-bobfiles = "epicsdb2bob xspdApp/Db xspdApp/op/bob -d -r _RBV -t none"
 simulator = "sim/xspdSimulator.py"
 

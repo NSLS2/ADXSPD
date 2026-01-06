@@ -1,3 +1,4 @@
+---
 exclude: ^xspdSupport/
 repos:
   # General pre-commit hooks

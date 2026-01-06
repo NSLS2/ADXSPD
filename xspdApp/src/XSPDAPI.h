@@ -1,5 +1,5 @@
-#ifndef XSPD_API_H
-#define XSPD_API_H
+#ifndef XSPDAPI_H
+#define XSPDAPI_H
 
 #include <cpr/cpr.h>
 
@@ -72,6 +72,9 @@ enum class ModuleFeature {
     FEAT_EXTENDED_GATING = 3,
 };
 
+// Forward declarations
+class Module;
+class DataPort;
 class Detector;
 
 class API {
@@ -92,14 +95,31 @@ class API {
     json Get(string endpoint);
     json Put(string endpoint);
 
+    /**
+     * @brief Retrieves the value of a variable from the API
+     * 
+     * @tparam T The expected type of the variable
+     * @param varPath The path to the variable
+     * @param key The key within the JSON response to extract the value from (default is "value")
+     * @return T The value of the variable
+     */
     template <typename T>
     T GetVar(string varPath, string key = "value") {
         json response = Get("devices/" + this->deviceId + "/variables?path=" + varPath);
         return ReadVarFromResp<T>(response, varPath, key);
     }
 
+    /**
+     * @brief Sets the value of a variable in the API
+     * 
+     * @tparam T The type of the variable to set
+     * @param varPath The path to the variable
+     * @param value The value to set
+     * @param rbKey The key within the JSON response to extract the readback value from (default is "value")
+     * @return T The readback value of the variable after setting
+     */
     template <typename T>
-    T SetVar(string varPath, T value, string rbKey) {
+    T SetVar(string varPath, T value, string rbKey = "value") {
         string valueAsStr;
         if constexpr (std::is_same_v<T, string>) {
             valueAsStr = value;
@@ -121,6 +141,15 @@ class API {
 
     void ExecCommand(string command);
 
+    /**
+     * @brief Reads a variable of type T from the JSON response
+     * 
+     * @tparam T The expected type of the variable
+     * @param response The JSON response from the API
+     * @param varName The name of the variable (for error messages)
+     * @param key The key within the JSON response to extract the value from
+     * @return T The value of the variable
+     */
     template <typename T>
     T ReadVarFromResp(json response, string varName, string key) {
         if (response.contains(key)) {
@@ -153,11 +182,28 @@ class DataPort {
     string GetId() { return this->dataPortId; }
     string GetURI() { return "tcp://" + this->ip + ":" + std::to_string(this->port); }
 
+    /**
+     * @brief Retrieves the value of a variable from the DataPort
+     * 
+     * @tparam T The expected type of the variable
+     * @param varName The name of the variable
+     * @param key The key within the JSON response to extract the value from (default is "value")
+     * @return T The value of the variable
+     */
     template <typename T>
     T GetVar(string varName, string key = "value") {
         return this->api->GetVar<T>(this->dataPortId + "/" + varName, key);
     }
 
+    /**
+     * @brief Sets the value of a variable in the DataPort
+     * 
+     * @tparam T The type of the variable to set
+     * @param varName The name of the variable
+     * @param value The value to set
+     * @param rbKey The key within the JSON response to extract the readback value from (default is "value")
+     * @return T The readback value of the variable after setting
+     */
     template <typename T>
     T SetVar(string varName, T value, string rbKey = "value") {
         return this->api->SetVar<T>(this->dataPortId + "/" + varName, value, rbKey);
@@ -179,11 +225,28 @@ class Module {
     string GetFirmware() { return this->moduleFirmware; }
     vector<string> GetChipIds() { return this->chipIds; }
 
+    /**
+     * @brief Retrieves the value of a variable from the Module
+     * 
+     * @tparam T The expected type of the variable
+     * @param varName The name of the variable
+     * @param key The key within the JSON response to extract the value from (default is "value")
+     * @return T The value of the variable
+     */
     template <typename T>
     T GetVar(string varName, string key = "value") {
         return this->api->GetVar<T>(this->moduleId + "/" + varName, key);
     }
 
+    /**
+     * @brief Sets the value of a variable in the Module
+     * 
+     * @tparam T The type of the variable to set
+     * @param varName The name of the variable
+     * @param value The value to set
+     * @param rbKey The key within the JSON response to extract the readback value from (default is "value")
+     * @return T The readback value of the variable after setting
+     */
     template <typename T>
     T SetVar(string varName, T value, string rbKey = "value") {
         return this->api->SetVar<T>(this->moduleId + "/" + varName, value, rbKey);
@@ -204,6 +267,11 @@ class Detector {
 
     double SetThreshold(XSPD::Threshold threshold, double value);
 
+    /**
+     * @brief Updates and retrieves the current status of the detector
+     * 
+     * @return Status The current status of the detector
+     */
     Status UpdateStatus() {
         this->status = this->GetVar<Status>("status");
         return this->status;
@@ -213,6 +281,11 @@ class Detector {
 
     vector<Module*> GetModules() { return this->modules; }
 
+    /**
+     * @brief Retrieves the IDs of all registered data ports
+     * 
+     * @return vector<string> A vector of data port IDs
+     */
     vector<string> GetDataPortIds() {
         vector<string> dpIds;
         for (const auto& dpPair : this->dataPorts) {
@@ -223,11 +296,21 @@ class Detector {
 
     void RegisterModule(Module* module) { this->modules.push_back(module); }
 
+    /**
+     * @brief Registers a DataPort with the detector
+     * 
+     * @param dataPort Pointer to the DataPort to register
+     */
     void RegisterDataPort(DataPort* dataPort) {
         this->dataPorts[dataPort->GetId()] = dataPort;
         if (this->activeDataPort == nullptr) this->activeDataPort = dataPort;
     }
 
+    /**
+     * @brief Retrieves the firmware version(s) of the detector modules
+     * 
+     * @return string The firmware version if all modules are identical, otherwise "Multiple versions"
+     */
     string GetFirmwareVersion() {
         if (this->modules.size() == 1) {
             return this->modules[0]->GetFirmware();
@@ -249,11 +332,27 @@ class Detector {
 
     DataPort* GetActiveDataPort() { return this->activeDataPort; }
 
+    /**
+     * @brief Gets a detector variable
+     * 
+     * @tparam T The expected type of the variable
+     * @param varName The name of the variable
+     * @param key The key within the JSON response to extract the value from (default is "value")
+     * @return T The value of the variable
+     */
     template <typename T>
     T GetVar(string varName, string key = "value") {
         return this->api->GetVar<T>(this->detectorId + "/" + varName, key);
     }
 
+    /**
+     * @brief Sets the value of a detector variable
+     * 
+     * @tparam T The type of the variable to set
+     * @param varName The name of the variable
+     * @param value The value to set
+     * @param rbKey The key within the JSON response to extract the readback value from
+     */
     template <typename T>
     T SetVar(string varName, T value, string rbKey = "value") {
         return this->api->SetVar<T>(this->detectorId + "/" + varName, value, rbKey);
@@ -270,4 +369,4 @@ class Detector {
     DataPort* activeDataPort = nullptr;
 };
 };      // namespace XSPD
-#endif  // ADXSPDAPI_H
+#endif  // XSPDAPI_H

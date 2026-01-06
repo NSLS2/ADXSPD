@@ -12,4 +12,4 @@ class MockXSPDAPI : public XSPD::API {
     MOCK_METHOD(string, GetApiVersion, (), (override));
 };
 
-#endif  // MOCK_XSPD_API_H
+#endif  // MOCK_XSPDAPI_H

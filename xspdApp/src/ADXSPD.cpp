@@ -67,6 +67,8 @@ static void monitorThreadC(void* drvPvt) {
 
 /**
  * @brief Starts acquisition
+ * 
+ * @return asynStatus asynSuccess on success, asynError on failure
  */
 asynStatus ADXSPD::acquireStart() {
     setIntegerParam(ADAcquire, 1);
@@ -94,6 +96,8 @@ asynStatus ADXSPD::acquireStart() {
 
 /**
  * @brief stops acquisition by aborting exposure and joinging acq thread
+ * 
+ * @return asynStatus asynSuccess on success, asynError on failure
  */
 asynStatus ADXSPD::acquireStop() {
     setIntegerParam(ADAcquire, 0);
@@ -106,16 +110,37 @@ asynStatus ADXSPD::acquireStop() {
     return asynSuccess;
 }
 
+/**
+ * @brief Subtracts two frames element-wise with floor at 0
+ *
+ * @tparam T The data type of the frame pixels
+ * @param currentFrame Pointer to the current frame data
+ * @param previousFrame Pointer to the previous frame data
+ * @param outputFrame Pointer to the output frame data
+ * @param numBytes Number of bytes in each frame
+ */
 template <typename T>
-void ADXSPD::subtractFrames(T* currentFrame, T* previousFrame, T* outputFrame, size_t numBytes) {
+void ADXSPD::subtractFrames(void* currentFrame, void* previousFrame, void* outputFrame, size_t numBytes) {
+
+    // Cast the void pointers to the appropriate type
+    T* currFrameT = static_cast<T*>(currentFrame);
+    T* prevFrameT = static_cast<T*>(previousFrame);
+    T* outFrameT = static_cast<T*>(outputFrame);
+
+    // Calculate our number of elements, and then perform subtraction with floor at 0
     size_t numElements = numBytes / sizeof(T);
     for (size_t i = 0; i < numElements; i++) {
-        outputFrame[i] = std::max(T(0), currentFrame[i] - previousFrame[i]);
+        T subtractedPixel = currFrameT[i] - prevFrameT[i];
+        if (subtractedPixel < 0) {
+            outFrameT[i] = T(0);
+        } else {
+            outFrameT[i] = subtractedPixel;
+        }
     }
 }
 
 /**
- * Main acquisition function for ADXSPD
+ * @brief Main acquisition loop thread
  */
 void ADXSPD::acquisitionThread() {
     NDArray* pArray = nullptr;
@@ -126,8 +151,8 @@ void ADXSPD::acquisitionThread() {
     NDColorMode_t colorMode = NDColorModeMono;  // Only monochrome is supported.
     XSPD::CounterMode counterMode;
 
-    void* frameBuffer;
-    void* prevFrameBuffer;
+    void* frameBuffer = nullptr;
+    void* prevFrameBuffer = nullptr;
 
     int arrayCallbacks;
 
@@ -765,8 +790,6 @@ ADXSPD::~ADXSPD() {
         INFO("Stopping acquisition...");
         acquireStop();
     }
-
-    this->alive = false;
 
     if (this->monitorThreadId != NULL) {
         INFO("Waiting for monitoring thread to join...");

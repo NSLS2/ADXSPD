@@ -152,7 +152,7 @@ class ADXSPD : ADDriver {
     NDDataType_t getDataTypeForBitDepth(int bitDepth);
 
     template <typename T>
-    void subtractFrames(T* currentFrame, T* previousFrame, T* outputFrame, size_t numBytes);
+    void subtractFrames(void* currentFrame, void* previousFrame, void* outputFrame, size_t numBytes);
 
    protected:
 // Load auto-generated parameter string and index definitions
