@@ -29,6 +29,7 @@
 #include <iocsh.h>
 #include <stdlib.h>
 #include <zlib.h>
+#include <blosc.h>
 #include <zmq.h>
 
 #include <cmath>

@@ -290,9 +290,14 @@ void ADXSPD::acquisitionThread() {
                              decompressedSize, arrayInfo.totalBytes);
                 }
             } else if (compressor == XSPD::Compressor::BLOSC) {
-                // TODO: Decompress using Blosc
-                ERR("BLOSC decompression not yet implemented");
-                decompressOK = false;
+                size_t decompressSize;
+                decompressSize = blosc_decompress(zmq_msg_data(&frameMessages[2]), frameBuffer,
+                                                 arrayInfo.totalBytes);
+                if (decompressSize != arrayInfo.totalBytes) {
+                    ERR_ARGS("Failed to decompress frame data with Blosc, decompressed size %zu does not match expected size %zu",
+                             decompressSize, arrayInfo.totalBytes);
+                    decompressOK = false;
+                }
             } else {
                 // Copy data from new frame to pArray
                 memcpy(frameBuffer, zmq_msg_data(&frameMessages[2]), arrayInfo.totalBytes);
