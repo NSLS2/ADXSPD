@@ -1,6 +1,7 @@
 record(ai, "$(P)$(R)BoardTemp_RBV"){
     field(DESC, "Board Temp rb in C")
     field(DTYP, "asynFloat64")
+    field(EGU, "C")
     field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_BOARD_TEMP")
     field(SCAN, "I/O Intr")
@@ -9,6 +10,7 @@ record(ai, "$(P)$(R)BoardTemp_RBV"){
 record(ai, "$(P)$(R)FPGATemp_RBV"){
     field(DESC, "FPGA Temp rb in C")
     field(DTYP, "asynFloat64")
+    field(EGU, "C")
     field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_FPGA_TEMP")
     field(SCAN, "I/O Intr")
@@ -17,6 +19,7 @@ record(ai, "$(P)$(R)FPGATemp_RBV"){
 record(ai, "$(P)$(R)HumiditySensorTemp_RBV"){
     field(DESC, "Humidity sensor Temp rb in C")
     field(DTYP, "asynFloat64")
+    field(EGU, "C")
     field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_HUM_TEMP")
     field(SCAN, "I/O Intr")
@@ -25,6 +28,7 @@ record(ai, "$(P)$(R)HumiditySensorTemp_RBV"){
 record(ai, "$(P)$(R)Humidity_RBV"){
     field(DESC, "Humidity rb in %")
     field(DTYP, "asynFloat64")
+    field(EGU, "%")
     field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_HUM")
     field(SCAN, "I/O Intr")
@@ -34,6 +38,7 @@ record(ao, "$(P)$(R)Voltage"){
     field(DESC, "Voltage in V")
     field(DTYP, "asynFloat64")
     field(PREC, "1")
+    field(EGU, "V")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_VOLTAGE")
     field(VAL, "0.0")
     field(PINI, "NO")
@@ -43,6 +48,7 @@ record(ai, "$(P)$(R)Voltage_RBV"){
     field(DESC, "Voltage rb in V")
     field(DTYP, "asynFloat64")
     field(PREC, "1")
+    field(EGU, "V")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_VOLTAGE")
     field(SCAN, "I/O Intr")
 }
@@ -50,6 +56,7 @@ record(ai, "$(P)$(R)Voltage_RBV"){
 record(ai, "$(P)$(R)SensorCurrent_RBV"){
     field(DESC, "Sensor current rb in mA")
     field(DTYP, "asynFloat64")
+    field(EGU, "mA")
     field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_SENS_CURR")
     field(SCAN, "I/O Intr")
@@ -65,6 +72,7 @@ record(ai, "$(P)$(R)SaturationThresh_RBV"){
 
 record(ai, "$(P)$(R)RotationYaw_RBV"){
     field(DESC, "Rotation yaw rb in degrees")
+    field(EGU, "deg")
     field(DTYP, "asynFloat64")
     field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_ROT_YAW")
@@ -73,6 +81,7 @@ record(ai, "$(P)$(R)RotationYaw_RBV"){
 
 record(ai, "$(P)$(R)RotationPitch_RBV"){
     field(DESC, "Rotation pitch rb in degrees")
+    field(EGU, "deg")
     field(DTYP, "asynFloat64")
     field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_ROT_PITCH")
@@ -81,6 +90,7 @@ record(ai, "$(P)$(R)RotationPitch_RBV"){
 
 record(ai, "$(P)$(R)RotationRoll_RBV"){
     field(DESC, "Rotation roll rb in degrees")
+    field(EGU, "deg")
     field(DTYP, "asynFloat64")
     field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_ROT_ROLL")
@@ -89,6 +99,7 @@ record(ai, "$(P)$(R)RotationRoll_RBV"){
 
 record(ai, "$(P)$(R)PositionX_RBV"){
     field(DESC, "Position X rb in mm")
+    field(EGU, "mm")
     field(DTYP, "asynFloat64")
     field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_POS_X")
@@ -97,6 +108,7 @@ record(ai, "$(P)$(R)PositionX_RBV"){
 
 record(ai, "$(P)$(R)PositionY_RBV"){
     field(DESC, "Position Y rb in mm")
+    field(EGU, "mm")
     field(DTYP, "asynFloat64")
     field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_POS_Y")
@@ -105,6 +117,7 @@ record(ai, "$(P)$(R)PositionY_RBV"){
 
 record(ai, "$(P)$(R)PositionZ_RBV"){
     field(DESC, "Position Z rb in mm")
+    field(EGU, "mm")
     field(DTYP, "asynFloat64")
     field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_POS_Z")
@@ -148,33 +161,33 @@ record(ai, "$(P)$(R)FeaturesBitmask_RBV") {
     field(SCAN, "I/O Intr")
 }
 
-record(mbbo, "$(P)$(R)CompressLevel"){
-    field(DESC, "Compression level")
-    field(DTYP, "asynInt32")
-    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_COMPRESS_LEVEL")
-    field(ZRVL, "0")
-    field(ZRST, "0")
-    field(ONVL, "1")
-    field(ONST, "1")
-    field(TWST, "2")
-    field(TWVL, "2")
-    field(THST, "3")
-    field(THVL, "3")
-    field(FRST, "4")
-    field(FRVL, "4")
-    field(FVST, "5")
-    field(FVVL, "5")
-    field(SXST, "6")
-    field(SXVL, "6")
-    field(SVST, "7")
-    field(SVVL, "7")
-    field(EIST, "8")
-    field(EIVL, "8")
-    field(NIST, "9")
-    field(NIVL, "9")
-    field(VAL, "1")
-    field(PINI, "YES")
-}
+# record(mbbo, "$(P)$(R)CompressLevel"){
+#     field(DESC, "Compression level")
+#     field(DTYP, "asynInt32")
+#     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_COMPRESS_LEVEL")
+#     field(ZRVL, "0")
+#     field(ZRST, "0")
+#     field(ONVL, "1")
+#     field(ONST, "1")
+#     field(TWST, "2")
+#     field(TWVL, "2")
+#     field(THST, "3")
+#     field(THVL, "3")
+#     field(FRST, "4")
+#     field(FRVL, "4")
+#     field(FVST, "5")
+#     field(FVVL, "5")
+#     field(SXST, "6")
+#     field(SXVL, "6")
+#     field(SVST, "7")
+#     field(SVVL, "7")
+#     field(EIST, "8")
+#     field(EIVL, "8")
+#     field(NIST, "9")
+#     field(NIVL, "9")
+#     field(VAL, "1")
+#     field(PINI, "YES")
+# }
 
 record(mbbi, "$(P)$(R)CompressLevel_RBV"){
     field(DESC, "Compression level rb")
@@ -201,20 +214,6 @@ record(mbbi, "$(P)$(R)CompressLevel_RBV"){
     field(NIST, "9")
     field(NIVL, "9")
     field(SCAN, "I/O Intr")
-}
-
-record(mbbo, "$(P)$(R)Compressor"){
-    field(DESC, "Compressor type")
-    field(DTYP, "asynInt32")
-    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_COMPRESSOR")
-    field(ZRVL, "0")
-    field(ZRST, "None")
-    field(ONVL, "1")
-    field(ONST, "zlib")
-    field(TWVL, "2")
-    field(TWST, "blosc")
-    field(VAL, "1")
-    field(PINI, "YES")
 }
 
 record(mbbi, "$(P)$(R)Compressor_RBV"){

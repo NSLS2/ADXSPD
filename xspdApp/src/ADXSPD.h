@@ -16,8 +16,8 @@
 
 // version numbers
 #define ADXSPD_VERSION 0
-#define ADXSPD_REVISION 0
-#define ADXSPD_MODIFICATION 1
+#define ADXSPD_REVISION 1
+#define ADXSPD_MODIFICATION 0
 
 #include <cpr/cpr.h>
 #include <epicsExit.h>
@@ -28,6 +28,8 @@
 #include <epicsTime.h>
 #include <iocsh.h>
 #include <stdlib.h>
+#include <zlib.h>
+#include <blosc.h>
 #include <zmq.h>
 
 #include <cmath>
@@ -42,7 +44,7 @@
 #include <type_traits>
 
 #include "ADDriver.h"
-#include "epicsThread.h"
+#include "XSPDAPI.h"
 
 using json = nlohmann::json;
 using namespace std;
@@ -50,39 +52,66 @@ using namespace std;
 // Error message formatters
 #define ERR(msg)                                      \
     if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) \
-        printf("ERROR | %s::%s: %s\n", driverName, __func__, msg);
+        fprintf(stderr, "ERROR | %s::%s: %s\n", driverName, __func__, msg);
 
 #define ERR_ARGS(fmt, ...)                            \
     if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) \
-        printf("ERROR | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
+        fprintf(stderr, "ERROR | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
+
+#define ERR_TO_STATUS(fmt, ...)                                       \
+    if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) {               \
+        char errMsg[256];                                             \
+        snprintf(errMsg, sizeof(errMsg), fmt, __VA_ARGS__);           \
+        printf("ERROR | %s::%s: %s\n", driverName, __func__, errMsg); \
+        setStringParam(ADStatusMessage, errMsg);                      \
+        setIntegerParam(ADStatus, ADStatusError);                     \
+        callParamCallbacks();                                         \
+    }
 
 // Warning message formatters
 #define WARN(msg)                                       \
     if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) \
-        printf("WARNING | %s::%s: %s\n", driverName, __func__, msg);
+        fprintf(stderr, "WARNING | %s::%s: %s\n", driverName, __func__, msg);
 
 #define WARN_ARGS(fmt, ...)                             \
     if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) \
-        printf("WARNING | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
+        fprintf(stderr, "WARNING | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
-// Info message formatters. Because there is no ASYN trace for info messages, we just use `printf`
-// here.
+#define WARN_TO_STATUS(fmt, ...)                                         \
+    if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) {                \
+        char warnMsg[256];                                               \
+        snprintf(warnMsg, sizeof(warnMsg), fmt, __VA_ARGS__);            \
+        printf("WARNING | %s::%s: %s\n", driverName, __func__, warnMsg); \
+        setStringParam(ADStatusMessage, warnMsg);                        \
+        callParamCallbacks();                                            \
+    }
+
+// Info message formatters
 #define INFO(msg)                                    \
     if (this->getLogLevel() >= ADXSPDLogLevel::INFO) \
-        printf("INFO | %s::%s: %s\n", driverName, __func__, msg);
+        fprintf(stdout, "INFO | %s::%s: %s\n", driverName, __func__, msg);
 
 #define INFO_ARGS(fmt, ...)                          \
     if (this->getLogLevel() >= ADXSPDLogLevel::INFO) \
-        printf("INFO | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
+        fprintf(stdout, "INFO | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
+
+#define INFO_TO_STATUS(fmt, ...)                                      \
+    if (this->getLogLevel() >= ADXSPDLogLevel::INFO) {                \
+        char infoMsg[256];                                            \
+        snprintf(infoMsg, sizeof(infoMsg), fmt, __VA_ARGS__);         \
+        printf("INFO | %s::%s: %s\n", driverName, __func__, infoMsg); \
+        setStringParam(ADStatusMessage, infoMsg);                     \
+        callParamCallbacks();                                         \
+    }
 
 // Debug message formatters
 #define DEBUG(msg)                                    \
     if (this->getLogLevel() >= ADXSPDLogLevel::DEBUG) \
-        printf("DEBUG | %s::%s: %s\n", driverName, __func__, msg);
+        fprintf(stdout, "DEBUG | %s::%s: %s\n", driverName, __func__, msg);
 
 #define DEBUG_ARGS(fmt, ...)                          \
     if (this->getLogLevel() >= ADXSPDLogLevel::DEBUG) \
-        printf("DEBUG | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
+        fprintf(stdout, "DEBUG | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
 enum class ADXSPDLogLevel {
     NONE = 0,      // No logging
@@ -92,45 +121,7 @@ enum class ADXSPDLogLevel {
     DEBUG = 40     // Debugging information
 };
 
-enum class ADXSPDOnOff {
-    OFF = 0,
-    ON = 1,
-};
-
-enum class ADXSPDCompressor {
-    NONE = 0,
-    ZLIB = 1,
-    BLOSC = 2,
-};
-
-enum class ADXSPDShuffleMode {
-    NO_SHUFFLE = 0,
-    AUTO_SHUFFLE = 1,
-    SHUFFLE_BIT = 2,
-    SHUFFLE_BYTE = 3,
-};
-
-enum class ADXSPDTrigMode {
-    SOFTWARE = 0,
-    EXT_FRAMES = 1,
-    EXT_SEQ = 2,
-};
-
-enum class ADXSPDCounterMode {
-    SINGLE = 0,
-    DUAL = 1,
-};
-
-enum class ADXSPDStatus {
-    CONNECTED = ADStatusInitializing,
-    READY = ADStatusIdle,
-    BUSY = ADStatusAcquire,
-};
-
-enum class ADXSPDThreshold {
-    LOW = 0,
-    HIGH = 1,
-};
+#define ADXSPD_MIN_STATUS_POLL_INTERVAL 0.5  // Minimum status poll interval in seconds
 
 class ADXSPDModule;  // Forward declaration of module class
 
@@ -140,7 +131,7 @@ class ADXSPDModule;  // Forward declaration of module class
 class ADXSPD : ADDriver {
    public:
     // Constructor for the ADXSPD driver
-    ADXSPD(const char* portName, const char* ipPort, const char* deviceId);
+    ADXSPD(const char* portName, const char* ip, int portNum, const char* deviceId = nullptr);
 
     // ADDriver overrides
     virtual asynStatus writeInt32(asynUser* pasynUser, epicsInt32 value);
@@ -155,27 +146,14 @@ class ADXSPD : ADDriver {
     void monitorThread();
 
     ADXSPDLogLevel getLogLevel() { return this->logLevel; }
-    string getDeviceId() { return this->deviceId; }
-    string getDetectorId() { return this->detectorId; }
 
-    json xspdGet(string uri);
-
-    template <typename T>
-    T xspdGetVar(string endpoint, string key = "value");
+    void getInitialDetState();
+    asynStatus acquireStart();
+    asynStatus acquireStop();
+    NDDataType_t getDataTypeForBitDepth(int bitDepth);
 
     template <typename T>
-    T xspdGetDetVar(string endpoint, string key = "value");
-
-    template <typename T>
-    T xspdGetDataPortVar(string endpoint, string key = "value");
-
-    template <typename T>
-    T xspdSetVar(string endpoint, T value, string rbKey = "value");
-
-    template <typename T>
-    T xspdSetDetVar(string endpoint, T value, string rbKey = "value");
-
-    asynStatus xspdCommand(string command);
+    void subtractFrames(void* currentFrame, void* previousFrame, void* outputFrame, size_t numBytes);
 
    protected:
 // Load auto-generated parameter string and index definitions
@@ -185,21 +163,16 @@ class ADXSPD : ADDriver {
     const char* driverName = "ADXSPD";
     void createAllParams();
 
-    bool alive = true;  // Flag to indicate whether our acquisition thread and monitor thread should
-                        // keep running
     epicsThreadId acquisitionThreadId;
     epicsThreadId monitorThreadId;
 
+    epicsEventId shutdownEventId;
+
     void* zmqContext;
 
-    void acquireStart();
-    void acquireStop();
     vector<ADXSPDModule*> modules;
-
-    void getInitialDetState();
-    NDDataType_t getDataTypeForBitDepth(int bitDepth);
-
-    double setThreshold(ADXSPDThreshold thresholdType, double value);
+    XSPD::API* pApi;
+    XSPD::Detector* pDetector;
 
     string apiUri;        // IP address and port for the device
     string deviceUri;     // Base URI for the device
@@ -211,8 +184,7 @@ class ADXSPD : ADDriver {
     int dataPortPort;
 
     vector<int> onlyIdleParams = {
-        ADTriggerMode,     ADAcquireTime,      ADXSPD_BitDepth,
-        ADXSPD_Compressor, ADXSPD_ShuffleMode, ADXSPD_CounterMode,
+        ADTriggerMode, ADAcquireTime, ADXSPD_BitDepth, ADXSPD_ShuffleMode, ADXSPD_CounterMode,
     };
 
     ADXSPDLogLevel logLevel = ADXSPDLogLevel::DEBUG;  // Logging level for the driver

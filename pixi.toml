@@ -8,15 +8,17 @@ version = "0.1.0"
 [tasks]
 lint = "pre-commit run --all-files"
 build = "make -sj"
-make-paramdefs = "dbtools-gen-paramdefs xspdApp/Db xspdApp/src"
+make-paramdefs = "dbtools-gen-paramdefs xspdApp/Db xspdApp/src && pre-commit run --all-files"
 make-bobfiles = "epicsdb2bob xspdApp/Db xspdApp/op/bob -d -r _RBV -t none"
-
+simulator = "sim/xspdSimulator.py"
 
 [dependencies]
 pre-commit = ">=4.3.0,<5"
 ruff = ">=0.14.0,<0.15"
 pip = ">=25.2,<26"
 python = ">=3.12.12,<3.13"
+flask = ">=3.1.2,<4"
+pyzmq = ">=27.1.0,<28"
 
 [pypi-dependencies]
 epicsdbtools = { git = "https://github.com/jwlodek/epicsdbtools.git" }

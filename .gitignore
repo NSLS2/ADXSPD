@@ -15,6 +15,10 @@ dllPath.bat
 autorun.cmd
 venv/
 .ruff_cache/
+*.o
+*.a
+*.so
+a.out
 # pixi environments
 .pixi/*
 !.pixi/config.toml

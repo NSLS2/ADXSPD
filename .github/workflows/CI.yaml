@@ -1,0 +1,74 @@
+name: CI
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Pixi
+        uses: prefix-dev/setup-pixi@8ca4608ef7f4daeb54f5205b20d0b7cb42f11143  # v0.8.14
+        with:
+          pixi-version: v0.56.0
+          cache: false
+          frozen: true
+
+      - name: Run Linting Checks
+        run: pixi run lint
+
+  prepare-image:
+    name: Prepare EPICS Container Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to GitHub Container Registry
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | \
+            docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Get Container Digest
+        id: digest
+        run: |
+          set -e
+          DIGEST=$(docker manifest inspect \
+            ghcr.io/nsls2/epics-alma8:latest --verbose \
+            | jq -r '.[0].Descriptor.digest') || {
+            echo "Failed to retrieve container digest" >&2
+            exit 1
+          }
+          if [ -z "$DIGEST" ] || [ "$DIGEST" = "null" ]; then
+            echo "Invalid container digest: $DIGEST" >&2
+            exit 1
+          fi
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
+          echo "Container digest: $DIGEST"
+
+      - name: Cache Docker Image
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/epics-alma8.tar
+          key: epics-alma8-${{ steps.digest.outputs.digest }}
+
+      - name: Pull and Save Container Image
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          echo "Pulling fresh image..."
+          docker pull ghcr.io/nsls2/epics-alma8:latest
+          docker save ghcr.io/nsls2/epics-alma8:latest -o /tmp/epics-alma8.tar
+
+  build:
+
+  test:

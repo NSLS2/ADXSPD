@@ -15,7 +15,6 @@
 #define ADXSPD_ChargeSummingString "XSPD_CHARGE_SUMMING"
 #define ADXSPD_FFCorrectionString "XSPD_F_F_CORRECTION"
 #define ADXSPD_GatingModeString "XSPD_GATING_MODE"
-#define ADXSPD_TriggerModeString "XSPD_TRIGGER_MODE"
 #define ADXSPD_CounterModeString "XSPD_COUNTER_MODE"
 #define ADXSPD_ResetString "XSPD_RESET"
 #define ADXSPD_GenerateFlatfieldString "XSPD_GENERATE_FLATFIELD"
@@ -31,6 +30,7 @@
 #define ADXSPD_ResetDetectorString "XSPD_RESET_DETECTOR"
 #define ADXSPD_BitDepthString "XSPD_BIT_DEPTH"
 #define ADXSPD_CrCorrString "XSPD_CR_CORR"
+#define ADXSPD_StatusIntervalString "XSPD_STATUS_INTERVAL"
 
 // Parameter index definitions
 int ADXSPD_ApiVersion;
@@ -43,7 +43,6 @@ int ADXSPD_SaturationFlag;
 int ADXSPD_ChargeSumming;
 int ADXSPD_FFCorrection;
 int ADXSPD_GatingMode;
-int ADXSPD_TriggerMode;
 int ADXSPD_CounterMode;
 int ADXSPD_Reset;
 int ADXSPD_GenerateFlatfield;
@@ -59,9 +58,10 @@ int ADXSPD_GenFlatfield;
 int ADXSPD_ResetDetector;
 int ADXSPD_BitDepth;
 int ADXSPD_CrCorr;
+int ADXSPD_StatusInterval;
 
 #define ADXSPD_FIRST_PARAM ADXSPD_ApiVersion
-#define ADXSPD_LAST_PARAM ADXSPD_CrCorr
+#define ADXSPD_LAST_PARAM ADXSPD_StatusInterval
 
 #define NUM_ADXSPD_PARAMS ((int) (&ADXSPD_LAST_PARAM - &ADXSPD_FIRST_PARAM + 1))
 

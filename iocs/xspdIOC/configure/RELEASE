@@ -4,6 +4,8 @@
 
 ADXSPD=$(TOP)/../..
 
+-include $(ADXSPD)/configure/RELEASE
+-include $(ADXSPD)/configure/RELEASE.local
 -include $(TOP)/../../../configure/RELEASE_PRODS_INCLUDE
 -include $(TOP)/RELEASE.local
 -include $(TOP)/configure/RELEASE.local

@@ -2,7 +2,7 @@
 errlogInit(20000)
 
 < envPaths
-# < /epics/common/localhost-netsetup.cmd
+< /epics/common/localhost-netsetup.cmd
 
 epicsEnvSet("ENGINEER",                 "Jakub Wlodek")
 epicsEnvSet("PORT",                     "XSPD1")
@@ -24,7 +24,7 @@ dbLoadDatabase("$(ADXSPD)/iocs/xspdIOC/dbd/xspdApp.dbd")
 xspdApp_registerRecordDeviceDriver(pdbbase)
 
 # Create instance of ADXSPD driver, and pause to show connection messages
-ADXSPDConfig("$(PORT)", "http://localhost:8008")
+ADXSPDConfig("$(PORT)", "localhost", 8008)
 # epicsThreadSleep(3)
 
 dbLoadRecords("$(ADXSPD)/db/ADXSPD.template","P=$(PREFIX),R=cam1:,PORT=$(PORT),ADDR=0,TIMEOUT=1")
@@ -38,4 +38,4 @@ dbLoadRecords("$(ADXSPD)/db/ADXSPDModule.template", "P=$(PREFIX), R=mod1:,PORT=$
 iocInit()
 
 # save things every thirty seconds
-# create_monitor_set("auto_settings.req", 30, "P=$(PREFIX)")
+create_monitor_set("auto_settings.req", 30, "P=$(PREFIX)")

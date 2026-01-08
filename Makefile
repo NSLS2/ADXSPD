@@ -6,6 +6,7 @@ DIRS := $(DIRS) xspdApp
 DIRS := $(DIRS) xspdSupport
 
 xspdApp_DEPEND_DIRS += xspdSupport
+
 ifeq ($(BUILD_IOCS), YES)
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard iocs))
 iocs_DEPEND_DIRS += xspdApp
@@ -31,3 +32,5 @@ paramdefs:
 
 lint:
 	pixi run lint
+runtests:
+	cd xspdApp/tests && make -sj && cd ../.. && ./bin/linux-x86_64/ADXSPDTests
