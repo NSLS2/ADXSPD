@@ -1,12 +1,16 @@
 
 #include "XSPDAPI.h"
 
+<<<<<<< Updated upstream
 /**
  * @brief Checks if a device with the given device ID exists
  *
  * @param deviceId The device ID to check
  * @return true if the device exists, false otherwise
  */
+=======
+
+>>>>>>> Stashed changes
 bool XSPD::API::DeviceExists(string deviceId) {
     json devices;
     try {

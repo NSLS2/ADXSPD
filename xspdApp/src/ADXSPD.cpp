@@ -61,6 +61,10 @@ static void monitorThreadC(void* drvPvt) {
     pPvt->monitorThread();
 }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 // -----------------------------------------------------------------------
 // ADXSPD Acquisition Functions
 // -----------------------------------------------------------------------
@@ -121,6 +125,7 @@ asynStatus ADXSPD::acquireStop() {
  */
 template <typename T>
 void ADXSPD::subtractFrames(void* currentFrame, void* previousFrame, void* outputFrame, size_t numBytes) {
+<<<<<<< Updated upstream
 
     // Cast the void pointers to the appropriate type
     T* currFrameT = static_cast<T*>(currentFrame);
@@ -128,6 +133,11 @@ void ADXSPD::subtractFrames(void* currentFrame, void* previousFrame, void* outpu
     T* outFrameT = static_cast<T*>(outputFrame);
 
     // Calculate our number of elements, and then perform subtraction with floor at 0
+=======
+    T* current = static_cast<T*>(currentFrame);
+    T* previous = static_cast<T*>(previousFrame);
+    T* output = static_cast<T*>(outputFrame);
+>>>>>>> Stashed changes
     size_t numElements = numBytes / sizeof(T);
     for (size_t i = 0; i < numElements; i++) {
         T subtractedPixel = currFrameT[i] - prevFrameT[i];

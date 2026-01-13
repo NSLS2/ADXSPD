@@ -8,7 +8,7 @@
  *
  * @param deviceId The device ID to initialize with
  */
-void TestXSPDAPI::MockIntialziationSeq(std::string deviceId) {
+void TestXSPDAPI::MockInitializationSeq(std::string deviceId) {
     InSequence seq;
     this->MockGetRequest(this->expectedApiUri, this->sampleApiResponse);
     this->MockGetRequest(this->expectedDeviceUri, this->sampleDeviceList);
@@ -24,7 +24,7 @@ void TestXSPDAPI::MockIntialziationSeq(std::string deviceId) {
  * @return XSPD::Detector* Pointer to the initialized Detector object
  */
 XSPD::Detector* TestXSPDAPI::MockInitialization(std::string deviceId) {
-    this->MockIntialziationSeq(deviceId);
+    this->MockInitializationSeq(deviceId);
     return this->mockXSPDAPI->Initialize(deviceId);
 }
 
@@ -82,7 +82,7 @@ TEST_F(TestXSPDAPI, TestAPIInitNoDataPorts) {
 }
 
 TEST_F(TestXSPDAPI, TestAPIInitNoDeviceId) {
-    this->MockIntialziationSeq();
+    this->MockInitializationSeq();
     XSPD::Detector* pdet = this->mockXSPDAPI->Initialize();
     ASSERT_EQ(this->mockXSPDAPI->GetDeviceId(), "device123");
     ASSERT_EQ(pdet->GetId(), "lambda");
@@ -90,7 +90,7 @@ TEST_F(TestXSPDAPI, TestAPIInitNoDeviceId) {
 }
 
 TEST_F(TestXSPDAPI, TestAPIInitDeviceIndex) {
-    this->MockIntialziationSeq();
+    this->MockInitializationSeq();
     XSPD::Detector* pdet = this->mockXSPDAPI->Initialize("0");
     ASSERT_EQ(this->mockXSPDAPI->GetDeviceId(), "device123");
     ASSERT_EQ(pdet->GetId(), "lambda");
@@ -98,7 +98,7 @@ TEST_F(TestXSPDAPI, TestAPIInitDeviceIndex) {
 }
 
 TEST_F(TestXSPDAPI, TestAPIInitDeviceId) {
-    this->MockIntialziationSeq();
+    this->MockInitializationSeq();
     XSPD::Detector* pdet = this->mockXSPDAPI->Initialize("device123");
     ASSERT_EQ(this->mockXSPDAPI->GetDeviceId(), "device123");
     ASSERT_EQ(pdet->GetId(), "lambda");
@@ -200,6 +200,7 @@ TEST_F(TestXSPDAPI, TestGetIntDetectorVar) {
             XSPD::RequestType::GET))
         .WillOnce(Return(response));
 
-    int intValue = mockXSPDAPI->GetDetectorVar<int>("testIntVar");
+    XSPD::Detector* pdet = this->MockInitialization("device123");
+    int intValue = pdet->GetVar<int>("testIntVar");
     ASSERT_EQ(intValue, 42);
 }
