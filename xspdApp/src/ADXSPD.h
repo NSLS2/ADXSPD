@@ -154,12 +154,9 @@ class ADXSPD : ADDriver {
 
     template <typename T>
     void subtractFrames(void* currentFrame, void* previousFrame, void* outputFrame, size_t numBytes);
-<<<<<<< Updated upstream
-
-=======
     
->>>>>>> Stashed changes
    protected:
+
 // Load auto-generated parameter string and index definitions
 #include "ADXSPDParamDefs.h"
 
