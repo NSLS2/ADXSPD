@@ -50,6 +50,7 @@ string XSPD::API::GetDeviceAtIndex(int deviceIndex) {
  * @return Pointer to the initialized Detector object
  */
 XSPD::Detector* XSPD::API::Initialize(string deviceId) {
+
     // Get API version information
     json apiVersionInfo = SubmitRequest(this->baseUri + "/api", XSPD::RequestType::GET);
 
@@ -75,9 +76,15 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
     }
 
     // Retrieve detector information
-    json detectorInfo = GetVar<json>("info");
-    if (!detectorInfo.contains("detectors") || detectorInfo["detectors"].empty())
-        throw runtime_error("No detector information found for device ID " + this->deviceId);
+    json detectorInfo;
+    try{
+         detectorInfo = GetVar<json>("info");
+        if (!detectorInfo.contains("detectors") || detectorInfo["detectors"].empty())
+            throw runtime_error("No detector information found for device ID " + this->deviceId);
+    } catch (out_of_range& e) {
+        throw runtime_error("Failed to retrieve detector information for device ID " + this->deviceId +
+                            ": " + string(e.what()));
+    }
 
     // Get libxsp version if available
     if (detectorInfo.contains("libxsp version"))

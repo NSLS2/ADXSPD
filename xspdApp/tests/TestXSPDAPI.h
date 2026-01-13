@@ -28,7 +28,7 @@ class TestXSPDAPI : public ::testing::Test {
    protected:
     void SetUp() override {
         mockXSPDAPI = new StrictMock<MockXSPDAPI>();
-        EXPECT_CALL(*mockXSPDAPI, GetApiVersion()).WillRepeatedly(Return("1"));
+        // EXPECT_CALL(*mockXSPDAPI, GetApiVersion()).WillRepeatedly(Return("1"));
     }
 
     void TearDown() override { delete mockXSPDAPI; }
@@ -48,15 +48,15 @@ class TestXSPDAPI : public ::testing::Test {
     void MockGetRequest(string uri, json response) {
         EXPECT_CALL(*mockXSPDAPI, SubmitRequest(uri, XSPD::RequestType::GET))
             .WillOnce(Return(response));
-        std::cout << "Mocked GET request to URI: " << uri << std::endl;
-        std::cout << "Returning response: " << response.dump(4) << std::endl;
+        std::cerr << "Mocked GET request to URI: " << uri << std::endl;
+        std::cerr << "Returning response: " << response.dump(4) << std::endl;
     }
 
     void MockRepeatedGetRequest(string uri, json response) {
         EXPECT_CALL(*mockXSPDAPI, SubmitRequest(uri, XSPD::RequestType::GET))
             .WillRepeatedly(Return(response));
-        std::cout << "Mocked GET request to URI: " << uri << std::endl;
-        std::cout << "Returning response: " << response.dump(4) << std::endl;
+        std::cerr << "Mocked GET request to URI: " << uri << std::endl;
+        std::cerr << "Returning response: " << response.dump(4) << std::endl;
     }
 
     void MockInitializationSeq(std::string deviceId = "device123");
@@ -65,7 +65,7 @@ class TestXSPDAPI : public ::testing::Test {
     string expectedApiUri = "localhost:8080/api";
     string expectedDeviceUri = this->expectedApiUri + "/v1/devices";
 
-    json sampleApiResponse = {{"api version", "1"}, {"libxsp version", "1.2.3"}};
+    json sampleApiResponse = {{"api version", "1"}, {"xspd version", "1.2.3"}};
     json sampleDeviceList = {
         {"devices", json::array({{{"id", "device123"}}, {{"id", "device456"}}})}};
     json sampleDeviceInfo = {
@@ -75,12 +75,14 @@ class TestXSPDAPI : public ::testing::Test {
            json::array({{{"id", "port01"}, {"ip", "192.168.1.1"}, {"port", 1234}},
                         {{"id", "port02"}, {"ip", "192.168.1.1"}, {"port", 5678}}})}}}};
     json sampleModuleInfo = {
-        {"module", "module0"}, {"firmware", "v1.0"}, {"chip_ids", json::array({"chipA", "chipB"})}};
+        {"module", "module0"}, {"firmware", "v1.0"}, {"chip-ids", json::array({"chipA", "chipB"})}};
 
     json sampleInfoVar = {
-        {"libxsp version", "1.2.3"},
+        {"path", "info"},
+        {"value", {
+        {"libxsp version", "4.5.6"},
         {"detectors",
-         json::array({{{"detector-id", "lambda"}, {"modules", this->sampleModuleInfo}}})}};
+         json::array({{{"detector-id", "lambda"}, {"modules", json::array({this->sampleModuleInfo})}}})}}}};
 
     std::map<std::string, std::string> sampleVarResponse = {{"status", "1"},
                                                             {"message", "success"}};
