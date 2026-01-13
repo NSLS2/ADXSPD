@@ -223,3 +223,19 @@ TEST_F(TestXSPDAPI, TestGetIntDetectorVar) {
     int intValue = pdet->GetVar<int>("testIntVar");
     ASSERT_EQ(intValue, 42);
 }
+
+
+TEST_F(TestXSPDAPI, TestSettingHighThresholdFirstThrowsError) {
+    XSPD::Detector* pdet = this->MockInitialization();
+
+    EXPECT_CALL(*mockXSPDAPI,
+                SubmitRequest(
+                    "http://localhost:8080/api/v1/devices/device123/variables?path=lambda/thresholds",
+                    XSPD::RequestType::GET))
+        .WillOnce(Return(json{{"value", "[]"}}));
+
+    EXPECT_THAT(
+        [&]() { pdet->SetThreshold(XSPD::Threshold::HIGH, 100); },
+        testing::ThrowsMessage<std::invalid_argument>(
+            testing::HasSubstr("Must set low threshold before setting high threshold")));
+}

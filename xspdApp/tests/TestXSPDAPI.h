@@ -86,4 +86,4 @@ class TestXSPDAPI : public ::testing::Test {
                                                             {"message", "success"}};
 };
 
-#endif  // ADXSPD_TESTS_XSPD_SERVICE_H
+#endif  // TEST_XSPDAPI_H

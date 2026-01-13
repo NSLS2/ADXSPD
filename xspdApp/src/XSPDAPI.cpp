@@ -247,7 +247,7 @@ double XSPD::Detector::SetThreshold(XSPD::Threshold threshold, double value) {
 
     vector<double> thresholds = this->GetVar<vector<double>>("thresholds");
     if (thresholds.size() == 0 && threshold != XSPD::Threshold::LOW)
-        throw runtime_error("Must set low threshold before setting high threshold");
+        throw invalid_argument("Must set low threshold before setting high threshold");
 
     switch (thresholds.size()) {
         case 2:
