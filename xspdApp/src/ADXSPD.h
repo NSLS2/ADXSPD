@@ -19,6 +19,7 @@
 #define ADXSPD_REVISION 1
 #define ADXSPD_MODIFICATION 0
 
+#include <blosc.h>
 #include <cpr/cpr.h>
 #include <epicsExit.h>
 #include <epicsExport.h>
@@ -29,7 +30,6 @@
 #include <iocsh.h>
 #include <stdlib.h>
 #include <zlib.h>
-#include <blosc.h>
 #include <zmq.h>
 
 #include <cmath>
@@ -153,10 +153,10 @@ class ADXSPD : ADDriver {
     NDDataType_t getDataTypeForBitDepth(int bitDepth);
 
     template <typename T>
-    void subtractFrames(void* currentFrame, void* previousFrame, void* outputFrame, size_t numBytes);
-    
-   protected:
+    void subtractFrames(void* currentFrame, void* previousFrame, void* outputFrame,
+                        size_t numBytes);
 
+   protected:
 // Load auto-generated parameter string and index definitions
 #include "ADXSPDParamDefs.h"
 

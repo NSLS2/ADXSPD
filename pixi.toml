@@ -13,7 +13,7 @@ make-bobfiles = "epicsdb2bob xspdApp/Db xspdApp/op/bob -d -r _RBV -t none"
 simulator = "sim/xspdSimulator.py"
 
 [dependencies]
-pre-commit = ">=4.3.0,<5"
+pre-commit = ">=4.5.1,<5"
 ruff = ">=0.14.0,<0.15"
 pip = ">=25.2,<26"
 python = ">=3.12.12,<3.13"

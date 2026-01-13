@@ -65,16 +65,9 @@ class TestXSPDAPI : public ::testing::Test {
     string expectedApiUri = "http://localhost:8080/api";
     string expectedDeviceUri = this->expectedApiUri + "/v1/devices";
 
-    json sampleApiResponse = {
-        {"api version", "1"},
-        {"libxsp version", "1.2.3"}
-    };
+    json sampleApiResponse = {{"api version", "1"}, {"libxsp version", "1.2.3"}};
     json sampleDeviceList = {
-        {"devices", json::array({
-            { {"id", "device123"} },
-            { {"id", "device456"} }
-        })}
-    };
+        {"devices", json::array({{{"id", "device123"}}, {{"id", "device456"}}})}};
     json sampleDeviceInfo = {
         {"system",
          {{"detectors", json::array({{{"id", "lambda"}, {"n_modules", 2}}})},

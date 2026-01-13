@@ -67,7 +67,7 @@ static void monitorThreadC(void* drvPvt) {
 
 /**
  * @brief Starts acquisition
- * 
+ *
  * @return asynStatus asynSuccess on success, asynError on failure
  */
 asynStatus ADXSPD::acquireStart() {
@@ -96,7 +96,7 @@ asynStatus ADXSPD::acquireStart() {
 
 /**
  * @brief stops acquisition by aborting exposure and joinging acq thread
- * 
+ *
  * @return asynStatus asynSuccess on success, asynError on failure
  */
 asynStatus ADXSPD::acquireStop() {
@@ -120,8 +120,8 @@ asynStatus ADXSPD::acquireStop() {
  * @param numBytes Number of bytes in each frame
  */
 template <typename T>
-void ADXSPD::subtractFrames(void* currentFrame, void* previousFrame, void* outputFrame, size_t numBytes) {
-
+void ADXSPD::subtractFrames(void* currentFrame, void* previousFrame, void* outputFrame,
+                            size_t numBytes) {
     // Cast the void pointers to the appropriate type
     T* currFrameT = static_cast<T*>(currentFrame);
     T* prevFrameT = static_cast<T*>(previousFrame);
@@ -292,10 +292,12 @@ void ADXSPD::acquisitionThread() {
             } else if (compressor == XSPD::Compressor::BLOSC) {
                 size_t decompressSize;
                 decompressSize = blosc_decompress(zmq_msg_data(&frameMessages[2]), frameBuffer,
-                                                 arrayInfo.totalBytes);
+                                                  arrayInfo.totalBytes);
                 if (decompressSize != arrayInfo.totalBytes) {
-                    ERR_ARGS("Failed to decompress frame data with Blosc, decompressed size %zu does not match expected size %zu",
-                             decompressSize, arrayInfo.totalBytes);
+                    ERR_ARGS(
+                        "Failed to decompress frame data with Blosc, decompressed size %zu does "
+                        "not match expected size %zu",
+                        decompressSize, arrayInfo.totalBytes);
                     decompressOK = false;
                 }
             } else {
@@ -381,7 +383,6 @@ void ADXSPD::monitorThread() {
     while (true) {
         getDoubleParam(ADXSPD_StatusInterval, &pollInterval);
 
-
         // Don't allow polling faster than minimum interval
         if (pollInterval <= ADXSPD_MIN_STATUS_POLL_INTERVAL)
             pollInterval = ADXSPD_MIN_STATUS_POLL_INTERVAL;
@@ -414,7 +415,7 @@ void ADXSPD::monitorThread() {
         }
 
         // TODO: Allow for setting the polling interval via a PV
-        if(epicsEventWaitWithTimeout(this->shutdownEventId, pollInterval) == epicsEventWaitOK) {
+        if (epicsEventWaitWithTimeout(this->shutdownEventId, pollInterval) == epicsEventWaitOK) {
             INFO("Shutdown event received, exiting monitor thread...");
             break;
         }

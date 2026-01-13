@@ -120,7 +120,7 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
 
 /**
  * @brief Retrieves the libxsp version
- * 
+ *
  * @return string The libxsp version string
  */
 string XSPD::API::GetLibXSPVersion() {
@@ -130,7 +130,7 @@ string XSPD::API::GetLibXSPVersion() {
 
 /**
  * @brief Retrieves the API version
- * 
+ *
  * @return string The API version string
  */
 string XSPD::API::GetApiVersion() {
@@ -140,7 +140,7 @@ string XSPD::API::GetApiVersion() {
 
 /**
  * @brief Retrieves the XSPD version
- * 
+ *
  * @return string The XSPD version string
  */
 string XSPD::API::GetXSPDVersion() {

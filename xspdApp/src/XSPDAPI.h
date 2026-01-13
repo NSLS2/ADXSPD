@@ -97,7 +97,7 @@ class API {
 
     /**
      * @brief Retrieves the value of a variable from the API
-     * 
+     *
      * @tparam T The expected type of the variable
      * @param varPath The path to the variable
      * @param key The key within the JSON response to extract the value from (default is "value")
@@ -111,11 +111,12 @@ class API {
 
     /**
      * @brief Sets the value of a variable in the API
-     * 
+     *
      * @tparam T The type of the variable to set
      * @param varPath The path to the variable
      * @param value The value to set
-     * @param rbKey The key within the JSON response to extract the readback value from (default is "value")
+     * @param rbKey The key within the JSON response to extract the readback value from (default is
+     * "value")
      * @return T The readback value of the variable after setting
      */
     template <typename T>
@@ -143,7 +144,7 @@ class API {
 
     /**
      * @brief Reads a variable of type T from the JSON response
-     * 
+     *
      * @tparam T The expected type of the variable
      * @param response The JSON response from the API
      * @param varName The name of the variable (for error messages)
@@ -184,7 +185,7 @@ class DataPort {
 
     /**
      * @brief Retrieves the value of a variable from the DataPort
-     * 
+     *
      * @tparam T The expected type of the variable
      * @param varName The name of the variable
      * @param key The key within the JSON response to extract the value from (default is "value")
@@ -197,11 +198,12 @@ class DataPort {
 
     /**
      * @brief Sets the value of a variable in the DataPort
-     * 
+     *
      * @tparam T The type of the variable to set
      * @param varName The name of the variable
      * @param value The value to set
-     * @param rbKey The key within the JSON response to extract the readback value from (default is "value")
+     * @param rbKey The key within the JSON response to extract the readback value from (default is
+     * "value")
      * @return T The readback value of the variable after setting
      */
     template <typename T>
@@ -227,7 +229,7 @@ class Module {
 
     /**
      * @brief Retrieves the value of a variable from the Module
-     * 
+     *
      * @tparam T The expected type of the variable
      * @param varName The name of the variable
      * @param key The key within the JSON response to extract the value from (default is "value")
@@ -240,11 +242,12 @@ class Module {
 
     /**
      * @brief Sets the value of a variable in the Module
-     * 
+     *
      * @tparam T The type of the variable to set
      * @param varName The name of the variable
      * @param value The value to set
-     * @param rbKey The key within the JSON response to extract the readback value from (default is "value")
+     * @param rbKey The key within the JSON response to extract the readback value from (default is
+     * "value")
      * @return T The readback value of the variable after setting
      */
     template <typename T>
@@ -269,7 +272,7 @@ class Detector {
 
     /**
      * @brief Updates and retrieves the current status of the detector
-     * 
+     *
      * @return Status The current status of the detector
      */
     Status UpdateStatus() {
@@ -283,7 +286,7 @@ class Detector {
 
     /**
      * @brief Retrieves the IDs of all registered data ports
-     * 
+     *
      * @return vector<string> A vector of data port IDs
      */
     vector<string> GetDataPortIds() {
@@ -298,7 +301,7 @@ class Detector {
 
     /**
      * @brief Registers a DataPort with the detector
-     * 
+     *
      * @param dataPort Pointer to the DataPort to register
      */
     void RegisterDataPort(DataPort* dataPort) {
@@ -308,8 +311,9 @@ class Detector {
 
     /**
      * @brief Retrieves the firmware version(s) of the detector modules
-     * 
-     * @return string The firmware version if all modules are identical, otherwise "Multiple versions"
+     *
+     * @return string The firmware version if all modules are identical, otherwise "Multiple
+     * versions"
      */
     string GetFirmwareVersion() {
         if (this->modules.size() == 1) {
@@ -334,7 +338,7 @@ class Detector {
 
     /**
      * @brief Gets a detector variable
-     * 
+     *
      * @tparam T The expected type of the variable
      * @param varName The name of the variable
      * @param key The key within the JSON response to extract the value from (default is "value")
@@ -347,7 +351,7 @@ class Detector {
 
     /**
      * @brief Sets the value of a detector variable
-     * 
+     *
      * @tparam T The type of the variable to set
      * @param varName The name of the variable
      * @param value The value to set
