@@ -62,7 +62,7 @@ class TestXSPDAPI : public ::testing::Test {
     void MockInitializationSeq(std::string deviceId = "device123");
     XSPD::Detector* MockInitialization(std::string deviceId = "device123");
 
-    string expectedApiUri = "http://localhost:8080/api";
+    string expectedApiUri = "localhost:8080/api";
     string expectedDeviceUri = this->expectedApiUri + "/v1/devices";
 
     json sampleApiResponse = {{"api version", "1"}, {"libxsp version", "1.2.3"}};

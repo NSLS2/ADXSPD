@@ -12,9 +12,9 @@ void TestXSPDAPI::MockInitializationSeq(std::string deviceId) {
     InSequence seq;
     this->MockGetRequest(this->expectedApiUri, this->sampleApiResponse);
     this->MockGetRequest(this->expectedDeviceUri, this->sampleDeviceList);
-    this->MockGetRequest(this->expectedDeviceUri + deviceId + "/variables?path=info",
+    this->MockGetRequest(this->expectedDeviceUri + "/" + deviceId + "/variables?path=info",
                          this->sampleInfoVar);
-    this->MockGetRequest(this->expectedDeviceUri + deviceId, this->sampleDeviceInfo);
+    this->MockGetRequest(this->expectedDeviceUri + "/" + deviceId, this->sampleDeviceInfo);
 }
 
 /**
@@ -28,7 +28,26 @@ XSPD::Detector* TestXSPDAPI::MockInitialization(std::string deviceId) {
     return this->mockXSPDAPI->Initialize(deviceId);
 }
 
-/** */
+TEST_F(TestXSPDAPI, TestGetApiVersionNotInitialized) {
+    EXPECT_CALL(*mockXSPDAPI, GetApiVersion()).WillOnce(Invoke(mockXSPDAPI,
+                                                              &MockXSPDAPI::API::GetApiVersion));
+    EXPECT_THAT([&]() { this->mockXSPDAPI->GetApiVersion(); },
+                testing::ThrowsMessage<std::runtime_error>(
+                    testing::HasSubstr("XSPD API not initialized")));
+}
+
+TEST_F(TestXSPDAPI, TestGetXSPDVersionNotInitialized) {
+    EXPECT_THAT([&]() { this->mockXSPDAPI->GetXSPDVersion(); },
+                testing::ThrowsMessage<std::runtime_error>(
+                    testing::HasSubstr("XSPD API not initialized")));
+}
+
+TEST_F(TestXSPDAPI, TestGetLibXSPVersionNotInitialized) {
+    EXPECT_THAT([&]() { this->mockXSPDAPI->GetLibXSPVersion(); },
+                testing::ThrowsMessage<std::runtime_error>(
+                    testing::HasSubstr("XSPD API not initialized")));
+}
+
 TEST_F(TestXSPDAPI, TestGetDeviceAtIndex) {
     this->MockRepeatedGetRequest(this->expectedDeviceUri, this->sampleDeviceList);
     std::string deviceId = mockXSPDAPI->GetDeviceAtIndex(0);
@@ -46,14 +65,14 @@ TEST_F(TestXSPDAPI, TestDeviceExists) {
 }
 
 TEST_F(TestXSPDAPI, TestAPIInitInvalidDeviceId) {
-    this->MockRepeatedGetRequest(this->expectedDeviceUri, this->sampleDeviceList);
+    this->MockInitializationSeq("device789");
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("device789"); },
                 testing::ThrowsMessage<std::invalid_argument>(
                     testing::HasSubstr("Device with ID device789 does not exist.")));
 }
 
 TEST_F(TestXSPDAPI, TestAPIInitDeviceIndexOutOfRange) {
-    this->MockRepeatedGetRequest(this->expectedDeviceUri, this->sampleDeviceList);
+    this->MockInitializationSeq("5");
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("5"); },
                 testing::ThrowsMessage<std::out_of_range>(
                     testing::HasSubstr("Device index 5 is out of range.")));
@@ -63,7 +82,7 @@ TEST_F(TestXSPDAPI, TestAPIInitNoDetectors) {
     InSequence seq;
     this->MockGetRequest(this->expectedApiUri, this->sampleApiResponse);
     this->MockGetRequest(this->expectedDeviceUri, this->sampleDeviceList);
-    this->MockGetRequest(this->expectedDeviceUri + "device123/variables?path=info", json());
+    this->MockGetRequest(this->expectedDeviceUri + "/device123/variables?path=info", json());
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("device123"); },
                 testing::ThrowsMessage<std::runtime_error>(
                     testing::HasSubstr("No detectors information found for device ID device123")));

@@ -124,7 +124,7 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
  * @return string The libxsp version string
  */
 string XSPD::API::GetLibXSPVersion() {
-    if (this->libxspVersion.empty()) throw runtime_error("XSPD API not initialized");
+    if (this->libxspVersion.empty()) throw runtime_error("XSPD API not initialized!");
     return this->libxspVersion;
 }
 
@@ -134,7 +134,7 @@ string XSPD::API::GetLibXSPVersion() {
  * @return string The API version string
  */
 string XSPD::API::GetApiVersion() {
-    if (this->apiVersion.empty()) throw runtime_error("XSPD API not initialized");
+    if (this->apiVersion.empty()) throw runtime_error("XSPD API not initialized!");
     return this->apiVersion;
 }
 
@@ -144,7 +144,7 @@ string XSPD::API::GetApiVersion() {
  * @return string The XSPD version string
  */
 string XSPD::API::GetXSPDVersion() {
-    if (this->xspdVersion.empty()) throw runtime_error("XSPD API not initialized");
+    if (this->xspdVersion.empty()) throw runtime_error("XSPD API not initialized!");
     return this->xspdVersion;
 }
 
