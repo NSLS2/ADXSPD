@@ -2,7 +2,6 @@
 
 import json
 import requests
-import logging
 
 SAMPLE_RESPONSE_DICT = {}
 
