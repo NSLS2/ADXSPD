@@ -118,6 +118,10 @@ jobs:
         run: |
           wget https://raw.githubusercontent.com/epics-modules/sequencer/refs/heads/main/configure/RULES_SNCSEQ -O /usr/lib64/epics/configure/rules.d/RULES_SNCSEQ
 
+      - name: Install required system packages
+        run: |
+          dnf -y install curl-devel
+
       - name: Build ADXSPD Driver and Unit Tests
         run: |
           make -j4
