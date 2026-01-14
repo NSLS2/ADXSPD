@@ -76,22 +76,23 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
     }
 
     // Retrieve detector information
-    json detectorInfo;
+    json deviceInfo;
     try{
-         detectorInfo = GetVar<json>("info");
-        if (!detectorInfo.contains("detectors") || detectorInfo["detectors"].empty())
-            throw runtime_error("No detector information found for device ID " + this->deviceId);
+         deviceInfo = GetVar<json>("info");
     } catch (out_of_range& e) {
-        throw runtime_error("Failed to retrieve detector information for device ID " + this->deviceId +
+        throw runtime_error("Failed to retrieve device info for device ID " + this->deviceId +
                             ": " + string(e.what()));
     }
 
     // Get libxsp version if available
-    if (detectorInfo.contains("libxsp version"))
-        this->libxspVersion = detectorInfo["libxsp version"].get<string>();
+    if (deviceInfo.contains("libxsp version"))
+        this->libxspVersion = deviceInfo["libxsp version"].get<string>();
+
+    if (!deviceInfo.contains("detectors") || deviceInfo["detectors"].empty())
+        throw runtime_error("No detector information found for device ID " + this->deviceId);
 
     // Only support single detector for now
-    detectorInfo = detectorInfo["detectors"][0];
+    json detectorInfo = deviceInfo["detectors"][0];
     if (!detectorInfo.contains("detector-id") || !detectorInfo.contains("modules"))
         throw runtime_error(
             "Detector information is missing 'detector-id' or 'modules' field for device ID " +
@@ -108,18 +109,19 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
         this->detector->RegisterModule(pmodule);
     }
 
-    try {
-        json dataPortInfo = Get("devices/" + this->deviceId)["system"]["data-ports"];
-        for (auto& dpInfo : dataPortInfo) {
-            DataPort* pdataPort =
-                new DataPort(this, dpInfo["id"].get<string>(), dpInfo["ip"].get<string>(),
-                             dpInfo["port"].get<int>());
-            this->detector->RegisterDataPort(pdataPort);
-        }
+    json dataPortInfo = Get("devices/" + this->deviceId)["system"]["data-ports"];
+    if (dataPortInfo.empty())
+        throw runtime_error("No data ports found for device ID " + this->deviceId);
 
-    } catch (json::other_error& e) {
-        throw runtime_error("Failed to retrieve data port information for " + this->deviceId +
-                            ": " + string(e.what()));
+    for (auto& dpInfo : dataPortInfo) {
+        if(!dpInfo.contains("id") || !dpInfo.contains("ip") || !dpInfo.contains("port"))
+            throw runtime_error("Data port information is missing 'id', 'ip', or 'port' field for device ID " +
+                                this->deviceId);
+
+        DataPort* pdataPort =
+            new DataPort(this, dpInfo["id"].get<string>(), dpInfo["ip"].get<string>(),
+                         dpInfo["port"].get<int>());
+        this->detector->RegisterDataPort(pdataPort);
     }
 
     return this->detector;

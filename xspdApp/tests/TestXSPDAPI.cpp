@@ -97,7 +97,7 @@ TEST_F(TestXSPDAPI, TestAPIInitNoDeviceInfo) {
     this->MockGetRequest(this->expectedDeviceUri + "/device123/variables?path=info", json());
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("device123"); },
                 testing::ThrowsMessage<std::runtime_error>(
-                    testing::HasSubstr("Failed to retrieve detector information for device ID device123")));
+                    testing::HasSubstr("Failed to retrieve device info for device ID device123")));
 }
 
 TEST_F(TestXSPDAPI, TestAPIInitNoDetectors) {
@@ -138,14 +138,30 @@ TEST_F(TestXSPDAPI, TestAPIInitNoModules) {
 
 TEST_F(TestXSPDAPI, TestAPIInitNoDataPorts) {
     InSequence seq;
+    json modifiedDeviceInfo = this->sampleDeviceInfo;
+    modifiedDeviceInfo["system"]["data-ports"] = json::array();
     this->MockGetRequest(this->expectedApiUri, this->sampleApiResponse);
     this->MockGetRequest(this->expectedDeviceUri, this->sampleDeviceList);
-    this->MockGetRequest(this->expectedDeviceUri + "device123/variables?path=info",
+    this->MockGetRequest(this->expectedDeviceUri + "/device123/variables?path=info",
                          this->sampleInfoVar);
-    this->MockGetRequest(this->expectedDeviceUri + "device123", json());
+    this->MockGetRequest(this->expectedDeviceUri + "/device123", modifiedDeviceInfo);
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("device123"); },
                 testing::ThrowsMessage<std::runtime_error>(
-                    testing::HasSubstr("No data-ports information found for device ID device123")));
+                    testing::HasSubstr("No data ports found for device ID device123")));
+}
+
+TEST_F(TestXSPDAPI, TestAPIInitMissingDataPortInfo) {
+    InSequence seq;
+    json modifiedDeviceInfo = this->sampleDeviceInfo;
+    modifiedDeviceInfo["system"]["data-ports"][0].erase("ip");
+    this->MockGetRequest(this->expectedApiUri, this->sampleApiResponse);
+    this->MockGetRequest(this->expectedDeviceUri, this->sampleDeviceList);
+    this->MockGetRequest(this->expectedDeviceUri + "/device123/variables?path=info",
+                         this->sampleInfoVar);
+    this->MockGetRequest(this->expectedDeviceUri + "/device123", modifiedDeviceInfo);
+    EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("device123"); },
+                testing::ThrowsMessage<std::runtime_error>(
+                    testing::HasSubstr("Data port information is missing 'id', 'ip', or 'port' field for device ID device123")));
 }
 
 TEST_F(TestXSPDAPI, TestAPIInitNoDeviceId) {
@@ -173,30 +189,31 @@ TEST_F(TestXSPDAPI, TestAPIInitDeviceId) {
 }
 
 TEST_F(TestXSPDAPI, TestGetValidEndpoint) {
-    this->MockGetRequest("http://localhost:8080/api/v1/test-endpoint", json{{"key", "value"}});
+    this->MockInitialization();
+    this->MockGetRequest(this->expectedApiUri + "/test-endpoint", json{{"key", "value"}});
 
     json response = mockXSPDAPI->Get("test-endpoint");
     ASSERT_EQ(response["key"], "value");
 }
 
 TEST_F(TestXSPDAPI, TestGetInvalidResponseCode) {
-    EXPECT_CALL(*mockXSPDAPI, SubmitRequest("http://localhost:8080/api/v1/invalid-endpoint",
-                                            XSPD::RequestType::GET))
-        .WillOnce(testing::Throw(std::runtime_error("Failed to get data from invalid-endpoint")));
+    this->MockInitialization();
+    this->MockGetRequest(this->expectedApiUri + "/invalid-endpoint", json());
 
     ASSERT_THAT(
         [&]() { mockXSPDAPI->Get("invalid-endpoint"); },
-        testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr("Failed to get data from")));
+        testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr("Failed to get data from invalid-endpoint")));
 }
 
 TEST_F(TestXSPDAPI, TestReadVarFromRespValidInt) {
-    json response = json{{"status", 1}};
 
+    json response = json{{"status", 1}};
     int status = mockXSPDAPI->ReadVarFromResp<int>(response, "status", "status");
     ASSERT_EQ(status, 1);
 }
 
 TEST_F(TestXSPDAPI, TestReadVarFromRespValidString) {
+
     json response = json{{"message", "success"}};
 
     std::string message = mockXSPDAPI->ReadVarFromResp<std::string>(response, "message", "message");
@@ -252,16 +269,11 @@ TEST_F(TestXSPDAPI, TestReadVarFromRespVectorOfIntsValid) {
 }
 
 TEST_F(TestXSPDAPI, TestGetIntDetectorVar) {
+    XSPD::Detector* pdet = this->MockInitialization();
     json response = json{{"value", 42}};
 
-    EXPECT_CALL(
-        *mockXSPDAPI,
-        SubmitRequest(
-            "http://localhost:8080/api/v1/devices/device123/variables?path=lambda/testIntVar",
-            XSPD::RequestType::GET))
-        .WillOnce(Return(response));
+    this->MockGetRequest(this->device123VarUri + "lambda/testIntVar", response);
 
-    XSPD::Detector* pdet = this->MockInitialization("device123");
     int intValue = pdet->GetVar<int>("testIntVar");
     ASSERT_EQ(intValue, 42);
 }
@@ -270,13 +282,10 @@ TEST_F(TestXSPDAPI, TestGetIntDetectorVar) {
 TEST_F(TestXSPDAPI, TestSettingHighThresholdFirstThrowsError) {
     XSPD::Detector* pdet = this->MockInitialization();
 
-    EXPECT_CALL(*mockXSPDAPI,
-                SubmitRequest(
-                    "http://localhost:8080/api/v1/devices/device123/variables?path=lambda/thresholds",
-                    XSPD::RequestType::GET))
-        .WillOnce(Return(json{{"value", "[]"}}));
+    this->MockGetRequest(this->device123VarUri + "lambda/thresholds",
+                          json{{"value", json::array({})}});
 
-    EXPECT_THAT(
+    ASSERT_THAT(
         [&]() { pdet->SetThreshold(XSPD::Threshold::HIGH, 100); },
         testing::ThrowsMessage<std::invalid_argument>(
             testing::HasSubstr("Must set low threshold before setting high threshold")));

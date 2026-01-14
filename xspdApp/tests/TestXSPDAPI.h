@@ -48,15 +48,15 @@ class TestXSPDAPI : public ::testing::Test {
     void MockGetRequest(string uri, json response) {
         EXPECT_CALL(*mockXSPDAPI, SubmitRequest(uri, XSPD::RequestType::GET))
             .WillOnce(Return(response));
-        std::cerr << "Mocked GET request to URI: " << uri << std::endl;
-        std::cerr << "Returning response: " << response.dump(4) << std::endl;
+        std::cout << "Mocked GET request to URI: " << uri << std::endl;
+        std::cout << "Returning response: " << response.dump(4) << std::endl;
     }
 
     void MockRepeatedGetRequest(string uri, json response) {
         EXPECT_CALL(*mockXSPDAPI, SubmitRequest(uri, XSPD::RequestType::GET))
             .WillRepeatedly(Return(response));
-        std::cerr << "Mocked GET request to URI: " << uri << std::endl;
-        std::cerr << "Returning response: " << response.dump(4) << std::endl;
+        std::cout << "Mocked GET request to URI: " << uri << std::endl;
+        std::cout << "Returning response: " << response.dump(4) << std::endl;
     }
 
     void MockInitializationSeq(std::string deviceId = "device123");
@@ -64,6 +64,7 @@ class TestXSPDAPI : public ::testing::Test {
 
     string expectedApiUri = "localhost:8080/api";
     string expectedDeviceUri = this->expectedApiUri + "/v1/devices";
+    string device123VarUri = this->expectedDeviceUri + "/device123/variables?path=";
 
     json sampleApiResponse = {{"api version", "1"}, {"xspd version", "1.2.3"}};
     json sampleDeviceList = {
