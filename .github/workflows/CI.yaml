@@ -36,9 +36,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rhel_version: [el9, el10]
+        rhel_version: [9, 10]
     container:
-      image: ghcr.io/nsls2/epics-alma${{ matrix.rhel_version[:-1] }}:latest
+      image: ghcr.io/nsls2/epics-alma${{ matrix.rhel_version }}:latest
       options: --user root
 
     steps:
