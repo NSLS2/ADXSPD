@@ -36,9 +36,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rhel_version: [9, 10]
+        rhel_version: [el9, el10]
     container:
-      image: ghcr.io/nsls2/epics-alma${{ matrix.rhel_version }}:latest
+      image: ghcr.io/nsls2/epics-alma${{ matrix.rhel_version[:-1] }}:latest
       options: --user root
 
     steps:
@@ -116,7 +116,7 @@ jobs:
       # TODO: Fix this upstream
       - name: Create missing RULES_SNCSEQ file
         run: |
-          wget https://raw.githubusercontent.com/epics-modules/sequencer/refs/heads/main/configure/RULES_SNCSEQ -O /usr/lib64/epics/configure/RULES_SNCSEQ
+          wget https://raw.githubusercontent.com/epics-modules/sequencer/refs/heads/main/configure/RULES_SNCSEQ -O /usr/lib64/epics/configure/rules.d/RULES_SNCSEQ
 
       - name: Build ADXSPD Driver and Unit Tests
         run: |
