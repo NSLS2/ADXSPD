@@ -29,46 +29,90 @@ jobs:
       - name: Run Linting Checks
         run: pixi run lint
 
-  prepare-image:
-    name: Prepare EPICS Container Image
+  build-and-test:
+    name: Build ADXSPD Driver and Unit Tests
+    needs: lint
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/nsls2/epics-alma9:latest
+      options: --user root
+
     steps:
-      - name: Login to GitHub Container Registry
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | \
-            docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-
-      - name: Get Container Digest
-        id: digest
-        run: |
-          set -e
-          DIGEST=$(docker manifest inspect \
-            ghcr.io/nsls2/epics-alma8:latest --verbose \
-            | jq -r '.[0].Descriptor.digest') || {
-            echo "Failed to retrieve container digest" >&2
-            exit 1
-          }
-          if [ -z "$DIGEST" ] || [ "$DIGEST" = "null" ]; then
-            echo "Invalid container digest: $DIGEST" >&2
-            exit 1
-          fi
-          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
-          echo "Container digest: $DIGEST"
-
-      - name: Cache Docker Image
-        id: cache
-        uses: actions/cache@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
         with:
-          path: /tmp/epics-alma8.tar
-          key: epics-alma8-${{ steps.digest.outputs.digest }}
-
-      - name: Pull and Save Container Image
-        if: steps.cache.outputs.cache-hit != 'true'
+          persist-credentials: false
+      - name: Create CONFIG_SITE.local
         run: |
-          echo "Pulling fresh image..."
-          docker pull ghcr.io/nsls2/epics-alma8:latest
-          docker save ghcr.io/nsls2/epics-alma8:latest -o /tmp/epics-alma8.tar
+          cat > configure/CONFIG_SITE.local << EOF
+          # CONFIG_SITE.local for GitHub Actions CI
+          CHECK_RELEASE=NO
+          BUILD_IOCS=YES
+          BUILD_TESTS=YES
+          WITH_BOOST=NO
+          BOOST_EXTERNAL=YES
+          WITH_PVA=YES
+          WITH_QSRV=YES
+          WITH_BLOSC=YES
+          BLOSC_EXTERNAL=NO
+          WITH_BITSHUFFLE=YES
+          BITSHUFFLE_EXTERNAL=NO
+          WITH_GRAPHICSMAGICK=YES
+          GRAPHICSMAGICK_EXTERNAL=NO
+          GRAPHICSMAGICK_PREFIX_SYMBOLS=YES
+          WITH_HDF5=YES
+          HDF5_EXTERNAL=NO
+          WITH_JSON=YES
+          WITH_JPEG=YES
+          JPEG_EXTERNAL=NO
+          WITH_NETCDF=YES
+          NETCDF_EXTERNAL=NO
+          WITH_NEXUS=YES
+          NEXUS_EXTERNAL=NO
+          WITH_OPENCV=NO
+          OPENCV_EXTERNAL=YES
+          WITH_OPENCV_VIDEO=YES
+          WITH_SZIP=YES
+          SZIP_EXTERNAL=NO
+          WITH_TIFF=YES
+          TIFF_EXTERNAL=NO
+          XML2_EXTERNAL=NO
+          WITH_ZLIB=YES
+          ZLIB_EXTERNAL=NO
+          EOF
 
-  build:
+          echo "CONFIG_SITE.local created:"
+          cat configure/CONFIG_SITE.local
 
-  test:
+      - name: Create RELEASE.local
+        run: |
+          cat > configure/RELEASE.local << EOF
+          # RELEASE.local for GitHub Actions CI
+          ADSUPPORT=/usr/lib64/epics
+          ADCORE=/usr/lib64/epics
+          ASYN=/usr/lib64/epics
+          AUTOSAVE=/usr/lib64/epics
+          BUSY=/usr/lib64/epics
+          CALC=/usr/lib64/epics
+          DEVIOCSTATS=/usr/lib64/epics
+          SSCAN=/usr/lib64/epics
+          STREAM=/usr/lib64/epics
+          SNCSEQ=/usr/lib64/epics
+          RECCASTER=/usr/lib64/epics
+          MOTOR=/usr/lib64/epics
+
+          # EPICS_BASE should always be last
+          EPICS_BASE=/usr/lib64/epics
+
+          EOF
+
+          echo "RELEASE.local created:"
+          cat configure/RELEASE.local
+
+      - name: Build ADXSPD Driver and Unit Tests
+        run: |
+          make -j$(nproc)
+
+      - name: Run Unit Tests
+        run: |
+          ./bin/linux-x86_64/TestADXSPD
