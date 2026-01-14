@@ -14,19 +14,19 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           persist-credentials: false
 
-      - name: Setup Pixi
+      - name: Setup pixi
         uses: prefix-dev/setup-pixi@8ca4608ef7f4daeb54f5205b20d0b7cb42f11143  # v0.8.14
         with:
           pixi-version: v0.56.0
           cache: false
           frozen: true
 
-      - name: Run Linting Checks
+      - name: Run linting checks
         run: pixi run lint
 
   build-and-test:
@@ -42,7 +42,7 @@ jobs:
       options: --user root
 
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           persist-credentials: false
@@ -113,19 +113,23 @@ jobs:
           echo "RELEASE.local created:"
           cat configure/RELEASE.local
 
-      # TODO: Fix this upstream
-      - name: Create missing RULES_SNCSEQ file
+      # TODO: Fix these upstream
+      - name: Create missing EPICS configuration files
         run: |
           wget https://raw.githubusercontent.com/epics-modules/sequencer/refs/heads/main/configure/RULES_SNCSEQ -O /usr/lib64/epics/configure/rules.d/RULES_SNCSEQ
+          mkdir -p /usr/lib64/epics/ADApp
+          wget https://raw.githubusercontent.com/areaDetector/ADCore/refs/heads/main/ADApp/commonDriverMakefile -O /usr/lib64/epics/ADApp/commonDriverMakefile
+          wget https://raw.githubusercontent.com/areaDetector/ADCore/refs/heads/main/ADApp/commonLibraryMakefile -O /usr/lib64/epics/ADApp/commonLibraryMakefile
+
 
       - name: Install required system packages
         run: |
           dnf -y install curl-devel
 
-      - name: Build ADXSPD Driver and Unit Tests
+      - name: Build ADXSPD driver and unit tests
         run: |
           make -j4
 
-      - name: Run Unit Tests
+      - name: Run unit tests
         run: |
           ./bin/linux-x86_64/TestADXSPD
