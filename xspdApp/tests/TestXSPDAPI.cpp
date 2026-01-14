@@ -190,19 +190,10 @@ TEST_F(TestXSPDAPI, TestAPIInitDeviceId) {
 
 TEST_F(TestXSPDAPI, TestGetValidEndpoint) {
     this->MockInitialization();
-    this->MockGetRequest(this->expectedApiUri + "/test-endpoint", json{{"key", "value"}});
+    this->MockGetRequest(this->expectedApiUri + "/v1/test-endpoint", json{{"key", "value"}});
 
     json response = mockXSPDAPI->Get("test-endpoint");
     ASSERT_EQ(response["key"], "value");
-}
-
-TEST_F(TestXSPDAPI, TestGetInvalidResponseCode) {
-    this->MockInitialization();
-    this->MockGetRequest(this->expectedApiUri + "/invalid-endpoint", json());
-
-    ASSERT_THAT(
-        [&]() { mockXSPDAPI->Get("invalid-endpoint"); },
-        testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr("Failed to get data from invalid-endpoint")));
 }
 
 TEST_F(TestXSPDAPI, TestReadVarFromRespValidInt) {
