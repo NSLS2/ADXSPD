@@ -9,9 +9,10 @@ using ::testing::Return;
 using ::testing::SetArgPointee;
 
 MockXSPDAPI::MockXSPDAPI() : XSPD::API("localhost", 8008) {
-    std::ifstream file("xspdApp/tests/samples/xspd_sample_resp_sim.json");
+    string sampleResponsesPath = "xspdApp/tests/samples/xspd_sample_resp_sim.json";
+    std::ifstream file(sampleResponsesPath);
     if (!file.is_open())
-        throw std::runtime_error("Failed to open sample responses JSON file.");
+        throw std::runtime_error("Failed to open sample responses JSON file at " + sampleResponsesPath);
 
     this->sampleResponses = json::parse(file);
     // Add a second device

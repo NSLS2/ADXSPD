@@ -143,7 +143,7 @@ TEST_F(TestXSPDAPI, TestAPIInitNoDeviceId) {
     XSPD::Detector* pdet = this->mockXSPDAPI->Initialize();
     ASSERT_EQ(this->mockXSPDAPI->GetDeviceId(), "lambda01");
     ASSERT_EQ(pdet->GetId(), "lambda");
-    ASSERT_EQ(pdet->GetActiveDataPort()->GetId(), "port01");
+    ASSERT_EQ(pdet->GetActiveDataPort()->GetId(), "port-1");
 }
 
 TEST_F(TestXSPDAPI, TestAPIInitDeviceIndex) {
@@ -151,7 +151,7 @@ TEST_F(TestXSPDAPI, TestAPIInitDeviceIndex) {
     XSPD::Detector* pdet = this->mockXSPDAPI->Initialize("0");
     ASSERT_EQ(this->mockXSPDAPI->GetDeviceId(), "lambda01");
     ASSERT_EQ(pdet->GetId(), "lambda");
-    ASSERT_EQ(pdet->GetActiveDataPort()->GetId(), "port01");
+    ASSERT_EQ(pdet->GetActiveDataPort()->GetId(), "port-1");
 }
 
 TEST_F(TestXSPDAPI, TestAPIInitDeviceId) {
@@ -159,7 +159,7 @@ TEST_F(TestXSPDAPI, TestAPIInitDeviceId) {
     XSPD::Detector* pdet = this->mockXSPDAPI->Initialize("lambda01");
     ASSERT_EQ(this->mockXSPDAPI->GetDeviceId(), "lambda01");
     ASSERT_EQ(pdet->GetId(), "lambda");
-    ASSERT_EQ(pdet->GetActiveDataPort()->GetId(), "port01");
+    ASSERT_EQ(pdet->GetActiveDataPort()->GetId(), "port-1");
 }
 
 TEST_F(TestXSPDAPI, TestGetValidEndpoint) {
@@ -167,7 +167,7 @@ TEST_F(TestXSPDAPI, TestGetValidEndpoint) {
     this->mockXSPDAPI->MockGetVarRequest("lambda/summed_frames");
     json response = this->mockXSPDAPI->Get("devices/lambda01/variables?path=lambda/summed_frames");
     ASSERT_EQ(response["path"], "lambda/summed_frames");
-    ASSERT_EQ(response["value"], "1");
+    ASSERT_EQ(response["value"], 1);
 }
 
 TEST_F(TestXSPDAPI, TestGetInvalidEndpoint) {
