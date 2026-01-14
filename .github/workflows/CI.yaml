@@ -124,7 +124,7 @@ jobs:
 
       - name: Install required system packages
         run: |
-          dnf -y install curl-devel
+          dnf -y install curl-devel zeromq-devel
 
       - name: Build ADXSPD driver and unit tests
         run: |
