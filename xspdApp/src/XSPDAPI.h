@@ -72,6 +72,14 @@ enum class ModuleFeature {
     FEAT_EXTENDED_GATING = 3,
 };
 
+enum class APIState {
+    NOT_INITIALIZED = 0,
+    CHECKING_API_VERSION = 1,
+    RETRIEVING_DEVICE_LIST = 2,
+    RETRIEVING_DEVICE_INFO = 3,
+    INITIALIZED = 4,
+};
+
 // Forward declarations
 class Module;
 class DataPort;
