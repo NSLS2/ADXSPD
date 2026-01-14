@@ -25,6 +25,7 @@ using ::testing::StrictMock;
 class TestADXSPD : public ::testing::Test {
    protected:
     void SetUpTestSuite() {
+
         // this->simulatedXSPDService = boost::process::child(".pixi/envs/default/bin/python3
         // sim/xspdSimulator.py",
         //                                    boost::process::std_out > boost::process::null,
@@ -35,6 +36,9 @@ class TestADXSPD : public ::testing::Test {
     }
 
     void SetUp() override {
+        std::cout << "Capturing output for test." << std::endl;
+        ::testing::internal::CaptureStdout();
+        ::testing::internal::CaptureStderr();
         // this->xspdDriver = new ADXSPD(this->getUniquePortName().c_str(),
         // "http://localhost:8000");
     }
