@@ -118,8 +118,8 @@ jobs:
         run: |
           wget https://raw.githubusercontent.com/epics-modules/sequencer/refs/heads/main/configure/RULES_SNCSEQ -O /usr/lib64/epics/configure/rules.d/RULES_SNCSEQ
           mkdir -p /usr/lib64/epics/ADApp
-          wget https://raw.githubusercontent.com/areaDetector/ADCore/refs/heads/main/ADApp/commonDriverMakefile -O /usr/lib64/epics/ADApp/commonDriverMakefile
-          wget https://raw.githubusercontent.com/areaDetector/ADCore/refs/heads/main/ADApp/commonLibraryMakefile -O /usr/lib64/epics/ADApp/commonLibraryMakefile
+          wget https://raw.githubusercontent.com/areaDetector/ADCore/refs/heads/master/ADApp/commonDriverMakefile -O /usr/lib64/epics/ADApp/commonDriverMakefile
+          wget https://raw.githubusercontent.com/areaDetector/ADCore/refs/heads/master/ADApp/commonLibraryMakefile -O /usr/lib64/epics/ADApp/commonLibraryMakefile
 
 
       - name: Install required system packages
