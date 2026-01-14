@@ -16,6 +16,7 @@ def save_sample_endpoint_value(endpoint):
     SAMPLE_RESPONSE_DICT[url] = response.json()
     return response.json()
 
+
 def save_device_variable_values(device_id):
     var_endpoint = f"devices/{device_id}/variables"
     save_sample_endpoint_value(var_endpoint + "?path=info")
@@ -23,7 +24,6 @@ def save_device_variable_values(device_id):
     for variable in variables:
         variable_id = variable["path"]
         save_sample_endpoint_value(f"{var_endpoint}?path={variable_id}")
-
 
 
 api_info = save_sample_endpoint_value("")
