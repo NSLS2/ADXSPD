@@ -9,7 +9,7 @@ class MockXSPDAPI : public XSPD::API {
    public:
     MockXSPDAPI() : XSPD::API("localhost", 8080){};
     MOCK_METHOD(json, SubmitRequest, (string uri, XSPD::RequestType reqType), (override));
-    MOCK_METHOD(string, GetApiVersion, (), (override));
+    // MOCK_METHOD(string, GetApiVersion, (), (override));
 };
 
 #endif  // MOCK_XSPDAPI_H

@@ -48,7 +48,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/openssl-3.5.4-h26f9b46_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/pip-25.2-pyh8b19718_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.5.0-pyhcf101f3_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/pre-commit-4.3.0-pyha770c72_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/pre-commit-4.5.1-pyha770c72_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/pycparser-2.22-pyh29332c3_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/python-3.12.12-hfe2f287_0_cpython.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/python-gil-3.12.12-hd8ed1ab_1.conda
@@ -68,9 +68,10 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/yaml-0.2.5-h280c20c_3.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zeromq-4.3.5-h387f397_9.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-3.23.0-pyhd8ed1ab_0.conda
-      - pypi: git+https://github.com/NSLS2/epicsdb2bob.git#6cdb0843a4e657671b699056be451831abbf3e9f
+      - pypi: git+https://github.com/NSLS2/epicsdb2bob.git#56d3d8059022637ce19011a9e1394fc96c4ba1c2
       - pypi: git+https://github.com/jwlodek/epicsdbtools.git#27f2f545b44ce9e9139980f6736d2fa7431d3d27
       - pypi: https://files.pythonhosted.org/packages/24/07/47b797ef5dd22d1b293936aee48d04a1f3901d9b87f01fe719fe34de9100/phoebusgen-3.1.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/88/5b/6f4b0772d6b648c03420bad32cbdd354799816e84d0961c6f5435036e594/rectangle_packer-2.0.5-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl
 packages:
 - conda: https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2
   sha256: fe51de6107f9edc7aa4f786a70f4a883943bc9d39b3bb7307c04c41410990726
@@ -196,11 +197,12 @@ packages:
   - pkg:pypi/distlib?source=hash-mapping
   size: 275642
   timestamp: 1752823081585
-- pypi: git+https://github.com/NSLS2/epicsdb2bob.git#6cdb0843a4e657671b699056be451831abbf3e9f
+- pypi: git+https://github.com/NSLS2/epicsdb2bob.git#56d3d8059022637ce19011a9e1394fc96c4ba1c2
   name: epicsdb2bob
-  version: 0.1.dev42+g6cdb0843a
+  version: 0.1.dev53+g56d3d8059
   requires_dist:
   - phoebusgen
+  - rectangle-packer
   - epicsdbtools @ git+https://github.com/jwlodek/epicsdbtools
   - copier ; extra == 'dev'
   - pipdeptree ; extra == 'dev'
@@ -596,22 +598,22 @@ packages:
   - pkg:pypi/platformdirs?source=hash-mapping
   size: 23625
   timestamp: 1759953252315
-- conda: https://conda.anaconda.org/conda-forge/noarch/pre-commit-4.3.0-pyha770c72_0.conda
-  sha256: 66b6d429ab2201abaa7282af06b17f7631dcaafbc5aff112922b48544514b80a
-  md5: bc6c44af2a9e6067dd7e949ef10cdfba
+- conda: https://conda.anaconda.org/conda-forge/noarch/pre-commit-4.5.1-pyha770c72_0.conda
+  sha256: 5b81b7516d4baf43d0c185896b245fa7384b25dc5615e7baa504b7fa4e07b706
+  md5: 7f3ac694319c7eaf81a0325d6405e974
   depends:
   - cfgv >=2.0.0
   - identify >=1.0.0
   - nodeenv >=0.11.1
-  - python >=3.9
+  - python >=3.10
   - pyyaml >=5.1
   - virtualenv >=20.10.0
   license: MIT
   license_family: MIT
   purls:
   - pkg:pypi/pre-commit?source=hash-mapping
-  size: 195839
-  timestamp: 1754831350570
+  size: 200827
+  timestamp: 1765937577534
 - conda: https://conda.anaconda.org/conda-forge/noarch/pycparser-2.22-pyh29332c3_1.conda
   sha256: 79db7928d13fab2d892592223d7570f5061c192f27b9febd1a418427b719acc6
   md5: 12c566707c80111f9799308d9e265aef
@@ -716,6 +718,10 @@ packages:
   purls: []
   size: 282480
   timestamp: 1740379431762
+- pypi: https://files.pythonhosted.org/packages/88/5b/6f4b0772d6b648c03420bad32cbdd354799816e84d0961c6f5435036e594/rectangle_packer-2.0.5-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl
+  name: rectangle-packer
+  version: 2.0.5
+  sha256: 7083c4cbc90c5cac58673bfa51edf39e870eb582814c0dee9e96052a706d9a18
 - conda: https://conda.anaconda.org/conda-forge/linux-64/ruff-0.14.0-ha3a3aed_0.conda
   noarch: python
   sha256: 3af418d75043ca682d190e7c1f86064fca1de0e7c04db63c1fbe4e78863b5767
