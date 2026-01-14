@@ -17,18 +17,13 @@ using ::testing::Return;
 using ::testing::SetArgPointee;
 using ::testing::StrictMock;
 
-
 class TestXSPDAPI : public ::testing::Test {
    protected:
-    void SetUp() override {
-        mockXSPDAPI = new StrictMock<MockXSPDAPI>();
-    }
+    void SetUp() override { mockXSPDAPI = new StrictMock<MockXSPDAPI>(); }
 
     void TearDown() override { delete mockXSPDAPI; }
 
     StrictMock<MockXSPDAPI>* mockXSPDAPI;
-
-
 };
 
 #endif  // TEST_XSPDAPI_H

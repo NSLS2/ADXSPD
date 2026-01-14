@@ -79,7 +79,7 @@ LIB_SRCS += unix_socket.cpp
 LIB_SRCS += util.cpp
 
 ifeq ($(ZLIB_EXTERNAL), NO)
-LIB_LIBS += z
+LIB_LIBS += zlib
 else
 LIB_SYS_LIBS += z
 endif
