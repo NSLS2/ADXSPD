@@ -1,0 +1,817 @@
+{
+    "localhost:8008/api": {
+        "api version": "1",
+        "xspd version": "1.5.2"
+    },
+    "localhost:8008/api/v1/devices": {
+        "devices": [
+            {
+                "id": "lambda01",
+                "type": "xsp",
+                "href": "http://localhost:8008/api/v1/devices/lambda01"
+            }
+        ]
+    },
+    "localhost:8008/api/v1/devices/lambda01": {
+        "id": "lambda01",
+        "type": "xsp",
+        "configfile": "/opt/xsp/config/system.yml",
+        "system": {
+            "id": "SYSTEM",
+            "detectors": [
+                {
+                    "id": "lambda",
+                    "modules": 1
+                }
+            ],
+            "data-ports": [
+                {
+                    "ref": "lambda/1",
+                    "id": "port-1",
+                    "ip": "0.0.0.0",
+                    "port": 4300
+                }
+            ]
+        }
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=info": {
+        "path": "info",
+        "value": {
+            "libxsp version": "2.7.5",
+            "id": "SYSTEM",
+            "detectors": [
+                {
+                    "detector-id": "lambda",
+                    "modules": [
+                        {
+                            "module": "lambda/1",
+                            "firmware": "2.2.0 [ctrl=v1, data=v3, feat=0x4b]",
+                            "chips": 12,
+                            "chip-ids": [
+                                "w1-A01,CRN,0x00000111",
+                                "w2-A01,CRN,0x00000211",
+                                "w3-A01,CRN,0x00000311",
+                                "w4-A01,CRN,0x00000411",
+                                "w5-A01,CRN,0x00000511",
+                                "w6-A01,CRN,0x00000611",
+                                "w7-A01,CRN,0x00000711",
+                                "w8-A01,CRN,0x00000811",
+                                "w9-A01,CRN,0x00000911",
+                                "w10-A01,CRN,0x00000a11",
+                                "w11-A01,CRN,0x00000b11",
+                                "w12-A01,CRN,0x00000c11"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables": [
+        {
+            "path": "lambda/beam_energy",
+            "description": "defines the current beam energy setting in keV"
+        },
+        {
+            "path": "lambda/bit_depth",
+            "description": "defines the readout bit depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "lambda/charge_summing",
+            "description": "enables/disables the charge summing mode with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/compression_level",
+            "description": "defines the compression level from '1' to '4'"
+        },
+        {
+            "path": "lambda/compressor",
+            "description": "defines the compressor 'zlib', 'blosc' or 'none'"
+        },
+        {
+            "path": "lambda/counter_mode",
+            "description": "defines the counter mode 'SINGLE' or 'DUAL'"
+        },
+        {
+            "path": "lambda/countrate_correction",
+            "description": "enables/disables the countrate correction with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/flatfield_correction",
+            "description": "enables/disables the flatfield correction with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/gating_mode",
+            "description": "enables/disables the gating mode with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/n_frames",
+            "description": "defines the number of frames per acquisition"
+        },
+        {
+            "path": "lambda/n_modules",
+            "description": "returns the number of modules of a detector"
+        },
+        {
+            "path": "lambda/roi_rows",
+            "description": "defines the numbers of readout rows per chip"
+        },
+        {
+            "path": "lambda/saturation_flag",
+            "description": "enables/disables the saturation flag with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/shuffle_mode",
+            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+        },
+        {
+            "path": "lambda/shutter_time",
+            "description": "defines the shutter time in ms"
+        },
+        {
+            "path": "lambda/status",
+            "description": "returns the detector status 'busy', 'ready' or 'connected'"
+        },
+        {
+            "path": "lambda/summed_frames",
+            "description": "returns the number of summed frames"
+        },
+        {
+            "path": "lambda/thresholds",
+            "description": "defines the detector thresholds in a list of floats"
+        },
+        {
+            "path": "lambda/trigger_mode",
+            "description": "defines the trigger mode 'SOFTWARE', 'EXT_FRAMES' or 'EXT_SEQUENCE'"
+        },
+        {
+            "path": "lambda/type",
+            "description": "returns the detector type"
+        },
+        {
+            "path": "lambda/user_data",
+            "description": "returns the user data to a specified key"
+        },
+        {
+            "path": "lambda/1/chip_ids",
+            "description": "returns a list of chip ids of the corresponding module"
+        },
+        {
+            "path": "lambda/1/compression_level",
+            "description": "defines the compression level from '1' to '4'"
+        },
+        {
+            "path": "lambda/1/compressor",
+            "description": "defines the compressor 'zlib', 'blosc' or 'none'"
+        },
+        {
+            "path": "lambda/1/features",
+            "description": "returns the supported firmware features"
+        },
+        {
+            "path": "lambda/1/firmware_version",
+            "description": "returns the firmware version in 'major.minor.patch' order"
+        },
+        {
+            "path": "lambda/1/flatfield",
+            "description": "returns the flatfield data"
+        },
+        {
+            "path": "lambda/1/flatfield_author",
+            "description": "returns the author of the flatfield"
+        },
+        {
+            "path": "lambda/1/flatfield_enabled",
+            "description": "returns 'true' if a flatfield is applied, 'false' otherwise"
+        },
+        {
+            "path": "lambda/1/flatfield_error",
+            "description": "returns the error of the flatfield"
+        },
+        {
+            "path": "lambda/1/flatfield_status",
+            "description": "returns the status of the latest generate_flatfield command call"
+        },
+        {
+            "path": "lambda/1/flatfield_timestamp",
+            "description": "returns the timestamp of the flatfield"
+        },
+        {
+            "path": "lambda/1/frame_depth",
+            "description": "defines the frame depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "lambda/1/frame_height",
+            "description": "returns the frame height in pixels"
+        },
+        {
+            "path": "lambda/1/frame_width",
+            "description": "returns the frame width in pixels"
+        },
+        {
+            "path": "lambda/1/frames_queued",
+            "description": "returns the number of queued frames"
+        },
+        {
+            "path": "lambda/1/humidity",
+            "description": "returns the measured humidity from a detector module"
+        },
+        {
+            "path": "lambda/1/interpolation",
+            "description": "enables/disables the interpolation with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/1/max_frames",
+            "description": "defines the maximum number of frames that fit into the RAM buffer"
+        },
+        {
+            "path": "lambda/1/n_connectors",
+            "description": "returns the number of connected sensors"
+        },
+        {
+            "path": "lambda/1/n_subframes",
+            "description": "returns the number of subframes"
+        },
+        {
+            "path": "lambda/1/pixel_mask",
+            "description": "returns the base64 encoded pixel mask of a module"
+        },
+        {
+            "path": "lambda/1/pixel_mask_enabled",
+            "description": "returns 'true' if a pixel mask is applied, 'false' otherwise"
+        },
+        {
+            "path": "lambda/1/position",
+            "description": "returns the module position [x,y,z]"
+        },
+        {
+            "path": "lambda/1/ram_allocated",
+            "description": "returns whether ram is allocated"
+        },
+        {
+            "path": "lambda/1/rotation",
+            "description": "returns the module rotation [alpha, beta, gamma]"
+        },
+        {
+            "path": "lambda/1/saturation_threshold",
+            "description": "defines the actual saturation threshold in counts per second per pixel"
+        },
+        {
+            "path": "lambda/1/sensor_current",
+            "description": "returns the measured sensor current from a detector module"
+        },
+        {
+            "path": "lambda/1/shuffle_mode",
+            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+        },
+        {
+            "path": "lambda/1/status",
+            "description": "returns the module status 'busy', 'ready' or 'connected'"
+        },
+        {
+            "path": "lambda/1/temperature",
+            "description": "returns the measured temperatures from a detector module"
+        },
+        {
+            "path": "lambda/1/voltage",
+            "description": "returns the current high voltage in V"
+        },
+        {
+            "path": "port-1/frame_depth",
+            "description": "defines the frame depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "port-1/frame_height",
+            "description": "returns the frame height in pixels"
+        },
+        {
+            "path": "port-1/frame_width",
+            "description": "returns the frame width in pixels"
+        },
+        {
+            "path": "port-1/frames_queued",
+            "description": "returns the number of queued frames"
+        },
+        {
+            "path": "port-1/pixel_mask",
+            "description": "returns the base64 encoded pixel mask"
+        }
+    ],
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/beam_energy": {
+        "path": "lambda/beam_energy",
+        "value": 0.0
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/bit_depth": {
+        "path": "lambda/bit_depth",
+        "value": 12
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/charge_summing": {
+        "path": "lambda/charge_summing",
+        "value": "OFF"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/compression_level": {
+        "path": "lambda/compression_level",
+        "value": 2
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/compressor": {
+        "path": "lambda/compressor",
+        "value": "none"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/counter_mode": {
+        "path": "lambda/counter_mode",
+        "value": "SINGLE"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/countrate_correction": {
+        "path": "lambda/countrate_correction",
+        "value": "OFF"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/flatfield_correction": {
+        "path": "lambda/flatfield_correction",
+        "value": "OFF"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/gating_mode": {
+        "path": "lambda/gating_mode",
+        "value": "OFF"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/n_frames": {
+        "path": "lambda/n_frames",
+        "value": 1
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/n_modules": {
+        "path": "lambda/n_modules",
+        "value": 1
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/roi_rows": {
+        "path": "lambda/roi_rows",
+        "value": 256
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/saturation_flag": {
+        "path": "lambda/saturation_flag",
+        "value": "OFF"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/shuffle_mode": {
+        "path": "lambda/shuffle_mode",
+        "value": "NO_SHUFFLE"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/shutter_time": {
+        "path": "lambda/shutter_time",
+        "value": 1.0
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/status": {
+        "path": "lambda/status",
+        "value": "ready"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/summed_frames": {
+        "path": "lambda/summed_frames",
+        "value": 1
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/thresholds": {
+        "path": "lambda/thresholds",
+        "value": []
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/trigger_mode": {
+        "path": "lambda/trigger_mode",
+        "value": "SOFTWARE"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/type": {
+        "path": "lambda/type",
+        "value": "Lambda"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/user_data": {
+        "path": "lambda/user_data",
+        "value": ""
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/chip_ids": {
+        "path": "lambda/1/chip_ids",
+        "value": [
+            "w1-A01,CRN,0x00000111",
+            "w2-A01,CRN,0x00000211",
+            "w3-A01,CRN,0x00000311",
+            "w4-A01,CRN,0x00000411",
+            "w5-A01,CRN,0x00000511",
+            "w6-A01,CRN,0x00000611",
+            "w7-A01,CRN,0x00000711",
+            "w8-A01,CRN,0x00000811",
+            "w9-A01,CRN,0x00000911",
+            "w10-A01,CRN,0x00000a11",
+            "w11-A01,CRN,0x00000b11",
+            "w12-A01,CRN,0x00000c11"
+        ]
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/compression_level": {
+        "path": "lambda/1/compression_level",
+        "value": 2
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/compressor": {
+        "path": "lambda/1/compressor",
+        "value": "none"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/features": {
+        "path": "lambda/1/features",
+        "value": [
+            "HV",
+            "1_6_BIT",
+            "EXTENDED_GATING"
+        ]
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/firmware_version": {
+        "path": "lambda/1/firmware_version",
+        "value": "2.2.0 [ctrl=v1, data=v3, feat=0x4b]"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/flatfield": {
+        "path": "lambda/1/flatfield",
+        "value": []
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/flatfield_author": {
+        "path": "lambda/1/flatfield_author",
+        "value": []
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/flatfield_enabled": {
+        "path": "lambda/1/flatfield_enabled",
+        "value": "false"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/flatfield_error": {
+        "path": "lambda/1/flatfield_error",
+        "value": []
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/flatfield_status": {
+        "path": "lambda/1/flatfield_status",
+        "value": "No flatfield measurement started"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/flatfield_timestamp": {
+        "path": "lambda/1/flatfield_timestamp",
+        "value": []
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/frame_depth": {
+        "path": "lambda/1/frame_depth",
+        "value": 12
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/frame_height": {
+        "path": "lambda/1/frame_height",
+        "value": 516
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/frame_width": {
+        "path": "lambda/1/frame_width",
+        "value": 1556
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/frames_queued": {
+        "path": "lambda/1/frames_queued",
+        "value": 0
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/humidity": {
+        "path": "lambda/1/humidity",
+        "value": 75.099991
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/interpolation": {
+        "path": "lambda/1/interpolation",
+        "value": "ON"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/max_frames": {
+        "path": "lambda/1/max_frames",
+        "value": 6930
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/n_connectors": {
+        "path": "lambda/1/n_connectors",
+        "value": 1
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/n_subframes": {
+        "path": "lambda/1/n_subframes",
+        "value": 1
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/pixel_mask": {
+        "path": "lambda/1/pixel_mask",
+        "value": ""
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/pixel_mask_enabled": {
+        "path": "lambda/1/pixel_mask_enabled",
+        "value": "false"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/position": {
+        "path": "lambda/1/position",
+        "value": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/ram_allocated": [
+        {
+            "path": "lambda/beam_energy",
+            "description": "defines the current beam energy setting in keV"
+        },
+        {
+            "path": "lambda/bit_depth",
+            "description": "defines the readout bit depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "lambda/charge_summing",
+            "description": "enables/disables the charge summing mode with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/compression_level",
+            "description": "defines the compression level from '1' to '4'"
+        },
+        {
+            "path": "lambda/compressor",
+            "description": "defines the compressor 'zlib', 'blosc' or 'none'"
+        },
+        {
+            "path": "lambda/counter_mode",
+            "description": "defines the counter mode 'SINGLE' or 'DUAL'"
+        },
+        {
+            "path": "lambda/countrate_correction",
+            "description": "enables/disables the countrate correction with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/flatfield_correction",
+            "description": "enables/disables the flatfield correction with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/gating_mode",
+            "description": "enables/disables the gating mode with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/n_frames",
+            "description": "defines the number of frames per acquisition"
+        },
+        {
+            "path": "lambda/n_modules",
+            "description": "returns the number of modules of a detector"
+        },
+        {
+            "path": "lambda/roi_rows",
+            "description": "defines the numbers of readout rows per chip"
+        },
+        {
+            "path": "lambda/saturation_flag",
+            "description": "enables/disables the saturation flag with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/shuffle_mode",
+            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+        },
+        {
+            "path": "lambda/shutter_time",
+            "description": "defines the shutter time in ms"
+        },
+        {
+            "path": "lambda/status",
+            "description": "returns the detector status 'busy', 'ready' or 'connected'"
+        },
+        {
+            "path": "lambda/summed_frames",
+            "description": "returns the number of summed frames"
+        },
+        {
+            "path": "lambda/thresholds",
+            "description": "defines the detector thresholds in a list of floats"
+        },
+        {
+            "path": "lambda/trigger_mode",
+            "description": "defines the trigger mode 'SOFTWARE', 'EXT_FRAMES' or 'EXT_SEQUENCE'"
+        },
+        {
+            "path": "lambda/type",
+            "description": "returns the detector type"
+        },
+        {
+            "path": "lambda/user_data",
+            "description": "returns the user data to a specified key"
+        },
+        {
+            "path": "lambda/1/chip_ids",
+            "description": "returns a list of chip ids of the corresponding module"
+        },
+        {
+            "path": "lambda/1/compression_level",
+            "description": "defines the compression level from '1' to '4'"
+        },
+        {
+            "path": "lambda/1/compressor",
+            "description": "defines the compressor 'zlib', 'blosc' or 'none'"
+        },
+        {
+            "path": "lambda/1/features",
+            "description": "returns the supported firmware features"
+        },
+        {
+            "path": "lambda/1/firmware_version",
+            "description": "returns the firmware version in 'major.minor.patch' order"
+        },
+        {
+            "path": "lambda/1/flatfield",
+            "description": "returns the flatfield data"
+        },
+        {
+            "path": "lambda/1/flatfield_author",
+            "description": "returns the author of the flatfield"
+        },
+        {
+            "path": "lambda/1/flatfield_enabled",
+            "description": "returns 'true' if a flatfield is applied, 'false' otherwise"
+        },
+        {
+            "path": "lambda/1/flatfield_error",
+            "description": "returns the error of the flatfield"
+        },
+        {
+            "path": "lambda/1/flatfield_status",
+            "description": "returns the status of the latest generate_flatfield command call"
+        },
+        {
+            "path": "lambda/1/flatfield_timestamp",
+            "description": "returns the timestamp of the flatfield"
+        },
+        {
+            "path": "lambda/1/frame_depth",
+            "description": "defines the frame depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "lambda/1/frame_height",
+            "description": "returns the frame height in pixels"
+        },
+        {
+            "path": "lambda/1/frame_width",
+            "description": "returns the frame width in pixels"
+        },
+        {
+            "path": "lambda/1/frames_queued",
+            "description": "returns the number of queued frames"
+        },
+        {
+            "path": "lambda/1/humidity",
+            "description": "returns the measured humidity from a detector module"
+        },
+        {
+            "path": "lambda/1/interpolation",
+            "description": "enables/disables the interpolation with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/1/max_frames",
+            "description": "defines the maximum number of frames that fit into the RAM buffer"
+        },
+        {
+            "path": "lambda/1/n_connectors",
+            "description": "returns the number of connected sensors"
+        },
+        {
+            "path": "lambda/1/n_subframes",
+            "description": "returns the number of subframes"
+        },
+        {
+            "path": "lambda/1/pixel_mask",
+            "description": "returns the base64 encoded pixel mask of a module"
+        },
+        {
+            "path": "lambda/1/pixel_mask_enabled",
+            "description": "returns 'true' if a pixel mask is applied, 'false' otherwise"
+        },
+        {
+            "path": "lambda/1/position",
+            "description": "returns the module position [x,y,z]"
+        },
+        {
+            "path": "lambda/1/ram_allocated",
+            "description": "returns whether ram is allocated"
+        },
+        {
+            "path": "lambda/1/rotation",
+            "description": "returns the module rotation [alpha, beta, gamma]"
+        },
+        {
+            "path": "lambda/1/saturation_threshold",
+            "description": "defines the actual saturation threshold in counts per second per pixel"
+        },
+        {
+            "path": "lambda/1/sensor_current",
+            "description": "returns the measured sensor current from a detector module"
+        },
+        {
+            "path": "lambda/1/shuffle_mode",
+            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+        },
+        {
+            "path": "lambda/1/status",
+            "description": "returns the module status 'busy', 'ready' or 'connected'"
+        },
+        {
+            "path": "lambda/1/temperature",
+            "description": "returns the measured temperatures from a detector module"
+        },
+        {
+            "path": "lambda/1/voltage",
+            "description": "returns the current high voltage in V"
+        },
+        {
+            "path": "port-1/frame_depth",
+            "description": "defines the frame depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "port-1/frame_height",
+            "description": "returns the frame height in pixels"
+        },
+        {
+            "path": "port-1/frame_width",
+            "description": "returns the frame width in pixels"
+        },
+        {
+            "path": "port-1/frames_queued",
+            "description": "returns the number of queued frames"
+        },
+        {
+            "path": "port-1/pixel_mask",
+            "description": "returns the base64 encoded pixel mask"
+        }
+    ],
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/rotation": {
+        "path": "lambda/1/rotation",
+        "value": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/saturation_threshold": {
+        "path": "lambda/1/saturation_threshold",
+        "value": 200000
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/sensor_current": {
+        "path": "lambda/1/sensor_current",
+        "value": 0.209991
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/shuffle_mode": {
+        "path": "lambda/1/shuffle_mode",
+        "value": "NO_SHUFFLE"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/status": {
+        "path": "lambda/1/status",
+        "value": "ready"
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/temperature": {
+        "path": "lambda/1/temperature",
+        "value": [
+            36.779999,
+            41.049988,
+            39.119995
+        ]
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=lambda/1/voltage": {
+        "path": "lambda/1/voltage",
+        "value": 0.0
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=port-1/frame_depth": {
+        "path": "port-1/frame_depth",
+        "value": 12
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=port-1/frame_height": {
+        "path": "port-1/frame_height",
+        "value": 516
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=port-1/frame_width": {
+        "path": "port-1/frame_width",
+        "value": 1556
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=port-1/frames_queued": {
+        "path": "port-1/frames_queued",
+        "value": 0
+    },
+    "localhost:8008/api/v1/devices/lambda01/variables?path=port-1/pixel_mask": {
+        "path": "port-1/pixel_mask",
+        "value": ""
+    },
+    "localhost:8008/api/v1/devices/lambda01/commands": [
+        {
+            "path": "start",
+            "description": "starts an acquisition on all detectors"
+        },
+        {
+            "path": "stop",
+            "description": "stops an acquisition on all detectors"
+        },
+        {
+            "path": "reset",
+            "description": "resets all detectors"
+        },
+        {
+            "path": "generate_flatfield",
+            "description": "generates flatfield correction for all detectors"
+        },
+        {
+            "path": "lambda/start",
+            "description": "starts an acquisition on detector with id: lambda"
+        },
+        {
+            "path": "lambda/stop",
+            "description": "stops an acquisition on detector with id: lambda"
+        },
+        {
+            "path": "lambda/reset",
+            "description": "resets the detector with id: lambda"
+        },
+        {
+            "path": "lambda/generate_flatfield",
+            "description": "generates flatfield for detector with id: lambda"
+        }
+    ]
+}
