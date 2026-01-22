@@ -106,11 +106,10 @@ jobs:
           echo "RELEASE.local created:"
           cat configure/RELEASE.local
 
-      # TODO: Fix these upstream
-
+      # TODO: Check why the non-devel deps are not being pulled in
       - name: Install required system packages
         run: |
-          dnf -y install curl-devel zeromq-devel zlib-devel blosc-devel
+          dnf -y install curl-devel zeromq-devel zlib-devel blosc-devel hdf5 libtiff libjpeg libaec libxml2
 
       - name: Build ADXSPD driver and unit tests
         run: |
