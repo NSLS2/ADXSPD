@@ -107,9 +107,10 @@ jobs:
           cat configure/RELEASE.local
 
       # TODO: Check why the non-devel deps are not being pulled in
+      # Epics bundle rpm should be converted to require devel versions of packages
       - name: Install required system packages
         run: |
-          dnf -y install curl-devel zeromq-devel zlib-devel blosc-devel hdf5 libtiff libjpeg libaec libxml2
+          dnf -y install curl-devel zeromq-devel zlib-devel blosc-devel hdf5-devel libtiff-devel libjpeg-devel libaec-devel libxml2-devel
 
       - name: Build ADXSPD driver and unit tests
         run: |
