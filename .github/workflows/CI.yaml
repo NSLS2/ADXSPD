@@ -110,7 +110,7 @@ jobs:
 
       - name: Install required system packages
         run: |
-          dnf -y install curl-devel zeromq-devel zlib-devel
+          dnf -y install curl-devel zeromq-devel zlib-devel blosc-devel
 
       - name: Build ADXSPD driver and unit tests
         run: |
