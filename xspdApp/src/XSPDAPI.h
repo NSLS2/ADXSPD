@@ -91,7 +91,6 @@ class API {
     Detector* Initialize(string deviceId = "");
     virtual ~API() {}
 
-
     void GetVersionInfo();
     string GetXSPDVersion();
     string GetLibXSPVersion();

@@ -21,7 +21,7 @@ else
   PROD_SYS_LIBS  += zmq
 endif
 
-PROD_SYS_LIBS += curl z
+PROD_SYS_LIBS += curl
 
 include $(ADCORE)/ADApp/commonDriverMakefile
 

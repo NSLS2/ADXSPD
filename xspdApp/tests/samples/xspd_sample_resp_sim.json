@@ -122,7 +122,8 @@
         },
         {
             "path": "lambda/shuffle_mode",
-            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+            "description":
+                "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
         },
         {
             "path": "lambda/shutter_time",
@@ -262,7 +263,8 @@
         },
         {
             "path": "lambda/1/shuffle_mode",
-            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+            "description":
+                "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
         },
         {
             "path": "lambda/1/status",
@@ -549,7 +551,8 @@
         },
         {
             "path": "lambda/shuffle_mode",
-            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+            "description":
+                "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
         },
         {
             "path": "lambda/shutter_time",
@@ -689,7 +692,8 @@
         },
         {
             "path": "lambda/1/shuffle_mode",
-            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+            "description":
+                "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
         },
         {
             "path": "lambda/1/status",

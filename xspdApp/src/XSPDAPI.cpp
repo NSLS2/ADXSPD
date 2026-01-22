@@ -50,7 +50,6 @@ string XSPD::API::GetDeviceAtIndex(int deviceIndex) {
  * @return Pointer to the initialized Detector object
  */
 XSPD::Detector* XSPD::API::Initialize(string deviceId) {
-
     // Get API version information
     json apiVersionInfo = SubmitRequest(this->baseUri + "/api", XSPD::RequestType::GET);
 
@@ -77,8 +76,8 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
 
     // Retrieve detector information
     json deviceInfo;
-    try{
-         deviceInfo = GetVar<json>("info");
+    try {
+        deviceInfo = GetVar<json>("info");
     } catch (out_of_range& e) {
         throw runtime_error("Failed to retrieve device info for device ID " + this->deviceId +
                             ": " + string(e.what()));
@@ -114,13 +113,13 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
         throw runtime_error("No data ports found for device ID " + this->deviceId);
 
     for (auto& dpInfo : dataPortInfo) {
-        if(!dpInfo.contains("id") || !dpInfo.contains("ip") || !dpInfo.contains("port"))
-            throw runtime_error("Data port information is missing 'id', 'ip', or 'port' field for device ID " +
-                                this->deviceId);
+        if (!dpInfo.contains("id") || !dpInfo.contains("ip") || !dpInfo.contains("port"))
+            throw runtime_error(
+                "Data port information is missing 'id', 'ip', or 'port' field for device ID " +
+                this->deviceId);
 
-        DataPort* pdataPort =
-            new DataPort(this, dpInfo["id"].get<string>(), dpInfo["ip"].get<string>(),
-                         dpInfo["port"].get<int>());
+        DataPort* pdataPort = new DataPort(this, dpInfo["id"].get<string>(),
+                                           dpInfo["ip"].get<string>(), dpInfo["port"].get<int>());
         this->detector->RegisterDataPort(pdataPort);
     }
 

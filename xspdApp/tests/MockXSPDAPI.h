@@ -14,7 +14,8 @@ class MockXSPDAPI : public XSPD::API {
     void MockGetVarRequest(string variableEndpoint, json* alternateResponse = nullptr);
     void MockRepeatedGetRequest(string endpoint, json* alternateResponse = nullptr);
     void MockInitializationSeq(string deviceId = "lambda01");
-    // void MockIncompleteInitializationSeq(XSPD::APIState stopAtState, std::string deviceId = "lambda01");
+    // void MockIncompleteInitializationSeq(XSPD::APIState stopAtState, std::string deviceId =
+    // "lambda01");
     XSPD::Detector* MockInitialization(string deviceId = "lambda01");
     void MockAPIVerionCheck();
 

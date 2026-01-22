@@ -3,23 +3,22 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-
 TEST_F(TestXSPDAPI, TestGetApiVersionNotInitialized) {
-    EXPECT_THAT([&]() { this->mockXSPDAPI->GetApiVersion(); },
-                testing::ThrowsMessage<std::runtime_error>(
-                    testing::HasSubstr("XSPD API not initialized")));
+    EXPECT_THAT(
+        [&]() { this->mockXSPDAPI->GetApiVersion(); },
+        testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr("XSPD API not initialized")));
 }
 
 TEST_F(TestXSPDAPI, TestGetXSPDVersionNotInitialized) {
-    EXPECT_THAT([&]() { this->mockXSPDAPI->GetXSPDVersion(); },
-                testing::ThrowsMessage<std::runtime_error>(
-                    testing::HasSubstr("XSPD API not initialized")));
+    EXPECT_THAT(
+        [&]() { this->mockXSPDAPI->GetXSPDVersion(); },
+        testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr("XSPD API not initialized")));
 }
 
 TEST_F(TestXSPDAPI, TestGetLibXSPVersionNotInitialized) {
-    EXPECT_THAT([&]() { this->mockXSPDAPI->GetLibXSPVersion(); },
-                testing::ThrowsMessage<std::runtime_error>(
-                    testing::HasSubstr("XSPD API not initialized")));
+    EXPECT_THAT(
+        [&]() { this->mockXSPDAPI->GetLibXSPVersion(); },
+        testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr("XSPD API not initialized")));
 }
 
 TEST_F(TestXSPDAPI, TestGetVersionInfoAfterInitialization) {
@@ -78,7 +77,8 @@ TEST_F(TestXSPDAPI, TestAPIInitNoDeviceInfo) {
 
 TEST_F(TestXSPDAPI, TestAPIInitNoDetectors) {
     InSequence seq;
-    json modifiedInfoResp = this->mockXSPDAPI->GetSampleResp("devices/lambda01/variables?path=info");
+    json modifiedInfoResp =
+        this->mockXSPDAPI->GetSampleResp("devices/lambda01/variables?path=info");
     modifiedInfoResp["value"]["detectors"] = json::array();
     this->mockXSPDAPI->MockAPIVerionCheck();
     this->mockXSPDAPI->MockGetRequest("devices");
@@ -88,28 +88,32 @@ TEST_F(TestXSPDAPI, TestAPIInitNoDetectors) {
                     testing::HasSubstr("No detector information found for device ID lambda01")));
 }
 
-TEST_F(TestXSPDAPI, TestAPIInitNoDetectorID){
+TEST_F(TestXSPDAPI, TestAPIInitNoDetectorID) {
     InSequence seq;
-    json modifiedInfoResp = this->mockXSPDAPI->GetSampleResp("devices/lambda01/variables?path=info");
+    json modifiedInfoResp =
+        this->mockXSPDAPI->GetSampleResp("devices/lambda01/variables?path=info");
     modifiedInfoResp["value"]["detectors"][0].erase("detector-id");
     this->mockXSPDAPI->MockAPIVerionCheck();
     this->mockXSPDAPI->MockGetRequest("devices");
     this->mockXSPDAPI->MockGetVarRequest("info", &modifiedInfoResp);
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("lambda01"); },
                 testing::ThrowsMessage<std::runtime_error>(
-                    testing::HasSubstr("Detector information is missing 'detector-id' or 'modules' field for device ID lambda01")));
+                    testing::HasSubstr("Detector information is missing 'detector-id' or 'modules' "
+                                       "field for device ID lambda01")));
 }
 
 TEST_F(TestXSPDAPI, TestAPIInitNoModules) {
     InSequence seq;
-    json modifiedInfoResp = this->mockXSPDAPI->GetSampleResp("devices/lambda01/variables?path=info");
+    json modifiedInfoResp =
+        this->mockXSPDAPI->GetSampleResp("devices/lambda01/variables?path=info");
     modifiedInfoResp["value"]["detectors"][0].erase("modules");
     this->mockXSPDAPI->MockAPIVerionCheck();
     this->mockXSPDAPI->MockGetRequest("devices");
     this->mockXSPDAPI->MockGetVarRequest("info", &modifiedInfoResp);
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("lambda01"); },
                 testing::ThrowsMessage<std::runtime_error>(
-                    testing::HasSubstr("Detector information is missing 'detector-id' or 'modules' field for device ID lambda01")));
+                    testing::HasSubstr("Detector information is missing 'detector-id' or 'modules' "
+                                       "field for device ID lambda01")));
 }
 
 TEST_F(TestXSPDAPI, TestAPIInitNoDataPorts) {
@@ -135,7 +139,8 @@ TEST_F(TestXSPDAPI, TestAPIInitMissingDataPortInfo) {
     this->mockXSPDAPI->MockGetRequest("devices/lambda01", &modifiedDeviceInfo);
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("lambda01"); },
                 testing::ThrowsMessage<std::runtime_error>(
-                    testing::HasSubstr("Data port information is missing 'id', 'ip', or 'port' field for device ID lambda01")));
+                    testing::HasSubstr("Data port information is missing 'id', 'ip', or 'port' "
+                                       "field for device ID lambda01")));
 }
 
 TEST_F(TestXSPDAPI, TestAPIInitNoDeviceId) {
@@ -173,26 +178,22 @@ TEST_F(TestXSPDAPI, TestGetValidEndpoint) {
 TEST_F(TestXSPDAPI, TestGetInvalidEndpoint) {
     this->mockXSPDAPI->MockInitialization();
     this->mockXSPDAPI->MockGetRequest("invalid/endpoint");
-    EXPECT_THAT(
-        [&]() {
-            this->mockXSPDAPI->Get("invalid/endpoint");
-        },
-        testing::ThrowsMessage<std::runtime_error>(
-            testing::HasSubstr("Failed to get data from localhost:8008/api/v1/invalid/endpoint")));
+    EXPECT_THAT([&]() { this->mockXSPDAPI->Get("invalid/endpoint"); },
+                testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr(
+                    "Failed to get data from localhost:8008/api/v1/invalid/endpoint")));
 }
 
 TEST_F(TestXSPDAPI, TestReadVarFromRespValidInt) {
-
     json response = json{{"status", 1}};
     int status = this->mockXSPDAPI->ReadVarFromResp<int>(response, "status", "status");
     ASSERT_EQ(status, 1);
 }
 
 TEST_F(TestXSPDAPI, TestReadVarFromRespValidString) {
-
     json response = json{{"message", "success"}};
 
-    std::string message = this->mockXSPDAPI->ReadVarFromResp<std::string>(response, "message", "message");
+    std::string message =
+        this->mockXSPDAPI->ReadVarFromResp<std::string>(response, "message", "message");
     ASSERT_EQ(message, "success");
 }
 
@@ -254,14 +255,12 @@ TEST_F(TestXSPDAPI, TestGetIntDetectorVar) {
     ASSERT_EQ(intValue, 12);
 }
 
-
 TEST_F(TestXSPDAPI, TestSettingHighThresholdFirstThrowsError) {
     XSPD::Detector* pdet = this->mockXSPDAPI->MockInitialization();
 
     this->mockXSPDAPI->MockGetVarRequest("lambda/thresholds");
 
-    ASSERT_THAT(
-        [&]() { pdet->SetThreshold(XSPD::Threshold::HIGH, 100); },
-        testing::ThrowsMessage<std::invalid_argument>(
-            testing::HasSubstr("Must set low threshold before setting high threshold")));
+    ASSERT_THAT([&]() { pdet->SetThreshold(XSPD::Threshold::HIGH, 100); },
+                testing::ThrowsMessage<std::invalid_argument>(
+                    testing::HasSubstr("Must set low threshold before setting high threshold")));
 }
