@@ -53,36 +53,29 @@ jobs:
           CHECK_RELEASE=NO
           BUILD_IOCS=YES
           BUILD_TESTS=YES
+
           WITH_BOOST=NO
-          BOOST_EXTERNAL=YES
           WITH_PVA=YES
           WITH_QSRV=YES
           WITH_BLOSC=YES
-          BLOSC_EXTERNAL=NO
-          WITH_BITSHUFFLE=YES
-          BITSHUFFLE_EXTERNAL=NO
+          BLOSC_EXTERNAL=YES
+          WITH_BITSHUFFLE=NO
           WITH_GRAPHICSMAGICK=NO
-          GRAPHICSMAGICK_EXTERNAL=NO
-          GRAPHICSMAGICK_PREFIX_SYMBOLS=YES
           WITH_HDF5=YES
-          HDF5_EXTERNAL=NO
+          HDF5_EXTERNAL=YES
           WITH_JSON=YES
           WITH_JPEG=YES
-          JPEG_EXTERNAL=NO
-          WITH_NETCDF=YES
-          NETCDF_EXTERNAL=NO
-          WITH_NEXUS=YES
-          NEXUS_EXTERNAL=NO
+          JPEG_EXTERNAL=YES
+          WITH_NETCDF=NO
+          WITH_NEXUS=NO
           WITH_OPENCV=NO
-          OPENCV_EXTERNAL=YES
-          WITH_OPENCV_VIDEO=YES
           WITH_SZIP=YES
-          SZIP_EXTERNAL=NO
+          SZIP_EXTERNAL=YES
           WITH_TIFF=YES
-          TIFF_EXTERNAL=NO
-          XML2_EXTERNAL=NO
+          TIFF_EXTERNAL=YES
+          XML2_EXTERNAL=YES
           WITH_ZLIB=YES
-          ZLIB_EXTERNAL=NO
+          ZLIB_EXTERNAL=YES
           EOF
 
           echo "CONFIG_SITE.local created:"

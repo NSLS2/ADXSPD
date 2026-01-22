@@ -15,7 +15,7 @@ TestADXSPD_SRCS += MockXSPDAPI.cpp
 # Add additional test source files here
 # TestADXSPD_SRCS +=
 
-TestADXSPD_LIBS += ADXSPD ADBase asyn cpr gtest gmock $(EPICS_BASE_IOC_LIBS) xml2
+TestADXSPD_LIBS += ADXSPD ADBase asyn cpr gtest gmock $(EPICS_BASE_IOC_LIBS)
 
 ifdef ZMQ_LIB
   zmq_DIR        += $(ZMQ_LIB)
