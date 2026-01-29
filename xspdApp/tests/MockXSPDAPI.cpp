@@ -57,6 +57,39 @@ void MockXSPDAPI::MockRepeatedGetRequest(string endpoint, json* alternateRespons
     std::cout << "Returning response: " << response.dump(4) << std::endl;
 }
 
+void MockXSPDAPI::MockSetRequest(string endpoint, json* alternateResponse) {
+    string uri = "localhost:8008/api/v1/" + endpoint;
+    string rbUri = "localhost:8008/api/v1/" + endpoint.substr(0, endpoint.find_last_of("&"));
+
+    string newValue = endpoint.substr(endpoint.find_last_of('=') + 1);
+
+    // For vectors, we pass them without brackets, but add them back here to make them a valid JSON list.
+    if (newValue.find(",") != string::npos) {
+        newValue = "[" + newValue + "]";
+    }
+
+    json newValueJson = json::parse(newValue);
+
+    if (!this->sampleResponses.contains(rbUri)) {
+        EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::PUT))
+            .WillOnce(Throw(std::runtime_error("Failed to put data to " + uri)));
+        std::cout << "Mocked PUT request to URI: " << uri << std::endl;
+        std::cout << "Mocking non 200 response code." << std::endl;
+    } else {
+        json newResponse = this->sampleResponses[rbUri];
+        newResponse["value"] = newValueJson;
+
+        json response = alternateResponse ? *alternateResponse : newResponse;
+        EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::PUT)).WillOnce(Return(response));
+        std::cout << "Mocked PUT request to URI: " << uri << std::endl;
+        std::cout << "Returning response: " << response.dump(4) << std::endl;
+    }
+}
+
+void MockXSPDAPI::MockSetVarRequest(string variableEndpoint, json* alternateResponse) {
+    this->MockSetRequest("devices/lambda01/variables?path=" + variableEndpoint, alternateResponse);
+}
+
 // void MockXSPDAPI::MockIncompleteInitializationSeq(XSPD::APIState stopAtState, std::string
 // deviceId) {
 //     InSequence seq;

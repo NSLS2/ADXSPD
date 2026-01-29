@@ -286,3 +286,14 @@ TEST_F(TestXSPDAPI, TestSettingHighThresholdFirstThrowsError) {
                 testing::ThrowsMessage<std::invalid_argument>(
                     testing::HasSubstr("Must set low threshold before setting high threshold")));
 }
+
+TEST_F(TestXSPDAPI, TestSetThresholdsLowLevel) {
+    XSPD::Detector* pdet = this->mockXSPDAPI->MockInitialization();
+    this->mockXSPDAPI->MockSetVarRequest("lambda/thresholds&value=1.0,2.0");
+
+    vector<double> thresholds = pdet->SetVar<std::string, std::vector<double>>("thresholds", "1.0,2.0");
+    size_t expectedSize = 2;
+    ASSERT_EQ(thresholds.size(), expectedSize);
+    ASSERT_DOUBLE_EQ(thresholds[0], 1.0);
+    ASSERT_DOUBLE_EQ(thresholds[1], 2.0);
+}
