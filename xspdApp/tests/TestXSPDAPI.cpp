@@ -286,3 +286,41 @@ TEST_F(TestXSPDAPI, TestSettingHighThresholdFirstThrowsError) {
                 testing::ThrowsMessage<std::invalid_argument>(
                     testing::HasSubstr("Must set low threshold before setting high threshold")));
 }
+
+TEST_F(TestXSPDAPI, TestSetThresholdsLowLevel) {
+    XSPD::Detector* pdet = this->mockXSPDAPI->MockInitialization();
+    this->mockXSPDAPI->MockSetVarRequest("lambda/thresholds&value=1.000000,2.000000");
+
+    vector<double> thresholds = pdet->SetVar<std::string, std::vector<double>>("thresholds", "1.000000,2.000000");
+    size_t expectedSize = 2;
+    ASSERT_EQ(thresholds.size(), expectedSize);
+    ASSERT_DOUBLE_EQ(thresholds[0], 1.0);
+    ASSERT_DOUBLE_EQ(thresholds[1], 2.0);
+}
+
+TEST_F(TestXSPDAPI, TestSetThresholdsCorrectOrder) {
+    XSPD::Detector* pdet = this->mockXSPDAPI->MockInitialization();
+
+    this->mockXSPDAPI->MockGetVarRequest("lambda/thresholds");
+    this->mockXSPDAPI->MockSetVarRequest("lambda/thresholds&value=1.000000");
+
+    double lowThreshold = pdet->SetThreshold(XSPD::Threshold::LOW, 1.0);
+    ASSERT_DOUBLE_EQ(lowThreshold, 1.0);
+
+    this->mockXSPDAPI->MockGetVarRequest("lambda/thresholds");
+    this->mockXSPDAPI->MockSetVarRequest("lambda/thresholds&value=1.000000,5.000000");
+
+    double highThreshold = pdet->SetThreshold(XSPD::Threshold::HIGH, 5.0);
+    ASSERT_DOUBLE_EQ(highThreshold, 5.0);
+
+    this->mockXSPDAPI->MockGetVarRequest("lambda/thresholds");
+    this->mockXSPDAPI->MockSetVarRequest("lambda/thresholds&value=1.000000,7.000000");
+
+    highThreshold = pdet->SetThreshold(XSPD::Threshold::HIGH, 7.0);
+    ASSERT_DOUBLE_EQ(highThreshold, 7.0);
+
+    this->mockXSPDAPI->MockGetVarRequest("lambda/thresholds");
+    this->mockXSPDAPI->MockSetVarRequest("lambda/thresholds&value=2.000000,7.000000");
+    lowThreshold = pdet->SetThreshold(XSPD::Threshold::LOW, 2.0);
+    ASSERT_DOUBLE_EQ(lowThreshold, 2.0);
+}

@@ -57,6 +57,41 @@ void MockXSPDAPI::MockRepeatedGetRequest(string endpoint, json* alternateRespons
     std::cout << "Returning response: " << response.dump(4) << std::endl;
 }
 
+void MockXSPDAPI::MockSetRequest(string endpoint, json* alternateResponse) {
+    string uri = "localhost:8008/api/v1/" + endpoint;
+    string rbUri = "localhost:8008/api/v1/" + endpoint.substr(0, endpoint.find_last_of("&"));
+
+    string newValue = endpoint.substr(endpoint.find_last_of('=') + 1);
+
+    // TODO: Thresholds are a vector but passed as a string value. Consider if there is a better way of handling
+    // these
+    if (rbUri.find("thresholds") != string::npos) {
+        newValue = "[" + newValue + "]";
+    }
+
+    json newValueJson = json::parse(newValue);
+
+    if (!this->sampleResponses.contains(rbUri)) {
+        EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::PUT))
+            .WillOnce(Throw(std::runtime_error("Failed to put data to " + uri)));
+        std::cout << "Mocked PUT request to URI: " << uri << std::endl;
+        std::cout << "Mocking non 200 response code." << std::endl;
+    } else {
+
+        // Update our sample responses json with the new value
+        this->sampleResponses[rbUri]["value"] = newValueJson;
+
+        json response = alternateResponse ? *alternateResponse : this->sampleResponses[rbUri];
+        EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::PUT)).WillOnce(Return(response));
+        std::cout << "Mocked PUT request to URI: " << uri << std::endl;
+        std::cout << "Returning response: " << response.dump(4) << std::endl;
+    }
+}
+
+void MockXSPDAPI::MockSetVarRequest(string variableEndpoint, json* alternateResponse) {
+    this->MockSetRequest("devices/lambda01/variables?path=" + variableEndpoint, alternateResponse);
+}
+
 // void MockXSPDAPI::MockIncompleteInitializationSeq(XSPD::APIState stopAtState, std::string
 // deviceId) {
 //     InSequence seq;
