@@ -155,6 +155,7 @@ record(mbbi, "$(P)$(R)Compressor_RBV"){
 record(ao, "$(P)$(R)BeamEnergy"){
     field(DESC, "Beam energy")
     field(DTYP, "asynFloat64")
+    field(EGU, "keV")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_BEAM_ENERGY")
     field(VAL, "0.0")
     field(PINI, "NO")
@@ -163,6 +164,7 @@ record(ao, "$(P)$(R)BeamEnergy"){
 record(ai, "$(P)$(R)BeamEnergy_RBV"){
     field(DESC, "Beam energy readback")
     field(DTYP, "asynFloat64")
+    field(EGU, "keV")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_BEAM_ENERGY")
     field(SCAN, "I/O Intr")
 }
@@ -440,7 +442,7 @@ record(mbbo, "$(P)$(R)BitDepth"){
     field(TWST, "12 bit")
     field(THVL, "24")
     field(THST, "24 bit")
-    field(PINI, "NO")
+    field(PINI, "YES")
 }
 
 record(mbbi, "$(P)$(R)BitDepth_RBV"){

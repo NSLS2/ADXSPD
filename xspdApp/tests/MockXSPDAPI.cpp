@@ -63,8 +63,8 @@ void MockXSPDAPI::MockSetRequest(string endpoint, json* alternateResponse) {
 
     string newValue = endpoint.substr(endpoint.find_last_of('=') + 1);
 
-    // TODO: Thresholds are a vector but passed as a string value. Consider if there is a better way of handling
-    // these
+    // TODO: Thresholds are a vector but passed as a string value. Consider if there is a better way
+    // of handling these
     if (rbUri.find("thresholds") != string::npos) {
         newValue = "[" + newValue + "]";
     }
@@ -77,7 +77,6 @@ void MockXSPDAPI::MockSetRequest(string endpoint, json* alternateResponse) {
         std::cout << "Mocked PUT request to URI: " << uri << std::endl;
         std::cout << "Mocking non 200 response code." << std::endl;
     } else {
-
         // Update our sample responses json with the new value
         this->sampleResponses[rbUri]["value"] = newValueJson;
 
