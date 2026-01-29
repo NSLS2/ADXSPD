@@ -186,7 +186,7 @@ json XSPD::API::SubmitRequest(string uri, XSPD::RequestType reqType) {
         json parsedResponse = json::parse(response.text, nullptr, true, false, true);
         if (parsedResponse.empty()) throw runtime_error("Empty JSON response from " + uri);
 
-        std::cout << parsedResponse.dump(4) << std::endl;
+        // std::cout << parsedResponse.dump(4) << std::endl;
         return parsedResponse;
     } catch (json::parse_error& e) {
         throw runtime_error("Failed to parse JSON response from " + uri + ": " + string(e.what()));
@@ -280,7 +280,7 @@ double XSPD::Detector::SetThreshold(XSPD::Threshold threshold, double value) {
     }
 
     // Thresholds set as comma-separated string, read as vector<double>
-    string rbThresholdsStr = this->SetVar<string>("thresholds", thresholdsStr, "thresholds");
+    string rbThresholdsStr = this->SetVar<string>("thresholds", thresholdsStr);
     vector<double> rbThresholds = json::parse(rbThresholdsStr.c_str()).get<vector<double>>();
 
     if (rbThresholds.size() <= static_cast<size_t>(threshold))
