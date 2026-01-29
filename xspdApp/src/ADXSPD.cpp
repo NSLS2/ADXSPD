@@ -791,7 +791,8 @@ ADXSPD::ADXSPD(const char* portName, const char* ip, int portNum, const char* de
     monitorOpts.stackSize = epicsThreadGetStackSize(epicsThreadStackMedium);
     monitorOpts.joinable = 1;
     // this->monitorThreadId =
-    //     epicsThreadCreateOpt("monitorThread", (EPICSTHREADFUNC) monitorThreadC, this, &monitorOpts);
+    //     epicsThreadCreateOpt("monitorThread", (EPICSTHREADFUNC) monitorThreadC, this,
+    //     &monitorOpts);
 
     // when epics is exited, delete the instance of this class
     epicsAtExit(exitCallbackC, this);

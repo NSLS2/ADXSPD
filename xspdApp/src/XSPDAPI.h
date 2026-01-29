@@ -126,7 +126,8 @@ class API {
      * @tparam GetT The type of the readback value
      * @param varPath The path to the variable
      * @param value The value to set
-     * @param rbKey The key within the JSON response to extract the readback value from (default is "value")
+     * @param rbKey The key within the JSON response to extract the readback value from (default is
+     * "value")
      * @return GetT The readback value of the variable after setting
      */
     template <typename SetT, typename GetT>
@@ -200,7 +201,6 @@ class API {
     Detector* detector = nullptr;
 };
 
-
 class APIComponent {
    public:
     APIComponent(API* api, string id) : api(api), id(id) {}
@@ -228,7 +228,8 @@ class APIComponent {
      * @tparam GetT The type of the readback value
      * @param varName The name of the variable
      * @param value The value to set
-     * @param rbKey The key within the JSON response to extract the readback value from (default is "value")
+     * @param rbKey The key within the JSON response to extract the readback value from (default is
+     * "value")
      * @return GetT The readback value of the variable after setting
      */
     template <typename SetT, typename GetT>
