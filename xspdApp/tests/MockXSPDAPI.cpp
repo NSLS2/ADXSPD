@@ -63,8 +63,9 @@ void MockXSPDAPI::MockSetRequest(string endpoint, json* alternateResponse) {
 
     string newValue = endpoint.substr(endpoint.find_last_of('=') + 1);
 
-    // For vectors, we pass them without brackets, but add them back here to make them a valid JSON list.
-    if (newValue.find(",") != string::npos) {
+    // TODO: Thresholds are a vector but passed as a string value. Consider if there is a better way of handling
+    // these
+    if (rbUri.find("thresholds") != string::npos) {
         newValue = "[" + newValue + "]";
     }
 
@@ -76,10 +77,11 @@ void MockXSPDAPI::MockSetRequest(string endpoint, json* alternateResponse) {
         std::cout << "Mocked PUT request to URI: " << uri << std::endl;
         std::cout << "Mocking non 200 response code." << std::endl;
     } else {
-        json newResponse = this->sampleResponses[rbUri];
-        newResponse["value"] = newValueJson;
 
-        json response = alternateResponse ? *alternateResponse : newResponse;
+        // Update our sample responses json with the new value
+        this->sampleResponses[rbUri]["value"] = newValueJson;
+
+        json response = alternateResponse ? *alternateResponse : this->sampleResponses[rbUri];
         EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::PUT)).WillOnce(Return(response));
         std::cout << "Mocked PUT request to URI: " << uri << std::endl;
         std::cout << "Returning response: " << response.dump(4) << std::endl;
