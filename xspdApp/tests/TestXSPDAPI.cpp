@@ -21,6 +21,28 @@ TEST_F(TestXSPDAPI, TestGetLibXSPVersionNotInitialized) {
         testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr("XSPD API not initialized")));
 }
 
+TEST_F(TestXSPDAPI, TestGetDeviceIdNotInitialized) {
+    EXPECT_THAT(
+        [&]() { this->mockXSPDAPI->GetDeviceId(); },
+        testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr("XSPD API not initialized")));
+}
+
+TEST_F(TestXSPDAPI, TestGetSystemIdNotInitialized) {
+    EXPECT_THAT(
+        [&]() { this->mockXSPDAPI->GetSystemId(); },
+        testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr("XSPD API not initialized")));
+}
+
+TEST_F(TestXSPDAPI, TestGetDeviceIdAfterInitialization) {
+    this->mockXSPDAPI->MockInitialization();
+    ASSERT_EQ(this->mockXSPDAPI->GetDeviceId(), "lambda01");
+}
+
+TEST_F(TestXSPDAPI, TestGetSystemIdAfterInitialization) {
+    this->mockXSPDAPI->MockInitialization();
+    ASSERT_EQ(this->mockXSPDAPI->GetSystemId(), "SYSTEM");
+}
+
 TEST_F(TestXSPDAPI, TestGetVersionInfoAfterInitialization) {
     this->mockXSPDAPI->MockInitialization();
     ASSERT_EQ(this->mockXSPDAPI->GetApiVersion(), "1");

@@ -95,7 +95,8 @@ class API {
     string GetXSPDVersion();
     string GetLibXSPVersion();
     string GetApiVersion();
-    string GetDeviceId() { return this->deviceId; };
+    string GetDeviceId();
+    string GetSystemId();
 
     bool DeviceExists(string deviceId);
     string GetDeviceAtIndex(int deviceIndex);
@@ -180,7 +181,7 @@ class API {
     }
 
    private:
-    string baseUri, apiVersion, xspdVersion, deviceId, libxspVersion;
+    string baseUri, apiVersion, xspdVersion, libxspVersion, deviceId, systemId;
     Detector* detector = nullptr;
 };
 
