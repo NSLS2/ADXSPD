@@ -54,9 +54,9 @@ record(ai, "$(P)$(R)Voltage_RBV"){
 }
 
 record(ai, "$(P)$(R)SensorCurrent_RBV"){
-    field(DESC, "Sensor current rb in mA")
+    field(DESC, "Sensor current rb in uA")
     field(DTYP, "asynFloat64")
-    field(EGU, "mA")
+    field(EGU, "uA")
     field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_SENS_CURR")
     field(SCAN, "I/O Intr")
