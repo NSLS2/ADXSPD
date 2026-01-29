@@ -120,21 +120,21 @@ class API {
     }
 
     /**
-     * @brief Sets the value of a variable in the API
+     * @brief Sets the value of a variable in the API and returns the readback value
      *
-     * @tparam T The type of the variable to set
+     * @tparam SetT The type of the value to set
+     * @tparam GetT The type of the readback value
      * @param varPath The path to the variable
      * @param value The value to set
-     * @param rbKey The key within the JSON response to extract the readback value from (default is
-     * "value")
-     * @return T The readback value of the variable after setting
+     * @param rbKey The key within the JSON response to extract the readback value from (default is "value")
+     * @return GetT The readback value of the variable after setting
      */
-    template <typename T>
-    T SetVar(string varPath, T value, string rbKey = "value") {
+    template <typename SetT, typename GetT>
+    GetT SetVar(string varPath, SetT value, string rbKey = "value") {
         string valueAsStr;
-        if constexpr (std::is_same_v<T, string>) {
+        if constexpr (std::is_same_v<SetT, string>) {
             valueAsStr = value;
-        } else if constexpr (is_enum<T>::value) {
+        } else if constexpr (is_enum<SetT>::value) {
             auto enumString = magic_enum::enum_name(value);
             if (enumString.empty()) {
                 throw runtime_error("Failed to convert enum value to string for variable " +
@@ -147,7 +147,22 @@ class API {
 
         json response = this->Put("devices/" + this->deviceId + "/variables?path=" + varPath +
                                   "&value=" + valueAsStr);
-        return ReadVarFromResp<T>(response, varPath, rbKey);
+        return ReadVarFromResp<GetT>(response, varPath, rbKey);
+    }
+
+    /**
+     * @brief Sets the value of a variable in the API and returns the readback value
+     *
+     * @tparam T The type of the variable to set and readback
+     * @param varPath The path to the variable
+     * @param value The value to set
+     * @param rbKey The key within the JSON response to extract the readback value from (default is
+     * "value")
+     * @return T The readback value of the variable after setting
+     */
+    template <typename T>
+    T SetVar(string varPath, T value, string rbKey = "value") {
+        return this->SetVar<T, T>(varPath, value, rbKey);
     }
 
     void ExecCommand(string command);
@@ -185,13 +200,13 @@ class API {
     Detector* detector = nullptr;
 };
 
-class DataPort {
+
+class APIComponent {
    public:
-    DataPort(API* api, string dataPortId, string ip, int port)
-        : api(api), dataPortId(dataPortId), ip(ip), port(port) {}
-    virtual ~DataPort() = default;
-    string GetId() { return this->dataPortId; }
-    string GetURI() { return "tcp://" + this->ip + ":" + std::to_string(this->port); }
+    APIComponent(API* api, string id) : api(api), id(id) {}
+    virtual ~APIComponent() = default;
+    string GetId() { return this->id; }
+    API* GetAPI() { return this->api; }
 
     /**
      * @brief Retrieves the value of a variable from the DataPort
@@ -203,7 +218,22 @@ class DataPort {
      */
     template <typename T>
     T GetVar(string varName, string key = "value") {
-        return this->api->GetVar<T>(this->dataPortId + "/" + varName, key);
+        return this->api->GetVar<T>(this->id + "/" + varName, key);
+    }
+
+    /**
+     * @brief Sets the value of a variable in the DataPort and returns the readback value
+     *
+     * @tparam SetT The type of the value to set
+     * @tparam GetT The type of the readback value
+     * @param varName The name of the variable
+     * @param value The value to set
+     * @param rbKey The key within the JSON response to extract the readback value from (default is "value")
+     * @return GetT The readback value of the variable after setting
+     */
+    template <typename SetT, typename GetT>
+    GetT SetVar(string varName, SetT value, string rbKey = "value") {
+        return this->api->SetVar<SetT, GetT>(this->id + "/" + varName, value, rbKey);
     }
 
     /**
@@ -218,65 +248,43 @@ class DataPort {
      */
     template <typename T>
     T SetVar(string varName, T value, string rbKey = "value") {
-        return this->api->SetVar<T>(this->dataPortId + "/" + varName, value, rbKey);
+        return this->api->SetVar<T>(this->id + "/" + varName, value, rbKey);
     }
 
    private:
     API* api;
-    string dataPortId;
+    string id;
+};
+
+class DataPort : public APIComponent {
+   public:
+    DataPort(API* api, string id, string ip, int port)
+        : APIComponent(api, id), ip(ip), port(port) {}
+    virtual ~DataPort() = default;
+    string GetURI() { return "tcp://" + this->ip + ":" + std::to_string(this->port); }
+
+   private:
     string ip;
     int port;
 };
 
-class Module {
+class Module : public APIComponent {
    public:
-    Module(API* api, string moduleId, string moduleFirmware, vector<string> chipIds)
-        : api(api), moduleId(moduleId), moduleFirmware(moduleFirmware), chipIds(chipIds) {}
+    Module(API* api, string id, string moduleFirmware, vector<string> chipIds)
+        : APIComponent(api, id), moduleFirmware(moduleFirmware), chipIds(chipIds) {}
     virtual ~Module() = default;
-    string GetId() { return this->moduleId; }
     string GetFirmware() { return this->moduleFirmware; }
     vector<string> GetChipIds() { return this->chipIds; }
 
-    /**
-     * @brief Retrieves the value of a variable from the Module
-     *
-     * @tparam T The expected type of the variable
-     * @param varName The name of the variable
-     * @param key The key within the JSON response to extract the value from (default is "value")
-     * @return T The value of the variable
-     */
-    template <typename T>
-    T GetVar(string varName, string key = "value") {
-        return this->api->GetVar<T>(this->moduleId + "/" + varName, key);
-    }
-
-    /**
-     * @brief Sets the value of a variable in the Module
-     *
-     * @tparam T The type of the variable to set
-     * @param varName The name of the variable
-     * @param value The value to set
-     * @param rbKey The key within the JSON response to extract the readback value from (default is
-     * "value")
-     * @return T The readback value of the variable after setting
-     */
-    template <typename T>
-    T SetVar(string varName, T value, string rbKey = "value") {
-        return this->api->SetVar<T>(this->moduleId + "/" + varName, value, rbKey);
-    }
-
    private:
-    API* api;
-    string moduleId;
     string moduleFirmware;
     vector<string> chipIds;
 };
 
-class Detector {
+class Detector : public APIComponent {
    public:
-    Detector(API* api, string detectorId) : api(api), detectorId(detectorId) {}
+    Detector(API* api, string id) : APIComponent(api, id) {}
     virtual ~Detector() = default;
-    string GetId() { return this->detectorId; }
 
     double SetThreshold(XSPD::Threshold threshold, double value);
 
@@ -346,38 +354,10 @@ class Detector {
 
     DataPort* GetActiveDataPort() { return this->activeDataPort; }
 
-    /**
-     * @brief Gets a detector variable
-     *
-     * @tparam T The expected type of the variable
-     * @param varName The name of the variable
-     * @param key The key within the JSON response to extract the value from (default is "value")
-     * @return T The value of the variable
-     */
-    template <typename T>
-    T GetVar(string varName, string key = "value") {
-        return this->api->GetVar<T>(this->detectorId + "/" + varName, key);
-    }
-
-    /**
-     * @brief Sets the value of a detector variable
-     *
-     * @tparam T The type of the variable to set
-     * @param varName The name of the variable
-     * @param value The value to set
-     * @param rbKey The key within the JSON response to extract the readback value from
-     */
-    template <typename T>
-    T SetVar(string varName, T value, string rbKey = "value") {
-        return this->api->SetVar<T>(this->detectorId + "/" + varName, value, rbKey);
-    }
-
-    void ExecCommand(string command) { this->api->ExecCommand(this->detectorId + "/" + command); }
+    void ExecCommand(string command) { this->GetAPI()->ExecCommand(this->GetId() + "/" + command); }
 
    private:
     Status status;
-    API* api;
-    string detectorId;
     vector<Module*> modules;
     map<string, DataPort*> dataPorts;
     DataPort* activeDataPort = nullptr;
