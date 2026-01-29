@@ -78,6 +78,7 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
     json deviceInfo;
     try {
         deviceInfo = GetVar<json>("info");
+        this->systemId = deviceInfo["id"].get<string>();
     } catch (out_of_range& e) {
         throw runtime_error("Failed to retrieve device info for device ID " + this->deviceId +
                             ": " + string(e.what()));
@@ -154,6 +155,26 @@ string XSPD::API::GetApiVersion() {
 string XSPD::API::GetXSPDVersion() {
     if (this->xspdVersion.empty()) throw runtime_error("XSPD API not initialized!");
     return this->xspdVersion;
+}
+
+/**
+ * @brief Retrieves the device ID
+ *
+ * @return string The device ID string
+ */
+string XSPD::API::GetDeviceId() {
+    if (this->deviceId.empty()) throw runtime_error("XSPD API not initialized!");
+    return this->deviceId;
+}
+
+/**
+ * @brief Retrieves the system ID
+ *
+ * @return string The system ID string
+ */
+string XSPD::API::GetSystemId() {
+    if (this->systemId.empty()) throw runtime_error("XSPD API not initialized!");
+    return this->systemId;
 }
 
 /**
