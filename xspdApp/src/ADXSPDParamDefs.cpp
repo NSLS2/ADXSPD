@@ -24,8 +24,6 @@ void ADXSPD::createAllParams() {
     createParam(ADXSPD_LowThresholdString, asynParamFloat64, &ADXSPD_LowThreshold);
     createParam(ADXSPD_HighThresholdString, asynParamFloat64, &ADXSPD_HighThreshold);
     createParam(ADXSPD_FramesQueuedString, asynParamInt32, &ADXSPD_FramesQueued);
-    createParam(ADXSPD_GenFlatfieldString, asynParamInt32, &ADXSPD_GenFlatfield);
-    createParam(ADXSPD_ResetDetectorString, asynParamInt32, &ADXSPD_ResetDetector);
     createParam(ADXSPD_BitDepthString, asynParamInt32, &ADXSPD_BitDepth);
     createParam(ADXSPD_CrCorrString, asynParamInt32, &ADXSPD_CrCorr);
     createParam(ADXSPD_StatusIntervalString, asynParamFloat64, &ADXSPD_StatusInterval);

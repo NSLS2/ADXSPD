@@ -25,8 +25,6 @@
 #define ADXSPD_LowThresholdString "XSPD_LOW_THRESHOLD"
 #define ADXSPD_HighThresholdString "XSPD_HIGH_THRESHOLD"
 #define ADXSPD_FramesQueuedString "XSPD_FRAMES_QUEUED"
-#define ADXSPD_GenFlatfieldString "XSPD_GEN_FLATFIELD"
-#define ADXSPD_ResetDetectorString "XSPD_RESET_DETECTOR"
 #define ADXSPD_BitDepthString "XSPD_BIT_DEPTH"
 #define ADXSPD_CrCorrString "XSPD_CR_CORR"
 #define ADXSPD_StatusIntervalString "XSPD_STATUS_INTERVAL"
@@ -52,8 +50,6 @@ int ADXSPD_RoiRows;
 int ADXSPD_LowThreshold;
 int ADXSPD_HighThreshold;
 int ADXSPD_FramesQueued;
-int ADXSPD_GenFlatfield;
-int ADXSPD_ResetDetector;
 int ADXSPD_BitDepth;
 int ADXSPD_CrCorr;
 int ADXSPD_StatusInterval;

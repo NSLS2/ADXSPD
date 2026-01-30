@@ -574,7 +574,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             setIntegerParam(ADImageMode, ADImageSingle);
         else
             setIntegerParam(ADImageMode, ADImageMultiple);
-    } else if (function < ADXSPD_FIRST_PARAM) {
+    } else if (function < ADXSPD_FIRST_PARAM && function != ADTriggerMode) {
         status = ADDriver::writeInt32(pasynUser, value);
     } else {
         try {
@@ -845,7 +845,8 @@ ADXSPD::~ADXSPD() {
     delete this->pDetector;
     delete this->pApi;
 
-    this->shutdownPortDriver();
+    // This seems to intermittently segfault, leave commented for now.
+    // this->shutdownPortDriver();
 
     INFO("Done.");
 }

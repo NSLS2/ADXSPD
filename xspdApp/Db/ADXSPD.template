@@ -395,25 +395,6 @@ record(ai, "$(P)$(R)FramesQueued_RBV"){
     field(SCAN, "I/O Intr")
 }
 
-record(bo, "$(P)$(R)GenerateFF"){
-    field(DESC, "Generate flatfield")
-    field(DTYP, "asynInt32")
-    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_GEN_FLATFIELD")
-    field(ZNAM, "Abort")
-    field(ONAM, "Generate")
-    field(VAL, "0")
-    field(PINI, "NO")
-}
-
-record(bo, "$(P)$(R)ResetDetector"){
-    field(DESC, "Reset detector")
-    field(DTYP, "asynInt32")
-    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_RESET_DETECTOR")
-    field(ZNAM, "Abort")
-    field(ONAM, "Reset")
-    field(VAL, "0")
-    field(PINI, "NO")
-}
 
 record(mbbo, "$(P)$(R)BitDepth"){
     field(DESC, "Bit depth")
