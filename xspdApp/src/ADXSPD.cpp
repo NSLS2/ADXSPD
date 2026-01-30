@@ -148,8 +148,8 @@ void ADXSPD::acquisitionThread() {
     NDColorMode_t colorMode = NDColorModeMono;  // Only monochrome is supported.
     XSPD::CounterMode counterMode;
 
-    void* frameBuffer = nullptr;
-    void* prevFrameBuffer = nullptr;
+    // void* frameBuffer = nullptr;
+    // void* prevFrameBuffer = nullptr;
 
     int arrayCallbacks;
 
@@ -623,6 +623,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
                     "counter_mode", static_cast<XSPD::CounterMode>(value)));
                 for (auto& module : this->modules) {
                     module->getMaxNumImages();
+                    module->getFlatfieldState(); // FF is different for each counter mode
                 }
             } else if (function == ADXSPD_SaturationFlag) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
