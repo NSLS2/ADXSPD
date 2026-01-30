@@ -396,20 +396,6 @@ record(ai, "$(P)$(R)FramesQueued_RBV"){
     field(SCAN, "I/O Intr")
 }
 
-record(stringout, "$(P)$(R)PixelMask"){
-    field(DESC, "Pixel mask file path")
-    field(DTYP, "asynOctetWrite")
-    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_PIXEL_MASK")
-    field(PINI, "NO")
-}
-
-record(stringin, "$(P)$(R)PixelMask_RBV"){
-    field(DESC, "Pixel mask file path readback")
-    field(DTYP, "asynOctetRead")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_PIXEL_MASK")
-    field(SCAN, "I/O Intr")
-}
-
 record(bo, "$(P)$(R)GenerateFF"){
     field(DESC, "Generate flatfield")
     field(DTYP, "asynInt32")
