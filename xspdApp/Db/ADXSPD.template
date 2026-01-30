@@ -520,3 +520,7 @@ record(ao, "$(P)$(R)AcquirePeriod") {
 record(ao, "$(P)$(R)Gain") {
     field(DISA, 1)
 }
+
+record(ao, "$(P)$(R)NumExposures") {
+    field(DISA, 1)
+}
