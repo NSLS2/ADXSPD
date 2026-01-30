@@ -35,21 +35,13 @@ void ADXSPDModule::getFlatfieldState() {
     setIntegerParam(ADXSPDModule_FfEnabled,
                     this->module->GetVar<bool>("flatfield_enabled") ? 1 : 0);
 
-    vector<string> flatfieldTimestamps = this->module->GetVar<vector<string>>("flatfield_timestamp");
-    setStringParam(ADXSPDModule_LowThreshFfDate, flatfieldTimestamps[0].c_str());
-    if (static_cast<int>(flatfieldTimestamps.size()) > 1) {
-        setStringParam(ADXSPDModule_HighThreshFfDate, flatfieldTimestamps[1].c_str());
-    } else {
-        setStringParam(ADXSPDModule_HighThreshFfDate, "");
-    }
+    vector<string> ffTs = this->module->GetVar<vector<string>>("flatfield_timestamp");
+    setStringParam(ADXSPDModule_LowThreshFfDate, static_cast<int>(ffTs.size()) > 0 ? ffTs[0].c_str() : "");
+    setStringParam(ADXSPDModule_HighThreshFfDate, static_cast<int>(ffTs.size()) > 1 ? ffTs[1].c_str() : "");
 
-    vector<string> flatfieldAuthors = this->module->GetVar<vector<string>>("flatfield_author");
-    setStringParam(ADXSPDModule_LowThreshFfAuthor, flatfieldAuthors[0].c_str());
-    if (static_cast<int>(flatfieldAuthors.size()) > 1) {
-        setStringParam(ADXSPDModule_HighThreshFfAuthor, flatfieldAuthors[1].c_str());
-    } else {
-        setStringParam(ADXSPDModule_HighThreshFfAuthor, "");
-    }
+    vector<string> ffAuthors = this->module->GetVar<vector<string>>("flatfield_author");
+    setStringParam(ADXSPDModule_LowThreshFfAuthor, static_cast<int>(ffAuthors.size()) > 0 ? ffAuthors[0].c_str() : "");
+    setStringParam(ADXSPDModule_HighThreshFfAuthor, static_cast<int>(ffAuthors.size()) > 1 ? ffAuthors[1].c_str() : "");
 
     callParamCallbacks();
 }
