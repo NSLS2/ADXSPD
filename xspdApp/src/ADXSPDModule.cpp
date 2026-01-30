@@ -10,7 +10,7 @@
 #include "ADXSPDModule.h"
 
 void ADXSPDModule::checkStatus() {
-    // Example: Read module temperature and update parameter
+    // Module status/health checks
     setDoubleParam(ADXSPDModule_SensCurr, this->module->GetVar<double>("sensor_current"));
 
     vector<double> temps = this->module->GetVar<vector<double>>("temperature");
@@ -19,9 +19,39 @@ void ADXSPDModule::checkStatus() {
     setDoubleParam(ADXSPDModule_HumTemp, temps[2]);
 
     setDoubleParam(ADXSPDModule_Hum, this->module->GetVar<double>("humidity"));
-    // Add more status checks as needed
+
+    // Module flatfield state
+    setStringParam(ADXSPDModule_FfStatus, this->module->GetVar<string>("flatfield_status").c_str());
+
+    // Module readout check
+    setIntegerParam(ADXSPDModule_FramesQueued, this->module->GetVar<int>("frames_queued"));
+    getMaxNumImages();
+}
+
+void ADXSPDModule::getFlatfieldState() {
+    setIntegerParam(ADXSPDModule_FfEnabled,
+                    this->module->GetVar<bool>("flatfield_enabled") ? 1 : 0);
+
+    vector<string> ffTs = this->module->GetVar<vector<string>>("flatfield_timestamp");
+    setStringParam(ADXSPDModule_LowThreshFfDate,
+                   static_cast<int>(ffTs.size()) > 0 ? ffTs[0].c_str() : "");
+    setStringParam(ADXSPDModule_HighThreshFfDate,
+                   static_cast<int>(ffTs.size()) > 1 ? ffTs[1].c_str() : "");
+
+    vector<string> ffAuthors = this->module->GetVar<vector<string>>("flatfield_author");
+    setStringParam(ADXSPDModule_LowThreshFfAuthor,
+                   static_cast<int>(ffAuthors.size()) > 0 ? ffAuthors[0].c_str() : "");
+    setStringParam(ADXSPDModule_HighThreshFfAuthor,
+                   static_cast<int>(ffAuthors.size()) > 1 ? ffAuthors[1].c_str() : "");
 
     callParamCallbacks();
+}
+
+int ADXSPDModule::getMaxNumImages() {
+    int maxFrames = this->module->GetVar<int>("max_frames");
+    setIntegerParam(ADXSPDModule_MaxFrames, maxFrames);
+    callParamCallbacks();
+    return maxFrames;
 }
 
 void ADXSPDModule::getInitialModuleState() {
@@ -32,13 +62,12 @@ void ADXSPDModule::getInitialModuleState() {
     setIntegerParam(ADXSPDModule_Compressor,
                     (int) this->module->GetVar<XSPD::Compressor>("compressor"));
 
-    setStringParam(ADXSPDModule_FfStatus, this->module->GetVar<string>("flatfield_status").c_str());
     setIntegerParam(ADXSPDModule_InterpMode,
                     (int) this->module->GetVar<XSPD::OnOff>("interpolation"));
 
     setIntegerParam(ADXSPDModule_NumCons, this->module->GetVar<int>("n_connectors"));
 
-    setIntegerParam(ADXSPDModule_MaxFrames, this->module->GetVar<int>("max_frames"));
+    getFlatfieldState();
 
     vector<double> position = this->module->GetVar<vector<double>>("position");
     setDoubleParam(ADXSPDModule_PosX, position[0]);
@@ -55,38 +84,24 @@ void ADXSPDModule::getInitialModuleState() {
 
     setIntegerParam(ADXSPDModule_SatThresh, this->module->GetVar<int>("saturation_threshold"));
 
-    // vector<string> features = this->module->GetVar<vector<string>>("features");
-    // for(auto& featureStr : features) {
-    //     auto feature = magic_enum::enum_cast<ADXSPDModuleFeature>("FEAT_" + featureStr);
-    //     if (!feature.has_value()) {
-    //         ERR_ARGS("Unknown module feature: %s", featureStr.c_str());
-    //         continue;
-    //     }
-    //     // TODO: Make these into a bitmask parameter?
-    //     switch(feature.value()) {
-    //         case ADXSPDModuleFeature::FEAT_HV:
-    //             setIntegerParam(ADXSPDModule_HvSup,1);
-    //             break;
-    //         case ADXSPDModuleFeature::FEAT_1_6_BIT:
-    //             setIntegerParam(ADXSPDModule_16bitSup,1);
-    //             break;
-    //         case ADXSPDModuleFeature::FEAT_MEDIPIX_DAC_IO:
-    //             setIntegerParam(ADXSPDModule_MpixDacIoSup,1);
-    //             break;
-    //         case ADXSPDModuleFeature::FEAT_EXTENDED_GATING:
-    //             setIntegerParam(ADXSPDModule_ExtGatingSup,1);
-    //             break;
-    //     }
-    // }
+    // Module feature support is stored as a bitmask w/ 4 bits.
+    vector<string> features = this->module->GetVar<vector<string>>("features");
+    int featureBitmask = 0;
+    for (auto& featureStr : features) {
+        auto feature = magic_enum::enum_cast<XSPD::ModuleFeature>("FEAT_" + featureStr);
+        if (!feature.has_value()) {
+            ERR_ARGS("Unknown module feature: %s", featureStr.c_str());
+            continue;
+        } else {
+            featureBitmask += pow(2, static_cast<int>(feature.value()));
+        }
+    }
+    setIntegerParam(ADXSPDModule_FeatBitmask, featureBitmask);
+
+    setDoubleParam(ADXSPDModule_Voltage, this->module->GetVar<double>("voltage"));
+    setIntegerParam(ADXSPDModule_NumSubframes, this->module->GetVar<int>("n_subframes"));
 
     callParamCallbacks();
-}
-
-int ADXSPDModule::getMaxNumImages() {
-    int numImages = this->module->GetVar<int>("max_frames");
-    setIntegerParam(ADXSPDModule_MaxFrames, numImages);
-    callParamCallbacks();
-    return numImages;
 }
 
 ADXSPDModule::ADXSPDModule(const char* portName, XSPD::Module* module, ADXSPD* parent)

@@ -269,12 +269,28 @@ TEST_F(TestXSPDAPI, TestReadVarFromRespVectorOfIntsValid) {
 
 TEST_F(TestXSPDAPI, TestGetIntDetectorVar) {
     XSPD::Detector* pdet = this->mockXSPDAPI->MockInitialization();
-    json response = json{{"value", 42}};
 
     this->mockXSPDAPI->MockGetVarRequest("lambda/bit_depth");
 
     int intValue = pdet->GetVar<int>("bit_depth");
     ASSERT_EQ(intValue, 12);
+}
+
+TEST_F(TestXSPDAPI, TestGetBoolModuleVar) {
+    XSPD::Detector* pdet = this->mockXSPDAPI->MockInitialization();
+    this->mockXSPDAPI->MockGetVarRequest("lambda/1/flatfield_enabled");
+
+    bool boolValue = pdet->GetModules()[0]->GetVar<bool>("flatfield_enabled");
+
+    ASSERT_EQ(boolValue, false);
+
+    // Update to true
+    this->mockXSPDAPI->UpdateSampleResp(
+        "devices/lambda01/variables?path=lambda/1/flatfield_enabled", json{{"value", "true"}});
+    this->mockXSPDAPI->MockGetVarRequest("lambda/1/flatfield_enabled");
+
+    boolValue = pdet->GetModules()[0]->GetVar<bool>("flatfield_enabled");
+    ASSERT_EQ(boolValue, true);
 }
 
 TEST_F(TestXSPDAPI, TestSettingHighThresholdFirstThrowsError) {

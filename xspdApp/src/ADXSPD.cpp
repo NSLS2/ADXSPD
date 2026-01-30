@@ -82,15 +82,12 @@ asynStatus ADXSPD::acquireStart() {
 
     callParamCallbacks();
 
-    // Acquire a lock to prevent other API calls during acquisition start
-    this->lock();
     try {
         this->pDetector->ExecCommand("start");
     } catch (std::exception& e) {
         ERR_ARGS("Failed to start acquisition: %s", e.what());
         return asynError;
     }
-    this->unlock();
     return asynSuccess;
 }
 
@@ -387,6 +384,7 @@ void ADXSPD::monitorThread() {
         if (pollInterval <= ADXSPD_MIN_STATUS_POLL_INTERVAL)
             pollInterval = ADXSPD_MIN_STATUS_POLL_INTERVAL;
 
+        this->lock();
         XSPD::Status status = this->pDetector->GetVar<XSPD::Status>("status");
         int adStatus = ADStatusIdle;
         switch (status) {
@@ -404,17 +402,19 @@ void ADXSPD::monitorThread() {
         }
         setIntegerParam(ADStatus, adStatus);
 
-        if (status != XSPD::Status::BUSY) {
-            // Lock the driver here, so we can't start
-            // an acquisition while reading module statuses
-            this->lock();
-            for (auto& module : this->modules) {
-                module->checkStatus();
-            }
-            this->unlock();
-        }
+        // Update the state of counter mode and frames queued
+        setIntegerParam(
+            ADXSPD_CounterMode,
+            static_cast<int>(this->pDetector->GetVar<XSPD::CounterMode>("counter_mode")));
+        setIntegerParam(ADXSPD_FramesQueued,
+                        this->pDetector->GetActiveDataPort()->GetVar<int>("frames_queued"));
 
-        // TODO: Allow for setting the polling interval via a PV
+        // Reading out module status takes too long.
+        // for (auto& module : this->modules) {
+        //    module->checkStatus();
+        //}
+        this->unlock();
+
         if (epicsEventWaitWithTimeout(this->shutdownEventId, pollInterval) == epicsEventWaitOK) {
             INFO("Shutdown event received, exiting monitor thread...");
             break;
@@ -495,6 +495,9 @@ void ADXSPD::getInitialDetState() {
         setIntegerParam(ADMaxSizeY, maxSizeY);
         setIntegerParam(ADSizeX, maxSizeX);
         setIntegerParam(ADSizeY, maxSizeY);
+
+        setIntegerParam(ADXSPD_FramesQueued,
+                        this->pDetector->GetActiveDataPort()->GetVar<int>("frames_queued"));
 
         setIntegerParam(ADXSPD_RoiRows, this->pDetector->GetVar<int>("roi_rows"));
 
@@ -790,9 +793,8 @@ ADXSPD::ADXSPD(const char* portName, const char* ip, int portNum, const char* de
     monitorOpts.priority = epicsThreadPriorityMedium;
     monitorOpts.stackSize = epicsThreadGetStackSize(epicsThreadStackMedium);
     monitorOpts.joinable = 1;
-    // this->monitorThreadId =
-    //     epicsThreadCreateOpt("monitorThread", (EPICSTHREADFUNC) monitorThreadC, this,
-    //     &monitorOpts);
+    this->monitorThreadId =
+        epicsThreadCreateOpt("monitorThread", (EPICSTHREADFUNC) monitorThreadC, this, &monitorOpts);
 
     // when epics is exited, delete the instance of this class
     epicsAtExit(exitCallbackC, this);
