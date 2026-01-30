@@ -266,17 +266,17 @@ void ADXSPD::acquisitionThread() {
             XSPD::Compressor compressor;
             getIntegerParam(ADXSPD_Compressor, (int*) &compressor);
 
-            if (counterMode == XSPD::CounterMode::DUAL)
-                frameBuffer = calloc(1, arrayInfo.totalBytes);
-            else
-                frameBuffer = pArray->pData;
+            // if (counterMode == XSPD::CounterMode::DUAL)
+            //     frameBuffer = calloc(1, arrayInfo.totalBytes);
+            // else
+            //     frameBuffer = pArray->pData;
 
             bool decompressOK = true;
             if (compressor == XSPD::Compressor::ZLIB) {
                 // Decompress using zlib
                 size_t decompressedSize;
                 int zlibStatus =
-                    uncompress((Bytef*) frameBuffer, &decompressedSize,
+                    uncompress((Bytef*) pArray->pData, &decompressedSize,
                                (Bytef*) zmq_msg_data(&frameMessages[2]), frameSizeBytes);
                 if (zlibStatus != Z_OK) {
                     ERR_ARGS("Failed to decompress frame data with zlib, status code %d",
@@ -290,7 +290,7 @@ void ADXSPD::acquisitionThread() {
                 }
             } else if (compressor == XSPD::Compressor::BLOSC) {
                 size_t decompressSize;
-                decompressSize = blosc_decompress(zmq_msg_data(&frameMessages[2]), frameBuffer,
+                decompressSize = blosc_decompress(zmq_msg_data(&frameMessages[2]), pArray->pData,
                                                   arrayInfo.totalBytes);
                 if (decompressSize != arrayInfo.totalBytes) {
                     ERR_ARGS(
@@ -301,44 +301,42 @@ void ADXSPD::acquisitionThread() {
                 }
             } else {
                 // Copy data from new frame to pArray
-                memcpy(frameBuffer, zmq_msg_data(&frameMessages[2]), arrayInfo.totalBytes);
+                memcpy(pArray->pData, zmq_msg_data(&frameMessages[2]), arrayInfo.totalBytes);
             }
 
             bool subtractOk = true;
-            if (counterMode == XSPD::CounterMode::DUAL && prevFrameBuffer != nullptr) {
-                switch (dataType) {
-                    case NDUInt8:
-                        this->subtractFrames<uint8_t>(frameBuffer, prevFrameBuffer, pArray->pData,
-                                                      arrayInfo.totalBytes);
-                        break;
-                    case NDUInt16:
-                        this->subtractFrames<uint16_t>(frameBuffer, prevFrameBuffer, pArray->pData,
-                                                       arrayInfo.totalBytes);
-                        break;
-                    case NDUInt32:
-                        this->subtractFrames<uint32_t>(frameBuffer, prevFrameBuffer, pArray->pData,
-                                                       arrayInfo.totalBytes);
-                        break;
-                    default:
-                        ERR("Unsupported data type for frame subtraction");
-                        subtractOk = false;
-                        break;
-                }
+            // if (counterMode == XSPD::CounterMode::DUAL && prevFrameBuffer != nullptr) {
+            //     switch (dataType) {
+            //         case NDUInt8:
+            //             this->subtractFrames<uint8_t>(frameBuffer, prevFrameBuffer, pArray->pData,
+            //                                           arrayInfo.totalBytes);
+            //             break;
+            //         case NDUInt16:
+            //             this->subtractFrames<uint16_t>(frameBuffer, prevFrameBuffer, pArray->pData,
+            //                                            arrayInfo.totalBytes);
+            //             break;
+            //         case NDUInt32:
+            //             this->subtractFrames<uint32_t>(frameBuffer, prevFrameBuffer, pArray->pData,
+            //                                            arrayInfo.totalBytes);
+            //             break;
+            //         default:
+            //             ERR("Unsupported data type for frame subtraction");
+            //             subtractOk = false;
+            //             break;
+            //     }
 
-                // Clear frameBuffers
-                free(prevFrameBuffer);
-                free(frameBuffer);
+            //     // Clear frameBuffers
+            //     free(prevFrameBuffer);
+            //     free(frameBuffer);
 
-            } else if (counterMode == XSPD::CounterMode::DUAL && prevFrameBuffer == nullptr) {
-                // Store the current frame as the previous frame for the next iteration
-                prevFrameBuffer = frameBuffer;
-                frameBuffer = nullptr;
-                subtractOk = false;
-            }
+            // } else if (counterMode == XSPD::CounterMode::DUAL && prevFrameBuffer == nullptr) {
+            //     // Store the current frame as the previous frame for the next iteration
+            //     prevFrameBuffer = frameBuffer;
+            //     frameBuffer = nullptr;
+            //     subtractOk = false;
+            // }
 
             if (decompressOK && subtractOk) {
-                DEBUG("Copied frame to framebuffer.");
-
                 // increment the array counter
                 int arrayCounter;
                 getIntegerParam(NDArrayCounter, &arrayCounter);
@@ -371,8 +369,8 @@ void ADXSPD::acquisitionThread() {
         }
 
         // If framebuffers are still allocated, clear them
-        if (frameBuffer != nullptr) free(frameBuffer);
-        if (prevFrameBuffer != nullptr) free(prevFrameBuffer);
+        // if (frameBuffer != nullptr) free(frameBuffer);
+        // if (prevFrameBuffer != nullptr) free(prevFrameBuffer);
 
         // refresh all PVs
         callParamCallbacks();
