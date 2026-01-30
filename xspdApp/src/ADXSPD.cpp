@@ -402,14 +402,11 @@ void ADXSPD::monitorThread() {
         }
         setIntegerParam(ADStatus, adStatus);
 
-        // Update the state of counter mode and frames queued
-        setIntegerParam(
-            ADXSPD_CounterMode,
-            static_cast<int>(this->pDetector->GetVar<XSPD::CounterMode>("counter_mode")));
         setIntegerParam(ADXSPD_FramesQueued,
                         this->pDetector->GetActiveDataPort()->GetVar<int>("frames_queued"));
 
-        // Reading out module status takes too long.
+        // Reading out module status takes too long. Probably should become a "GetModuleStatus"
+        // PV that can have its Scan rate updated from I/O Intr to some rate.
         // for (auto& module : this->modules) {
         //    module->checkStatus();
         //}
