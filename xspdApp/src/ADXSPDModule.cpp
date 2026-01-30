@@ -10,6 +10,7 @@
 #include "ADXSPDModule.h"
 
 void ADXSPDModule::checkStatus() {
+    // Module status/health checks
     setDoubleParam(ADXSPDModule_SensCurr, this->module->GetVar<double>("sensor_current"));
 
     vector<double> temps = this->module->GetVar<vector<double>>("temperature");
@@ -18,7 +19,37 @@ void ADXSPDModule::checkStatus() {
     setDoubleParam(ADXSPDModule_HumTemp, temps[2]);
 
     setDoubleParam(ADXSPDModule_Hum, this->module->GetVar<double>("humidity"));
-    // Add more status checks as needed
+
+    // Module readout check
+    setIntegerParam(ADXSPDModule_MaxFrames, this->module->GetVar<int>("max_frames"));
+    setIntegerParam(ADXSPDModule_FramesQueued, this->module->GetVar<int>("frames_queued"));
+
+    // Module flatfield state
+    setStringParam(ADXSPDModule_FfStatus, this->module->GetVar<string>("flatfield_status").c_str());
+
+    callParamCallbacks();
+}
+
+void ADXSPDModule::getFlatfieldState() {
+
+    setIntegerParam(ADXSPDModule_FfEnabled,
+                    this->module->GetVar<bool>("flatfield_enabled") ? 1 : 0);
+
+    vector<string> flatfieldTimestamps = this->module->GetVar<vector<string>>("flatfield_timestamp");
+    setStringParam(ADXSPDModule_LowThreshFfDate, flatfieldTimestamps[0].c_str());
+    if (static_cast<int>(flatfieldTimestamps.size()) > 1) {
+        setStringParam(ADXSPDModule_HighThreshFfDate, flatfieldTimestamps[1].c_str());
+    } else {
+        setStringParam(ADXSPDModule_HighThreshFfDate, "");
+    }
+
+    vector<string> flatfieldAuthors = this->module->GetVar<vector<string>>("flatfield_author");
+    setStringParam(ADXSPDModule_LowThreshFfAuthor, flatfieldAuthors[0].c_str());
+    if (static_cast<int>(flatfieldAuthors.size()) > 1) {
+        setStringParam(ADXSPDModule_HighThreshFfAuthor, flatfieldAuthors[1].c_str());
+    } else {
+        setStringParam(ADXSPDModule_HighThreshFfAuthor, "");
+    }
 
     callParamCallbacks();
 }
@@ -31,15 +62,12 @@ void ADXSPDModule::getInitialModuleState() {
     setIntegerParam(ADXSPDModule_Compressor,
                     (int) this->module->GetVar<XSPD::Compressor>("compressor"));
 
-    setStringParam(ADXSPDModule_FfStatus, this->module->GetVar<string>("flatfield_status").c_str());
-    setIntegerParam(ADXSPDModule_FfEnabled,
-                    this->module->GetVar<bool>("flatfield_enabled") ? 1 : 0);
     setIntegerParam(ADXSPDModule_InterpMode,
                     (int) this->module->GetVar<XSPD::OnOff>("interpolation"));
 
     setIntegerParam(ADXSPDModule_NumCons, this->module->GetVar<int>("n_connectors"));
 
-    setIntegerParam(ADXSPDModule_MaxFrames, this->module->GetVar<int>("max_frames"));
+    getFlatfieldState();
 
     vector<double> position = this->module->GetVar<vector<double>>("position");
     setDoubleParam(ADXSPDModule_PosX, position[0]);
@@ -74,13 +102,6 @@ void ADXSPDModule::getInitialModuleState() {
     setIntegerParam(ADXSPDModule_NumSubframes, this->module->GetVar<int>("n_subframes"));
 
     callParamCallbacks();
-}
-
-int ADXSPDModule::getMaxNumImages() {
-    int numImages = this->module->GetVar<int>("max_frames");
-    setIntegerParam(ADXSPDModule_MaxFrames, numImages);
-    callParamCallbacks();
-    return numImages;
 }
 
 ADXSPDModule::ADXSPDModule(const char* portName, XSPD::Module* module, ADXSPD* parent)
