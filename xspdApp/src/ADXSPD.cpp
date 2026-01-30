@@ -384,6 +384,7 @@ void ADXSPD::monitorThread() {
         if (pollInterval <= ADXSPD_MIN_STATUS_POLL_INTERVAL)
             pollInterval = ADXSPD_MIN_STATUS_POLL_INTERVAL;
 
+        this->lock();
         XSPD::Status status = this->pDetector->GetVar<XSPD::Status>("status");
         int adStatus = ADStatusIdle;
         switch (status) {
@@ -402,15 +403,18 @@ void ADXSPD::monitorThread() {
         setIntegerParam(ADStatus, adStatus);
 
         // Update the state of counter mode and frames queued
-        setIntegerParam(ADXSPD_CounterMode, this->pDetector->GetVar<int>("counter_mode"));
+        setIntegerParam(
+            ADXSPD_CounterMode,
+            static_cast<int>(this->pDetector->GetVar<XSPD::CounterMode>("counter_mode")));
         setIntegerParam(ADXSPD_FramesQueued,
                         this->pDetector->GetActiveDataPort()->GetVar<int>("frames_queued"));
 
-        for (auto& module : this->modules) {
-            module->checkStatus();
-        }
+        // Reading out module status takes too long.
+        // for (auto& module : this->modules) {
+        //    module->checkStatus();
+        //}
+        this->unlock();
 
-        // TODO: Allow for setting the polling interval via a PV
         if (epicsEventWaitWithTimeout(this->shutdownEventId, pollInterval) == epicsEventWaitOK) {
             INFO("Shutdown event received, exiting monitor thread...");
             break;
@@ -789,9 +793,8 @@ ADXSPD::ADXSPD(const char* portName, const char* ip, int portNum, const char* de
     monitorOpts.priority = epicsThreadPriorityMedium;
     monitorOpts.stackSize = epicsThreadGetStackSize(epicsThreadStackMedium);
     monitorOpts.joinable = 1;
-    // this->monitorThreadId =
-    //     epicsThreadCreateOpt("monitorThread", (EPICSTHREADFUNC) monitorThreadC, this,
-    //     &monitorOpts);
+    this->monitorThreadId =
+        epicsThreadCreateOpt("monitorThread", (EPICSTHREADFUNC) monitorThreadC, this, &monitorOpts);
 
     // when epics is exited, delete the instance of this class
     epicsAtExit(exitCallbackC, this);

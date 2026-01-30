@@ -20,30 +20,38 @@ void ADXSPDModule::checkStatus() {
 
     setDoubleParam(ADXSPDModule_Hum, this->module->GetVar<double>("humidity"));
 
-    // Module readout check
-    setIntegerParam(ADXSPDModule_MaxFrames, this->module->GetVar<int>("max_frames"));
-    setIntegerParam(ADXSPDModule_FramesQueued, this->module->GetVar<int>("frames_queued"));
-
     // Module flatfield state
     setStringParam(ADXSPDModule_FfStatus, this->module->GetVar<string>("flatfield_status").c_str());
 
-    callParamCallbacks();
+    // Module readout check
+    setIntegerParam(ADXSPDModule_FramesQueued, this->module->GetVar<int>("frames_queued"));
+    getMaxNumImages();
 }
 
 void ADXSPDModule::getFlatfieldState() {
-
     setIntegerParam(ADXSPDModule_FfEnabled,
                     this->module->GetVar<bool>("flatfield_enabled") ? 1 : 0);
 
     vector<string> ffTs = this->module->GetVar<vector<string>>("flatfield_timestamp");
-    setStringParam(ADXSPDModule_LowThreshFfDate, static_cast<int>(ffTs.size()) > 0 ? ffTs[0].c_str() : "");
-    setStringParam(ADXSPDModule_HighThreshFfDate, static_cast<int>(ffTs.size()) > 1 ? ffTs[1].c_str() : "");
+    setStringParam(ADXSPDModule_LowThreshFfDate,
+                   static_cast<int>(ffTs.size()) > 0 ? ffTs[0].c_str() : "");
+    setStringParam(ADXSPDModule_HighThreshFfDate,
+                   static_cast<int>(ffTs.size()) > 1 ? ffTs[1].c_str() : "");
 
     vector<string> ffAuthors = this->module->GetVar<vector<string>>("flatfield_author");
-    setStringParam(ADXSPDModule_LowThreshFfAuthor, static_cast<int>(ffAuthors.size()) > 0 ? ffAuthors[0].c_str() : "");
-    setStringParam(ADXSPDModule_HighThreshFfAuthor, static_cast<int>(ffAuthors.size()) > 1 ? ffAuthors[1].c_str() : "");
+    setStringParam(ADXSPDModule_LowThreshFfAuthor,
+                   static_cast<int>(ffAuthors.size()) > 0 ? ffAuthors[0].c_str() : "");
+    setStringParam(ADXSPDModule_HighThreshFfAuthor,
+                   static_cast<int>(ffAuthors.size()) > 1 ? ffAuthors[1].c_str() : "");
 
     callParamCallbacks();
+}
+
+int ADXSPDModule::getMaxNumImages() {
+    int maxFrames = this->module->GetVar<int>("max_frames");
+    setIntegerParam(ADXSPDModule_MaxFrames, maxFrames);
+    callParamCallbacks();
+    return maxFrames;
 }
 
 void ADXSPDModule::getInitialModuleState() {

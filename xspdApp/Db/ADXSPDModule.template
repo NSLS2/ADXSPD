@@ -272,21 +272,6 @@ record(stringin, "$(P)$(R)HighThreshFfAuthor_RBV"){
     field(SCAN, "I/O Intr")
 }
 
-
-record(stringin, "$(P)$(R)LowThreshFfErr_RBV"){
-    field(DESC, "Low threshold ff error")
-    field(DTYP, "asynOctetRead")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_LOW_THRESH_FF_ERR")
-    field(SCAN, "I/O Intr")
-}
-
-record(stringin, "$(P)$(R)HighThreshFfErr_RBV"){
-    field(DESC, "High threshold ff error")
-    field(DTYP, "asynOctetRead")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_HIGH_THRESH_FF_ERR")
-    field(SCAN, "I/O Intr")
-}
-
 record(stringin, "$(P)$(R)LowThreshFfDate_RBV"){
     field(DESC, "Low threshold ff date")
     field(DTYP, "asynOctetRead")
@@ -301,18 +286,10 @@ record(stringin, "$(P)$(R)HighThreshFfDate_RBV"){
     field(SCAN, "I/O Intr")
 }
 
-
 record(ai, "$(P)$(R)FramesQueued_RBV"){
     field(DESC, "Frames queued rb")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_FRAMES_QUEUED")
-    field(SCAN, "I/O Intr")
-}
-
-record(stringin, "$(P)$(R)PixelMask_RBV"){
-    field(DESC, "Pixel mask rb")
-    field(DTYP, "asynOctetRead")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_PIXEL_MASK")
     field(SCAN, "I/O Intr")
 }
 

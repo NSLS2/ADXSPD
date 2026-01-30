@@ -30,12 +30,9 @@
 #define ADXSPDModule_FfStatusString "XSPD_FF_STATUS"
 #define ADXSPDModule_LowThreshFfAuthorString "XSPD_LOW_THRESH_FF_AUTHOR"
 #define ADXSPDModule_HighThreshFfAuthorString "XSPD_HIGH_THRESH_FF_AUTHOR"
-#define ADXSPDModule_LowThreshFfErrString "XSPD_LOW_THRESH_FF_ERR"
-#define ADXSPDModule_HighThreshFfErrString "XSPD_HIGH_THRESH_FF_ERR"
 #define ADXSPDModule_LowThreshFfDateString "XSPD_LOW_THRESH_FF_DATE"
 #define ADXSPDModule_HighThreshFfDateString "XSPD_HIGH_THRESH_FF_DATE"
 #define ADXSPDModule_FramesQueuedString "XSPD_FRAMES_QUEUED"
-#define ADXSPDModule_PixelMaskString "XSPD_PIXEL_MASK"
 #define ADXSPDModule_UsePixelMaskString "XSPD_USE_PIXEL_MASK"
 #define ADXSPDModule_ShuffleModeString "XSPD_SHUFFLE_MODE"
 
@@ -65,12 +62,9 @@ int ADXSPDModule_FfEnabled;
 int ADXSPDModule_FfStatus;
 int ADXSPDModule_LowThreshFfAuthor;
 int ADXSPDModule_HighThreshFfAuthor;
-int ADXSPDModule_LowThreshFfErr;
-int ADXSPDModule_HighThreshFfErr;
 int ADXSPDModule_LowThreshFfDate;
 int ADXSPDModule_HighThreshFfDate;
 int ADXSPDModule_FramesQueued;
-int ADXSPDModule_PixelMask;
 int ADXSPDModule_UsePixelMask;
 int ADXSPDModule_ShuffleMode;
 
