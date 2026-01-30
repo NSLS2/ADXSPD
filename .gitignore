@@ -23,6 +23,7 @@ a.out
 .pixi/*
 !.pixi/config.toml
 *.local
+test.py
 notes.txt
 checkVar.sh
 setVar.sh

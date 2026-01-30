@@ -216,10 +216,10 @@ void ADXSPD::acquisitionThread() {
             ERR_ARGS("Expected 3 message parts for frame, got %zu", frameMessages.size());
             continue;
         } else {
-            uint16_t frameNumber = *((uint16_t*) zmq_msg_data(&frameMessages[1]));
-            uint16_t triggerNumber = *((uint16_t*) zmq_msg_data(&frameMessages[1]) + 1);
-            uint16_t statusCode = *((uint16_t*) zmq_msg_data(&frameMessages[1]) + 2);
-            uint16_t size = *((uint16_t*) zmq_msg_data(&frameMessages[1]) + 3);
+            uint8_t frameNumber = *((uint8_t*) zmq_msg_data(&frameMessages[1]));
+            uint8_t triggerNumber = *((uint8_t*) zmq_msg_data(&frameMessages[1]) + 1);
+            uint8_t statusCode = *((uint8_t*) zmq_msg_data(&frameMessages[1]) + 2);
+            uint8_t size = *((uint8_t*) zmq_msg_data(&frameMessages[1]) + 3);
 
             // The third message part contains the frame data
             // TODO: This assumes no compression; handle compressed data later
@@ -281,10 +281,12 @@ void ADXSPD::acquisitionThread() {
                 if (zlibStatus != Z_OK) {
                     ERR_ARGS("Failed to decompress frame data with zlib, status code %d",
                              zlibStatus);
+                    decompressOK = false;
                 }
                 if (decompressedSize != arrayInfo.totalBytes) {
                     ERR_ARGS("Decompressed size %lu does not match expected size %lu",
                              decompressedSize, arrayInfo.totalBytes);
+                    decompressOK = false;
                 }
             } else if (compressor == XSPD::Compressor::BLOSC) {
                 size_t decompressSize;
@@ -322,6 +324,11 @@ void ADXSPD::acquisitionThread() {
                         subtractOk = false;
                         break;
                 }
+
+                // Clear frameBuffers
+                free(prevFrameBuffer);
+                free(frameBuffer);
+
             } else if (counterMode == XSPD::CounterMode::DUAL && prevFrameBuffer == nullptr) {
                 // Store the current frame as the previous frame for the next iteration
                 prevFrameBuffer = frameBuffer;
@@ -345,6 +352,7 @@ void ADXSPD::acquisitionThread() {
                 getAttributes(pArray->pAttributeList);
 
                 if (arrayCallbacks) doCallbacksGenericPointer(pArray, NDArrayData, 0);
+
             }
 
             // If in single mode, finish acq, if in multiple mode and reached target number
@@ -361,6 +369,10 @@ void ADXSPD::acquisitionThread() {
         for (auto& msgPart : frameMessages) {
             zmq_msg_close(&msgPart);
         }
+
+        // If framebuffers are still allocated, clear them
+        if (frameBuffer != nullptr) free(frameBuffer);
+        if (prevFrameBuffer != nullptr) free(prevFrameBuffer);
 
         // refresh all PVs
         callParamCallbacks();
