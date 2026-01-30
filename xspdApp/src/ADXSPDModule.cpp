@@ -10,7 +10,6 @@
 #include "ADXSPDModule.h"
 
 void ADXSPDModule::checkStatus() {
-    // Example: Read module temperature and update parameter
     setDoubleParam(ADXSPDModule_SensCurr, this->module->GetVar<double>("sensor_current"));
 
     vector<double> temps = this->module->GetVar<vector<double>>("temperature");
@@ -33,6 +32,8 @@ void ADXSPDModule::getInitialModuleState() {
                     (int) this->module->GetVar<XSPD::Compressor>("compressor"));
 
     setStringParam(ADXSPDModule_FfStatus, this->module->GetVar<string>("flatfield_status").c_str());
+    setIntegerParam(ADXSPDModule_FfEnabled,
+                    this->module->GetVar<bool>("flatfield_enabled") ? 1 : 0);
     setIntegerParam(ADXSPDModule_InterpMode,
                     (int) this->module->GetVar<XSPD::OnOff>("interpolation"));
 
@@ -55,29 +56,22 @@ void ADXSPDModule::getInitialModuleState() {
 
     setIntegerParam(ADXSPDModule_SatThresh, this->module->GetVar<int>("saturation_threshold"));
 
-    // vector<string> features = this->module->GetVar<vector<string>>("features");
-    // for(auto& featureStr : features) {
-    //     auto feature = magic_enum::enum_cast<ADXSPDModuleFeature>("FEAT_" + featureStr);
-    //     if (!feature.has_value()) {
-    //         ERR_ARGS("Unknown module feature: %s", featureStr.c_str());
-    //         continue;
-    //     }
-    //     // TODO: Make these into a bitmask parameter?
-    //     switch(feature.value()) {
-    //         case ADXSPDModuleFeature::FEAT_HV:
-    //             setIntegerParam(ADXSPDModule_HvSup,1);
-    //             break;
-    //         case ADXSPDModuleFeature::FEAT_1_6_BIT:
-    //             setIntegerParam(ADXSPDModule_16bitSup,1);
-    //             break;
-    //         case ADXSPDModuleFeature::FEAT_MEDIPIX_DAC_IO:
-    //             setIntegerParam(ADXSPDModule_MpixDacIoSup,1);
-    //             break;
-    //         case ADXSPDModuleFeature::FEAT_EXTENDED_GATING:
-    //             setIntegerParam(ADXSPDModule_ExtGatingSup,1);
-    //             break;
-    //     }
-    // }
+    // Module feature support is stored as a bitmask w/ 4 bits.
+    vector<string> features = this->module->GetVar<vector<string>>("features");
+    int featureBitmask = 0;
+    for (auto& featureStr : features) {
+        auto feature = magic_enum::enum_cast<XSPD::ModuleFeature>("FEAT_" + featureStr);
+        if (!feature.has_value()) {
+            ERR_ARGS("Unknown module feature: %s", featureStr.c_str());
+            continue;
+        } else {
+            featureBitmask += pow(2, static_cast<int>(feature.value()));
+        }
+    }
+    setIntegerParam(ADXSPDModule_FeatBitmask, featureBitmask);
+
+    setDoubleParam(ADXSPDModule_Voltage, this->module->GetVar<double>("voltage"));
+    setIntegerParam(ADXSPDModule_NumSubframes, this->module->GetVar<int>("n_subframes"));
 
     callParamCallbacks();
 }

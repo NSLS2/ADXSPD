@@ -13,6 +13,7 @@
 using json = nlohmann::json;
 using std::invalid_argument;
 using std::is_enum;
+using std::is_same;
 using std::map;
 using std::out_of_range;
 using std::runtime_error;
@@ -189,6 +190,10 @@ class API {
                     throw runtime_error("Failed to cast value " + valAsStr +
                                         " to enum for variable " + varName);
                 }
+            } else if constexpr (is_same<T, bool>::value) {
+                // Temporarily handle booleans manually, since they are being passed as strings
+                // instead of bools.
+                return response[key].get<string>() == "true";
             } else {
                 return response[key].get<T>();
             }

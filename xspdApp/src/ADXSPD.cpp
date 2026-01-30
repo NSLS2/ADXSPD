@@ -82,15 +82,12 @@ asynStatus ADXSPD::acquireStart() {
 
     callParamCallbacks();
 
-    // Acquire a lock to prevent other API calls during acquisition start
-    this->lock();
     try {
         this->pDetector->ExecCommand("start");
     } catch (std::exception& e) {
         ERR_ARGS("Failed to start acquisition: %s", e.what());
         return asynError;
     }
-    this->unlock();
     return asynSuccess;
 }
 
@@ -404,14 +401,13 @@ void ADXSPD::monitorThread() {
         }
         setIntegerParam(ADStatus, adStatus);
 
-        if (status != XSPD::Status::BUSY) {
-            // Lock the driver here, so we can't start
-            // an acquisition while reading module statuses
-            this->lock();
-            for (auto& module : this->modules) {
-                module->checkStatus();
-            }
-            this->unlock();
+        // Update the state of counter mode and frames queued
+        setIntegerParam(ADXSPD_CounterMode, this->pDetector->GetVar<int>("counter_mode"));
+        setIntegerParam(ADXSPD_FramesQueued,
+                        this->pDetector->GetActiveDataPort()->GetVar<int>("frames_queued"));
+
+        for (auto& module : this->modules) {
+            module->checkStatus();
         }
 
         // TODO: Allow for setting the polling interval via a PV
@@ -495,6 +491,9 @@ void ADXSPD::getInitialDetState() {
         setIntegerParam(ADMaxSizeY, maxSizeY);
         setIntegerParam(ADSizeX, maxSizeX);
         setIntegerParam(ADSizeY, maxSizeY);
+
+        setIntegerParam(ADXSPD_FramesQueued,
+                        this->pDetector->GetActiveDataPort()->GetVar<int>("frames_queued"));
 
         setIntegerParam(ADXSPD_RoiRows, this->pDetector->GetVar<int>("roi_rows"));
 
