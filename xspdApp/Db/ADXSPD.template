@@ -23,43 +23,42 @@ include "ADBase.template"
 
 # ADBase record overrides
 
-# record(mbbo, "$(P)$(R)ImageMode") {
-#     field(TWVL, "")
-#     field(TWST, "")
-#     field(VAL, "1")
-# }
+record(mbbo, "$(P)$(R)ImageMode") {
+    field(TWVL, "")
+    field(TWST, "")
+}
 
-# record(mbbi, "$(P)$(R)ImageMode_RBV") {
-#     field(TWVL, "")
-#     field(TWST, "")
-# }
+record(mbbi, "$(P)$(R)ImageMode_RBV") {
+    field(TWVL, "")
+    field(TWST, "")
+}
 
-# record(mbbo, "$(P)$(R)TriggerMode") {
-#     field(DESC, "Trigger mode")
-#     field(DTYP, "asynInt32")
-#     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))TRIGGER_MODE")
-#     field(ZRVL, "0")
-#     field(ZRST, "Software")
-#     field(ONVL, "1")
-#     field(ONST, "External Frames")
-#     field(TWVL, "2")
-#     field(TWST, "External Sequence")
-#     field(VAL, "0")
-#     field(PINI, "YES")
-# }
+record(mbbo, "$(P)$(R)TriggerMode") {
+    field(DESC, "Trigger mode")
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))TRIGGER_MODE")
+    field(ZRVL, "0")
+    field(ZRST, "Software")
+    field(ONVL, "1")
+    field(ONST, "External Frames")
+    field(TWVL, "2")
+    field(TWST, "External Sequence")
+    field(VAL, "0")
+    field(PINI, "YES")
+}
 
-# record(mbbi, "$(P)$(R)TriggerMode_RBV") {
-#     field(DESC, "Trigger mode readback")
-#     field(DTYP, "asynInt32")
-#     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))TRIGGER_MODE")
-#     field(ZRVL, "0")
-#     field(ZRST, "Software")
-#     field(ONVL, "1")
-#     field(ONST, "External Frames")
-#     field(TWVL, "2")
-#     field(TWST, "External Sequence")
-#     field(SCAN, "I/O Intr")
-# }
+record(mbbi, "$(P)$(R)TriggerMode_RBV") {
+    field(DESC, "Trigger mode readback")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))TRIGGER_MODE")
+    field(ZRVL, "0")
+    field(ZRST, "Software")
+    field(ONVL, "1")
+    field(ONST, "External Frames")
+    field(TWVL, "2")
+    field(TWST, "External Sequence")
+    field(SCAN, "I/O Intr")
+}
 
 # XSPD specific records
 
@@ -482,4 +481,42 @@ record(ai, "$(P)$(R)StatusInterval_RBV"){
     field(EGU, "s")
     field(VAL, "5")
     field(SCAN, "I/O Intr")
+}
+
+
+# Disable any ADBase records we don't want to use
+
+# On-chip ROI size set by ROIRows PV
+record(ao, "$(P)$(R)SizeX") {
+    field(DISA, 1)
+}
+
+record(ao, "$(P)$(R)SizeY") {
+    field(DISA, 1)
+}
+
+# Only mono supported, and data type set by bit depth parameter
+record(mbbo, "$(P)$(R)DataType") {
+    field(DISA, 1)
+}
+
+record(mbbo, "$(P)$(R)ColorMode") {
+    field(DISA, 1)
+}
+
+# Binning not supported on-chip
+record(ao, "$(P)$(R)BinX") {
+    field(DISA, 1)
+}
+
+record(ao, "$(P)$(R)BinY") {
+    field(DISA, 1)
+}
+
+record(ao, "$(P)$(R)AcquirePeriod") {
+    field(DISA, 1)
+}
+
+record(ao, "$(P)$(R)Gain") {
+    field(DISA, 1)
 }
