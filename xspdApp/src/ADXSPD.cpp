@@ -583,10 +583,16 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             if (function == ADXSPD_BitDepth) {
                 actualValue = this->pDetector->SetVar<int>("bit_depth", value);
                 setIntegerParam(NDDataType, static_cast<int>(getDataTypeForBitDepth(actualValue)));
+                for (auto& module : this->modules) {
+                    module->getMaxNumImages();
+                }
             } else if (function == ADXSPD_SummedFrames) {
                 actualValue = this->pDetector->SetVar<int>("summed_frames", value);
             } else if (function == ADXSPD_RoiRows) {
                 actualValue = this->pDetector->SetVar<int>("roi_rows", value);
+                for (auto& module : this->modules) {
+                    module->getMaxNumImages();
+                }
             } else if (function == ADXSPD_GatingMode) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
                     "gating_mode", static_cast<XSPD::OnOff>(value)));
@@ -605,6 +611,9 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             } else if (function == ADXSPD_CounterMode) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::CounterMode>(
                     "counter_mode", static_cast<XSPD::CounterMode>(value)));
+                for (auto& module : this->modules) {
+                    module->getMaxNumImages();
+                }
             } else if (function == ADXSPD_SaturationFlag) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
                     "saturation_flag", static_cast<XSPD::OnOff>(value)));
