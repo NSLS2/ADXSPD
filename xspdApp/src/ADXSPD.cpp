@@ -231,7 +231,7 @@ void ADXSPD::acquisitionThread() {
 
             getIntegerParam(NDDataType, (int*) &dataType);
 
-            // For reason's I don't fully understand, casting the dims address pointers to int*
+            // For reasons I don't fully understand, casting the dims address pointers to int*
             // causes them to be populated with really odd values...
             size_t dims[2];
             int sizeX, sizeY;
@@ -395,31 +395,38 @@ void ADXSPD::monitorThread() {
             pollInterval = ADXSPD_MIN_STATUS_POLL_INTERVAL;
 
         this->lock();
-        XSPD::Status status = this->pDetector->GetVar<XSPD::Status>("status");
-        int adStatus = ADStatusIdle;
-        switch (status) {
-            case XSPD::Status::READY:
-                break;
-            case XSPD::Status::BUSY:
-                adStatus = ADStatusAcquire;
-                break;
-            case XSPD::Status::CONNECTED:
-                adStatus = ADStatusInitializing;
-                break;
-            default:
-                WARN("Detector status: UNKNOWN");
-                break;
+
+        try {
+            XSPD::Status status = this->pDetector->GetVar<XSPD::Status>("status");
+            int adStatus = ADStatusIdle;
+            switch (status) {
+                case XSPD::Status::READY:
+                    break;
+                case XSPD::Status::BUSY:
+                    adStatus = ADStatusAcquire;
+                    break;
+                case XSPD::Status::CONNECTED:
+                    adStatus = ADStatusInitializing;
+                    break;
+                default:
+                    WARN("Detector status: UNKNOWN");
+                    break;
+            }
+            setIntegerParam(ADStatus, adStatus);
+
+            setIntegerParam(ADXSPD_FramesQueued,
+                            this->pDetector->GetActiveDataPort()->GetVar<int>("frames_queued"));
+
+            // Reading out module status takes too long. Probably should become a "GetModuleStatus"
+            // PV that can have its Scan rate updated from I/O Intr to some rate.
+            // for (auto& module : this->modules) {
+            //    module->checkStatus();
+            //}
+        } catch (std::runtime_error& e) {
+            ERR_TO_STATUS("Failed to update detector status: %s", e.what());
+            setIntegerParam(ADStatus, ADStatusError);
         }
-        setIntegerParam(ADStatus, adStatus);
 
-        setIntegerParam(ADXSPD_FramesQueued,
-                        this->pDetector->GetActiveDataPort()->GetVar<int>("frames_queued"));
-
-        // Reading out module status takes too long. Probably should become a "GetModuleStatus"
-        // PV that can have its Scan rate updated from I/O Intr to some rate.
-        // for (auto& module : this->modules) {
-        //    module->checkStatus();
-        //}
         this->unlock();
 
         if (epicsEventWaitWithTimeout(this->shutdownEventId, pollInterval) == epicsEventWaitOK) {
