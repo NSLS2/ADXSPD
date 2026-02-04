@@ -20,7 +20,7 @@ class MockXSPDAPI : public XSPD::API {
     void MockInitializationSeq(string deviceId = "lambda01");
     XSPD::Detector* MockInitialization(string deviceId = "lambda01");
 
-    void MockAPIVerionCheck();
+    void MockAPIVerionCheck(json* alternateResponse = nullptr);
 
     void UpdateSampleResp(string endpoint, json response) {
         string uri = "localhost:8008/api/v1/" + endpoint;

@@ -22,9 +22,9 @@ MockXSPDAPI::MockXSPDAPI() : XSPD::API("localhost", 8008) {
         {{"id", "device456"}});
 };
 
-void MockXSPDAPI::MockAPIVerionCheck() {
+void MockXSPDAPI::MockAPIVerionCheck(json* alternateResponse) {
     string uri = "localhost:8008/api";
-    json response = this->sampleResponses[uri];
+    json response = alternateResponse ? *alternateResponse : this->sampleResponses[uri];
     EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::GET)).WillOnce(Return(response));
     std::cout << "Mocked GET request to URI: " << uri << std::endl;
     std::cout << "Returning response: " << response.dump(4) << std::endl;
