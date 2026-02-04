@@ -229,7 +229,7 @@ TEST_F(TestXSPDAPI, TestReadVarFromRespKeyNotFound) {
 }
 
 TEST_F(TestXSPDAPI, TestReadVarFromRespEnumValid) {
-    json response = json{{"enumKey", "ON"}};
+    json response = json{{"path", "enumVar"}, {"enumKey", "ON"}};
 
     XSPD::OnOff enumValue =
         this->mockXSPDAPI->ReadVarFromResp<XSPD::OnOff>(response, "enumVar", "enumKey");
@@ -265,6 +265,14 @@ TEST_F(TestXSPDAPI, TestReadVarFromRespVectorOfIntsValid) {
     ASSERT_EQ(values[1], 2);
     ASSERT_EQ(values[2], 3);
     ASSERT_EQ(values[3], 4);
+}
+
+TEST_F(TestXSPDAPI, TestReadVarFromRespPathDoesNotMatch) {
+    json response = json{{"path", "some/other/path"}, {"value", 10}};
+
+    ASSERT_THAT([&]() { this->mockXSPDAPI->ReadVarFromResp<int>(response, "some/path", "value"); },
+                testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr(
+                    "Variable path mismatch: expected some/path, got some/other/path")));
 }
 
 TEST_F(TestXSPDAPI, TestGetIntDetectorVar) {
