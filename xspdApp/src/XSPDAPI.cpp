@@ -202,14 +202,11 @@ json XSPD::API::SubmitRequest(string uri, XSPD::RequestType reqType) {
 
     if (response.status_code != 200)
         throw runtime_error("Failed to " + verbMsg + ": " + response.error.message);
-    else
-        std::cout << verbMsg << std::endl;
 
     try {
         json parsedResponse = json::parse(response.text, nullptr, true, false, true);
         if (parsedResponse.empty()) throw runtime_error("Empty JSON response from " + uri);
 
-        std::cout << parsedResponse.dump(4) << std::endl;
         return parsedResponse;
     } catch (json::parse_error& e) {
         throw runtime_error("Failed to parse JSON response from " + uri + ": " + string(e.what()));
