@@ -9,7 +9,7 @@ DIRS := $(DIRS) json
 DIRS := $(DIRS) magic_enum
 DIRS := $(DIRS) cpr
 
-ifeq ($(BUILD_TESTS), YES)
+ifeq ($(BUILD_XSPD_TESTS), YES)
 ifeq ($(GTEST_EXTERNAL), NO)
 DIRS := $(DIRS) gtest
 endif

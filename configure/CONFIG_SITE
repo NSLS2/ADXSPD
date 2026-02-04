@@ -34,15 +34,25 @@ CHECK_RELEASE = YES
 #   take effect.
 #IOCS_APPL_TOP = </IOC/path/to/application/top>
 
-BUILD_TESTS=NO
+# By default, don't build unit tests.
+# If building tests, by default build gtest from source.
+BUILD_XSPD_TESTS=NO
 GTEST_EXTERNAL=NO
+#GTEST_LIB=
 
-# By defau
+# By default use system curl library.
 CURL_EXTERNAL=YES
 #CURL_LIB=
 
+# By default use system zmq library
 ZMQ_EXTERNAL=YES
 #ZMQ_LIB=
+
+# Specify whether or not to use system zlib library. Note this setting is also set in
+# the shared AREA_DETECTOR CONFIG_SITE files, but we list it here to make it clear
+# that the driver can override it if needed.
+#ZLIB_EXTERNAL=YES
+#ZLIB_LIB=
 
 # Get settings from AREA_DETECTOR, so we only have to configure once for all detectors if we want to
 -include $(AREA_DETECTOR)/configure/CONFIG_SITE

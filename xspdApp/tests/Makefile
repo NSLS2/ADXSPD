@@ -6,7 +6,7 @@ include $(TOP)/configure/CONFIG
 USR_CPPFLAGS += -std=c++17
 
 PROD_NAME = TestADXSPD
-PROD_IOC = $(PROD_NAME)
+TESTPROD_IOC = $(PROD_NAME)
 
 $(PROD_NAME)_SRCS += TestADXSPDMain.cpp
 $(PROD_NAME)_SRCS += TestXSPDAPI.cpp
