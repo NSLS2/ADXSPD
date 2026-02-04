@@ -270,11 +270,9 @@ TEST_F(TestXSPDAPI, TestReadVarFromRespVectorOfIntsValid) {
 TEST_F(TestXSPDAPI, TestReadVarFromRespPathDoesNotMatch) {
     json response = json{{"path", "some/other/path"}, {"value", 10}};
 
-    ASSERT_THAT([&]() {
-                    this->mockXSPDAPI->ReadVarFromResp<int>(response, "some/path", "value");
-                },
-                testing::ThrowsMessage<std::runtime_error>(
-                    testing::HasSubstr("Variable path mismatch: expected some/path, got some/other/path")));
+    ASSERT_THAT([&]() { this->mockXSPDAPI->ReadVarFromResp<int>(response, "some/path", "value"); },
+                testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr(
+                    "Variable path mismatch: expected some/path, got some/other/path")));
 }
 
 TEST_F(TestXSPDAPI, TestGetIntDetectorVar) {

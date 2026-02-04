@@ -180,7 +180,6 @@ class API {
      */
     template <typename T>
     T ReadVarFromResp(json response, string varName, string key) {
-
         // Check to make sure the response we got was actually for the variable we requested
         // XSPD seems to occasionally return the same response twice.
         if (response.contains("path")) {
