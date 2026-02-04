@@ -2,6 +2,36 @@
 #include "XSPDAPI.h"
 
 /**
+ * @brief Parses a version string into its major, minor, and patch components
+ *
+ * @param versionStr The semantic version string to parse (e.g., "1.2.3")
+ * @return A tuple containing the major, minor, and patch version numbers
+ */
+tuple<int, int, int> XSPD::ParseVersionString(const string& versionStr) {
+    stringstream versionStream(versionStr);
+    string segment;
+    vector<int> parts;
+
+    while (getline(versionStream, segment, '.')) {
+        try {
+            parts.push_back(stoi(segment));
+        } catch (invalid_argument& e) {
+            parts.push_back(0);
+        }
+    }
+
+    if (parts.size() >= 3) {
+        return {parts[0], parts[1], parts[2]};
+    } else if (parts.size() == 2) {
+        return {parts[0], parts[1], 0};
+    } else if (parts.size() == 1) {
+        return {parts[0], 0, 0};
+    } else {
+        return {0, 0, 0};
+    }
+}
+
+/**
  * @brief Checks if a device with the given device ID exists
  *
  * @param deviceId The device ID to check
@@ -59,6 +89,18 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
         this->xspdVersion = apiVersionInfo["xspd version"].get<string>();
     } catch (json::type_error& e) {
         throw runtime_error("Failed to retrieve API version information: " + string(e.what()));
+    }
+
+    auto [xspdMajorVer, xspdMinorVer, xspdPatchVer] = ParseVersionString(this->xspdVersion);
+    if (xspdMajorVer < MIN_XSPD_MAJOR_VERSION ||
+        (xspdMajorVer == MIN_XSPD_MAJOR_VERSION && xspdMinorVer < MIN_XSPD_MINOR_VERSION) ||
+        (xspdMajorVer == MIN_XSPD_MAJOR_VERSION && xspdMinorVer == MIN_XSPD_MINOR_VERSION &&
+         xspdPatchVer < MIN_XSPD_PATCH_VERSION)) {
+        throw runtime_error("XSPD version " + this->xspdVersion +
+                            " is not supported. Minimum required version is " +
+                            to_string(MIN_XSPD_MAJOR_VERSION) + "." +
+                            to_string(MIN_XSPD_MINOR_VERSION) + "." +
+                            to_string(MIN_XSPD_PATCH_VERSION) + ".");
     }
 
     // Identify the deviceId to connect to

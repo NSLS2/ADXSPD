@@ -11,6 +11,8 @@
 #include "nlohmann/json.hpp"
 
 using json = nlohmann::json;
+using std::get;
+using std::getline;
 using std::invalid_argument;
 using std::is_enum;
 using std::is_same;
@@ -19,8 +21,14 @@ using std::out_of_range;
 using std::runtime_error;
 using std::stoi;
 using std::string;
+using std::stringstream;
 using std::to_string;
+using std::tuple;
 using std::vector;
+
+#define MIN_XSPD_MAJOR_VERSION 1
+#define MIN_XSPD_MINOR_VERSION 5
+#define MIN_XSPD_PATCH_VERSION 2
 
 namespace XSPD {
 
@@ -80,6 +88,8 @@ enum class APIState {
     RETRIEVING_DEVICE_INFO = 3,
     INITIALIZED = 4,
 };
+
+tuple<int, int, int> ParseVersionString(const string& versionStr);
 
 // Forward declarations
 class Module;
@@ -180,6 +190,16 @@ class API {
      */
     template <typename T>
     T ReadVarFromResp(json response, string varName, string key) {
+        // Check to make sure the response we got was actually for the variable we requested
+        // XSPD seems to occasionally return the same response twice.
+        if (response.contains("path")) {
+            string respVarPath = response["path"].get<string>();
+            if (respVarPath != varName) {
+                throw runtime_error("Variable path mismatch: expected " + varName + ", got " +
+                                    respVarPath);
+            }
+        }
+
         if (response.contains(key)) {
             if constexpr (is_enum<T>::value) {
                 string valAsStr = response[key].get<string>();

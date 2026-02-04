@@ -3,6 +3,35 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+TEST_F(TestXSPDAPI, TestParseVersionString) {
+    auto [major, minor, patch] = XSPD::ParseVersionString("1.2.3");
+    ASSERT_EQ(major, 1);
+    ASSERT_EQ(minor, 2);
+    ASSERT_EQ(patch, 3);
+
+    auto [major2, minor2, patch2] = XSPD::ParseVersionString("4.5");
+    ASSERT_EQ(major2, 4);
+    ASSERT_EQ(minor2, 5);
+    ASSERT_EQ(patch2, 0);
+
+    auto [major3, minor3, patch3] = XSPD::ParseVersionString("6");
+    ASSERT_EQ(major3, 6);
+    ASSERT_EQ(minor3, 0);
+    ASSERT_EQ(patch3, 0);
+
+    auto [major4, minor4, patch4] = XSPD::ParseVersionString("");
+    ASSERT_EQ(major4, 0);
+    ASSERT_EQ(minor4, 0);
+    ASSERT_EQ(patch4, 0);
+}
+
+TEST_F(TestXSPDAPI, TestParseVersionStringNotNumeric) {
+    auto [major, minor, patch] = XSPD::ParseVersionString("a.b.c");
+    ASSERT_EQ(major, 0);
+    ASSERT_EQ(minor, 0);
+    ASSERT_EQ(patch, 0);
+}
+
 TEST_F(TestXSPDAPI, TestGetApiVersionNotInitialized) {
     EXPECT_THAT(
         [&]() { this->mockXSPDAPI->GetApiVersion(); },
@@ -31,6 +60,18 @@ TEST_F(TestXSPDAPI, TestGetSystemIdNotInitialized) {
     EXPECT_THAT(
         [&]() { this->mockXSPDAPI->GetSystemId(); },
         testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr("XSPD API not initialized")));
+}
+
+TEST_F(TestXSPDAPI, TestInitializationFailsXSPDVersionInvalid) {
+    json versionResp = json{
+        {"xspd version", "0.9.0"},
+        {"api version", "1"},
+    };
+
+    this->mockXSPDAPI->MockAPIVersionCheck(&versionResp);
+    ASSERT_THAT([&]() { this->mockXSPDAPI->Initialize(); },
+                testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr(
+                    "XSPD version 0.9.0 is not supported. Minimum required version is")));
 }
 
 TEST_F(TestXSPDAPI, TestGetDeviceIdAfterInitialization) {
@@ -229,7 +270,7 @@ TEST_F(TestXSPDAPI, TestReadVarFromRespKeyNotFound) {
 }
 
 TEST_F(TestXSPDAPI, TestReadVarFromRespEnumValid) {
-    json response = json{{"enumKey", "ON"}};
+    json response = json{{"path", "enumVar"}, {"enumKey", "ON"}};
 
     XSPD::OnOff enumValue =
         this->mockXSPDAPI->ReadVarFromResp<XSPD::OnOff>(response, "enumVar", "enumKey");
@@ -265,6 +306,14 @@ TEST_F(TestXSPDAPI, TestReadVarFromRespVectorOfIntsValid) {
     ASSERT_EQ(values[1], 2);
     ASSERT_EQ(values[2], 3);
     ASSERT_EQ(values[3], 4);
+}
+
+TEST_F(TestXSPDAPI, TestReadVarFromRespPathDoesNotMatch) {
+    json response = json{{"path", "some/other/path"}, {"value", 10}};
+
+    ASSERT_THAT([&]() { this->mockXSPDAPI->ReadVarFromResp<int>(response, "some/path", "value"); },
+                testing::ThrowsMessage<std::runtime_error>(testing::HasSubstr(
+                    "Variable path mismatch: expected some/path, got some/other/path")));
 }
 
 TEST_F(TestXSPDAPI, TestGetIntDetectorVar) {
