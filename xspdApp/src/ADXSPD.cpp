@@ -308,15 +308,18 @@ void ADXSPD::acquisitionThread() {
             // if (counterMode == XSPD::CounterMode::DUAL && prevFrameBuffer != nullptr) {
             //     switch (dataType) {
             //         case NDUInt8:
-            //             this->subtractFrames<uint8_t>(frameBuffer, prevFrameBuffer, pArray->pData,
+            //             this->subtractFrames<uint8_t>(frameBuffer, prevFrameBuffer,
+            //             pArray->pData,
             //                                           arrayInfo.totalBytes);
             //             break;
             //         case NDUInt16:
-            //             this->subtractFrames<uint16_t>(frameBuffer, prevFrameBuffer, pArray->pData,
+            //             this->subtractFrames<uint16_t>(frameBuffer, prevFrameBuffer,
+            //             pArray->pData,
             //                                            arrayInfo.totalBytes);
             //             break;
             //         case NDUInt32:
-            //             this->subtractFrames<uint32_t>(frameBuffer, prevFrameBuffer, pArray->pData,
+            //             this->subtractFrames<uint32_t>(frameBuffer, prevFrameBuffer,
+            //             pArray->pData,
             //                                            arrayInfo.totalBytes);
             //             break;
             //         default:
@@ -350,7 +353,6 @@ void ADXSPD::acquisitionThread() {
                 getAttributes(pArray->pAttributeList);
 
                 if (arrayCallbacks) doCallbacksGenericPointer(pArray, NDArrayData, 0);
-
             }
 
             // If in single mode, finish acq, if in multiple mode and reached target number
@@ -630,7 +632,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
                     "counter_mode", static_cast<XSPD::CounterMode>(value)));
                 for (auto& module : this->modules) {
                     module->getMaxNumImages();
-                    module->getFlatfieldState(); // FF is different for each counter mode
+                    module->getFlatfieldState();  // FF is different for each counter mode
                 }
             } else if (function == ADXSPD_SaturationFlag) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
