@@ -70,7 +70,7 @@ TEST_F(TestXSPDAPI, TestDeviceExists) {
 
 TEST_F(TestXSPDAPI, TestAPIInitInvalidDeviceId) {
     InSequence seq;
-    this->mockXSPDAPI->MockAPIVerionCheck();
+    this->mockXSPDAPI->MockAPIVersionCheck();
     this->mockXSPDAPI->MockGetRequest("devices");
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("device789"); },
                 testing::ThrowsMessage<std::invalid_argument>(
@@ -79,7 +79,7 @@ TEST_F(TestXSPDAPI, TestAPIInitInvalidDeviceId) {
 
 TEST_F(TestXSPDAPI, TestAPIInitDeviceIndexOutOfRange) {
     InSequence seq;
-    this->mockXSPDAPI->MockAPIVerionCheck();
+    this->mockXSPDAPI->MockAPIVersionCheck();
     this->mockXSPDAPI->MockGetRequest("devices");
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("5"); },
                 testing::ThrowsMessage<std::out_of_range>(
@@ -89,7 +89,7 @@ TEST_F(TestXSPDAPI, TestAPIInitDeviceIndexOutOfRange) {
 TEST_F(TestXSPDAPI, TestAPIInitNoDeviceInfo) {
     InSequence seq;
     json emptyResponse = json();
-    this->mockXSPDAPI->MockAPIVerionCheck();
+    this->mockXSPDAPI->MockAPIVersionCheck();
     this->mockXSPDAPI->MockGetRequest("devices");
     this->mockXSPDAPI->MockGetVarRequest("info", &emptyResponse);
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("lambda01"); },
@@ -102,7 +102,7 @@ TEST_F(TestXSPDAPI, TestAPIInitNoDetectors) {
     json modifiedInfoResp =
         this->mockXSPDAPI->GetSampleResp("devices/lambda01/variables?path=info");
     modifiedInfoResp["value"]["detectors"] = json::array();
-    this->mockXSPDAPI->MockAPIVerionCheck();
+    this->mockXSPDAPI->MockAPIVersionCheck();
     this->mockXSPDAPI->MockGetRequest("devices");
     this->mockXSPDAPI->MockGetVarRequest("info", &modifiedInfoResp);
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("lambda01"); },
@@ -115,7 +115,7 @@ TEST_F(TestXSPDAPI, TestAPIInitNoDetectorID) {
     json modifiedInfoResp =
         this->mockXSPDAPI->GetSampleResp("devices/lambda01/variables?path=info");
     modifiedInfoResp["value"]["detectors"][0].erase("detector-id");
-    this->mockXSPDAPI->MockAPIVerionCheck();
+    this->mockXSPDAPI->MockAPIVersionCheck();
     this->mockXSPDAPI->MockGetRequest("devices");
     this->mockXSPDAPI->MockGetVarRequest("info", &modifiedInfoResp);
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("lambda01"); },
@@ -129,7 +129,7 @@ TEST_F(TestXSPDAPI, TestAPIInitNoModules) {
     json modifiedInfoResp =
         this->mockXSPDAPI->GetSampleResp("devices/lambda01/variables?path=info");
     modifiedInfoResp["value"]["detectors"][0].erase("modules");
-    this->mockXSPDAPI->MockAPIVerionCheck();
+    this->mockXSPDAPI->MockAPIVersionCheck();
     this->mockXSPDAPI->MockGetRequest("devices");
     this->mockXSPDAPI->MockGetVarRequest("info", &modifiedInfoResp);
     EXPECT_THAT([&]() { this->mockXSPDAPI->Initialize("lambda01"); },
@@ -142,7 +142,7 @@ TEST_F(TestXSPDAPI, TestAPIInitNoDataPorts) {
     InSequence seq;
     json modifiedDeviceInfo = this->mockXSPDAPI->GetSampleResp("devices/lambda01");
     modifiedDeviceInfo["system"]["data-ports"] = json::array();
-    this->mockXSPDAPI->MockAPIVerionCheck();
+    this->mockXSPDAPI->MockAPIVersionCheck();
     this->mockXSPDAPI->MockGetRequest("devices");
     this->mockXSPDAPI->MockGetVarRequest("info");
     this->mockXSPDAPI->MockGetRequest("devices/lambda01", &modifiedDeviceInfo);
@@ -155,7 +155,7 @@ TEST_F(TestXSPDAPI, TestAPIInitMissingDataPortInfo) {
     InSequence seq;
     json modifiedDeviceInfo = this->mockXSPDAPI->GetSampleResp("devices/lambda01");
     modifiedDeviceInfo["system"]["data-ports"][0].erase("ip");
-    this->mockXSPDAPI->MockAPIVerionCheck();
+    this->mockXSPDAPI->MockAPIVersionCheck();
     this->mockXSPDAPI->MockGetRequest("devices");
     this->mockXSPDAPI->MockGetVarRequest("info");
     this->mockXSPDAPI->MockGetRequest("devices/lambda01", &modifiedDeviceInfo);

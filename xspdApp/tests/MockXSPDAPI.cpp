@@ -9,7 +9,12 @@ using ::testing::Return;
 using ::testing::SetArgPointee;
 using ::testing::Throw;
 
+/**
+ * @brief Construct a new Mock XSPDAPI object
+ */
 MockXSPDAPI::MockXSPDAPI() : XSPD::API("localhost", 8008) {
+    // Load sample responses from JSON file. The sample responses were pulled from
+    // the simulator provided by X-Spectrum
     string sampleResponsesPath = "xspdApp/tests/samples/xspd_sample_resp_sim.json";
     std::ifstream file(sampleResponsesPath);
     if (!file.is_open())
@@ -22,7 +27,12 @@ MockXSPDAPI::MockXSPDAPI() : XSPD::API("localhost", 8008) {
         {{"id", "device456"}});
 };
 
-void MockXSPDAPI::MockAPIVerionCheck() {
+/**
+ * @brief Mocks the API version check during initialization
+ *
+ * @param alternateResponse Optional alternate response to return
+ */
+void MockXSPDAPI::MockAPIVersionCheck(json* alternateResponse) {
     string uri = "localhost:8008/api";
     json response = this->sampleResponses[uri];
     EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::GET)).WillOnce(Return(response));
@@ -30,6 +40,12 @@ void MockXSPDAPI::MockAPIVerionCheck() {
     std::cout << "Returning response: " << response.dump(4) << std::endl;
 }
 
+/**
+ * @brief Mocks a Get request to the API
+ *
+ * @param endpoint The endpoint to get
+ * @param alternateResponse Optional alternate response to return
+ */
 void MockXSPDAPI::MockGetRequest(string endpoint, json* alternateResponse) {
     string uri = "localhost:8008/api/v1/" + endpoint;
     if (!this->sampleResponses.contains(uri)) {
@@ -45,10 +61,22 @@ void MockXSPDAPI::MockGetRequest(string endpoint, json* alternateResponse) {
     }
 }
 
+/**
+ * @brief Mocks a GetVar request to the API
+ *
+ * @param variableEndpoint The variable endpoint to get
+ * @param alternateResponse Optional alternate response to return
+ */
 void MockXSPDAPI::MockGetVarRequest(string variableEndpoint, json* alternateResponse) {
     this->MockGetRequest("devices/lambda01/variables?path=" + variableEndpoint, alternateResponse);
 }
 
+/**
+ * @brief Mocks a repeated Get request to the API
+ *
+ * @param endpoint The endpoint to get
+ * @param alternateResponse Optional alternate response to return
+ */
 void MockXSPDAPI::MockRepeatedGetRequest(string endpoint, json* alternateResponse) {
     string uri = "localhost:8008/api/v1/" + endpoint;
     json response = alternateResponse ? *alternateResponse : this->sampleResponses[uri];
@@ -57,6 +85,12 @@ void MockXSPDAPI::MockRepeatedGetRequest(string endpoint, json* alternateRespons
     std::cout << "Returning response: " << response.dump(4) << std::endl;
 }
 
+/**
+ * @brief Mocks a Set request to the API
+ *
+ * @param endpoint The endpoint to set
+ * @param alternateResponse Optional alternate response to return
+ */
 void MockXSPDAPI::MockSetRequest(string endpoint, json* alternateResponse) {
     string uri = "localhost:8008/api/v1/" + endpoint;
     string rbUri = "localhost:8008/api/v1/" + endpoint.substr(0, endpoint.find_last_of("&"));
@@ -87,6 +121,12 @@ void MockXSPDAPI::MockSetRequest(string endpoint, json* alternateResponse) {
     }
 }
 
+/**
+ * @brief Mocks a SetVar request to the API
+ *
+ * @param variableEndpoint The variable endpoint to set
+ * @param alternateResponse Optional alternate response to return
+ */
 void MockXSPDAPI::MockSetVarRequest(string variableEndpoint, json* alternateResponse) {
     this->MockSetRequest("devices/lambda01/variables?path=" + variableEndpoint, alternateResponse);
 }

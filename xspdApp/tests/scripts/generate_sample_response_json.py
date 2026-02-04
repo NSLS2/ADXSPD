@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+"""
+This script generates a JSON file containing sample responses from the XSPD API.
+
+It queries various endpoints of the API and saves the responses in a structured format.
+"""
+
 import json
 import requests
 
