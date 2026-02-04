@@ -160,7 +160,7 @@ void MockXSPDAPI::MockSetVarRequest(string variableEndpoint, json* alternateResp
  */
 void MockXSPDAPI::MockInitializationSeq(std::string deviceId) {
     InSequence seq;
-    this->MockAPIVerionCheck();
+    this->MockAPIVersionCheck();
     this->MockGetRequest("devices");
     this->MockGetRequest("devices/" + deviceId + "/variables?path=info");
     this->MockGetRequest("devices/" + deviceId);
