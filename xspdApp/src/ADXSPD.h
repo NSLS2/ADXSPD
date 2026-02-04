@@ -188,7 +188,7 @@ class ADXSPD : ADDriver {
         ADTriggerMode, ADAcquireTime, ADXSPD_BitDepth, ADXSPD_ShuffleMode, ADXSPD_CounterMode,
     };
 
-    ADXSPDLogLevel logLevel = ADXSPDLogLevel::DEBUG;  // Logging level for the driver
+    ADXSPDLogLevel logLevel = ADXSPDLogLevel::INFO;  // Logging level for the driver
 };
 
 #endif
