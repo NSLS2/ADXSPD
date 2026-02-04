@@ -180,6 +180,17 @@ class API {
      */
     template <typename T>
     T ReadVarFromResp(json response, string varName, string key) {
+
+        // Check to make sure the response we got was actually for the variable we requested
+        // XSPD seems to occasionally return the same response twice.
+        if (response.contains("path")) {
+            string respVarPath = response["path"].get<string>();
+            if (respVarPath != varName) {
+                throw runtime_error("Variable path mismatch: expected " + varName + ", got " +
+                                    respVarPath);
+            }
+        }
+
         if (response.contains(key)) {
             if constexpr (is_enum<T>::value) {
                 string valAsStr = response[key].get<string>();
