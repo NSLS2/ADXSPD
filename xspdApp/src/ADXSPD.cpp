@@ -74,16 +74,16 @@ asynStatus ADXSPD::acquireStart() {
     setIntegerParam(ADAcquire, 1);
     setIntegerParam(ADNumImagesCounter, 0);
 
-    // Update frame size parameters from detector
-    int sizeX = this->pDetector->GetActiveDataPort()->GetVar<int>("frame_width");
-    int sizeY = this->pDetector->GetActiveDataPort()->GetVar<int>("frame_height");
-    setIntegerParam(ADSizeX, sizeX);
-    setIntegerParam(ADSizeY, sizeY);
-
-    callParamCallbacks();
-
     try {
+        int sizeX = this->pDetector->GetActiveDataPort()->GetVar<int>("frame_width");
+        int sizeY = this->pDetector->GetActiveDataPort()->GetVar<int>("frame_height");
+        setIntegerParam(ADSizeX, sizeX);
+        setIntegerParam(ADSizeY, sizeY);
+
+        callParamCallbacks();
+
         this->pDetector->ExecCommand("start");
+
     } catch (std::exception& e) {
         ERR_ARGS("Failed to start acquisition: %s", e.what());
         return asynError;
