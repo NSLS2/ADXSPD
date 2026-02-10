@@ -5,26 +5,61 @@ include $(TOP)/configure/CONFIG
 
 USR_CPPFLAGS += -std=c++17
 
-PROD_IOC = TestADXSPD
+PROD_NAME = TestADXSPD
+TESTPROD_IOC = $(PROD_NAME)
 
-TestADXSPD_SRCS += TestADXSPDMain.cpp
-# TestADXSPD_SRCS += ADXSPDTestUtils.cpp
-TestADXSPD_SRCS += TestXSPDAPI.cpp
-TestADXSPD_SRCS += MockXSPDAPI.cpp
+$(PROD_NAME)_SRCS += TestADXSPDMain.cpp
+$(PROD_NAME)_SRCS += TestXSPDAPI.cpp
+$(PROD_NAME)_SRCS += MockXSPDAPI.cpp
 
-# Add additional test source files here
-# TestADXSPD_SRCS +=
+$(PROD_NAME)_LIBS += ADXSPD ADBase asyn cpr
 
-TestADXSPD_LIBS += ADXSPD ADBase asyn cpr gtest gmock $(EPICS_BASE_IOC_LIBS)
-
-ifdef ZMQ_LIB
-  zmq_DIR        += $(ZMQ_LIB)
-  TestADXSPD_LIBS      += zmq
+ifeq ($(GTEST_EXTERNAL), NO)
+  $(PROD_NAME)_LIBS += gmock gtest
 else
-  TestADXSPD_SYS_LIBS  += zmq
+  ifdef GTEST_LIB
+    gtest_DIR        += $(GTEST_LIB)
+    $(PROD_NAME)_LIBS      += gmock gtest
+  else
+    $(PROD_NAME)_SYS_LIBS += gmock gtest
+  endif
 endif
 
-TestADXSPD_SYS_LIBS += curl z
+ifeq ($(ZMQ_EXTERNAL), NO)
+  $(PROD_NAME)_LIBS += zmq
+else
+  ifdef ZMQ_LIB
+    zmq_DIR        += $(ZMQ_LIB)
+    $(PROD_NAME)_LIBS      += zmq
+  else
+    $(PROD_NAME)_SYS_LIBS  += zmq
+  endif
+endif
+
+ifeq ($(CURL_EXTERNAL), NO)
+  $(PROD_NAME)_LIBS += curl
+else
+  ifdef CURL_LIB
+    curl_DIR        += $(CURL_LIB)
+    $(PROD_NAME)_LIBS      += curl
+  else
+    $(PROD_NAME)_SYS_LIBS += curl
+  endif
+endif
+
+ifeq ($(ZLIB_EXTERNAL), NO)
+  $(PROD_NAME)_LIBS += zlib
+else
+  ifdef ZLIB_LIB
+    zlib_DIR        += $(ZLIB_LIB)
+    $(PROD_NAME)_LIBS      += z
+  else
+    $(PROD_NAME)_SYS_LIBS += z
+  endif
+endif
+
+$(PROD_NAME)_LIBS += $(EPICS_BASE_IOC_LIBS)
+
 
 include $(TOP)/configure/RULES
 #----------------------------------------

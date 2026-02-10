@@ -3,7 +3,7 @@ include $(TOP)/configure/CONFIG
 #----------------------------------------
 
 DIRS := $(DIRS) src
-ifeq ($(BUILD_TESTS), YES)
+ifeq ($(BUILD_XSPD_TESTS), YES)
 DIRS := $(DIRS) tests
 tests_DEPEND_DIRS += src
 endif
