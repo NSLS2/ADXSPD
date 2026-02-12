@@ -293,21 +293,21 @@ record(ai, "$(P)$(R)FramesQueued_RBV"){
     field(SCAN, "I/O Intr")
 }
 
-record(bo, "$(P)$(R)UsePixelMask"){
+record(bo, "$(P)$(R)PixelMask"){
     field(DESC, "Use pixel mask")
     field(DTYP, "asynInt32")
-    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_USE_PIXEL_MASK")
-    field(ZNAM, "Disable")
-    field(ONAM, "Enable")
+    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_PIXEL_MASK")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
     field(VAL, "0")
     field(PINI, "NO")
 }
 
-record(bi, "$(P)$(R)UsePixelMask_RBV"){
+record(bi, "$(P)$(R)PixelMask_RBV"){
     field(DESC, "Use pixel mask rb")
     field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_USE_PIXEL_MASK")
-    field(ZNAM, "Disable")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_PIXEL_MASK")
+    field(ZNAM, "Disabled")
     field(ONAM, "Enable")
     field(SCAN, "I/O Intr")
 }

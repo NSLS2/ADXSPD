@@ -63,9 +63,11 @@ void ADXSPDModule::getInitialModuleState() {
                     (int) this->module->GetVar<XSPD::Compressor>("compressor"));
 
     setIntegerParam(ADXSPDModule_InterpMode,
-                    (int) this->module->GetVar<XSPD::OnOff>("interpolation"));
+                    (int) this->module->GetVar<bool>("interpolation_enabled"));
 
     setIntegerParam(ADXSPDModule_NumCons, this->module->GetVar<int>("n_connectors"));
+
+    setIntegerParam(ADXSPDModule_PixelMask, this->module->GetVar<bool>("pixel_mask_enabled"));
 
     getFlatfieldState();
 
@@ -74,8 +76,7 @@ void ADXSPDModule::getInitialModuleState() {
     setDoubleParam(ADXSPDModule_PosY, position[1]);
     setDoubleParam(ADXSPDModule_PosZ, position[2]);
 
-    // TODO: ram_allocated endpoint doesn't seem to work
-    // setIntegerParam(ADXSPDModule_RamAllocated, this->module->GetVar<int>("ram_allocated"));
+    setIntegerParam(ADXSPDModule_RamAllocated, this->module->GetVar<bool>("ram_allocated"));
 
     vector<double> rotation = this->module->GetVar<vector<double>>("rotation");
     setDoubleParam(ADXSPDModule_RotYaw, rotation[0]);

@@ -23,8 +23,7 @@ MockXSPDAPI::MockXSPDAPI() : XSPD::API("localhost", 8008) {
 
     this->sampleResponses = json::parse(file);
     // Add a second device
-    this->sampleResponses["api/v1/devices"]["devices"].push_back(
-        {{"id", "device456"}});
+    this->sampleResponses["api/v1/devices"]["devices"].push_back({{"id", "device456"}});
 };
 
 /**
@@ -55,7 +54,8 @@ void MockXSPDAPI::MockGetRequest(string endpoint, json* alternateResponse) {
             .WillOnce(Throw(std::runtime_error("Failed to get data from " + uri)));
         std::cout << "Mocking non 200 response code." << std::endl;
     } else {
-        json response = alternateResponse ? *alternateResponse : this->sampleResponses[fullEndpoint];
+        json response =
+            alternateResponse ? *alternateResponse : this->sampleResponses[fullEndpoint];
         EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::GET)).WillOnce(Return(response));
         std::cout << "Returning response: " << response.dump(4) << std::endl;
     }
@@ -108,7 +108,8 @@ void MockXSPDAPI::MockSetRequest(string endpoint, json* alternateResponse) {
 
     json newValueJson = json::parse(newValue);
 
-    std::cout << "Mocked PUT request with value " << newValue << "to endpoint: " << fullEndpoint << std::endl;
+    std::cout << "Mocked PUT request with value " << newValue << "to endpoint: " << fullEndpoint
+              << std::endl;
     if (!this->sampleResponses.contains(fullEndpoint)) {
         EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::PUT))
             .WillOnce(Throw(std::runtime_error("Failed to put data to " + uri)));
@@ -117,7 +118,8 @@ void MockXSPDAPI::MockSetRequest(string endpoint, json* alternateResponse) {
         // Update our sample responses json with the new value
         this->sampleResponses[fullEndpoint]["value"] = newValueJson;
 
-        json response = alternateResponse ? *alternateResponse : this->sampleResponses[fullEndpoint];
+        json response =
+            alternateResponse ? *alternateResponse : this->sampleResponses[fullEndpoint];
         EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::PUT)).WillOnce(Return(response));
         std::cout << "Returning response: " << response.dump(4) << std::endl;
     }

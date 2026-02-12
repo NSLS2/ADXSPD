@@ -474,9 +474,7 @@ void ADXSPD::getInitialDetState() {
         setDoubleParam(ADXSPD_BeamEnergy, this->pDetector->GetVar<double>("beam_energy"));
         setIntegerParam(ADXSPD_GatingMode,
                         static_cast<int>(this->pDetector->GetVar<XSPD::OnOff>("gating_mode")));
-        setIntegerParam(
-            ADXSPD_FFCorrection,
-            static_cast<int>(this->pDetector->GetVar<XSPD::OnOff>("flatfield_correction")));
+        setIntegerParam(ADXSPD_FFCorrection, this->pDetector->GetVar<bool>("flatfield_enabled"));
         setIntegerParam(ADXSPD_ChargeSumming,
                         static_cast<int>(this->pDetector->GetVar<XSPD::OnOff>("charge_summing")));
         setIntegerParam(
@@ -487,14 +485,13 @@ void ADXSPD::getInitialDetState() {
         setIntegerParam(ADXSPD_BitDepth, bitDepth);
         setIntegerParam(NDDataType, static_cast<int>(getDataTypeForBitDepth(bitDepth)));
 
-        setIntegerParam(
-            ADXSPD_CrCorr,
-            static_cast<int>(this->pDetector->GetVar<XSPD::OnOff>("countrate_correction")));
+        setIntegerParam(ADXSPD_CrCorr,
+                        this->pDetector->GetVar<bool>("countrate_correction_enabled"));
         setIntegerParam(
             ADXSPD_CounterMode,
             static_cast<int>(this->pDetector->GetVar<XSPD::CounterMode>("counter_mode")));
         setIntegerParam(ADXSPD_SaturationFlag,
-                        static_cast<int>(this->pDetector->GetVar<XSPD::OnOff>("saturation_flag")));
+                        this->pDetector->GetVar<bool>("saturation_flag_enabled"));
         setIntegerParam(
             ADXSPD_ShuffleMode,
             static_cast<int>(this->pDetector->GetVar<XSPD::ShuffleMode>("shuffle_mode")));
