@@ -86,16 +86,9 @@ void ADXSPDModule::getInitialModuleState() {
     setIntegerParam(ADXSPDModule_SatThresh, this->module->GetVar<int>("saturation_threshold"));
 
     // Module feature support is stored as a bitmask w/ 4 bits.
-    vector<string> features = this->module->GetVar<vector<string>>("features");
     int featureBitmask = 0;
-    for (auto& featureStr : features) {
-        auto feature = magic_enum::enum_cast<XSPD::ModuleFeature>("FEAT_" + featureStr);
-        if (!feature.has_value()) {
-            ERR_ARGS("Unknown module feature: %s", featureStr.c_str());
-            continue;
-        } else {
-            featureBitmask += pow(2, static_cast<int>(feature.value()));
-        }
+    for (auto& feature : this->module->GetFeatures()) {
+        featureBitmask += pow(2, static_cast<int>(feature));
     }
     setIntegerParam(ADXSPDModule_FeatBitmask, featureBitmask);
 

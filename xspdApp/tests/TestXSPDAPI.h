@@ -19,11 +19,11 @@ using ::testing::StrictMock;
 
 class TestXSPDAPI : public ::testing::Test {
    protected:
-    void SetUp() override { mockXSPDAPI = new StrictMock<MockXSPDAPI>(); }
+    void SetUp() override { mapi = new StrictMock<MockXSPDAPI>(); }
 
-    void TearDown() override { delete mockXSPDAPI; }
+    void TearDown() override { delete mapi; }
 
-    StrictMock<MockXSPDAPI>* mockXSPDAPI;
+    StrictMock<MockXSPDAPI>* mapi;
 };
 
 #endif  // TEST_XSPDAPI_H

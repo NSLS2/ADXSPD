@@ -297,6 +297,7 @@ class Module : public APIComponent {
     virtual ~Module() = default;
     string GetFirmware() { return this->moduleFirmware; }
     vector<string> GetChipIds() { return this->chipIds; }
+    vector<XSPD::ModuleFeature> GetFeatures();
 
    private:
     string moduleFirmware;
