@@ -93,8 +93,9 @@ void MockXSPDAPI::MockRepeatedGetRequest(string endpoint, json* alternateRespons
  * @param alternateResponse Optional alternate response to return
  */
 void MockXSPDAPI::MockSetRequest(string endpoint, json* alternateResponse) {
+    string fullEndpointWithArg = "api/v1/" + endpoint;
     string fullEndpoint = "api/v1/" + endpoint.substr(0, endpoint.find_last_of("&"));
-    string uri = "localhost:8008/api/v1/" + endpoint;
+    string uri = "localhost:8008/" + fullEndpointWithArg;
     string rbUri = "localhost:8008/" + fullEndpoint;
 
     string newValue = endpoint.substr(endpoint.find_last_of('=') + 1);
@@ -107,14 +108,14 @@ void MockXSPDAPI::MockSetRequest(string endpoint, json* alternateResponse) {
 
     json newValueJson = json::parse(newValue);
 
-    std::cout << "Mocked PUT request to URI: " << fullEndpoint << std::endl;
+    std::cout << "Mocked PUT request with value " << newValue << "to endpoint: " << fullEndpoint << std::endl;
     if (!this->sampleResponses.contains(fullEndpoint)) {
         EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::PUT))
             .WillOnce(Throw(std::runtime_error("Failed to put data to " + uri)));
         std::cout << "Mocking non 200 response code." << std::endl;
     } else {
         // Update our sample responses json with the new value
-        this->sampleResponses[rbUri]["value"] = newValueJson;
+        this->sampleResponses[fullEndpoint]["value"] = newValueJson;
 
         json response = alternateResponse ? *alternateResponse : this->sampleResponses[fullEndpoint];
         EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::PUT)).WillOnce(Return(response));

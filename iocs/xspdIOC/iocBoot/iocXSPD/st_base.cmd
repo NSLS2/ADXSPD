@@ -33,9 +33,22 @@ dbLoadRecords("$(ADXSPD)/db/ADXSPDModule.template", "P=$(PREFIX), R=mod1:,PORT=$
 # Load all other plugins using commonPlugins.cmd
 < $(ADCORE)/iocBoot/commonPlugins.cmd
 
+# Load Apache Arrow file plugin
+NDFileArrowConfigure("ARR1", $(QSIZE), 0, "$(PORT)", 0)
+dbLoadRecords("$(ADPLUGINARROW)/db/NDFileArrow.template", "P=$(PREFIX),R=arrow1:,PORT=ARR1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=PROC1")
+
 # set_requestfile_path("$(ADXSPD)/xspdApp/Db")
 
 iocInit()
 
 # save things every thirty seconds
 create_monitor_set("auto_settings.req", 30, "P=$(PREFIX)")
+
+# Set initial plugin arrow params
+
+dbpf $(PREFIX)arrow1:FilePath "/tmp"
+dbpf $(PREFIX)arrow1:FileTemplate "%s%s_%3.3d.csv"
+dbpf $(PREFIX)arrow1:AutoIncrement 1
+dbpf $(PREFIX)arrow1:OutputFileFormat 1
+dbpf $(PREFIX)arrow1:EnableCallbacks 1
+dbpf $(PREFIX)arrow1:FileName "Test"
