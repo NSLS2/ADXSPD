@@ -33,7 +33,7 @@
 #define ADXSPDModule_LowThreshFfDateString "XSPD_LOW_THRESH_FF_DATE"
 #define ADXSPDModule_HighThreshFfDateString "XSPD_HIGH_THRESH_FF_DATE"
 #define ADXSPDModule_FramesQueuedString "XSPD_FRAMES_QUEUED"
-#define ADXSPDModule_UsePixelMaskString "XSPD_USE_PIXEL_MASK"
+#define ADXSPDModule_PixelMaskString "XSPD_PIXEL_MASK"
 #define ADXSPDModule_ShuffleModeString "XSPD_SHUFFLE_MODE"
 
 // Parameter index definitions
@@ -65,12 +65,12 @@ int ADXSPDModule_HighThreshFfAuthor;
 int ADXSPDModule_LowThreshFfDate;
 int ADXSPDModule_HighThreshFfDate;
 int ADXSPDModule_FramesQueued;
-int ADXSPDModule_UsePixelMask;
+int ADXSPDModule_PixelMask;
 int ADXSPDModule_ShuffleMode;
 
 #define ADXSPDMODULE_FIRST_PARAM ADXSPDModule_BoardTemp
 #define ADXSPDMODULE_LAST_PARAM ADXSPDModule_ShuffleMode
 
-#define NUM_ADXSPDMODULE_PARAMS ((int) (&ADXSPDMODULE_LAST_PARAM - &ADXSPDMODULE_FIRST_PARAM + 1))
+#define NUM_ADXSPDMODULE_PARAMS 30
 
 #endif
