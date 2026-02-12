@@ -87,8 +87,8 @@ TEST_F(TestXSPDAPI, TestGetSystemIdAfterInitialization) {
 TEST_F(TestXSPDAPI, TestGetVersionInfoAfterInitialization) {
     this->mockXSPDAPI->MockInitialization();
     ASSERT_EQ(this->mockXSPDAPI->GetApiVersion(), "1");
-    ASSERT_EQ(this->mockXSPDAPI->GetXSPDVersion(), "1.5.2");
-    ASSERT_EQ(this->mockXSPDAPI->GetLibXSPVersion(), "2.7.5");
+    ASSERT_EQ(this->mockXSPDAPI->GetXSPDVersion(), "1.6.0");
+    ASSERT_EQ(this->mockXSPDAPI->GetLibXSPVersion(), "2.7.6");
 }
 
 TEST_F(TestXSPDAPI, TestGetDeviceAtIndex) {
@@ -335,7 +335,7 @@ TEST_F(TestXSPDAPI, TestGetBoolModuleVar) {
 
     // Update to true
     this->mockXSPDAPI->UpdateSampleResp(
-        "devices/lambda01/variables?path=lambda/1/flatfield_enabled", json{{"value", "true"}});
+        "devices/lambda01/variables?path=lambda/1/flatfield_enabled", json{{"value", true}});
     this->mockXSPDAPI->MockGetVarRequest("lambda/1/flatfield_enabled");
 
     boolValue = pdet->GetModules()[0]->GetVar<bool>("flatfield_enabled");

@@ -27,8 +27,8 @@ using std::tuple;
 using std::vector;
 
 #define MIN_XSPD_MAJOR_VERSION 1
-#define MIN_XSPD_MINOR_VERSION 5
-#define MIN_XSPD_PATCH_VERSION 2
+#define MIN_XSPD_MINOR_VERSION 6
+#define MIN_XSPD_PATCH_VERSION 0
 
 namespace XSPD {
 
@@ -210,10 +210,6 @@ class API {
                     throw runtime_error("Failed to cast value " + valAsStr +
                                         " to enum for variable " + varName);
                 }
-            } else if constexpr (is_same<T, bool>::value) {
-                // Temporarily handle booleans manually, since they are being passed as strings
-                // instead of bools.
-                return response[key].get<string>() == "true";
             } else {
                 return response[key].get<T>();
             }
