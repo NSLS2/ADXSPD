@@ -94,19 +94,19 @@ TEST_F(TestXSPDAPI, TestGetVersionInfoAfterInitialization) {
 TEST_F(TestXSPDAPI, TestGetDeviceAtIndex) {
     this->mapi->MockInitialization();
     this->mapi->MockRepeatedGetRequest("devices");
-    std::string deviceId = mockXSPDAPI->GetDeviceAtIndex(0);
+    std::string deviceId = mapi->GetDeviceAtIndex(0);
     ASSERT_EQ(deviceId, "lambda01");
 
-    deviceId = mockXSPDAPI->GetDeviceAtIndex(1);
+    deviceId = mapi->GetDeviceAtIndex(1);
     ASSERT_EQ(deviceId, "device456");
 }
 
 TEST_F(TestXSPDAPI, TestDeviceExists) {
     this->mapi->MockInitialization();
     this->mapi->MockRepeatedGetRequest("devices");
-    ASSERT_EQ(mockXSPDAPI->DeviceExists("lambda01"), true);
-    ASSERT_EQ(mockXSPDAPI->DeviceExists("device456"), true);
-    ASSERT_EQ(mockXSPDAPI->DeviceExists("device789"), false);
+    ASSERT_EQ(mapi->DeviceExists("lambda01"), true);
+    ASSERT_EQ(mapi->DeviceExists("device456"), true);
+    ASSERT_EQ(mapi->DeviceExists("device789"), false);
 }
 
 TEST_F(TestXSPDAPI, TestAPIInitInvalidDeviceId) {
