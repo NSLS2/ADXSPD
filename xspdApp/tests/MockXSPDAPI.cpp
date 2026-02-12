@@ -15,7 +15,7 @@ using ::testing::Throw;
 MockXSPDAPI::MockXSPDAPI() : XSPD::API("localhost", 8008) {
     // Load sample responses from JSON file. The sample responses were pulled from
     // the simulator provided by X-Spectrum
-    string sampleResponsesPath = "xspdApp/tests/samples/xspd_sample_resp_sim.json";
+    string sampleResponsesPath = "xspdApp/tests/samples/xspd_sample_responses.json";
     std::ifstream file(sampleResponsesPath);
     if (!file.is_open())
         throw std::runtime_error("Failed to open sample responses JSON file at " +
@@ -23,7 +23,7 @@ MockXSPDAPI::MockXSPDAPI() : XSPD::API("localhost", 8008) {
 
     this->sampleResponses = json::parse(file);
     // Add a second device
-    this->sampleResponses["localhost:8008/api/v1/devices"]["devices"].push_back(
+    this->sampleResponses["api/v1/devices"]["devices"].push_back(
         {{"id", "device456"}});
 };
 
@@ -34,7 +34,7 @@ MockXSPDAPI::MockXSPDAPI() : XSPD::API("localhost", 8008) {
  */
 void MockXSPDAPI::MockAPIVersionCheck(json* alternateResponse) {
     string uri = "localhost:8008/api";
-    json response = alternateResponse ? *alternateResponse : this->sampleResponses[uri];
+    json response = alternateResponse ? *alternateResponse : this->sampleResponses["api"];
     EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::GET)).WillOnce(Return(response));
     std::cout << "Mocked GET request to URI: " << uri << std::endl;
     std::cout << "Returning response: " << response.dump(4) << std::endl;
@@ -47,16 +47,16 @@ void MockXSPDAPI::MockAPIVersionCheck(json* alternateResponse) {
  * @param alternateResponse Optional alternate response to return
  */
 void MockXSPDAPI::MockGetRequest(string endpoint, json* alternateResponse) {
-    string uri = "localhost:8008/api/v1/" + endpoint;
-    if (!this->sampleResponses.contains(uri)) {
+    string fullEndpoint = "api/v1/" + endpoint;
+    string uri = "localhost:8008/" + fullEndpoint;
+    std::cout << "Mocking GET request to URI: " << fullEndpoint << std::endl;
+    if (!this->sampleResponses.contains(fullEndpoint)) {
         EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::GET))
             .WillOnce(Throw(std::runtime_error("Failed to get data from " + uri)));
-        std::cout << "Mocked GET request to URI: " << uri << std::endl;
         std::cout << "Mocking non 200 response code." << std::endl;
     } else {
-        json response = alternateResponse ? *alternateResponse : this->sampleResponses[uri];
+        json response = alternateResponse ? *alternateResponse : this->sampleResponses[fullEndpoint];
         EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::GET)).WillOnce(Return(response));
-        std::cout << "Mocked GET request to URI: " << uri << std::endl;
         std::cout << "Returning response: " << response.dump(4) << std::endl;
     }
 }
@@ -78,8 +78,9 @@ void MockXSPDAPI::MockGetVarRequest(string variableEndpoint, json* alternateResp
  * @param alternateResponse Optional alternate response to return
  */
 void MockXSPDAPI::MockRepeatedGetRequest(string endpoint, json* alternateResponse) {
-    string uri = "localhost:8008/api/v1/" + endpoint;
-    json response = alternateResponse ? *alternateResponse : this->sampleResponses[uri];
+    string fullEndpoint = "api/v1/" + endpoint;
+    string uri = "localhost:8008/" + fullEndpoint;
+    json response = alternateResponse ? *alternateResponse : this->sampleResponses[fullEndpoint];
     EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::GET)).WillRepeatedly(Return(response));
     std::cout << "Mocked GET request to URI: " << uri << std::endl;
     std::cout << "Returning response: " << response.dump(4) << std::endl;
@@ -92,8 +93,9 @@ void MockXSPDAPI::MockRepeatedGetRequest(string endpoint, json* alternateRespons
  * @param alternateResponse Optional alternate response to return
  */
 void MockXSPDAPI::MockSetRequest(string endpoint, json* alternateResponse) {
+    string fullEndpoint = "api/v1/" + endpoint.substr(0, endpoint.find_last_of("&"));
     string uri = "localhost:8008/api/v1/" + endpoint;
-    string rbUri = "localhost:8008/api/v1/" + endpoint.substr(0, endpoint.find_last_of("&"));
+    string rbUri = "localhost:8008/" + fullEndpoint;
 
     string newValue = endpoint.substr(endpoint.find_last_of('=') + 1);
 
@@ -105,18 +107,17 @@ void MockXSPDAPI::MockSetRequest(string endpoint, json* alternateResponse) {
 
     json newValueJson = json::parse(newValue);
 
-    if (!this->sampleResponses.contains(rbUri)) {
+    std::cout << "Mocked PUT request to URI: " << fullEndpoint << std::endl;
+    if (!this->sampleResponses.contains(fullEndpoint)) {
         EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::PUT))
             .WillOnce(Throw(std::runtime_error("Failed to put data to " + uri)));
-        std::cout << "Mocked PUT request to URI: " << uri << std::endl;
         std::cout << "Mocking non 200 response code." << std::endl;
     } else {
         // Update our sample responses json with the new value
         this->sampleResponses[rbUri]["value"] = newValueJson;
 
-        json response = alternateResponse ? *alternateResponse : this->sampleResponses[rbUri];
+        json response = alternateResponse ? *alternateResponse : this->sampleResponses[fullEndpoint];
         EXPECT_CALL(*this, SubmitRequest(uri, XSPD::RequestType::PUT)).WillOnce(Return(response));
-        std::cout << "Mocked PUT request to URI: " << uri << std::endl;
         std::cout << "Returning response: " << response.dump(4) << std::endl;
     }
 }

@@ -32,5 +32,3 @@ paramdefs:
 
 lint:
 	pixi run lint
-runtests:
-	cd xspdApp/tests && make -sj && cd ../.. && ./bin/linux-x86_64/ADXSPDTests

@@ -10,7 +10,8 @@ lint = "pre-commit run --all-files"
 build = "make -sj"
 make-paramdefs = "dbtools-gen-paramdefs xspdApp/Db xspdApp/src && pre-commit run --all-files"
 make-bobfiles = "epicsdb2bob xspdApp/Db xspdApp/op/bob -d -r _RBV -t none"
-simulator = "sim/xspdSimulator.py"
+make-sample-responses = "./xspdApp/tests/scripts/generate_sample_response_json.py"
+tests = "./xspdApp/tests/O.linux-x86_64/TestADXSPD"
 
 [dependencies]
 pre-commit = ">=4.5.1,<5"
@@ -19,6 +20,7 @@ pip = ">=25.2,<26"
 python = ">=3.12.12,<3.13"
 flask = ">=3.1.2,<4"
 pyzmq = ">=27.1.0,<28"
+requests = ">=2.32.5,<3"
 
 [pypi-dependencies]
 epicsdbtools = { git = "https://github.com/jwlodek/epicsdbtools.git" }
