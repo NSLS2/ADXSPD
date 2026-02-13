@@ -351,7 +351,7 @@ double XSPD::Detector::SetThreshold(XSPD::Threshold threshold, double value) {
     return rbThresholds[static_cast<size_t>(threshold)];
 }
 
-vector<XSPD::ModuleFeature> XSPD::Module::GetFeatures(){
+vector<XSPD::ModuleFeature> XSPD::Module::GetFeatures() {
     vector<string> featureStrings = this->GetVar<vector<string>>("features");
     vector<XSPD::ModuleFeature> features;
     for (auto& featureStr : featureStrings) {

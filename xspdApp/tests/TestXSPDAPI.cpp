@@ -140,8 +140,7 @@ TEST_F(TestXSPDAPI, TestAPIInitNoDeviceInfo) {
 
 TEST_F(TestXSPDAPI, TestAPIInitNoDetectors) {
     InSequence seq;
-    json modifiedInfoResp =
-        this->mapi->GetSampleResp("devices/lambda01/variables?path=info");
+    json modifiedInfoResp = this->mapi->GetSampleResp("devices/lambda01/variables?path=info");
     modifiedInfoResp["value"]["detectors"] = json::array();
     this->mapi->MockAPIVersionCheck();
     this->mapi->MockGetRequest("devices");
@@ -153,8 +152,7 @@ TEST_F(TestXSPDAPI, TestAPIInitNoDetectors) {
 
 TEST_F(TestXSPDAPI, TestAPIInitNoDetectorID) {
     InSequence seq;
-    json modifiedInfoResp =
-        this->mapi->GetSampleResp("devices/lambda01/variables?path=info");
+    json modifiedInfoResp = this->mapi->GetSampleResp("devices/lambda01/variables?path=info");
     modifiedInfoResp["value"]["detectors"][0].erase("detector-id");
     this->mapi->MockAPIVersionCheck();
     this->mapi->MockGetRequest("devices");
@@ -167,8 +165,7 @@ TEST_F(TestXSPDAPI, TestAPIInitNoDetectorID) {
 
 TEST_F(TestXSPDAPI, TestAPIInitNoModules) {
     InSequence seq;
-    json modifiedInfoResp =
-        this->mapi->GetSampleResp("devices/lambda01/variables?path=info");
+    json modifiedInfoResp = this->mapi->GetSampleResp("devices/lambda01/variables?path=info");
     modifiedInfoResp["value"]["detectors"][0].erase("modules");
     this->mapi->MockAPIVersionCheck();
     this->mapi->MockGetRequest("devices");
@@ -255,18 +252,16 @@ TEST_F(TestXSPDAPI, TestReadVarFromRespValidInt) {
 TEST_F(TestXSPDAPI, TestReadVarFromRespValidString) {
     json response = json{{"message", "success"}};
 
-    std::string message =
-        this->mapi->ReadVarFromResp<std::string>(response, "message", "message");
+    std::string message = this->mapi->ReadVarFromResp<std::string>(response, "message", "message");
     ASSERT_EQ(message, "success");
 }
 
 TEST_F(TestXSPDAPI, TestReadVarFromRespKeyNotFound) {
     json response = json{{"status", 1}};
 
-    EXPECT_THAT(
-        [&]() { this->mapi->ReadVarFromResp<std::string>(response, "message", "message"); },
-        testing::ThrowsMessage<std::out_of_range>(
-            testing::HasSubstr("not found in response for variable")));
+    EXPECT_THAT([&]() { this->mapi->ReadVarFromResp<std::string>(response, "message", "message"); },
+                testing::ThrowsMessage<std::out_of_range>(
+                    testing::HasSubstr("not found in response for variable")));
 }
 
 TEST_F(TestXSPDAPI, TestReadVarFromRespEnumValid) {
@@ -334,8 +329,8 @@ TEST_F(TestXSPDAPI, TestGetBoolModuleVar) {
     ASSERT_EQ(boolValue, false);
 
     // Update to true
-    this->mapi->UpdateSampleResp(
-        "devices/lambda01/variables?path=lambda/1/flatfield_enabled", json{{"value", true}});
+    this->mapi->UpdateSampleResp("devices/lambda01/variables?path=lambda/1/flatfield_enabled",
+                                 json{{"value", true}});
     this->mapi->MockGetVarRequest("lambda/1/flatfield_enabled");
 
     boolValue = pdet->GetModules()[0]->GetVar<bool>("flatfield_enabled");
@@ -401,8 +396,12 @@ TEST_F(TestXSPDAPI, TestGetModuleFeatures) {
     vector<XSPD::ModuleFeature> features = pmod->GetFeatures();
     size_t expectedSize = 3;
     ASSERT_EQ(features.size(), expectedSize);
-    ASSERT_TRUE(std::find(features.begin(), features.end(), XSPD::ModuleFeature::FEAT_HV) != features.end());
-    ASSERT_TRUE(std::find(features.begin(), features.end(), XSPD::ModuleFeature::FEAT_1_6_BIT) != features.end());
-    ASSERT_TRUE(std::find(features.begin(), features.end(), XSPD::ModuleFeature::FEAT_EXTENDED_GATING) != features.end());
-    ASSERT_TRUE(std::find(features.begin(), features.end(), XSPD::ModuleFeature::FEAT_MEDIPIX_DAC_IO) == features.end());
+    ASSERT_TRUE(std::find(features.begin(), features.end(), XSPD::ModuleFeature::FEAT_HV) !=
+                features.end());
+    ASSERT_TRUE(std::find(features.begin(), features.end(), XSPD::ModuleFeature::FEAT_1_6_BIT) !=
+                features.end());
+    ASSERT_TRUE(std::find(features.begin(), features.end(),
+                          XSPD::ModuleFeature::FEAT_EXTENDED_GATING) != features.end());
+    ASSERT_TRUE(std::find(features.begin(), features.end(),
+                          XSPD::ModuleFeature::FEAT_MEDIPIX_DAC_IO) == features.end());
 }

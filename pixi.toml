@@ -8,7 +8,7 @@ version = "0.1.0"
 [tasks]
 lint = "pre-commit run --all-files"
 build = "make -sj"
-make-paramdefs = "epicsdbtools paramdefs xspdApp/Db xspdApp/src -p XSPD && pre-commit run --all-files"
+make-paramdefs = "epicsdbtools paramdefs xspdApp/Db xspdApp/src -p XSPD"
 make-bobfiles = "epicsdb2bob xspdApp/Db xspdApp/op/bob -d -r _RBV -t none"
 make-sample-responses = "./xspdApp/tests/scripts/generate_sample_response_json.py"
 tests = "./xspdApp/tests/O.linux-x86_64/TestADXSPD"
@@ -21,6 +21,7 @@ python = ">=3.12.12,<3.13"
 flask = ">=3.1.2,<4"
 pyzmq = ">=27.1.0,<28"
 requests = ">=2.32.5,<3"
+clang-format = ">=21.1.8,<22"
 
 [pypi-dependencies]
 epicsdbtools = { git = "https://github.com/jwlodek/epicsdbtools.git" }

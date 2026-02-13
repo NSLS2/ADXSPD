@@ -18,13 +18,16 @@ repos:
       - id: mixed-line-ending
         args: ['--fix=lf']
 
-  - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v14.0.6
-    hooks:
-    - id: clang-format
-
   - repo: local
     hooks:
+      - id: clang-format
+        name: clang-format
+        entry: clang-format -i
+        language: python
+        types_or: [c++, c]
+        args: ["-style=file"]
+        require_serial: false
+
       - id: ruff
         name: lint with ruff
         language: system

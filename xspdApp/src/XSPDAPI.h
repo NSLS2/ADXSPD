@@ -385,5 +385,5 @@ class Detector : public APIComponent {
     map<string, DataPort*> dataPorts;
     DataPort* activeDataPort = nullptr;
 };
-};      // namespace XSPD
+};  // namespace XSPD
 #endif  // XSPDAPI_H
