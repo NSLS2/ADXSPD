@@ -30,7 +30,7 @@ jobs:
         run: pixi run lint
 
   build-and-test:
-    name: Build and Test
+    name: Build and Test ADXSPD on EL${{ matrix.rhel_version }}
 
     needs: lint
     runs-on: ubuntu-latest
