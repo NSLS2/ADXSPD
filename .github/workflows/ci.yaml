@@ -46,6 +46,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+
+      - name: Setup pixi
+        uses: prefix-dev/setup-pixi@8ca4608ef7f4daeb54f5205b20d0b7cb42f11143  # v0.8.14
+        with:
+          pixi-version: v0.56.0
+          cache: false
+          frozen: true
+
       - name: Create CONFIG_SITE.local
         run: |
           cat > configure/CONFIG_SITE.local << EOF
@@ -118,4 +126,12 @@ jobs:
 
       - name: Run unit tests
         run: |
-          ./bin/linux-x86_64/TestADXSPD
+          pixi run tests
+
+      - name: Get coverage info
+        run: |
+          pixi run get-coverage-info
+
+      - name: Show coverage summary
+        run: |
+          pixi run lcov -l coverage.info
