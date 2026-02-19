@@ -34,3 +34,8 @@ paramdefs:
 
 lint:
 	pixi run lint
+
+coverage-report:
+	pixi run tests
+	pixi run get-coverage-info
+	pixi run make-coverage-report
