@@ -143,7 +143,6 @@ void ADXSPD::acquisitionThread() {
     NDArray* pArray = nullptr;
     ADImageMode_t acquisitionMode;
     NDArrayInfo arrayInfo;
-    // TODO: Support other data types
     NDDataType_t dataType;
     NDColorMode_t colorMode = NDColorModeMono;  // Only monochrome is supported.
     XSPD::CounterMode counterMode;
