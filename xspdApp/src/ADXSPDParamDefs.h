@@ -32,7 +32,8 @@
 #define ADXSPD_FramesQueuedString "XSPD_FRAMES_QUEUED"
 #define ADXSPD_BitDepthString "XSPD_BIT_DEPTH"
 #define ADXSPD_CrCorrString "XSPD_CR_CORR"
-#define ADXSPD_StatusIntervalString "XSPD_STATUS_INTERVAL"
+#define ADXSPD_MonitorModeString "XSPD_MONITOR_MODE"
+#define ADXSPD_MonitorIntervalString "XSPD_MONITOR_INTERVAL"
 
 // Parameter index definitions
 int ADXSPD_ApiVersion;
@@ -62,11 +63,12 @@ int ADXSPD_HighThreshold;
 int ADXSPD_FramesQueued;
 int ADXSPD_BitDepth;
 int ADXSPD_CrCorr;
-int ADXSPD_StatusInterval;
+int ADXSPD_MonitorMode;
+int ADXSPD_MonitorInterval;
 
 #define ADXSPD_FIRST_PARAM ADXSPD_ApiVersion
-#define ADXSPD_LAST_PARAM ADXSPD_StatusInterval
+#define ADXSPD_LAST_PARAM ADXSPD_MonitorInterval
 
-#define NUM_ADXSPD_PARAMS 28
+#define NUM_ADXSPD_PARAMS 29
 
 #endif

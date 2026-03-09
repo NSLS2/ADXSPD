@@ -259,7 +259,7 @@ void ADXSPD::acquisitionThread() {
             // TODO: This assumes no compression; handle compressed data later
             size_t frameSizeBytes = zmq_msg_size(&frameMessages[2]);
 
-            DEBUG_ARGS(
+            INFO_ARGS(
                 "Received frame number %d, trigger number %d, status code %d, size %d, %ld bytes",
                 frameNumber, triggerNumber, statusCode, size, frameSizeBytes);
 
@@ -423,12 +423,22 @@ void ADXSPD::acquisitionThread() {
  */
 void ADXSPD::monitorThread() {
     double pollInterval;
+    int monitorEnabled;
     while (true) {
-        getDoubleParam(ADXSPD_StatusInterval, &pollInterval);
+        getDoubleParam(ADXSPD_MonitorInterval, &pollInterval);
+        getIntegerParam(ADXSPD_MonitorMode, &monitorEnabled);
 
         // Don't allow polling faster than minimum interval
         if (pollInterval <= ADXSPD_MIN_STATUS_POLL_INTERVAL)
             pollInterval = ADXSPD_MIN_STATUS_POLL_INTERVAL;
+
+        if (epicsEventWaitWithTimeout(this->shutdownEventId, pollInterval) == epicsEventWaitOK) {
+            INFO("Shutdown event received, exiting monitor thread...");
+            break;
+        }
+
+        // If monitoring is disabled, skip the rest of the loop and wait for the next interval
+        if (monitorEnabled == 0) continue;
 
         this->lock();
 
@@ -463,11 +473,6 @@ void ADXSPD::monitorThread() {
         this->getDataPortVar<int>(ADXSPD_FramesQueued, "frames_queued");
 
         this->unlock();
-
-        if (epicsEventWaitWithTimeout(this->shutdownEventId, pollInterval) == epicsEventWaitOK) {
-            INFO("Shutdown event received, exiting monitor thread...");
-            break;
-        }
 
         callParamCallbacks();
     }
@@ -678,7 +683,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             } else if (function == ADXSPD_ShuffleMode) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::ShuffleMode>(
                     "shuffle_mode", static_cast<XSPD::ShuffleMode>(value)));
-            } else if (function == ADXSPD_StatusInterval) {
+            } else if (function == ADXSPD_MonitorInterval) {
                 if (value < ADXSPD_MIN_STATUS_POLL_INTERVAL) {
                     actualValue = ADXSPD_MIN_STATUS_POLL_INTERVAL;
                 }
@@ -748,7 +753,7 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
             actualValue = this->pDetector->SetThreshold(XSPD::Threshold::LOW, value);
         } else if (function == ADXSPD_HighThreshold) {
             actualValue = this->pDetector->SetThreshold(XSPD::Threshold::HIGH, value);
-        } else if (function == ADXSPD_StatusInterval && value < ADXSPD_MIN_STATUS_POLL_INTERVAL) {
+        } else if (function == ADXSPD_MonitorInterval && value < ADXSPD_MIN_STATUS_POLL_INTERVAL) {
             actualValue = ADXSPD_MIN_STATUS_POLL_INTERVAL;
         }
         setDoubleParam(function, actualValue);

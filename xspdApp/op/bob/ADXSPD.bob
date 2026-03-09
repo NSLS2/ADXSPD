@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Saved on 2026-03-09 12:31:45 by jwlodek-->
+<!--Saved on 2026-03-09 13:46:56 by jwlodek-->
 <display version="2.0.0">
   <name>ADXSPD Top</name>
   <macros>
@@ -35,9 +35,9 @@
     <transparent>true</transparent>
     <widget type="label" version="2.0.0">
       <name>Label_22</name>
-      <text>Timeout (ms)</text>
-      <x>54</x>
-      <y>42</y>
+      <text>Timeout (s)</text>
+      <x>34</x>
+      <y>49</y>
       <width>110</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -51,9 +51,9 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>TextUpdate_14</name>
-      <pv_name>$(P)$(R)StatusInterval_RBV</pv_name>
-      <x>249</x>
-      <y>42</y>
+      <pv_name>$(P)$(R)MonitorInterval_RBV</pv_name>
+      <x>229</x>
+      <y>49</y>
       <width>80</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -70,9 +70,9 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>TextEntry_6</name>
-      <pv_name>$(P)$(R)StatusInterval</pv_name>
-      <x>181</x>
-      <y>42</y>
+      <pv_name>$(P)$(R)MonitorInterval</pv_name>
+      <x>161</x>
+      <y>49</y>
       <width>60</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -80,6 +80,54 @@
       </font>
       <background_color>
         <color red="115" green="223" blue="255">
+        </color>
+      </background_color>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_45</name>
+      <text>Monitor mode</text>
+      <x>6</x>
+      <y>24</y>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+    <widget type="combo" version="2.0.0">
+      <name>ComboBox_15</name>
+      <pv_name>$(P)$(R)MonitorMode</pv_name>
+      <x>118</x>
+      <y>24</y>
+      <height>20</height>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="115" green="223" blue="255">
+        </color>
+      </background_color>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>TextUpdate_33</name>
+      <pv_name>$(P)$(R)MonitorMode_RBV</pv_name>
+      <x>234</x>
+      <y>24</y>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <foreground_color>
+        <color red="10" green="0" blue="184">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color red="187" green="187" blue="187">
         </color>
       </background_color>
     </widget>

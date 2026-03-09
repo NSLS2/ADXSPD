@@ -524,7 +524,7 @@ record(bo, "$(P)$(R)MonitorMode"){
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MONITOR_MODE")
     field(ZNAM, "Disabled")
     field(ONAM, "Enabled")
-    field(VAL, "0")
+    field(VAL, "1")
     field(PINI, "NO")
 }
 
@@ -543,6 +543,7 @@ record(ao, "$(P)$(R)MonitorInterval"){
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MONITOR_INTERVAL")
     field(VAL, "5")
     field(LOLO, "0.5")
+    field(PREC, "3")
     field(EGU, "s")
     field(PINI, "YES")
 }
@@ -553,6 +554,7 @@ record(ai, "$(P)$(R)MonitorInterval_RBV"){
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_MONITOR_INTERVAL")
     field(EGU, "s")
     field(VAL, "5")
+    field(PREC, "3")
     field(SCAN, "I/O Intr")
 }
 

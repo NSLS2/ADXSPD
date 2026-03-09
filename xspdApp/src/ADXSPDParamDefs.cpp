@@ -31,5 +31,6 @@ void ADXSPD::createAllParams() {
     createParam(ADXSPD_FramesQueuedString, asynParamInt32, &ADXSPD_FramesQueued);
     createParam(ADXSPD_BitDepthString, asynParamInt32, &ADXSPD_BitDepth);
     createParam(ADXSPD_CrCorrString, asynParamInt32, &ADXSPD_CrCorr);
-    createParam(ADXSPD_StatusIntervalString, asynParamFloat64, &ADXSPD_StatusInterval);
+    createParam(ADXSPD_MonitorModeString, asynParamInt32, &ADXSPD_MonitorMode);
+    createParam(ADXSPD_MonitorIntervalString, asynParamFloat64, &ADXSPD_MonitorInterval);
 }
