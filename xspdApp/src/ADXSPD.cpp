@@ -66,6 +66,41 @@ static void monitorThreadC(void* drvPvt) {
 // -----------------------------------------------------------------------
 
 /**
+ * @brief Helper function that will read a parameter from the XSPD API and set the corresponding
+ * asyn parameter
+ *
+ * @param paramIndex The index of the asyn parameter to set
+ * @param component The XSPD API component to read the variable from (e.g. detector, data port,
+ * module)
+ * @param varName The name of the variable to read from the XSPD API
+ * @return asynStatus asynSuccess on success, asynError on failure
+ */
+template <typename T>
+asynStatus ADXSPD::getAPIVar(int paramIndex, XSPD::APIComponent& component, string varName) {
+    try {
+        T value = component.GetVar<T>(varName);
+        if constexpr (is_same_v<T, int> || is_same_v<T, bool>) {
+            setIntegerParam(paramIndex, value);
+        } else if constexpr (is_enum_v<T>) {
+            setIntegerParam(paramIndex, static_cast<int>(value));
+        } else if constexpr (is_same_v<T, double>) {
+            setDoubleParam(paramIndex, value);
+        } else if constexpr (is_same_v<T, string>) {
+            setStringParam(paramIndex, value.c_str());
+        } else {
+            ERR_ARGS("Unsupported parameter type for variable %s/%s", component.GetId().c_str(),
+                     varName.c_str());
+            return asynError;
+        }
+    } catch (std::exception& e) {
+        ERR_ARGS("Failed to read API parameter %s/%s: %s", component.GetId().c_str(),
+                 varName.c_str(), e.what());
+        return asynError;
+    }
+    return asynSuccess;
+}
+
+/**
  * @brief Starts acquisition
  *
  * @return asynStatus asynSuccess on success, asynError on failure
@@ -415,9 +450,6 @@ void ADXSPD::monitorThread() {
             }
             setIntegerParam(ADStatus, adStatus);
 
-            setIntegerParam(ADXSPD_FramesQueued,
-                            this->pDetector->GetActiveDataPort()->GetVar<int>("frames_queued"));
-
             // Reading out module status takes too long. Probably should become a "GetModuleStatus"
             // PV that can have its Scan rate updated from I/O Intr to some rate.
             // for (auto& module : this->modules) {
@@ -427,6 +459,8 @@ void ADXSPD::monitorThread() {
             ERR_TO_STATUS("Failed to update detector status: %s", e.what());
             setIntegerParam(ADStatus, ADStatusError);
         }
+
+        this->getDataPortVar<int>(ADXSPD_FramesQueued, "frames_queued");
 
         this->unlock();
 
@@ -453,12 +487,25 @@ NDDataType_t ADXSPD::getDataTypeForBitDepth(int bitDepth) {
     }
 }
 
-void ADXSPD::getInitialDetState() {
-    try {
-        setDoubleParam(ADAcquireTime, this->pDetector->GetVar<double>("shutter_time") /
-                                          1000.0);  // XSPD API uses milliseconds
-        setIntegerParam(ADXSPD_SummedFrames, this->pDetector->GetVar<int>("summed_frames"));
+/**
+ * @brief Reads initial state of the detector from the XSPD API and sets asyn parameters accordingly
+ *
+ * @return asynStatus asynSuccess if all parameters were read successfully, asynError if any
+ * parameter failed to be read
+ */
+asynStatus ADXSPD::getInitialDetState() {
+    int status = asynSuccess;
 
+    try {
+        // Get initial exposure time setting; XSPD API uses milliseconds, but ADAcquireTime is in
+        // seconds
+        setDoubleParam(ADAcquireTime, this->pDetector->GetVar<double>("shutter_time") / 1000.0);
+    } catch (std::exception& e) {
+        ERR_ARGS("Failed to read initial acquire time: %s", e.what());
+        status |= asynError;
+    }
+
+    try {
         // Set ADNumImages and ADImageMode based on n_frames
         int numImages = this->pDetector->GetVar<int>("n_frames");
         setIntegerParam(ADNumImages, numImages);
@@ -466,70 +513,60 @@ void ADXSPD::getInitialDetState() {
             setIntegerParam(ADImageMode, ADImageSingle);
         else
             setIntegerParam(ADImageMode, ADImageMultiple);
+    } catch (std::exception& e) {
+        ERR_ARGS("Failed to read initial number of images: %s", e.what());
+        status |= asynError;
+    }
 
-        setIntegerParam(ADXSPD_CompressLevel, this->pDetector->GetVar<int>("compression_level"));
-        setIntegerParam(ADXSPD_Compressor,
-                        static_cast<int>(this->pDetector->GetVar<XSPD::Compressor>("compressor")));
-        setDoubleParam(ADXSPD_BeamEnergy, this->pDetector->GetVar<double>("beam_energy"));
-        setIntegerParam(ADXSPD_GatingMode,
-                        static_cast<int>(this->pDetector->GetVar<XSPD::OnOff>("gating_mode")));
-        setIntegerParam(ADXSPD_FFCorrection, this->pDetector->GetVar<bool>("flatfield_enabled"));
-        setIntegerParam(ADXSPD_ChargeSumming,
-                        static_cast<int>(this->pDetector->GetVar<XSPD::OnOff>("charge_summing")));
-        setIntegerParam(
-            ADTriggerMode,
-            static_cast<int>(this->pDetector->GetVar<XSPD::TriggerMode>("trigger_mode")));
-
+    try {
+        // Get initial bit depth and set data type accordingly
         int bitDepth = this->pDetector->GetVar<int>("bit_depth");
         setIntegerParam(ADXSPD_BitDepth, bitDepth);
         setIntegerParam(NDDataType, static_cast<int>(getDataTypeForBitDepth(bitDepth)));
+    } catch (std::exception& e) {
+        ERR_ARGS("Failed to read initial bit depth: %s", e.what());
+        status |= asynError;
+    }
 
-        setIntegerParam(ADXSPD_CrCorr,
-                        this->pDetector->GetVar<bool>("countrate_correction_enabled"));
-        setIntegerParam(
-            ADXSPD_CounterMode,
-            static_cast<int>(this->pDetector->GetVar<XSPD::CounterMode>("counter_mode")));
-        setIntegerParam(ADXSPD_SaturationFlag,
-                        this->pDetector->GetVar<bool>("saturation_flag_enabled"));
-        setIntegerParam(
-            ADXSPD_ShuffleMode,
-            static_cast<int>(this->pDetector->GetVar<XSPD::ShuffleMode>("shuffle_mode")));
-
-        setStringParam(ADModel, this->pDetector->GetVar<string>("type").c_str());
-
+    try {
+        // Get initial threshold settings.
         vector<double> thresholds = this->pDetector->GetVar<vector<double>>("thresholds");
         if (thresholds.size() > 0) setDoubleParam(ADXSPD_LowThreshold, thresholds[0]);
         if (thresholds.size() > 1) setDoubleParam(ADXSPD_HighThreshold, thresholds[1]);
-
-        int maxSizeX = this->pDetector->GetActiveDataPort()->GetVar<int>("frame_width");
-        int maxSizeY = this->pDetector->GetActiveDataPort()->GetVar<int>("frame_height");
-        setIntegerParam(ADMaxSizeX, maxSizeX);
-        setIntegerParam(ADMaxSizeY, maxSizeY);
-        setIntegerParam(ADSizeX, maxSizeX);
-        setIntegerParam(ADSizeY, maxSizeY);
-
-        setIntegerParam(ADXSPD_FramesQueued,
-                        this->pDetector->GetActiveDataPort()->GetVar<int>("frames_queued"));
-
-        setIntegerParam(ADXSPD_RoiRows, this->pDetector->GetVar<int>("roi_rows"));
-
-        // TODO: BinY should reflect roi rows and vice versa.
-        setIntegerParam(ADBinX, 1);
-        setIntegerParam(ADBinY, 1);
-        setIntegerParam(ADMinX, 0);
-        setIntegerParam(ADMinY, 0);
-        setIntegerParam(NDColorMode, NDColorModeMono);
-
-        string sensorMaterial = this->pDetector->GetVar<string>("user_data/sensor_material");
-        setStringParam(ADXSPD_SensorMaterial, sensorMaterial.c_str());
-        int sensorThickness = this->pDetector->GetVar<int>("user_data/sensor_thickness");
-        setIntegerParam(ADXSPD_SensorThickness, sensorThickness);
-
     } catch (std::exception& e) {
-        ERR_ARGS("Failed to get initial detector state: %s", e.what());
+        ERR_ARGS("Failed to read initial threshold settings: %s", e.what());
+        status |= asynError;
     }
 
+    // Retrieve all remaining initial parameters.
+    status |= this->getDataPortVar<int>(ADMaxSizeX, "frame_width");
+    status |= this->getDataPortVar<int>(ADMaxSizeY, "frame_height");
+    status |= this->getDetVar<int>(ADXSPD_SummedFrames, "summed_frames");
+    status |= this->getDetVar<int>(ADXSPD_CompressLevel, "compression_level");
+    status |= this->getDetVar<XSPD::Compressor>(ADXSPD_Compressor, "compressor");
+    status |= this->getDetVar<double>(ADXSPD_BeamEnergy, "beam_energy");
+    status |= this->getDetVar<XSPD::OnOff>(ADXSPD_GatingMode, "gating_mode");
+    status |= this->getDetVar<bool>(ADXSPD_FFCorrection, "flatfield_enabled");
+    status |= this->getDetVar<XSPD::OnOff>(ADXSPD_ChargeSumming, "charge_summing");
+    status |= this->getDetVar<XSPD::TriggerMode>(ADTriggerMode, "trigger_mode");
+    status |= this->getDetVar<bool>(ADXSPD_CrCorr, "countrate_correction_enabled");
+    status |= this->getDetVar<XSPD::CounterMode>(ADXSPD_CounterMode, "counter_mode");
+    status |= this->getDetVar<bool>(ADXSPD_SaturationFlag, "saturation_flag_enabled");
+    status |= this->getDetVar<XSPD::ShuffleMode>(ADXSPD_ShuffleMode, "shuffle_mode");
+    status |= this->getDetVar<string>(ADModel, "type");
+    status |= this->getDataPortVar<int>(ADXSPD_FramesQueued, "frames_queued");
+    status |= this->getDetVar<int>(ADXSPD_RoiRows, "roi_rows");
+
+    // Sensor information is stored as user-data, so we can't guarantee it will be available or
+    // correct, so treat failure to read these parameters as a warning rather than an error.
+    int sensorInfoStatus = asynSuccess;
+    sensorInfoStatus |= this->getDetVar<string>(ADXSPD_SensorMaterial, "user_data/sensor_material");
+    sensorInfoStatus |= this->getDetVar<int>(ADXSPD_SensorThickness, "user_data/sensor_thickness");
+    if (sensorInfoStatus != asynSuccess) WARN("Failed to read one or more sensor info parameters.");
+
     callParamCallbacks();
+
+    return static_cast<asynStatus>(status);
 }
 
 //-------------------------------------------------------------------------
@@ -800,7 +837,8 @@ ADXSPD::ADXSPD(const char* portName, const char* ip, int portNum, const char* de
         this->modules.push_back(new ADXSPDModule(modulePortName.c_str(), moduleList[index], this));
     }
 
-    this->getInitialDetState();
+    asynStatus status = this->getInitialDetState();
+    if (status != asynSuccess) ERR("Failed to read one or more initial detector parameters.");
 
     // Create a shutdown event so we can signal to other threads to exit.
     this->shutdownEventId = epicsEventCreate(epicsEventEmpty);

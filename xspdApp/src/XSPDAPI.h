@@ -230,7 +230,7 @@ class APIComponent {
     API* GetAPI() { return this->api; }
 
     /**
-     * @brief Retrieves the value of a variable from the DataPort
+     * @brief Retrieves the value of a variable from the API for this component
      *
      * @tparam T The expected type of the variable
      * @param varName The name of the variable

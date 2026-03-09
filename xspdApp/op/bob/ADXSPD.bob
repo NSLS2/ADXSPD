@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Saved on 2026-03-09 11:42:14 by jwlodek-->
+<!--Saved on 2026-03-09 12:31:45 by jwlodek-->
 <display version="2.0.0">
   <name>ADXSPD Top</name>
   <macros>
@@ -416,40 +416,6 @@
         </font>
       </font>
       <horizontal_alignment>2</horizontal_alignment>
-    </widget>
-    <widget type="label" version="2.0.0">
-      <name>text #93</name>
-      <text>Detector state</text>
-      <x>9</x>
-      <y>131</y>
-      <width>140</width>
-      <font>
-        <font family="Liberation Sans" style="REGULAR" size="16.0">
-        </font>
-      </font>
-      <horizontal_alignment>2</horizontal_alignment>
-    </widget>
-    <widget type="textupdate" version="2.0.0">
-      <name>text update #96_1</name>
-      <pv_name>$(P)$(R)DetectorState_RBV</pv_name>
-      <x>154</x>
-      <y>131</y>
-      <width>160</width>
-      <height>18</height>
-      <font>
-        <font family="Liberation Sans" style="REGULAR" size="16.0">
-        </font>
-      </font>
-      <foreground_color>
-        <color red="10" green="0" blue="184">
-        </color>
-      </foreground_color>
-      <background_color>
-        <color red="218" green="218" blue="218">
-        </color>
-      </background_color>
-      <format>6</format>
-      <show_units>false</show_units>
     </widget>
     <widget type="label" version="2.0.0">
       <name>text #142</name>
@@ -1341,41 +1307,6 @@
       </color>
     </background_color>
     <transparent>true</transparent>
-    <widget type="label" version="2.0.0">
-      <name>Label_44</name>
-      <text>Detector state readback</text>
-      <x>4</x>
-      <y>4</y>
-      <width>150</width>
-      <font>
-        <font family="Liberation Sans" style="REGULAR" size="16.0">
-        </font>
-      </font>
-      <background_color>
-        <color red="187" green="187" blue="187">
-        </color>
-      </background_color>
-      <horizontal_alignment>2</horizontal_alignment>
-    </widget>
-    <widget type="textupdate" version="2.0.0">
-      <name>TextUpdate_32</name>
-      <pv_name>$(P)$(R)DetectorSate_RBV</pv_name>
-      <x>164</x>
-      <y>4</y>
-      <width>150</width>
-      <font>
-        <font family="Liberation Sans" style="REGULAR" size="16.0">
-        </font>
-      </font>
-      <foreground_color>
-        <color red="10" green="0" blue="184">
-        </color>
-      </foreground_color>
-      <background_color>
-        <color red="187" green="187" blue="187">
-        </color>
-      </background_color>
-    </widget>
     <widget type="action_button" version="3.0.0">
       <name>message button #68_1</name>
       <actions>
@@ -1481,6 +1412,40 @@
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
       </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>text #93</name>
+      <text>Detector state</text>
+      <x>18</x>
+      <y>17</y>
+      <width>140</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>text update #96_1</name>
+      <pv_name>$(P)$(R)DetectorState_RBV</pv_name>
+      <x>163</x>
+      <y>17</y>
+      <width>160</width>
+      <height>18</height>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <foreground_color>
+        <color red="10" green="0" blue="184">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color red="218" green="218" blue="218">
+        </color>
+      </background_color>
+      <format>6</format>
+      <show_units>false</show_units>
     </widget>
   </widget>
   <widget type="group" version="3.0.0">
@@ -2987,7 +2952,6 @@
       </background_color>
       <format>6</format>
       <show_units>false</show_units>
-      <horizontal_alignment>1</horizontal_alignment>
       <border_alarm_sensitive>false</border_alarm_sensitive>
     </widget>
     <widget type="label" version="2.0.0">
