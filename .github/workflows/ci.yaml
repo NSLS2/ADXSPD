@@ -84,6 +84,11 @@ jobs:
           XML2_EXTERNAL=YES
           WITH_ZLIB=YES
           ZLIB_EXTERNAL=YES
+
+          # Enable coverage flags for unit tests
+          USR_CXX_FLAGS_Linux += --coverage
+          USR_LD_FLAGS_Linux += --coverage
+
           EOF
 
           echo "CONFIG_SITE.local created:"
@@ -104,7 +109,6 @@ jobs:
           STREAM=/usr/lib64/epics
           SNCSEQ=/usr/lib64/epics
           RECCASTER=/usr/lib64/epics
-          MOTOR=/usr/lib64/epics
 
           # EPICS_BASE should always be last
           EPICS_BASE=/usr/lib64/epics
@@ -128,10 +132,11 @@ jobs:
         run: |
           pixi run tests
 
-      - name: Get coverage info
-        run: |
-          pixi run get-coverage-info
+      # TODO: add coverage reporting to CI once it is working & codecov enabled
+      # - name: Get coverage info
+      #   run: |
+      #     pixi run get-coverage-info
 
-      - name: Show coverage summary
-        run: |
-          pixi run lcov -l coverage.info
+      # - name: Show coverage summary
+      #   run: |
+      #     pixi run lcov -l coverage.info

@@ -8,6 +8,7 @@
 #define ADXSPD_ApiVersionString "XSPD_API_VERSION"
 #define ADXSPD_VersionString "XSPD_VERSION"
 #define ADXSPD_NumModulesString "XSPD_NUM_MODULES"
+#define ADXSPD_DetectorStateString "XSPD_DETECTOR_STATE"
 #define ADXSPD_CompressLevelString "XSPD_COMPRESS_LEVEL"
 #define ADXSPD_CompressorString "XSPD_COMPRESSOR"
 #define ADXSPD_BeamEnergyString "XSPD_BEAM_ENERGY"
@@ -21,6 +22,11 @@
 #define ADXSPD_FlatfieldStatusString "XSPD_FLATFIELD_STATUS"
 #define ADXSPD_ShuffleModeString "XSPD_SHUFFLE_MODE"
 #define ADXSPD_SummedFramesString "XSPD_SUMMED_FRAMES"
+#define ADXSPD_AvgBoardTempString "XSPD_AVG_BOARD_TEMP"
+#define ADXSPD_AvgFpgaTempString "XSPD_AVG_FPGA_TEMP"
+#define ADXSPD_AvgSensorTempString "XSPD_AVG_SENSOR_TEMP"
+#define ADXSPD_SensorMaterialString "XSPD_SENSOR_MATERIAL"
+#define ADXSPD_SensorThicknessString "XSPD_SENSOR_THICKNESS"
 #define ADXSPD_RoiRowsString "XSPD_ROI_ROWS"
 #define ADXSPD_LowThresholdString "XSPD_LOW_THRESHOLD"
 #define ADXSPD_HighThresholdString "XSPD_HIGH_THRESHOLD"
@@ -33,6 +39,7 @@
 int ADXSPD_ApiVersion;
 int ADXSPD_Version;
 int ADXSPD_NumModules;
+int ADXSPD_DetectorState;
 int ADXSPD_CompressLevel;
 int ADXSPD_Compressor;
 int ADXSPD_BeamEnergy;
@@ -46,6 +53,11 @@ int ADXSPD_GenerateFlatfield;
 int ADXSPD_FlatfieldStatus;
 int ADXSPD_ShuffleMode;
 int ADXSPD_SummedFrames;
+int ADXSPD_AvgBoardTemp;
+int ADXSPD_AvgFpgaTemp;
+int ADXSPD_AvgSensorTemp;
+int ADXSPD_SensorMaterial;
+int ADXSPD_SensorThickness;
 int ADXSPD_RoiRows;
 int ADXSPD_LowThreshold;
 int ADXSPD_HighThreshold;
@@ -57,6 +69,6 @@ int ADXSPD_StatusInterval;
 #define ADXSPD_FIRST_PARAM ADXSPD_ApiVersion
 #define ADXSPD_LAST_PARAM ADXSPD_StatusInterval
 
-#define NUM_ADXSPD_PARAMS 23
+#define NUM_ADXSPD_PARAMS 29
 
 #endif

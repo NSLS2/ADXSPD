@@ -7,6 +7,7 @@ void ADXSPD::createAllParams() {
     createParam(ADXSPD_ApiVersionString, asynParamOctet, &ADXSPD_ApiVersion);
     createParam(ADXSPD_VersionString, asynParamOctet, &ADXSPD_Version);
     createParam(ADXSPD_NumModulesString, asynParamInt32, &ADXSPD_NumModules);
+    createParam(ADXSPD_DetectorStateString, asynParamInt32, &ADXSPD_DetectorState);
     createParam(ADXSPD_CompressLevelString, asynParamInt32, &ADXSPD_CompressLevel);
     createParam(ADXSPD_CompressorString, asynParamInt32, &ADXSPD_Compressor);
     createParam(ADXSPD_BeamEnergyString, asynParamFloat64, &ADXSPD_BeamEnergy);
@@ -20,6 +21,11 @@ void ADXSPD::createAllParams() {
     createParam(ADXSPD_FlatfieldStatusString, asynParamOctet, &ADXSPD_FlatfieldStatus);
     createParam(ADXSPD_ShuffleModeString, asynParamInt32, &ADXSPD_ShuffleMode);
     createParam(ADXSPD_SummedFramesString, asynParamInt32, &ADXSPD_SummedFrames);
+    createParam(ADXSPD_AvgBoardTempString, asynParamFloat64, &ADXSPD_AvgBoardTemp);
+    createParam(ADXSPD_AvgFpgaTempString, asynParamFloat64, &ADXSPD_AvgFpgaTemp);
+    createParam(ADXSPD_AvgSensorTempString, asynParamFloat64, &ADXSPD_AvgSensorTemp);
+    createParam(ADXSPD_SensorMaterialString, asynParamOctet, &ADXSPD_SensorMaterial);
+    createParam(ADXSPD_SensorThicknessString, asynParamFloat64, &ADXSPD_SensorThickness);
     createParam(ADXSPD_RoiRowsString, asynParamInt32, &ADXSPD_RoiRows);
     createParam(ADXSPD_LowThresholdString, asynParamFloat64, &ADXSPD_LowThreshold);
     createParam(ADXSPD_HighThresholdString, asynParamFloat64, &ADXSPD_HighThreshold);

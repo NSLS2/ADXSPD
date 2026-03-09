@@ -520,6 +520,11 @@ void ADXSPD::getInitialDetState() {
         setIntegerParam(ADMinY, 0);
         setIntegerParam(NDColorMode, NDColorModeMono);
 
+        string sensorMaterial = this->pDetector->GetVar<string>("user_data/sensor_material");
+        setStringParam(ADXSPD_SensorMaterial, sensorMaterial.c_str());
+        int sensorThickness = this->pDetector->GetVar<int>("user_data/sensor_thickness");
+        setIntegerParam(ADXSPD_SensorThickness, sensorThickness);
+
     } catch (std::exception& e) {
         ERR_ARGS("Failed to get initial detector state: %s", e.what());
     }
@@ -700,10 +705,8 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
         status = ADDriver::writeFloat64(pasynUser, value);
     } else {
         double actualValue = value;
-        string endpoint;
         if (function == ADXSPD_BeamEnergy) {
-            endpoint = "beam_energy";
-            actualValue = this->pDetector->SetVar<double>(endpoint, value);
+            actualValue = this->pDetector->SetVar<double>("beam_energy", value);
         } else if (function == ADXSPD_LowThreshold) {
             actualValue = this->pDetector->SetThreshold(XSPD::Threshold::LOW, value);
         } else if (function == ADXSPD_HighThreshold) {
@@ -769,7 +772,7 @@ ADXSPD::ADXSPD(const char* portName, const char* ip, int portNum, const char* de
     INFO_ARGS("Connecting to XSPD api at %s:%d...", ip, portNum);
     this->pApi = new XSPD::API(string(ip), portNum);
     if (deviceId == nullptr) {
-        INFO("No device ID specified, will connect to first device found.");
+        INFO("No device ID specified, will connect to first available device.");
         this->pDetector = this->pApi->Initialize();
     } else {
         INFO_ARGS("Requested device ID: %s", deviceId);
