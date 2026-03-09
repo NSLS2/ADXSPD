@@ -1,0 +1,6 @@
+---
+debug: false
+label_alignment: right
+rtype_to_widget_map:
+  bo: ComboBox
+  bi: TextUpdate
