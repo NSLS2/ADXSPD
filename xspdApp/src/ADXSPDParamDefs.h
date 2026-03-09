@@ -8,7 +8,6 @@
 #define ADXSPD_ApiVersionString "XSPD_API_VERSION"
 #define ADXSPD_VersionString "XSPD_VERSION"
 #define ADXSPD_NumModulesString "XSPD_NUM_MODULES"
-#define ADXSPD_DetectorStateString "XSPD_DETECTOR_STATE"
 #define ADXSPD_CompressLevelString "XSPD_COMPRESS_LEVEL"
 #define ADXSPD_CompressorString "XSPD_COMPRESSOR"
 #define ADXSPD_BeamEnergyString "XSPD_BEAM_ENERGY"
@@ -39,7 +38,6 @@
 int ADXSPD_ApiVersion;
 int ADXSPD_Version;
 int ADXSPD_NumModules;
-int ADXSPD_DetectorState;
 int ADXSPD_CompressLevel;
 int ADXSPD_Compressor;
 int ADXSPD_BeamEnergy;
@@ -69,6 +67,6 @@ int ADXSPD_StatusInterval;
 #define ADXSPD_FIRST_PARAM ADXSPD_ApiVersion
 #define ADXSPD_LAST_PARAM ADXSPD_StatusInterval
 
-#define NUM_ADXSPD_PARAMS 29
+#define NUM_ADXSPD_PARAMS 28
 
 #endif
