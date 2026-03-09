@@ -23,12 +23,12 @@ class MockXSPDAPI : public XSPD::API {
     void MockAPIVersionCheck(json* alternateResponse = nullptr);
 
     void UpdateSampleResp(string endpoint, json response) {
-        string uri = "localhost:8008/api/v1/" + endpoint;
-        this->sampleResponses[uri] = response;
+        string fullEndpoint = "api/v1/" + endpoint;
+        this->sampleResponses[fullEndpoint] = response;
     }
     json GetSampleResp(string endpoint) {
-        string uri = "localhost:8008/api/v1/" + endpoint;
-        return this->sampleResponses[uri];
+        string fullEndpoint = "api/v1/" + endpoint;
+        return this->sampleResponses[fullEndpoint];
     }
 
    private:

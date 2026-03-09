@@ -350,3 +350,16 @@ double XSPD::Detector::SetThreshold(XSPD::Threshold threshold, double value) {
 
     return rbThresholds[static_cast<size_t>(threshold)];
 }
+
+vector<XSPD::ModuleFeature> XSPD::Module::GetFeatures() {
+    vector<string> featureStrings = this->GetVar<vector<string>>("features");
+    vector<XSPD::ModuleFeature> features;
+    for (auto& featureStr : featureStrings) {
+        auto feature = magic_enum::enum_cast<XSPD::ModuleFeature>(featureStr);
+        // TODO: Handle error case
+        if (feature.has_value()) {
+            features.push_back(feature.value());
+        }
+    }
+    return features;
+}

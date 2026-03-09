@@ -35,6 +35,6 @@ void ADXSPDModule::createAllParams() {
     createParam(ADXSPDModule_HighThreshFfDateString, asynParamOctet,
                 &ADXSPDModule_HighThreshFfDate);
     createParam(ADXSPDModule_FramesQueuedString, asynParamInt32, &ADXSPDModule_FramesQueued);
-    createParam(ADXSPDModule_UsePixelMaskString, asynParamInt32, &ADXSPDModule_UsePixelMask);
+    createParam(ADXSPDModule_PixelMaskString, asynParamInt32, &ADXSPDModule_PixelMask);
     createParam(ADXSPDModule_ShuffleModeString, asynParamInt32, &ADXSPDModule_ShuffleMode);
 }

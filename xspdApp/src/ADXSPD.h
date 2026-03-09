@@ -147,7 +147,7 @@ class ADXSPD : ADDriver {
 
     ADXSPDLogLevel getLogLevel() { return this->logLevel; }
 
-    void getInitialDetState();
+    asynStatus getInitialDetState();
     asynStatus acquireStart();
     asynStatus acquireStop();
     NDDataType_t getDataTypeForBitDepth(int bitDepth);
@@ -155,6 +155,23 @@ class ADXSPD : ADDriver {
     template <typename T>
     void subtractFrames(void* currentFrame, void* previousFrame, void* outputFrame,
                         size_t numBytes);
+
+    template <typename T>
+    asynStatus getAPIVar(int paramIndex, XSPD::APIComponent& component, string varName);
+
+    template <typename T>
+    asynStatus getDetVar(int paramIndex, string varName) {
+        return getAPIVar<T>(paramIndex, *(this->pDetector), varName);
+    }
+
+    template <typename T>
+    asynStatus getDataPortVar(int paramIndex, string varName) {
+        if (this->pDetector->GetActiveDataPort() == nullptr) {
+            ERR_ARGS("No active data port to read parameter %s from", varName.c_str());
+            return asynError;
+        }
+        return getAPIVar<T>(paramIndex, *(this->pDetector->GetActiveDataPort()), varName);
+    }
 
    protected:
 // Load auto-generated parameter string and index definitions

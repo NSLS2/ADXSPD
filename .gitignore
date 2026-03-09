@@ -27,3 +27,5 @@ test.py
 notes.txt
 checkVar.sh
 setVar.sh
+coverage.info
+coverage-report/

@@ -30,7 +30,7 @@ jobs:
         run: pixi run lint
 
   build-and-test:
-    name: Build and Test
+    name: Build and Test ADXSPD on EL${{ matrix.rhel_version }}
 
     needs: lint
     runs-on: ubuntu-latest
@@ -46,6 +46,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+
+      - name: Setup pixi
+        uses: prefix-dev/setup-pixi@8ca4608ef7f4daeb54f5205b20d0b7cb42f11143  # v0.8.14
+        with:
+          pixi-version: v0.56.0
+          cache: false
+          frozen: true
+
       - name: Create CONFIG_SITE.local
         run: |
           cat > configure/CONFIG_SITE.local << EOF
@@ -76,6 +84,11 @@ jobs:
           XML2_EXTERNAL=YES
           WITH_ZLIB=YES
           ZLIB_EXTERNAL=YES
+
+          # Enable coverage flags for unit tests
+          USR_CXX_FLAGS_Linux += --coverage
+          USR_LD_FLAGS_Linux += --coverage
+
           EOF
 
           echo "CONFIG_SITE.local created:"
@@ -96,7 +109,6 @@ jobs:
           STREAM=/usr/lib64/epics
           SNCSEQ=/usr/lib64/epics
           RECCASTER=/usr/lib64/epics
-          MOTOR=/usr/lib64/epics
 
           # EPICS_BASE should always be last
           EPICS_BASE=/usr/lib64/epics
@@ -118,4 +130,13 @@ jobs:
 
       - name: Run unit tests
         run: |
-          ./bin/linux-x86_64/TestADXSPD
+          pixi run tests
+
+      # TODO: add coverage reporting to CI once it is working & codecov enabled
+      # - name: Get coverage info
+      #   run: |
+      #     pixi run get-coverage-info
+
+      # - name: Show coverage summary
+      #   run: |
+      #     pixi run lcov -l coverage.info

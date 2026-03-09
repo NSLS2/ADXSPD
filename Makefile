@@ -27,10 +27,15 @@ realuninstall_iocs:
 bobfiles:
 	pixi run make-bobfiles
 
+# Generate parameter definitions and then immediately format with clang-format
 paramdefs:
 	pixi run make-paramdefs
+	pixi run clang-format -i -style=file $(shell find xspdApp -name '*.h' -o -name '*.cpp')
 
 lint:
 	pixi run lint
-runtests:
-	cd xspdApp/tests && make -sj && cd ../.. && ./bin/linux-x86_64/ADXSPDTests
+
+coverage-report:
+	pixi run tests
+	pixi run get-coverage-info
+	pixi run make-coverage-report

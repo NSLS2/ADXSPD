@@ -27,8 +27,8 @@ using std::tuple;
 using std::vector;
 
 #define MIN_XSPD_MAJOR_VERSION 1
-#define MIN_XSPD_MINOR_VERSION 5
-#define MIN_XSPD_PATCH_VERSION 2
+#define MIN_XSPD_MINOR_VERSION 6
+#define MIN_XSPD_PATCH_VERSION 0
 
 namespace XSPD {
 
@@ -210,10 +210,6 @@ class API {
                     throw runtime_error("Failed to cast value " + valAsStr +
                                         " to enum for variable " + varName);
                 }
-            } else if constexpr (is_same<T, bool>::value) {
-                // Temporarily handle booleans manually, since they are being passed as strings
-                // instead of bools.
-                return response[key].get<string>() == "true";
             } else {
                 return response[key].get<T>();
             }
@@ -234,7 +230,7 @@ class APIComponent {
     API* GetAPI() { return this->api; }
 
     /**
-     * @brief Retrieves the value of a variable from the DataPort
+     * @brief Retrieves the value of a variable from the API for this component
      *
      * @tparam T The expected type of the variable
      * @param varName The name of the variable
@@ -301,6 +297,7 @@ class Module : public APIComponent {
     virtual ~Module() = default;
     string GetFirmware() { return this->moduleFirmware; }
     vector<string> GetChipIds() { return this->chipIds; }
+    vector<XSPD::ModuleFeature> GetFeatures();
 
    private:
     string moduleFirmware;
@@ -388,5 +385,5 @@ class Detector : public APIComponent {
     map<string, DataPort*> dataPorts;
     DataPort* activeDataPort = nullptr;
 };
-};      // namespace XSPD
+};  // namespace XSPD
 #endif  // XSPDAPI_H

@@ -20,11 +20,17 @@ void ADXSPD::createAllParams() {
     createParam(ADXSPD_FlatfieldStatusString, asynParamOctet, &ADXSPD_FlatfieldStatus);
     createParam(ADXSPD_ShuffleModeString, asynParamInt32, &ADXSPD_ShuffleMode);
     createParam(ADXSPD_SummedFramesString, asynParamInt32, &ADXSPD_SummedFrames);
+    createParam(ADXSPD_AvgBoardTempString, asynParamFloat64, &ADXSPD_AvgBoardTemp);
+    createParam(ADXSPD_AvgFpgaTempString, asynParamFloat64, &ADXSPD_AvgFpgaTemp);
+    createParam(ADXSPD_AvgSensorTempString, asynParamFloat64, &ADXSPD_AvgSensorTemp);
+    createParam(ADXSPD_SensorMaterialString, asynParamOctet, &ADXSPD_SensorMaterial);
+    createParam(ADXSPD_SensorThicknessString, asynParamFloat64, &ADXSPD_SensorThickness);
     createParam(ADXSPD_RoiRowsString, asynParamInt32, &ADXSPD_RoiRows);
     createParam(ADXSPD_LowThresholdString, asynParamFloat64, &ADXSPD_LowThreshold);
     createParam(ADXSPD_HighThresholdString, asynParamFloat64, &ADXSPD_HighThreshold);
     createParam(ADXSPD_FramesQueuedString, asynParamInt32, &ADXSPD_FramesQueued);
     createParam(ADXSPD_BitDepthString, asynParamInt32, &ADXSPD_BitDepth);
     createParam(ADXSPD_CrCorrString, asynParamInt32, &ADXSPD_CrCorr);
-    createParam(ADXSPD_StatusIntervalString, asynParamFloat64, &ADXSPD_StatusInterval);
+    createParam(ADXSPD_MonitorModeString, asynParamInt32, &ADXSPD_MonitorMode);
+    createParam(ADXSPD_MonitorIntervalString, asynParamFloat64, &ADXSPD_MonitorInterval);
 }
