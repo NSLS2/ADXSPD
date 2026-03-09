@@ -83,6 +83,19 @@ record(ai, "$(P)$(R)NumModules_RBV"){
     field(SCAN, "I/O Intr")
 }
 
+record(mbbi, "$(P)$(R)DetectorSate_RBV") {
+    field(DESC, "Detector state readback")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_DETECTOR_STATE")
+    field(ZRVL, "0")
+    field(ZRST, "Connected")
+    field(ONVL, "1")
+    field(ONST, "Ready")
+    field(TWVL, "2")
+    field(TWST, "Busy")
+    field(SCAN, "I/O Intr")
+}
+
 # record(mbbo, "$(P)$(R)CompressLevel"){
 #     field(DESC, "Compress level")
 #     field(DTYP, "asynInt32")
@@ -339,18 +352,97 @@ record(ai, "$(P)$(R)SummedFrames_RBV"){
     field(SCAN, "I/O Intr")
 }
 
-record(ao, "$(P)$(R)ROIRows"){
+record(ai, "$(P)$(R)AvgBoardTemp_RBV"){
+    field(DESC, "Average board temp")
+    field(DTYP, "asynFloat64")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_AVG_BOARD_TEMP")
+    field(EGU, "C")
+    field(VAL, "0.0")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)AvgFPGATemp_RBV"){
+    field(DESC, "Average FPGA temp")
+    field(DTYP, "asynFloat64")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_AVG_FPGA_TEMP")
+    field(EGU, "C")
+    field(VAL, "0.0")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)AvgSensorTemp_RBV"){
+    field(DESC, "Average sensor temp")
+    field(DTYP, "asynFloat64")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_AVG_SENSOR_TEMP")
+    field(EGU, "C")
+    field(VAL, "0.0")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)SensorMaterial_RBV"){
+    field(DESC, "Sensor material")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_SENSOR_MATERIAL")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)SensorThickness_RBV"){
+    field(DESC, "Sensor thickness")
+    field(DTYP, "asynFloat64")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_SENSOR_THICKNESS")
+    field(EGU, "um")
+    field(VAL, "0.0")
+    field(SCAN, "I/O Intr")
+}
+
+record(mbbo, "$(P)$(R)ROIRows"){
     field(DESC, "ROI rows")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_ROI_ROWS")
     field(VAL, "0")
+    field(ZRVL, "0")
+    field(ZRST, "256")
+    field(ONVL, "1")
+    field(ONST, "128")
+    field(TWVL, "2")
+    field(TWST, "64")
+    field(THVL, "3")
+    field(THST, "32")
+    field(FRVL, "4")
+    field(FRST, "16")
+    field(FVVL, "5")
+    field(FVST, "8")
+    field(SXVL, "6")
+    field(SXST, "4")
+    field(SVVL, "7")
+    field(SVST, "2")
+    field(EIVL, "8")
+    field(EIST, "1")
     field(PINI, "NO")
 }
 
-record(ai, "$(P)$(R)ROIRows_RBV"){
+record(mbbi, "$(P)$(R)ROIRows_RBV"){
     field(DESC, "ROI rows readback")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_ROI_ROWS")
+    field(ZRVL, "0")
+    field(ZRST, "256")
+    field(ONVL, "1")
+    field(ONST, "128")
+    field(TWVL, "2")
+    field(TWST, "64")
+    field(THVL, "3")
+    field(THST, "32")
+    field(FRVL, "4")
+    field(FRST, "16")
+    field(FVVL, "5")
+    field(FVST, "8")
+    field(SXVL, "6")
+    field(SXST, "4")
+    field(SVVL, "7")
+    field(SVST, "2")
+    field(EIVL, "8")
+    field(EIST, "1")
     field(SCAN, "I/O Intr")
 }
 
