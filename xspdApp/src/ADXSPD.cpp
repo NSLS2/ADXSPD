@@ -185,7 +185,7 @@ void ADXSPD::acquisitionThread() {
     // void* frameBuffer = nullptr;
     // void* prevFrameBuffer = nullptr;
 
-    int arrayCallbacks, decompressInDriver;
+    int arrayCallbacks, decompress;
     int collectedImages;
 
     void* zmqSubscriber = zmq_socket(this->zmqContext, ZMQ_SUB);
@@ -294,7 +294,7 @@ void ADXSPD::acquisitionThread() {
             setIntegerParam(NDArraySizeY, arrayInfo.ySize);
 
             getIntegerParam(NDArrayCallbacks, &arrayCallbacks);
-            getIntegerParam(ADXSPD_DecompressInDriver, &decompressInDriver);
+            getIntegerParam(ADXSPD_Decompress, &decompress);
 
             // Decompress data if compressed
             XSPD::Compressor compressor;

@@ -1363,7 +1363,7 @@
       <y>910</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)DecompressInDriver</pv_name>
+      <pv_name>$(P)$(R)Decompress</pv_name>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1380,7 +1380,7 @@
       <y>910</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)DecompressInDriver_RBV</pv_name>
+      <pv_name>$(P)$(R)Decompress_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
