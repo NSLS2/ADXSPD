@@ -560,7 +560,9 @@ asynStatus ADXSPD::getInitialDetState() {
     status |= this->getDetVar<XSPD::ShuffleMode>(ADXSPD_ShuffleMode, "shuffle_mode");
     status |= this->getDetVar<string>(ADModel, "type");
     status |= this->getDataPortVar<int>(ADXSPD_FramesQueued, "frames_queued");
-    status |= this->getDetVar<int>(ADXSPD_RoiRows, "roi_rows");
+
+    int roiRows = this->pDetector->GetVar<int>("roi_rows");
+    setIntegerParam(ADXSPD_RoiRows, static_cast<int>(log2(roiRows)));
 
     // Sensor information is stored as user-data, so we can't guarantee it will be available or
     // correct, so treat failure to read these parameters as a warning rather than an error.
@@ -651,7 +653,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             } else if (function == ADXSPD_SummedFrames) {
                 actualValue = this->pDetector->SetVar<int>("summed_frames", value);
             } else if (function == ADXSPD_RoiRows) {
-                actualValue = this->pDetector->SetVar<int>("roi_rows", value);
+                actualValue = static_cast<int>(log2(this->pDetector->SetVar<int>("roi_rows", 1 << value)));
                 for (auto& module : this->modules) {
                     module->getMaxNumImages();
                 }
