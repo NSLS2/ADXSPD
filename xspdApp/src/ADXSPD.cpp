@@ -653,7 +653,8 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             } else if (function == ADXSPD_SummedFrames) {
                 actualValue = this->pDetector->SetVar<int>("summed_frames", value);
             } else if (function == ADXSPD_RoiRows) {
-                actualValue = static_cast<int>(log2(this->pDetector->SetVar<int>("roi_rows", 1 << value)));
+                actualValue =
+                    static_cast<int>(log2(this->pDetector->SetVar<int>("roi_rows", 1 << value)));
                 for (auto& module : this->modules) {
                     module->getMaxNumImages();
                 }
