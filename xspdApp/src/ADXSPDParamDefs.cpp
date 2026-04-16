@@ -33,4 +33,5 @@ void ADXSPD::createAllParams() {
     createParam(ADXSPD_CrCorrString, asynParamInt32, &ADXSPD_CrCorr);
     createParam(ADXSPD_MonitorModeString, asynParamInt32, &ADXSPD_MonitorMode);
     createParam(ADXSPD_MonitorIntervalString, asynParamFloat64, &ADXSPD_MonitorInterval);
+    createParam(ADXSPD_DecompressInDriverString, asynParamInt32, &ADXSPD_DecompressInDriver);
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Saved on 2026-03-09 13:46:56 by jwlodek-->
+<!--Saved on 2026-03-13 16:34:05 by jwlodek-->
 <display version="2.0.0">
-  <name>ADXSPD Top</name>
+  <name>ADXSPD Control - $(P)</name>
   <macros>
     <P>DEV:XSPD1:</P>
     <R>cam1:</R>
@@ -468,7 +468,6 @@
     <widget type="label" version="2.0.0">
       <name>text #142</name>
       <text># Queued arrays</text>
-      <x>-1</x>
       <y>56</y>
       <width>150</width>
       <font>
@@ -504,7 +503,6 @@
     <widget type="label" version="2.0.0">
       <name>text #159</name>
       <text>Wait for plugins</text>
-      <x>-11</x>
       <y>81</y>
       <width>160</width>
       <font>
@@ -1517,9 +1515,9 @@
     <widget type="textupdate" version="2.0.0">
       <name>text update #77</name>
       <pv_name>$(P)$(R)Model_RBV</pv_name>
-      <x>155</x>
+      <x>145</x>
       <y>85</y>
-      <width>165</width>
+      <width>190</width>
       <height>18</height>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -1540,9 +1538,9 @@
     <widget type="textupdate" version="2.0.0">
       <name>text update #81</name>
       <pv_name>$(P)$(R)SerialNumber_RBV</pv_name>
-      <x>155</x>
+      <x>145</x>
       <y>110</y>
-      <width>165</width>
+      <width>190</width>
       <height>18</height>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -1563,9 +1561,9 @@
     <widget type="textupdate" version="2.0.0">
       <name>text update #85</name>
       <pv_name>$(P)$(R)FirmwareVersion_RBV</pv_name>
-      <x>155</x>
+      <x>145</x>
       <y>135</y>
-      <width>165</width>
+      <width>190</width>
       <height>18</height>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -1586,9 +1584,9 @@
     <widget type="textupdate" version="2.0.0">
       <name>text update #89</name>
       <pv_name>$(P)$(R)SDKVersion_RBV</pv_name>
-      <x>155</x>
+      <x>145</x>
       <y>160</y>
-      <width>165</width>
+      <width>190</width>
       <height>18</height>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -1609,9 +1607,9 @@
     <widget type="textupdate" version="2.0.0">
       <name>text update #93</name>
       <pv_name>$(P)$(R)DriverVersion_RBV</pv_name>
-      <x>155</x>
+      <x>145</x>
       <y>184</y>
-      <width>165</width>
+      <width>190</width>
       <height>18</height>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -1632,9 +1630,9 @@
     <widget type="textupdate" version="2.0.0">
       <name>text update #97</name>
       <pv_name>$(P)$(R)ADCoreVersion_RBV</pv_name>
-      <x>155</x>
+      <x>145</x>
       <y>209</y>
-      <width>165</width>
+      <width>190</width>
       <height>18</height>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -1794,8 +1792,9 @@
     <widget type="label" version="2.0.0">
       <name>text #39</name>
       <text>EPICS name</text>
-      <x>50</x>
+      <x>10</x>
       <y>34</y>
+      <width>125</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1805,9 +1804,9 @@
     <widget type="label" version="2.0.0">
       <name>text #42</name>
       <text>Manufacturer</text>
-      <x>30</x>
+      <x>10</x>
       <y>59</y>
-      <width>120</width>
+      <width>125</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1817,9 +1816,9 @@
     <widget type="label" version="2.0.0">
       <name>text #45</name>
       <text>asyn port</text>
-      <x>60</x>
+      <x>10</x>
       <y>9</y>
-      <width>90</width>
+      <width>125</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1829,9 +1828,9 @@
     <widget type="label" version="2.0.0">
       <name>text #48</name>
       <text>Model</text>
-      <x>100</x>
+      <x>10</x>
       <y>84</y>
-      <width>50</width>
+      <width>125</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1841,9 +1840,9 @@
     <widget type="label" version="2.0.0">
       <name>text #51</name>
       <text>Serial number</text>
-      <x>20</x>
+      <x>10</x>
       <y>109</y>
-      <width>130</width>
+      <width>125</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1853,8 +1852,9 @@
     <widget type="label" version="2.0.0">
       <name>text #54</name>
       <text>Firmware version</text>
+      <x>10</x>
       <y>134</y>
-      <width>160</width>
+      <width>125</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1864,9 +1864,9 @@
     <widget type="label" version="2.0.0">
       <name>text #57</name>
       <text>SDK version</text>
-      <x>40</x>
+      <x>10</x>
       <y>159</y>
-      <width>110</width>
+      <width>125</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1878,7 +1878,7 @@
       <text>Driver version</text>
       <x>10</x>
       <y>183</y>
-      <width>140</width>
+      <width>125</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1890,7 +1890,7 @@
       <text>ADCore version</text>
       <x>10</x>
       <y>208</y>
-      <width>140</width>
+      <width>125</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1900,9 +1900,9 @@
     <widget type="label" version="2.0.0">
       <name>text #66</name>
       <text>$(P)$(R)</text>
-      <x>155</x>
+      <x>145</x>
       <y>35</y>
-      <width>138</width>
+      <width>190</width>
       <height>19</height>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -1912,14 +1912,13 @@
         <color red="10" green="0" blue="184">
         </color>
       </foreground_color>
-      <auto_size>true</auto_size>
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>text update #69</name>
       <pv_name>$(P)$(R)Manufacturer_RBV</pv_name>
-      <x>155</x>
+      <x>145</x>
       <y>60</y>
-      <width>165</width>
+      <width>190</width>
       <height>18</height>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -1940,9 +1939,9 @@
     <widget type="textupdate" version="2.0.0">
       <name>text update #73</name>
       <pv_name>$(P)$(R)PortName_RBV</pv_name>
-      <x>155</x>
+      <x>145</x>
       <y>10</y>
-      <width>165</width>
+      <width>190</width>
       <height>18</height>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -2495,7 +2494,7 @@
     <widget type="label" version="2.0.0">
       <name>Label_35</name>
       <text>Sensor material</text>
-      <x>22</x>
+      <x>20</x>
       <y>30</y>
       <width>125</width>
       <font>
@@ -2511,7 +2510,7 @@
     <widget type="label" version="2.0.0">
       <name>Label_36</name>
       <text>Sensor thickness</text>
-      <x>22</x>
+      <x>20</x>
       <y>55</y>
       <width>125</width>
       <font>
@@ -2565,7 +2564,7 @@
     <widget type="label" version="2.0.0">
       <name>text #78</name>
       <text>Sensor size</text>
-      <x>22</x>
+      <x>20</x>
       <y>5</y>
       <width>125</width>
       <font>
@@ -2625,9 +2624,9 @@
     <widget type="label" version="2.0.0">
       <name>Label_37</name>
       <text>Num modules</text>
-      <x>6</x>
+      <x>20</x>
       <y>80</y>
-      <width>150</width>
+      <width>125</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -2660,7 +2659,7 @@
     <widget type="label" version="2.0.0">
       <name>Label_23</name>
       <text>API Version</text>
-      <x>34</x>
+      <x>20</x>
       <y>110</y>
       <width>125</width>
       <font>
@@ -2695,7 +2694,7 @@
     <widget type="label" version="2.0.0">
       <name>Label_24</name>
       <text>XSPD Version</text>
-      <x>34</x>
+      <x>20</x>
       <y>135</y>
       <width>125</width>
       <font>
@@ -2730,7 +2729,7 @@
     <widget type="label" version="2.0.0">
       <name>Label_38</name>
       <text>Modules</text>
-      <x>22</x>
+      <x>20</x>
       <y>163</y>
       <width>125</width>
       <font>
@@ -3695,7 +3694,6 @@
     <widget type="label" version="2.0.0">
       <name>text #22_2</name>
       <text>Macros</text>
-      <x>-6</x>
       <y>31</y>
       <width>60</width>
       <font>
@@ -3725,7 +3723,6 @@
     <widget type="label" version="2.0.0">
       <name>text #29</name>
       <text>Status</text>
-      <x>-6</x>
       <y>56</y>
       <width>60</width>
       <font>

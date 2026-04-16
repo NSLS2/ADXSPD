@@ -89,6 +89,9 @@ enum class APIState {
     INITIALIZED = 4,
 };
 
+// Default port number for XSPD API
+constexpr int DEFAULT_PORT = 8008;
+
 tuple<int, int, int> ParseVersionString(const string& versionStr);
 
 // Forward declarations
@@ -98,7 +101,8 @@ class Detector;
 
 class API {
    public:
-    API(string hostname, int portNum) : baseUri(hostname + ":" + std::to_string(portNum)) {}
+    API(string hostname, int portNum = DEFAULT_PORT)
+        : baseUri(hostname + ":" + std::to_string(portNum)) {}
     Detector* Initialize(string deviceId = "");
     virtual ~API() {}
 

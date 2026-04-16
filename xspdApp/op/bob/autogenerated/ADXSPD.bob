@@ -1345,7 +1345,7 @@
       <y>910</y>
       <width>150</width>
       <height>20</height>
-      <text>DataType</text>
+      <text>Decompress in driver</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1363,7 +1363,7 @@
       <y>910</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)DataType</pv_name>
+      <pv_name>$(P)$(R)DecompressInDriver</pv_name>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1375,12 +1375,29 @@
       </font>
       <name>ComboBox_15</name>
     </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>330</x>
+      <y>910</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)DecompressInDriver_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>TextUpdate_29</name>
+    </widget>
     <widget type="label" version="2.0.0">
       <x>10</x>
       <y>940</y>
       <width>150</width>
       <height>20</height>
-      <text>ColorMode</text>
+      <text>DataType</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1398,7 +1415,7 @@
       <y>940</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)ColorMode</pv_name>
+      <pv_name>$(P)$(R)DataType</pv_name>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1410,29 +1427,12 @@
       </font>
       <name>ComboBox_16</name>
     </widget>
-    <widget type="textupdate" version="2.0.0">
-      <x>330</x>
-      <y>940</y>
-      <width>150</width>
-      <height>20</height>
-      <pv_name>$(P)$(R)ColorMode_RBV</pv_name>
-      <foreground_color>
-        <color red="10" blue="184" green="0" alpha="255"/>
-      </foreground_color>
-      <background_color>
-        <color red="187" blue="187" green="187" alpha="255"/>
-      </background_color>
-      <font>
-        <font family="Liberation Sans" size="16" style="REGULAR"/>
-      </font>
-      <name>TextUpdate_29</name>
-    </widget>
     <widget type="label" version="2.0.0">
       <x>10</x>
       <y>970</y>
       <width>150</width>
       <height>20</height>
-      <text>BinX</text>
+      <text>ColorMode</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1445,12 +1445,12 @@
       <horizontal_alignment>0</horizontal_alignment>
       <name>Label_33</name>
     </widget>
-    <widget type="textentry" version="2.0.0">
+    <widget type="combo" version="2.0.0">
       <x>170</x>
       <y>970</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)BinX</pv_name>
+      <pv_name>$(P)$(R)ColorMode</pv_name>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1460,14 +1460,14 @@
       <font>
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
-      <name>TextEntry_6</name>
+      <name>ComboBox_17</name>
     </widget>
     <widget type="textupdate" version="2.0.0">
       <x>330</x>
       <y>970</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)BinX_RBV</pv_name>
+      <pv_name>$(P)$(R)ColorMode_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -1484,7 +1484,7 @@
       <y>1000</y>
       <width>150</width>
       <height>20</height>
-      <text>BinY</text>
+      <text>BinX</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1502,7 +1502,7 @@
       <y>1000</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)BinY</pv_name>
+      <pv_name>$(P)$(R)BinX</pv_name>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1512,14 +1512,14 @@
       <font>
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
-      <name>TextEntry_7</name>
+      <name>TextEntry_6</name>
     </widget>
     <widget type="textupdate" version="2.0.0">
       <x>330</x>
       <y>1000</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)BinY_RBV</pv_name>
+      <pv_name>$(P)$(R)BinX_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -1536,7 +1536,7 @@
       <y>1030</y>
       <width>150</width>
       <height>20</height>
-      <text>MinX</text>
+      <text>BinY</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1554,7 +1554,7 @@
       <y>1030</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)MinX</pv_name>
+      <pv_name>$(P)$(R)BinY</pv_name>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1564,14 +1564,14 @@
       <font>
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
-      <name>TextEntry_8</name>
+      <name>TextEntry_7</name>
     </widget>
     <widget type="textupdate" version="2.0.0">
       <x>330</x>
       <y>1030</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)MinX_RBV</pv_name>
+      <pv_name>$(P)$(R)BinY_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -1588,7 +1588,7 @@
       <y>1060</y>
       <width>150</width>
       <height>20</height>
-      <text>MinY</text>
+      <text>MinX</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1606,7 +1606,7 @@
       <y>1060</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)MinY</pv_name>
+      <pv_name>$(P)$(R)MinX</pv_name>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1616,14 +1616,14 @@
       <font>
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
-      <name>TextEntry_9</name>
+      <name>TextEntry_8</name>
     </widget>
     <widget type="textupdate" version="2.0.0">
       <x>330</x>
       <y>1060</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)MinY_RBV</pv_name>
+      <pv_name>$(P)$(R)MinX_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -1640,7 +1640,7 @@
       <y>1090</y>
       <width>150</width>
       <height>20</height>
-      <text>SizeX</text>
+      <text>MinY</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1658,7 +1658,7 @@
       <y>1090</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)SizeX</pv_name>
+      <pv_name>$(P)$(R)MinY</pv_name>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1668,14 +1668,14 @@
       <font>
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
-      <name>TextEntry_10</name>
+      <name>TextEntry_9</name>
     </widget>
     <widget type="textupdate" version="2.0.0">
       <x>330</x>
       <y>1090</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)SizeX_RBV</pv_name>
+      <pv_name>$(P)$(R)MinY_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -1692,7 +1692,7 @@
       <y>1120</y>
       <width>150</width>
       <height>20</height>
-      <text>SizeY</text>
+      <text>SizeX</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1710,7 +1710,7 @@
       <y>1120</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)SizeY</pv_name>
+      <pv_name>$(P)$(R)SizeX</pv_name>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1720,14 +1720,14 @@
       <font>
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
-      <name>TextEntry_11</name>
+      <name>TextEntry_10</name>
     </widget>
     <widget type="textupdate" version="2.0.0">
       <x>330</x>
       <y>1120</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)SizeY_RBV</pv_name>
+      <pv_name>$(P)$(R)SizeX_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -1744,7 +1744,7 @@
       <y>1150</y>
       <width>150</width>
       <height>20</height>
-      <text>ReverseX</text>
+      <text>SizeY</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1757,12 +1757,12 @@
       <horizontal_alignment>0</horizontal_alignment>
       <name>Label_39</name>
     </widget>
-    <widget type="combo" version="2.0.0">
+    <widget type="textentry" version="2.0.0">
       <x>170</x>
       <y>1150</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)ReverseX</pv_name>
+      <pv_name>$(P)$(R)SizeY</pv_name>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1772,14 +1772,14 @@
       <font>
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
-      <name>ComboBox_17</name>
+      <name>TextEntry_11</name>
     </widget>
     <widget type="textupdate" version="2.0.0">
       <x>330</x>
       <y>1150</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)ReverseX_RBV</pv_name>
+      <pv_name>$(P)$(R)SizeY_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -1796,7 +1796,7 @@
       <y>1180</y>
       <width>150</width>
       <height>20</height>
-      <text>ReverseY</text>
+      <text>ReverseX</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1814,7 +1814,7 @@
       <y>1180</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)ReverseY</pv_name>
+      <pv_name>$(P)$(R)ReverseX</pv_name>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -1831,7 +1831,7 @@
       <y>1180</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)ReverseY_RBV</pv_name>
+      <pv_name>$(P)$(R)ReverseX_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -1853,9 +1853,61 @@
       </line_color>
       <name>Rectangle_1</name>
     </widget>
+    <widget type="label" version="2.0.0">
+      <x>490</x>
+      <y>10</y>
+      <width>150</width>
+      <height>20</height>
+      <text>ReverseY</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_41</name>
+    </widget>
+    <widget type="combo" version="2.0.0">
+      <x>650</x>
+      <y>10</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)ReverseY</pv_name>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="115" blue="255" green="223" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>ComboBox_19</name>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>810</x>
+      <y>10</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)ReverseY_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>TextUpdate_38</name>
+    </widget>
     <background_color>
       <color red="187" blue="187" green="187" alpha="255"/>
     </background_color>
     <height>1210</height>
-    <width>810</width>
+    <width>970</width>
   </display>

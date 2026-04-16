@@ -34,6 +34,7 @@
 #define ADXSPD_CrCorrString "XSPD_CR_CORR"
 #define ADXSPD_MonitorModeString "XSPD_MONITOR_MODE"
 #define ADXSPD_MonitorIntervalString "XSPD_MONITOR_INTERVAL"
+#define ADXSPD_DecompressInDriverString "XSPD_DECOMPRESS_IN_DRIVER"
 
 // Parameter index definitions
 int ADXSPD_ApiVersion;
@@ -65,10 +66,11 @@ int ADXSPD_BitDepth;
 int ADXSPD_CrCorr;
 int ADXSPD_MonitorMode;
 int ADXSPD_MonitorInterval;
+int ADXSPD_DecompressInDriver;
 
 #define ADXSPD_FIRST_PARAM ADXSPD_ApiVersion
-#define ADXSPD_LAST_PARAM ADXSPD_MonitorInterval
+#define ADXSPD_LAST_PARAM ADXSPD_DecompressInDriver
 
-#define NUM_ADXSPD_PARAMS 29
+#define NUM_ADXSPD_PARAMS 30
 
 #endif

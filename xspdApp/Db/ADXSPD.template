@@ -558,6 +558,25 @@ record(ai, "$(P)$(R)MonitorInterval_RBV"){
     field(SCAN, "I/O Intr")
 }
 
+record(bo, "$(P)$(R)DecompressInDriver"){
+    field(DESC, "Decompress in driver")
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_DECOMPRESS_IN_DRIVER")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
+    field(VAL, "0")
+    field(PINI, "NO")
+}
+
+record(bi, "$(P)$(R)DecompressInDriver_RBV"){
+    field(DESC, "Decompress in driver readback")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_DECOMPRESS_IN_DRIVER")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
+    field(SCAN, "I/O Intr")
+}
+
 
 # Disable any ADBase records we don't want to use
 

@@ -185,8 +185,7 @@ void ADXSPD::acquisitionThread() {
     // void* frameBuffer = nullptr;
     // void* prevFrameBuffer = nullptr;
 
-    int arrayCallbacks;
-
+    int arrayCallbacks, decompressInDriver;
     int collectedImages;
 
     void* zmqSubscriber = zmq_socket(this->zmqContext, ZMQ_SUB);
@@ -274,8 +273,8 @@ void ADXSPD::acquisitionThread() {
             dims[0] = (size_t) sizeX;
             dims[1] = (size_t) sizeY;
 
-            // Allocate the NDArray of the correct size
-            pArray = pNDArrayPool->alloc(2, dims, dataType, frameSizeBytes, NULL);
+            // Allocate the NDArray with the correct dtype and dimensions
+            pArray = pNDArrayPool->alloc(2, dims, dataType, 0, NULL);
 
             if (!pArray) {
                 ERR("Failed to allocate array!");
@@ -295,6 +294,7 @@ void ADXSPD::acquisitionThread() {
             setIntegerParam(NDArraySizeY, arrayInfo.ySize);
 
             getIntegerParam(NDArrayCallbacks, &arrayCallbacks);
+            getIntegerParam(ADXSPD_DecompressInDriver, &decompressInDriver);
 
             // Decompress data if compressed
             XSPD::Compressor compressor;
@@ -308,7 +308,7 @@ void ADXSPD::acquisitionThread() {
             bool decompressOK = true;
             if (compressor == XSPD::Compressor::ZLIB) {
                 // Decompress using zlib
-                size_t decompressedSize;
+                uLongf decompressedSize = arrayInfo.totalBytes;
                 int zlibStatus =
                     uncompress((Bytef*) pArray->pData, &decompressedSize,
                                (Bytef*) zmq_msg_data(&frameMessages[2]), frameSizeBytes);
@@ -812,6 +812,8 @@ ADXSPD::ADXSPD(const char* portName, const char* ip, int portNum, const char* de
     setStringParam(NDDriverVersion, versionString);
 
     INFO_ARGS("Connecting to XSPD api at %s:%d...", ip, portNum);
+
+    if (portNum == 0) portNum = XSPD::DEFAULT_PORT;
     this->pApi = new XSPD::API(string(ip), portNum);
     if (deviceId == nullptr) {
         INFO("No device ID specified, will connect to first available device.");
