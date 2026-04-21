@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Saved on 2026-04-16 15:50:18 by jwlodek-->
+<!--Saved on 2026-04-21 09:56:10 by jwlodek-->
 <display version="2.0.0">
   <name>ADXSPD Control - $(P)</name>
   <macros>
@@ -2144,7 +2144,7 @@
       <name>related display #40</name>
       <actions>
         <action type="open_display">
-          <file>commonPlugins.opi</file>
+          <file>../../../../ADCore/ADApp/op/bob/autoconvert/commonPlugins.bob</file>
           <target>tab</target>
           <description>Common plugins</description>
         </action>
