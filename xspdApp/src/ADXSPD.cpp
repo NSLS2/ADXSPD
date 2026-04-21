@@ -461,6 +461,9 @@ void ADXSPD::monitorThread() {
             break;
         }
 
+        // If monitoring is disabled, don't poll module statuses
+        if (monitorEnabled == 0) continue;
+
         this->lock();
 
         try {
@@ -480,9 +483,6 @@ void ADXSPD::monitorThread() {
                     break;
             }
             setIntegerParam(ADStatus, adStatus);
-
-            // If monitoring is disabled, don't poll module statuses
-            if (monitorEnabled == 0) continue;
 
             // Reading out module status takes too long. Probably should become a "GetModuleStatus"
             // PV that can have its Scan rate updated from I/O Intr to some rate.

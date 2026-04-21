@@ -326,18 +326,66 @@ def _max_for_dtype(dt: np.dtype) -> int:
     return int(np.iinfo(dt).max)
 
 
+def _draw_streak(img: np.ndarray, max_val: int, dt: np.dtype, intensity: float = 1.0) -> None:
+    """Draw a single cosmic-ray-like streak onto img (in-place).
+
+    The streak is 5-100 pixels long and 1-5 pixels wide, kept fairly
+    straight: the cumulative angular deviation from the initial direction
+    is clamped to +/-10 degrees.
+
+    intensity (0-1) scales the pixel brightness range.
+    """
+    height, width = img.shape
+    length = np.random.randint(5, 101)
+    base_width = np.random.randint(1, 6)
+
+    # Random starting point
+    y = np.random.randint(0, height)
+    x = np.random.randint(0, width)
+
+    # Random dominant direction (angle in radians)
+    base_angle = np.random.uniform(0, 2 * np.pi)
+    max_deviation = np.radians(10.0)  # max 10 degrees from the base direction
+
+    # Scale pixel value range by intensity
+    low_val = max(1, int(max_val * 0.3 * intensity))
+    high_val = max(low_val + 1, int(max_val * intensity) + 1)
+
+    cy, cx = float(y), float(x)
+    for step in range(length):
+        # Small per-step jitter, but clamp total deviation to +/-10 degrees
+        deviation = np.random.uniform(-max_deviation, max_deviation)
+        angle = base_angle + deviation
+        cx += np.cos(angle)
+        cy += np.sin(angle)
+
+        iy, ix_ = int(round(cy)), int(round(cx))
+
+        # Vary width per-pixel for slight irregularity
+        w = max(1, base_width + np.random.randint(-1, 2))
+        half_w = w // 2
+
+        for wy in range(iy - half_w, iy + half_w + 1):
+            for wx in range(ix_ - half_w, ix_ + half_w + 1):
+                if 0 <= wy < height and 0 <= wx < width:
+                    img[wy, wx] = np.random.randint(low_val, high_val)
+
+
 def generate_module_image(
     width: int,
     height: int,
     bit_depth: int,
     threshold_low: float,
     frame_number: int,
+    shutter_time_ms: float = 1000.0,
 ) -> np.ndarray:
     """Generate a single module image with noise shaped by threshold_low.
 
     threshold_low < 2  -> heavy noise (most pixels random)
     threshold_low 2-5  -> progressively sparser
     threshold_low > 5  -> nearly empty, occasional streaks simulating cosmic rays or similar
+
+    Longer shutter_time_ms increases cosmic ray probability and intensity.
     """
     dt = _dtype_for_bit_depth(bit_depth)
     max_val = _max_for_dtype(dt)
@@ -346,30 +394,48 @@ def generate_module_image(
         # Heavy noise -- full random image
         keep_fraction = 1.0
     elif threshold_low <= 5.0:
-        # Linear ramp from ~90% keep at 2 down to ~5% at 5
-        keep_fraction = max(0.05, 1.0 - (threshold_low - 1.0) / 5.0)
+        # Exponential decay from ~80% at 2 to ~6% at 5
+        keep_fraction = 0.8 * np.exp(-0.864 * (threshold_low - 2.0))
     else:
-        # Nearly empty
-        keep_fraction = 0.01
+        # Steeper exponential from 6% at 5, approaching zero gradually
+        # ~0.5% at 6, ~0.04% at 7, never hard-clips to zero
+        keep_fraction = 0.06 * np.exp(-2.5 * (threshold_low - 5.0))
 
-    # Generate full random image
-    img = np.random.randint(0, max_val + 1, size=(height, width), dtype=dt)
+    # Generate base image
+    if keep_fraction < 1e-6:
+        img = np.zeros((height, width), dtype=dt)
+    else:
+        img = np.random.randint(0, max_val + 1, size=(height, width), dtype=dt)
+        if keep_fraction < 1.0:
+            mask = np.random.random((height, width)) < keep_fraction
+            img[~mask] = 0
 
-    if keep_fraction < 1.0:
-        # Create a random mask and zero out pixels outside it
-        mask = np.random.random((height, width)) < keep_fraction
-        img[~mask] = 0
+    # Add rare cosmic-ray streaks for threshold > 3
+    # Probability scales with shutter time: longer exposures collect more
+    # cosmic rays.  Base probability at 1000ms is 0.05; scales linearly
+    # with shutter_time_ms, capped at 0.2 (1 in 5).
+    # Each additional streak after the first has exponentially decaying
+    # probability: p_next = p_first * 0.4^k.
+    # Intensity also scales with shutter time (more charge deposited).
+    if threshold_low > 3.0:
+        # Base probability at 1000ms -> 0.05, scales linearly, cap at 0.2
+        p_first = min(0.2, 0.05 * (shutter_time_ms / 1000.0))
+        # Intensity factor: 0.4 at 1ms, 1.0 at 1000ms+
+        intensity = min(1.0, 0.4 + 0.6 * (shutter_time_ms / 1000.0))
 
-    # For very high thresholds, add occasional streaks
-    if threshold_low > 5.0 and frame_number % 3 == 0:
-        n_streaks = np.random.randint(1, 4)
+        max_streaks = 7
+        n_streaks = 0
+        if np.random.random() < p_first:
+            n_streaks = 1
+            # Each subsequent: exponential decay  p_first * 0.4^k
+            for k in range(1, max_streaks):
+                p_next = p_first * (0.4 ** k)
+                if np.random.random() < p_next:
+                    n_streaks += 1
+                else:
+                    break
         for _ in range(n_streaks):
-            row = np.random.randint(0, height)
-            col_start = np.random.randint(0, max(1, width - 20))
-            length = np.random.randint(5, min(21, width - col_start + 1))
-            img[row, col_start : col_start + length] = np.random.randint(
-                max_val // 2, max_val + 1, size=length, dtype=dt
-            )
+            _draw_streak(img, max_val, dt, intensity)
 
     return img
 
@@ -379,6 +445,7 @@ def generate_stitched_image(
     bit_depth: int,
     threshold_low: float,
     frame_number: int,
+    shutter_time_ms: float = 1000.0,
 ) -> np.ndarray:
     """Generate a stitched image from all modules, placed by their positions.
 
@@ -401,7 +468,7 @@ def generate_stitched_image(
         px = int(position[0])
         py = int(position[1])
 
-        mod_img = generate_module_image(mod_w, mod_h, bit_depth, threshold_low, frame_number)
+        mod_img = generate_module_image(mod_w, mod_h, bit_depth, threshold_low, frame_number, shutter_time_ms)
 
         # Clip to canvas bounds
         src_y_end = min(mod_h, canvas_h - py)
@@ -516,9 +583,17 @@ def publisher_thread(
                 print(f"[ACQ] Completed {n_frames} frames, auto-stopped")
                 continue
 
+            # Sleep for shutter_time before generating/sending the frame
+            time.sleep(shutter_time_ms / 1000.0)
+
+            # Re-check acquisition state after sleep (may have been stopped)
+            with state.lock:
+                if not state.acquiring:
+                    continue
+
             # Generate frame(s)
             if stitched:
-                img = generate_stitched_image(state, bit_depth, threshold_low, frame_num)
+                img = generate_stitched_image(state, bit_depth, threshold_low, frame_num, shutter_time_ms)
                 raw = img.tobytes()
                 compressed = compress_data(raw, compressor_name)
                 send_frame(sockets[0], compressed, frame_num, 0)
@@ -533,7 +608,7 @@ def publisher_thread(
                 for i, mod_id in enumerate(state.module_ids):
                     mod_w = int(state.get_var(f"{mod_id}/frame_width", 1024))
                     mod_h = int(state.get_var(f"{mod_id}/frame_height", 1024))
-                    img = generate_module_image(mod_w, mod_h, bit_depth, threshold_low, frame_num)
+                    img = generate_module_image(mod_w, mod_h, bit_depth, threshold_low, frame_num, shutter_time_ms)
                     raw = img.tobytes()
                     compressed = compress_data(raw, compressor_name)
                     send_frame(sockets[i], compressed, frame_num, 0)
@@ -553,9 +628,6 @@ def publisher_thread(
                 state.set_var(f"{dp_id}/frames_queued", fn)
             for mod_id in state.module_ids:
                 state.set_var(f"{mod_id}/frames_queued", fn)
-
-            # Sleep for shutter_time
-            time.sleep(shutter_time_ms / 1000.0)
 
     except zmq.ContextTerminated:
         pass
