@@ -39,6 +39,17 @@ class ADXSPDModule : public asynPortDriver {
     XSPD::Module* module;  // Pointer to the XSPD module object
     void createAllParams();
 
+    template <typename T>
+    T getModuleVar(int paramIndex, const string& varName) {
+        try {
+            T value = this->parent->getAPIVar<T>(paramIndex, *this->module, varName);
+            return value;
+        } catch (std::exception& e) {
+            ERR_ARGS("Failed to get module variable %s: %s", varName.c_str(), e.what());
+            throw;  // Rethrow the exception to be handled by the caller
+        }
+    }
+
     ADXSPDLogLevel getLogLevel() { return this->parent->getLogLevel(); }
 };
 

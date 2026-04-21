@@ -329,6 +329,8 @@ class Detector : public APIComponent {
 
     vector<Module*> GetModules() { return this->modules; }
 
+    string GetUserDataVar(string varName);
+
     /**
      * @brief Retrieves the IDs of all registered data ports
      *
