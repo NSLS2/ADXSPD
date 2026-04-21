@@ -358,8 +358,16 @@ void ADXSPD::acquisitionThread() {
                         ERR_ARGS("Unsupported compressor type %d", (int) compressor);
                         decompressOK = false;
                 }
-                // Copy data from new frame to pArray
-                memcpy(pArray->pData, zmq_msg_data(&frameMessages[2]), frameSizeBytes);
+                // Copy data from new frame to pArray. With fully random data it is possible that compressed size is 
+                // actually larger than the uncompressed size, so we need to check and truncate if necessary to avoid overflow.
+                size_t copySize = frameSizeBytes;
+                if (frameSizeBytes > arrayInfo.totalBytes) {
+                    WARN_ARGS(
+                        "Size of incoming frame data %zu bytes is larger than expected array size %zu bytes truncating.",
+                        frameSizeBytes, arrayInfo.totalBytes);
+                    copySize = arrayInfo.totalBytes;
+                }
+                memcpy(pArray->pData, zmq_msg_data(&frameMessages[2]), copySize);
             }
 
             bool subtractOk = true;
