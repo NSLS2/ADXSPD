@@ -90,7 +90,7 @@ void ADXSPDModule::getInitialModuleState() {
     for (auto& feature : this->module->GetFeatures()) {
         featureBitmask += pow(2, static_cast<int>(feature));
     }
-    setIntegerParam(ADXSPDModule_FeatBitmask, featureBitmask);
+    setUIntDigitalParam(ADXSPDModule_FeatBitmask, featureBitmask, 0x1F);  // 0x1F = 00011111, since we have 5 features in the enum
 
     setDoubleParam(ADXSPDModule_Voltage, this->module->GetVar<double>("voltage"));
     setIntegerParam(ADXSPDModule_NumSubframes, this->module->GetVar<int>("n_subframes"));

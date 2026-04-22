@@ -602,10 +602,16 @@ asynStatus ADXSPD::getInitialDetState() {
 
     // Sensor information is stored as user-data, so we can't guarantee it will be available or
     // correct, so treat failure to read these parameters as a warning rather than an error.
-    int sensorInfoStatus = asynSuccess;
-    sensorInfoStatus |= this->getDetVar<string>(ADXSPD_SensorMaterial, "user_data/sensor_material");
-    sensorInfoStatus |= this->getDetVar<int>(ADXSPD_SensorThickness, "user_data/sensor_thickness");
-    if (sensorInfoStatus != asynSuccess) WARN("Failed to read one or more sensor info parameters.");
+    string sensorMaterial = this->pDetector->GetUserDataVar<string>("sensor_material");
+    if (sensorMaterial.empty())
+        WARN("Sensor material information not set in user data");
+    int sensorThickness = this->pDetector->GetUserDataVar<int>("sensor_thickness");
+    if (sensorThickness == 0) {
+        WARN("Sensor thickness information not set in user data");
+    }
+
+    status |= setStringParam(ADXSPD_SensorMaterial, sensorMaterial.c_str());
+    status |= setIntegerParam(ADXSPD_SensorThickness, sensorThickness);
 
     callParamCallbacks();
 
