@@ -389,7 +389,8 @@ void ADXSPD::acquisitionThread() {
                         pArray->codec.level = compressionLevel;
                         break;
 #else
-                        ERR("ADCore R3-15 or later is required to support zlib-compressed NDArrays.");
+                        ERR("ADCore R3-15 or later is required to support zlib-compressed "
+                            "NDArrays.");
                         readoutOk = false;
                         break;
 #endif
@@ -405,7 +406,8 @@ void ADXSPD::acquisitionThread() {
                 // compressed size is actually larger than the uncompressed size, so check for that
                 // and print an error.
                 if (!readoutOk) {
-                    // Don't attempt to copy data if we already know there's an issue with the compression settings.
+                    // Don't attempt to copy data if we already know there's an issue with the
+                    // compression settings.
                     ERR("Compression settings are invalid, cannot read out frame data");
                 } else if (frameSizeBytes > arrayInfo.totalBytes) {
                     ERR_ARGS(

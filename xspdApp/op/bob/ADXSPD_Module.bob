@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Saved on 2026-04-22 13:46:01 by jwlodek-->
+<!--Saved on 2026-04-22 14:44:16 by jwlodek-->
 <display version="2.0.0">
   <name>ADXSPD Module - $(P)$(R)</name>
   <macros>
     <P>DEV:XSPD1:</P>
     <R>mod1:</R>
   </macros>
-  <width>950</width>
+  <width>955</width>
   <height>625</height>
   <background_color>
     <color red="187" green="187" blue="187">
@@ -17,7 +17,7 @@
   <widget type="label" version="2.0.0">
     <name>Title</name>
     <text>XSPD Module - $(P)$(R)</text>
-    <width>950</width>
+    <width>955</width>
     <height>25</height>
     <font>
       <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -1192,7 +1192,7 @@
     <name>Module Features</name>
     <x>750</x>
     <y>35</y>
-    <width>200</width>
+    <width>205</width>
     <height>222</height>
     <font>
       <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -1210,7 +1210,7 @@
     <widget type="byte_monitor" version="2.0.0">
       <name>Byte Monitor</name>
       <pv_name>$(P)$(R)Features_RBV</pv_name>
-      <x>130</x>
+      <x>135</x>
       <y>25</y>
       <width>29</width>
       <height>150</height>
