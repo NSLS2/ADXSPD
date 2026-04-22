@@ -410,7 +410,7 @@ TEST_F(TestXSPDAPI, TestGetUserDataVar) {
     XSPD::Detector* pdet = this->mapi->MockInitialization();
 
     this->mapi->MockGetVarRequest("lambda/user_data/test_var");
-    string userDataValue = pdet->GetUserDataVar("test_var");
+    string userDataValue = pdet->GetUserDataVar<string>("test_var");
     ASSERT_EQ(userDataValue, "");
 
     this->mapi->UpdateSampleResp("devices/lambda01/variables?path=lambda/user_data/test_var",
@@ -418,7 +418,7 @@ TEST_F(TestXSPDAPI, TestGetUserDataVar) {
 
     this->mapi->MockGetVarRequest("lambda/user_data/test_var");
 
-    userDataValue = pdet->GetUserDataVar("test_var");
+    userDataValue = pdet->GetUserDataVar<string>("test_var");
     ASSERT_EQ(userDataValue, "");
 
     this->mapi->UpdateSampleResp(
@@ -426,6 +426,18 @@ TEST_F(TestXSPDAPI, TestGetUserDataVar) {
         json{{"path", "lambda/user_data/test_var"}, {"value", "test_value"}});
 
     this->mapi->MockGetVarRequest("lambda/user_data/test_var");
-    string s3 = pdet->GetUserDataVar("test_var");
+    string s3 = pdet->GetUserDataVar<string>("test_var");
     ASSERT_EQ(s3, "test_value");
+
+    this->mapi->UpdateSampleResp(
+        "devices/lambda01/variables?path=lambda/user_data/test_var",
+        json{{"path", "lambda/user_data/test_var"}, {"value", 123}});
+
+    this->mapi->MockGetVarRequest("lambda/user_data/test_var");
+    int i = pdet->GetUserDataVar<int>("test_var");
+    ASSERT_EQ(i, 123);
+
+    this->mapi->MockGetVarRequest("lambda/user_data/test_var");
+    double d = pdet->GetUserDataVar<double>("test_var");
+    ASSERT_DOUBLE_EQ(d, 123.0);
 }
