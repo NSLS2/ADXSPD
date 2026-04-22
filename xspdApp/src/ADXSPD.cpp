@@ -88,13 +88,13 @@ asynStatus ADXSPD::getAPIVar(int paramIndex, XSPD::APIComponent& component, stri
         } else if constexpr (is_same_v<T, string>) {
             setStringParam(paramIndex, value.c_str());
         } else {
-            ERR_ARGS("Unsupported parameter type for variable %s/%s", component.GetId().c_str(),
-                     varName.c_str());
+            ERR_TO_STATUS_ARGS("Unsupported parameter type for variable %s/%s",
+                               component.GetId().c_str(), varName.c_str());
             return asynError;
         }
     } catch (std::exception& e) {
-        ERR_ARGS("Failed to read API parameter %s/%s: %s", component.GetId().c_str(),
-                 varName.c_str(), e.what());
+        ERR_TO_STATUS_ARGS("Failed to read API parameter %s/%s: %s", component.GetId().c_str(),
+                           varName.c_str(), e.what());
         return asynError;
     }
     return asynSuccess;
@@ -114,13 +114,16 @@ asynStatus ADXSPD::acquireStart() {
         int sizeY = this->pDetector->GetActiveDataPort()->GetVar<int>("frame_height");
         setIntegerParam(ADSizeX, sizeX);
         setIntegerParam(ADSizeY, sizeY);
+        setIntegerParam(ADStatus, ADStatusAcquire);
 
         callParamCallbacks();
 
         this->pDetector->ExecCommand("start");
 
+        INFO_TO_STATUS("Acquisition started");
+
     } catch (std::exception& e) {
-        ERR_ARGS("Failed to start acquisition: %s", e.what());
+        ERR_TO_STATUS_ARGS("Failed to start acquisition: %s", e.what());
         return asynError;
     }
     return asynSuccess;
@@ -135,8 +138,10 @@ asynStatus ADXSPD::acquireStop() {
     setIntegerParam(ADAcquire, 0);
     try {
         this->pDetector->ExecCommand("stop");
+        setIntegerParam(ADStatus, ADStatusIdle);
+        callParamCallbacks();
     } catch (std::exception& e) {
-        ERR_ARGS("Failed to stop acquisition: %s", e.what());
+        ERR_TO_STATUS_ARGS("Failed to stop acquisition: %s", e.what());
         return asynError;
     }
     return asynSuccess;
@@ -185,22 +190,21 @@ void ADXSPD::acquisitionThread() {
     // void* frameBuffer = nullptr;
     // void* prevFrameBuffer = nullptr;
 
-    int arrayCallbacks;
-
+    int arrayCallbacks, decompress;
     int collectedImages;
 
     void* zmqSubscriber = zmq_socket(this->zmqContext, ZMQ_SUB);
     int rc = zmq_connect(zmqSubscriber, this->pDetector->GetActiveDataPort()->GetURI().c_str());
     if (rc != 0) {
-        ERR_ARGS("Failed to connect to data port zmq socket at %s:%d", this->dataPortIp.c_str(),
-                 this->dataPortPort);
+        ERR_TO_STATUS_ARGS("Failed to connect to data port zmq socket at %s:%d",
+                           this->dataPortIp.c_str(), this->dataPortPort);
         return;
     }
     // Subscribe to all messages
     rc = zmq_setsockopt(zmqSubscriber, ZMQ_SUBSCRIBE, "", 0);
     if (rc != 0) {
-        ERR_ARGS("Failed to set zmq socket options for data port at %s:%d",
-                 this->dataPortIp.c_str(), this->dataPortPort);
+        ERR_TO_STATUS_ARGS("Failed to set zmq socket options for data port at %s:%d",
+                           this->dataPortIp.c_str(), this->dataPortPort);
         return;
     }
 
@@ -255,18 +259,15 @@ void ADXSPD::acquisitionThread() {
             uint8_t statusCode = *((uint8_t*) zmq_msg_data(&frameMessages[1]) + 2);
             uint8_t size = *((uint8_t*) zmq_msg_data(&frameMessages[1]) + 3);
 
-            // The third message part contains the frame data
-            // TODO: This assumes no compression; handle compressed data later
+            // The third message part contains the frame data, either directly or compressed
             size_t frameSizeBytes = zmq_msg_size(&frameMessages[2]);
 
-            INFO_ARGS(
+            DEBUG_ARGS(
                 "Received frame number %d, trigger number %d, status code %d, size %d, %ld bytes",
                 frameNumber, triggerNumber, statusCode, size, frameSizeBytes);
 
             getIntegerParam(NDDataType, (int*) &dataType);
 
-            // For reasons I don't fully understand, casting the dims address pointers to int*
-            // causes them to be populated with really odd values...
             size_t dims[2];
             int sizeX, sizeY;
             getIntegerParam(ADSizeX, &sizeX);
@@ -274,8 +275,8 @@ void ADXSPD::acquisitionThread() {
             dims[0] = (size_t) sizeX;
             dims[1] = (size_t) sizeY;
 
-            // Allocate the NDArray of the correct size
-            pArray = pNDArrayPool->alloc(2, dims, dataType, frameSizeBytes, NULL);
+            // Allocate the NDArray with the correct dtype and dimensions
+            pArray = pNDArrayPool->alloc(2, dims, dataType, 0, NULL);
 
             if (!pArray) {
                 ERR("Failed to allocate array!");
@@ -295,50 +296,85 @@ void ADXSPD::acquisitionThread() {
             setIntegerParam(NDArraySizeY, arrayInfo.ySize);
 
             getIntegerParam(NDArrayCallbacks, &arrayCallbacks);
+            getIntegerParam(ADXSPD_Decompress, &decompress);
 
             // Decompress data if compressed
             XSPD::Compressor compressor;
+            int compressionLevel, bloscNumThreads;
             getIntegerParam(ADXSPD_Compressor, (int*) &compressor);
+            getIntegerParam(ADXSPD_CompressLevel, &compressionLevel);
+            getIntegerParam(ADXSPD_BloscNumThreads, &bloscNumThreads);
 
             // if (counterMode == XSPD::CounterMode::DUAL)
             //     frameBuffer = calloc(1, arrayInfo.totalBytes);
             // else
             //     frameBuffer = pArray->pData;
 
-            bool decompressOK = true;
-            if (compressor == XSPD::Compressor::ZLIB) {
-                // Decompress using zlib
-                size_t decompressedSize;
-                int zlibStatus =
-                    uncompress((Bytef*) pArray->pData, &decompressedSize,
-                               (Bytef*) zmq_msg_data(&frameMessages[2]), frameSizeBytes);
-                if (zlibStatus != Z_OK) {
-                    ERR_ARGS("Failed to decompress frame data with zlib, status code %d",
-                             zlibStatus);
-                    decompressOK = false;
-                }
-                if (decompressedSize != arrayInfo.totalBytes) {
-                    ERR_ARGS("Decompressed size %lu does not match expected size %lu",
-                             decompressedSize, arrayInfo.totalBytes);
-                    decompressOK = false;
-                }
-            } else if (compressor == XSPD::Compressor::BLOSC) {
-                size_t decompressSize;
-                decompressSize = blosc_decompress(zmq_msg_data(&frameMessages[2]), pArray->pData,
-                                                  arrayInfo.totalBytes);
-                if (decompressSize != arrayInfo.totalBytes) {
-                    ERR_ARGS(
-                        "Failed to decompress frame data with Blosc, decompressed size %zu does "
-                        "not match expected size %zu",
-                        decompressSize, arrayInfo.totalBytes);
-                    decompressOK = false;
+            bool readoutOk = true;
+            if (decompress && compressor != XSPD::Compressor::NONE) {
+                // If asked to decompress in the driver, decompress the data when copying it from
+                // the ZMQ message to the NDArray.
+                if (compressor == XSPD::Compressor::ZLIB) {
+                    uLongf decompressedSize = arrayInfo.totalBytes;
+                    int zlibStatus =
+                        uncompress((Bytef*) pArray->pData, &decompressedSize,
+                                   (Bytef*) zmq_msg_data(&frameMessages[2]), frameSizeBytes);
+                    if (zlibStatus != Z_OK) {
+                        ERR_ARGS("Failed to decompress frame data with zlib, status code %d",
+                                 zlibStatus);
+                        readoutOk = false;
+                    }
+                    if (decompressedSize != arrayInfo.totalBytes) {
+                        ERR_ARGS("Decompressed size %lu does not match expected size %lu",
+                                 decompressedSize, arrayInfo.totalBytes);
+                        readoutOk = false;
+                    }
+                } else if (compressor == XSPD::Compressor::BLOSC) {
+                    size_t decompressSize;
+                    decompressSize =
+                        blosc_decompress_ctx(zmq_msg_data(&frameMessages[2]), pArray->pData,
+                                             arrayInfo.totalBytes, bloscNumThreads);
+                    if (decompressSize != arrayInfo.totalBytes) {
+                        ERR_ARGS(
+                            "Failed to decompress frame data with Blosc, decompressed size %zu "
+                            "does "
+                            "not match expected size %zu",
+                            decompressSize, arrayInfo.totalBytes);
+                        readoutOk = false;
+                    }
                 }
             } else {
-                // Copy data from new frame to pArray
-                memcpy(pArray->pData, zmq_msg_data(&frameMessages[2]), arrayInfo.totalBytes);
+                // Otherwise, copy the framebuffer data directly to the NDArray, and set the codec
+                // information if compressed
+                switch (compressor) {
+                    case XSPD::Compressor::NONE:
+                        break;
+                    case XSPD::Compressor::ZLIB:
+                        pArray->codec.name = codecName[NDCODEC_ZLIB];
+                        pArray->codec.level = compressionLevel;
+                        break;
+                    case XSPD::Compressor::BLOSC:
+                        pArray->codec.name = codecName[NDCODEC_BLOSC];
+                        // TODO: need to set compressor, level, and shuffle for blosc codec
+                        break;
+                    default:
+                        ERR_ARGS("Unsupported compressor type %d", (int) compressor);
+                        readoutOk = false;
+                }
+                // Copy data from new frame to pArray. With fully random data it is possible that
+                // compressed size is actually larger than the uncompressed size, so check for that
+                // and print an error.
+                if (frameSizeBytes > arrayInfo.totalBytes) {
+                    ERR_ARGS(
+                        "Size of incoming frame data %zu bytes is larger than expected array size "
+                        "%zu bytes!",
+                        frameSizeBytes, arrayInfo.totalBytes);
+                    readoutOk = false;
+                } else {
+                    memcpy(pArray->pData, zmq_msg_data(&frameMessages[2]), frameSizeBytes);
+                }
             }
 
-            bool subtractOk = true;
             // if (counterMode == XSPD::CounterMode::DUAL && prevFrameBuffer != nullptr) {
             //     switch (dataType) {
             //         case NDUInt8:
@@ -373,7 +409,7 @@ void ADXSPD::acquisitionThread() {
             //     subtractOk = false;
             // }
 
-            if (decompressOK && subtractOk) {
+            if (readoutOk) {
                 // increment the array counter
                 int arrayCounter;
                 getIntegerParam(NDArrayCounter, &arrayCounter);
@@ -437,7 +473,7 @@ void ADXSPD::monitorThread() {
             break;
         }
 
-        // If monitoring is disabled, skip the rest of the loop and wait for the next interval
+        // If monitoring is disabled, don't poll module statuses
         if (monitorEnabled == 0) continue;
 
         this->lock();
@@ -466,7 +502,7 @@ void ADXSPD::monitorThread() {
             //    module->checkStatus();
             //}
         } catch (std::runtime_error& e) {
-            ERR_TO_STATUS("Failed to update detector status: %s", e.what());
+            ERR_TO_STATUS_ARGS("Failed to update detector status: %s", e.what());
             setIntegerParam(ADStatus, ADStatusError);
         }
 
@@ -560,7 +596,9 @@ asynStatus ADXSPD::getInitialDetState() {
     status |= this->getDetVar<XSPD::ShuffleMode>(ADXSPD_ShuffleMode, "shuffle_mode");
     status |= this->getDetVar<string>(ADModel, "type");
     status |= this->getDataPortVar<int>(ADXSPD_FramesQueued, "frames_queued");
-    status |= this->getDetVar<int>(ADXSPD_RoiRows, "roi_rows");
+
+    int roiRows = this->pDetector->GetVar<int>("roi_rows");
+    setIntegerParam(ADXSPD_RoiRows, static_cast<int>(log2(roiRows)));
 
     // Sensor information is stored as user-data, so we can't guarantee it will be available or
     // correct, so treat failure to read these parameters as a warning rather than an error.
@@ -596,7 +634,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
 
     if (acquiring && find(this->onlyIdleParams.begin(), this->onlyIdleParams.end(), function) !=
                          this->onlyIdleParams.end()) {
-        ERR_TO_STATUS("Cannot set parameter %s while acquiring", paramName);
+        ERR_TO_STATUS_ARGS("Cannot set parameter %s while acquiring", paramName);
         return asynError;
     }
 
@@ -628,7 +666,8 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             }
         }
         if (value < 1 || value > maxNumImages) {
-            ERR_TO_STATUS("Invalid number of images: %d (valid range: 1-%d)", value, maxNumImages);
+            ERR_TO_STATUS_ARGS("Invalid number of images: %d (valid range: 1-%d)", value,
+                               maxNumImages);
             return asynError;
         }
         setIntegerParam(ADNumImages, this->pDetector->SetVar<int>("n_frames", value));
@@ -651,7 +690,8 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             } else if (function == ADXSPD_SummedFrames) {
                 actualValue = this->pDetector->SetVar<int>("summed_frames", value);
             } else if (function == ADXSPD_RoiRows) {
-                actualValue = this->pDetector->SetVar<int>("roi_rows", value);
+                actualValue =
+                    static_cast<int>(log2(this->pDetector->SetVar<int>("roi_rows", 1 << value)));
                 for (auto& module : this->modules) {
                     module->getMaxNumImages();
                 }
@@ -696,17 +736,18 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
                 status = asynError;
             }
         } catch (std::invalid_argument& e) {
-            ERR_ARGS("Invalid argument when setting parameter %s: %s", paramName, e.what());
+            ERR_TO_STATUS_ARGS("Invalid argument when setting parameter %s: %s", paramName,
+                               e.what());
             return asynError;
         } catch (std::runtime_error& e) {
-            ERR_ARGS("Runtime error when setting parameter %s: %s", paramName, e.what());
+            ERR_TO_STATUS_ARGS("Runtime error when setting parameter %s: %s", paramName, e.what());
             return asynError;
         }
     }
     callParamCallbacks();
 
     if (status) {
-        ERR_ARGS("status=%d, parameter=%s, value=%d", status, paramName, value);
+        ERR_TO_STATUS_ARGS("status=%d, parameter=%s, value=%d", status, paramName, value);
         return asynError;
     } else {
         DEBUG_ARGS("parameter=%s value=%d", paramName, value);
@@ -735,7 +776,7 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
 
     if (acquiring && find(this->onlyIdleParams.begin(), this->onlyIdleParams.end(), function) !=
                          this->onlyIdleParams.end()) {
-        ERR_TO_STATUS("Cannot set param %s while acquiring", paramName);
+        ERR_TO_STATUS_ARGS("Cannot set param %s while acquiring", paramName);
         return asynError;
     }
 
@@ -812,6 +853,8 @@ ADXSPD::ADXSPD(const char* portName, const char* ip, int portNum, const char* de
     setStringParam(NDDriverVersion, versionString);
 
     INFO_ARGS("Connecting to XSPD api at %s:%d...", ip, portNum);
+
+    if (portNum == 0) portNum = XSPD::DEFAULT_PORT;
     this->pApi = new XSPD::API(string(ip), portNum);
     if (deviceId == nullptr) {
         INFO("No device ID specified, will connect to first available device.");

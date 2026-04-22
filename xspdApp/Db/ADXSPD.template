@@ -380,25 +380,25 @@ record(mbbo, "$(P)$(R)ROIRows"){
     field(DESC, "ROI rows")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_ROI_ROWS")
-    field(VAL, "256")
-    field(ZRVL, "256")
-    field(ZRST, "256")
-    field(ONVL, "128")
-    field(ONST, "128")
-    field(TWVL, "64")
-    field(TWST, "64")
-    field(THVL, "32")
-    field(THST, "32")
-    field(FRVL, "16")
+    field(VAL, "8")
+    field(ZRVL, "0")
+    field(ZRST, "1")
+    field(ONVL, "1")
+    field(ONST, "2")
+    field(TWVL, "2")
+    field(TWST, "4")
+    field(THVL, "3")
+    field(THST, "8")
+    field(FRVL, "4")
     field(FRST, "16")
-    field(FVVL, "8")
-    field(FVST, "8")
-    field(SXVL, "4")
-    field(SXST, "4")
-    field(SVVL, "2")
-    field(SVST, "2")
-    field(EIVL, "1")
-    field(EIST, "1")
+    field(FVVL, "5")
+    field(FVST, "32")
+    field(SXVL, "6")
+    field(SXST, "64")
+    field(SVVL, "7")
+    field(SVST, "128")
+    field(EIVL, "8")
+    field(EIST, "256")
     field(PINI, "NO")
 }
 
@@ -406,24 +406,25 @@ record(mbbi, "$(P)$(R)ROIRows_RBV"){
     field(DESC, "ROI rows readback")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_ROI_ROWS")
+    field(VAL, "8")
     field(ZRVL, "0")
-    field(ZRST, "256")
+    field(ZRST, "1")
     field(ONVL, "1")
-    field(ONST, "128")
+    field(ONST, "2")
     field(TWVL, "2")
-    field(TWST, "64")
+    field(TWST, "4")
     field(THVL, "3")
-    field(THST, "32")
+    field(THST, "8")
     field(FRVL, "4")
     field(FRST, "16")
     field(FVVL, "5")
-    field(FVST, "8")
+    field(FVST, "32")
     field(SXVL, "6")
-    field(SXST, "4")
+    field(SXST, "64")
     field(SVVL, "7")
-    field(SVST, "2")
+    field(SVST, "128")
     field(EIVL, "8")
-    field(EIST, "1")
+    field(EIST, "256")
     field(SCAN, "I/O Intr")
 }
 
@@ -558,6 +559,40 @@ record(ai, "$(P)$(R)MonitorInterval_RBV"){
     field(SCAN, "I/O Intr")
 }
 
+record(bo, "$(P)$(R)Decompress"){
+    field(DESC, "Decompress in driver")
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_DECOMPRESS")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
+    field(VAL, "0")
+    field(PINI, "NO")
+}
+
+record(bi, "$(P)$(R)Decompress_RBV"){
+    field(DESC, "Decompress in driver readback")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_DECOMPRESS")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
+    field(SCAN, "I/O Intr")
+}
+
+record(ao, "$(P)$(R)BloscNumThreads"){
+    field(DESC, "Number of threads for blosc decompression")
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_BLOSC_NUM_THREADS")
+    field(VAL, "1")
+    field(DRVL, "1")
+    field(PINI, "YES")
+}
+
+record(ai, "$(P)$(R)BloscNumThreads_RBV"){
+    field(DESC, "Number of threads for blosc decompression readback")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_BLOSC_NUM_THREADS")
+    field(SCAN, "I/O Intr")
+}
 
 # Disable any ADBase records we don't want to use
 

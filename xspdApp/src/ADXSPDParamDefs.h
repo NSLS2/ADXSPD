@@ -34,6 +34,8 @@
 #define ADXSPD_CrCorrString "XSPD_CR_CORR"
 #define ADXSPD_MonitorModeString "XSPD_MONITOR_MODE"
 #define ADXSPD_MonitorIntervalString "XSPD_MONITOR_INTERVAL"
+#define ADXSPD_DecompressString "XSPD_DECOMPRESS"
+#define ADXSPD_BloscNumThreadsString "XSPD_BLOSC_NUM_THREADS"
 
 // Parameter index definitions
 int ADXSPD_ApiVersion;
@@ -65,10 +67,12 @@ int ADXSPD_BitDepth;
 int ADXSPD_CrCorr;
 int ADXSPD_MonitorMode;
 int ADXSPD_MonitorInterval;
+int ADXSPD_Decompress;
+int ADXSPD_BloscNumThreads;
 
 #define ADXSPD_FIRST_PARAM ADXSPD_ApiVersion
-#define ADXSPD_LAST_PARAM ADXSPD_MonitorInterval
+#define ADXSPD_LAST_PARAM ADXSPD_BloscNumThreads
 
-#define NUM_ADXSPD_PARAMS 29
+#define NUM_ADXSPD_PARAMS 31
 
 #endif
