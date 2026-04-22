@@ -42,6 +42,40 @@ static void exitCallbackC(void* pPvt) {
 }
 
 /**
+ * @brief Formats a parameter name for display by removing the "XSPD_" prefix if present,
+ * converting to lowercase, and replacing underscores with spaces.
+ *
+ * @param name The parameter name to format
+ * @return string The formatted name
+ */
+static string formatParamName(string name) {
+    if (name.substr(0, 5) == "XSPD_") {
+        name = name.substr(5);
+    }
+    for (char& c : name) {
+        if (c == '_')
+            c = ' ';
+        else
+            c = tolower(c);
+    }
+    return name;
+}
+
+static NDDataType_t getDataTypeForBitDepth(int bitDepth) {
+    switch (bitDepth) {
+        case 1:
+        case 6:
+            return NDUInt8;
+        case 12:
+            return NDUInt16;
+        case 24:
+            return NDUInt32;
+        default:
+            throw std::invalid_argument("Unsupported bit depth");
+    }
+}
+
+/**
  * @brief Wrapper C function passed to epicsThreadCreate to create acquisition thread
  *
  * @param drvPvt Pointer to instance of ADXSPD driver object
@@ -350,9 +384,16 @@ void ADXSPD::acquisitionThread() {
                     case XSPD::Compressor::NONE:
                         break;
                     case XSPD::Compressor::ZLIB:
+#if ADCORE_SUPPORTS_ZLIB_NDARRAYS
                         pArray->codec.name = codecName[NDCODEC_ZLIB];
                         pArray->codec.level = compressionLevel;
                         break;
+#else
+                        ERR("ADCore R3-15 or later is required to support zlib-compressed "
+                            "NDArrays.");
+                        readoutOk = false;
+                        break;
+#endif
                     case XSPD::Compressor::BLOSC:
                         pArray->codec.name = codecName[NDCODEC_BLOSC];
                         // TODO: need to set compressor, level, and shuffle for blosc codec
@@ -364,7 +405,11 @@ void ADXSPD::acquisitionThread() {
                 // Copy data from new frame to pArray. With fully random data it is possible that
                 // compressed size is actually larger than the uncompressed size, so check for that
                 // and print an error.
-                if (frameSizeBytes > arrayInfo.totalBytes) {
+                if (!readoutOk) {
+                    // Don't attempt to copy data if we already know there's an issue with the
+                    // compression settings.
+                    ERR("Compression settings are invalid, cannot read out frame data");
+                } else if (frameSizeBytes > arrayInfo.totalBytes) {
                     ERR_ARGS(
                         "Size of incoming frame data %zu bytes is larger than expected array size "
                         "%zu bytes!",
@@ -514,20 +559,6 @@ void ADXSPD::monitorThread() {
     }
 }
 
-NDDataType_t ADXSPD::getDataTypeForBitDepth(int bitDepth) {
-    switch (bitDepth) {
-        case 1:
-        case 6:
-            return NDUInt8;
-        case 12:
-            return NDUInt16;
-        case 24:
-            return NDUInt32;
-        default:
-            throw std::invalid_argument("Unsupported bit depth");
-    }
-}
-
 /**
  * @brief Reads initial state of the detector from the XSPD API and sets asyn parameters accordingly
  *
@@ -596,16 +627,19 @@ asynStatus ADXSPD::getInitialDetState() {
     status |= this->getDetVar<XSPD::ShuffleMode>(ADXSPD_ShuffleMode, "shuffle_mode");
     status |= this->getDetVar<string>(ADModel, "type");
     status |= this->getDataPortVar<int>(ADXSPD_FramesQueued, "frames_queued");
-
-    int roiRows = this->pDetector->GetVar<int>("roi_rows");
-    setIntegerParam(ADXSPD_RoiRows, static_cast<int>(log2(roiRows)));
+    status |= this->getDetVar<int>(ADXSPD_RoiRows, "roi_rows");
 
     // Sensor information is stored as user-data, so we can't guarantee it will be available or
     // correct, so treat failure to read these parameters as a warning rather than an error.
-    int sensorInfoStatus = asynSuccess;
-    sensorInfoStatus |= this->getDetVar<string>(ADXSPD_SensorMaterial, "user_data/sensor_material");
-    sensorInfoStatus |= this->getDetVar<int>(ADXSPD_SensorThickness, "user_data/sensor_thickness");
-    if (sensorInfoStatus != asynSuccess) WARN("Failed to read one or more sensor info parameters.");
+    string sensorMaterial = this->pDetector->GetUserDataVar<string>("sensor_material");
+    if (sensorMaterial.empty()) WARN("Sensor material information not set in user data");
+    int sensorThickness = this->pDetector->GetUserDataVar<int>("sensor_thickness");
+    if (sensorThickness == 0) {
+        WARN("Sensor thickness information not set in user data");
+    }
+
+    status |= setStringParam(ADXSPD_SensorMaterial, sensorMaterial.c_str());
+    status |= setIntegerParam(ADXSPD_SensorThickness, sensorThickness);
 
     callParamCallbacks();
 
@@ -666,9 +700,10 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             }
         }
         if (value < 1 || value > maxNumImages) {
-            ERR_TO_STATUS_ARGS("Invalid number of images: %d (valid range: 1-%d)", value,
-                               maxNumImages);
+            ERR_TO_STATUS_ARGS("Invalid n_frames: %d (valid range: 1-%d)", value, maxNumImages);
             return asynError;
+        } else {
+            INFO_TO_STATUS_ARGS("Set n_frames to %d", value);
         }
         setIntegerParam(ADNumImages, this->pDetector->SetVar<int>("n_frames", value));
         if (value == 1)
@@ -690,8 +725,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             } else if (function == ADXSPD_SummedFrames) {
                 actualValue = this->pDetector->SetVar<int>("summed_frames", value);
             } else if (function == ADXSPD_RoiRows) {
-                actualValue =
-                    static_cast<int>(log2(this->pDetector->SetVar<int>("roi_rows", 1 << value)));
+                actualValue = static_cast<int>(this->pDetector->SetVar<int>("roi_rows", value));
                 for (auto& module : this->modules) {
                     module->getMaxNumImages();
                 }
@@ -735,6 +769,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
                           paramName, actualValue);
                 status = asynError;
             }
+            INFO_TO_STATUS_ARGS("Set %s to %d", formatParamName(paramName).c_str(), actualValue);
         } catch (std::invalid_argument& e) {
             ERR_TO_STATUS_ARGS("Invalid argument when setting parameter %s: %s", paramName,
                                e.what());
@@ -784,24 +819,36 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
         actualValue = this->pDetector->SetVar<double>("shutter_time", value * 1000.0) /
                       1000.0;  // XSPD API uses milliseconds
         setDoubleParam(ADAcquireTime, actualValue);
+        INFO_TO_STATUS_ARGS("Set acquire time to %f seconds", actualValue);
     } else if (function < ADXSPD_FIRST_PARAM) {
         status = ADDriver::writeFloat64(pasynUser, value);
     } else {
-        double actualValue = value;
-        if (function == ADXSPD_BeamEnergy) {
-            actualValue = this->pDetector->SetVar<double>("beam_energy", value);
-        } else if (function == ADXSPD_LowThreshold) {
-            actualValue = this->pDetector->SetThreshold(XSPD::Threshold::LOW, value);
-        } else if (function == ADXSPD_HighThreshold) {
-            actualValue = this->pDetector->SetThreshold(XSPD::Threshold::HIGH, value);
-        } else if (function == ADXSPD_MonitorInterval && value < ADXSPD_MIN_STATUS_POLL_INTERVAL) {
-            actualValue = ADXSPD_MIN_STATUS_POLL_INTERVAL;
-        }
-        setDoubleParam(function, actualValue);
-        if (actualValue != value) {
-            WARN_ARGS("Requested value %f for parameter %s, but set value is %f", value, paramName,
-                      actualValue);
-            status = asynError;
+        try {
+            double actualValue = value;
+            if (function == ADXSPD_BeamEnergy) {
+                actualValue = this->pDetector->SetVar<double>("beam_energy", value);
+            } else if (function == ADXSPD_LowThreshold) {
+                actualValue = this->pDetector->SetThreshold(XSPD::Threshold::LOW, value);
+            } else if (function == ADXSPD_HighThreshold) {
+                actualValue = this->pDetector->SetThreshold(XSPD::Threshold::HIGH, value);
+            } else if (function == ADXSPD_MonitorInterval &&
+                       value < ADXSPD_MIN_STATUS_POLL_INTERVAL) {
+                actualValue = ADXSPD_MIN_STATUS_POLL_INTERVAL;
+            }
+            setDoubleParam(function, actualValue);
+            if (actualValue != value) {
+                WARN_ARGS("Requested value %f for parameter %s, but set value is %f", value,
+                          paramName, actualValue);
+                status = asynError;
+            }
+            INFO_TO_STATUS_ARGS("Set %s to %f", formatParamName(paramName).c_str(), actualValue);
+        } catch (std::invalid_argument& e) {
+            ERR_TO_STATUS_ARGS("Invalid argument when setting parameter %s: %s", paramName,
+                               e.what());
+            return asynError;
+        } catch (std::runtime_error& e) {
+            ERR_TO_STATUS_ARGS("Runtime error when setting parameter %s: %s", paramName, e.what());
+            return asynError;
         }
     }
 

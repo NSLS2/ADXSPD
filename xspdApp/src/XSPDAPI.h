@@ -11,20 +11,7 @@
 #include "nlohmann/json.hpp"
 
 using json = nlohmann::json;
-using std::get;
-using std::getline;
-using std::invalid_argument;
-using std::is_enum;
-using std::is_same;
-using std::map;
-using std::out_of_range;
-using std::runtime_error;
-using std::stoi;
-using std::string;
-using std::stringstream;
-using std::to_string;
-using std::tuple;
-using std::vector;
+using namespace std;
 
 #define MIN_XSPD_MAJOR_VERSION 1
 #define MIN_XSPD_MINOR_VERSION 6
@@ -148,9 +135,9 @@ class API {
     template <typename SetT, typename GetT>
     GetT SetVar(string varPath, SetT value, string rbKey = "value") {
         string valueAsStr;
-        if constexpr (std::is_same_v<SetT, string>) {
+        if constexpr (is_same_v<SetT, string>) {
             valueAsStr = value;
-        } else if constexpr (is_enum<SetT>::value) {
+        } else if constexpr (is_enum_v<SetT>) {
             auto enumString = magic_enum::enum_name(value);
             if (enumString.empty()) {
                 throw runtime_error("Failed to convert enum value to string for variable " +
@@ -205,7 +192,7 @@ class API {
         }
 
         if (response.contains(key)) {
-            if constexpr (is_enum<T>::value) {
+            if constexpr (is_enum_v<T>) {
                 string valAsStr = response[key].get<string>();
                 auto enumValue = magic_enum::enum_cast<T>(valAsStr, magic_enum::case_insensitive);
                 if (enumValue.has_value()) {
@@ -329,7 +316,33 @@ class Detector : public APIComponent {
 
     vector<Module*> GetModules() { return this->modules; }
 
-    string GetUserDataVar(string varName);
+    /**
+     * @brief Retrieves a user data variable from the detector.
+     *
+     * Only accepts string, int, or double types. Returns an empty string for string types,
+     * or 0 for int/double types if the variable does not exist or cannot be read.
+     * User data is user-defined metadata that can be associated with the detector, such as
+     * experimental parameters or notes. Since we cannot guarantee the existence or format of user
+     * data variables, this function catches any exceptions that occur during retrieval and returns
+     * a default value in those cases.
+     *
+     * @param varName The name of the user data variable to retrieve
+     * @return The value of the user data variable, or a default value if it cannot be retrieved
+     */
+    template <typename T>
+    T GetUserDataVar(string varName) {
+        static_assert(is_same_v<T, string> || is_same_v<T, int> || is_same_v<T, double>,
+                      "GetUserDataVar only supports string, int, or double types");
+        try {
+            return this->GetVar<T>("user_data/" + varName);
+        } catch (std::exception& e) {
+            if constexpr (is_same_v<T, string>) {
+                return string();
+            } else {
+                return 0;
+            }
+        }
+    }
 
     /**
      * @brief Retrieves the IDs of all registered data ports

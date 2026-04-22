@@ -618,7 +618,7 @@
       <y>520</y>
       <width>150</width>
       <height>20</height>
-      <text>Features bitmask rb</text>
+      <text>Compression level rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -636,7 +636,7 @@
       <y>520</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)FeaturesBitmask_RBV</pv_name>
+      <pv_name>$(P)$(R)CompressLevel_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -653,7 +653,7 @@
       <y>550</y>
       <width>150</width>
       <height>20</height>
-      <text>Compression level rb</text>
+      <text>Compressor type rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -671,7 +671,7 @@
       <y>550</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)CompressLevel_RBV</pv_name>
+      <pv_name>$(P)$(R)Compressor_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -688,7 +688,7 @@
       <y>580</y>
       <width>150</width>
       <height>20</height>
-      <text>Compressor type rb</text>
+      <text>RAM allocated rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -706,7 +706,7 @@
       <y>580</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)Compressor_RBV</pv_name>
+      <pv_name>$(P)$(R)RamAllocated_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -723,7 +723,7 @@
       <y>610</y>
       <width>150</width>
       <height>20</height>
-      <text>RAM allocated rb</text>
+      <text>Flatfield correction enabled rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -741,7 +741,7 @@
       <y>610</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)RamAllocated_RBV</pv_name>
+      <pv_name>$(P)$(R)FlatfieldEnabled_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -758,7 +758,7 @@
       <y>640</y>
       <width>150</width>
       <height>20</height>
-      <text>Flatfield correction enabled rb</text>
+      <text>Low threshold ff author</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -776,7 +776,7 @@
       <y>640</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)FlatfieldEnabled_RBV</pv_name>
+      <pv_name>$(P)$(R)LowThreshFfAuthor_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -793,7 +793,7 @@
       <y>670</y>
       <width>150</width>
       <height>20</height>
-      <text>Low threshold ff author</text>
+      <text>High threshold ff author</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -811,7 +811,7 @@
       <y>670</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)LowThreshFfAuthor_RBV</pv_name>
+      <pv_name>$(P)$(R)HighThreshFfAuthor_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -828,7 +828,7 @@
       <y>700</y>
       <width>150</width>
       <height>20</height>
-      <text>High threshold ff author</text>
+      <text>Low threshold ff date</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -846,7 +846,7 @@
       <y>700</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)HighThreshFfAuthor_RBV</pv_name>
+      <pv_name>$(P)$(R)LowThreshFfDate_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -863,7 +863,7 @@
       <y>730</y>
       <width>150</width>
       <height>20</height>
-      <text>Low threshold ff date</text>
+      <text>High threshold ff date</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -881,7 +881,7 @@
       <y>730</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)LowThreshFfDate_RBV</pv_name>
+      <pv_name>$(P)$(R)HighThreshFfDate_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -898,7 +898,7 @@
       <y>760</y>
       <width>150</width>
       <height>20</height>
-      <text>High threshold ff date</text>
+      <text>Frames queued rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -916,7 +916,7 @@
       <y>760</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)HighThreshFfDate_RBV</pv_name>
+      <pv_name>$(P)$(R)FramesQueued_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -933,7 +933,7 @@
       <y>790</y>
       <width>150</width>
       <height>20</height>
-      <text>Frames queued rb</text>
+      <text>Use pixel mask</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -946,12 +946,29 @@
       <horizontal_alignment>0</horizontal_alignment>
       <name>Label_27</name>
     </widget>
-    <widget type="textupdate" version="2.0.0">
+    <widget type="combo" version="2.0.0">
       <x>170</x>
       <y>790</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)FramesQueued_RBV</pv_name>
+      <pv_name>$(P)$(R)PixelMask</pv_name>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="115" blue="255" green="223" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>ComboBox_1</name>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>330</x>
+      <y>790</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)PixelMask_RBV</pv_name>
       <foreground_color>
         <color red="10" blue="184" green="0" alpha="255"/>
       </foreground_color>
@@ -968,7 +985,7 @@
       <y>820</y>
       <width>150</width>
       <height>20</height>
-      <text>Use pixel mask</text>
+      <text>Shuffle mode</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -986,58 +1003,6 @@
       <y>820</y>
       <width>150</width>
       <height>20</height>
-      <pv_name>$(P)$(R)PixelMask</pv_name>
-      <foreground_color>
-        <color red="0" blue="0" green="0" alpha="255"/>
-      </foreground_color>
-      <background_color>
-        <color red="115" blue="255" green="223" alpha="255"/>
-      </background_color>
-      <font>
-        <font family="Liberation Sans" size="16" style="REGULAR"/>
-      </font>
-      <name>ComboBox_1</name>
-    </widget>
-    <widget type="textupdate" version="2.0.0">
-      <x>330</x>
-      <y>820</y>
-      <width>150</width>
-      <height>20</height>
-      <pv_name>$(P)$(R)PixelMask_RBV</pv_name>
-      <foreground_color>
-        <color red="10" blue="184" green="0" alpha="255"/>
-      </foreground_color>
-      <background_color>
-        <color red="187" blue="187" green="187" alpha="255"/>
-      </background_color>
-      <font>
-        <font family="Liberation Sans" size="16" style="REGULAR"/>
-      </font>
-      <name>TextUpdate_28</name>
-    </widget>
-    <widget type="label" version="2.0.0">
-      <x>10</x>
-      <y>850</y>
-      <width>150</width>
-      <height>20</height>
-      <text>Shuffle mode</text>
-      <foreground_color>
-        <color red="0" blue="0" green="0" alpha="255"/>
-      </foreground_color>
-      <background_color>
-        <color red="187" blue="187" green="187" alpha="255"/>
-      </background_color>
-      <font>
-        <font family="Liberation Sans" size="16" style="REGULAR"/>
-      </font>
-      <horizontal_alignment>0</horizontal_alignment>
-      <name>Label_29</name>
-    </widget>
-    <widget type="combo" version="2.0.0">
-      <x>170</x>
-      <y>850</y>
-      <width>150</width>
-      <height>20</height>
       <pv_name>$(P)$(R)ShuffleMode</pv_name>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
@@ -1052,7 +1017,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <x>330</x>
-      <y>850</y>
+      <y>820</y>
       <width>150</width>
       <height>20</height>
       <pv_name>$(P)$(R)ShuffleMode_RBV</pv_name>
@@ -1065,11 +1030,11 @@
       <font>
         <font family="Liberation Sans" size="16" style="REGULAR"/>
       </font>
-      <name>TextUpdate_29</name>
+      <name>TextUpdate_28</name>
     </widget>
     <background_color>
       <color red="187" blue="187" green="187" alpha="255"/>
     </background_color>
-    <height>890</height>
+    <height>860</height>
     <width>490</width>
   </display>

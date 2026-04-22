@@ -151,10 +151,11 @@ record(bi, "$(P)$(R)InterpolationMode_RBV") {
     field(SCAN, "I/O Intr")
 }
 
-record(ai, "$(P)$(R)FeaturesBitmask_RBV") {
+record(mbbiDirect, "$(P)$(R)Features_RBV") {
     field(DESC, "Features bitmask rb")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_FEAT_BITMASK")
+    field(DTYP, "asynUInt32Digital")
+    field(INP, "@asyn($(PORT),$(ADDR),0x1F,$(TIMEOUT))XSPD_FEAT_BITMASK")
+    field(NOBT, "5") # Number of enum members for feature enum in libxsp
     field(SCAN, "I/O Intr")
 }
 

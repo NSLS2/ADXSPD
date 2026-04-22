@@ -46,6 +46,13 @@
 #include "ADDriver.h"
 #include "XSPDAPI.h"
 
+// ADCore 3.15 introduced support for creating zlib-compressed NDArrays.
+// https://github.com/areaDetector/ADCore/pull/578
+// If buliding against an older version of ADCore, zlib compressed frames will
+// have to be decompressed in the driver and stored as uncompressed data in the NDArray.
+#define ADCORE_SUPPORTS_ZLIB_NDARRAYS \
+    ((ADCORE_VERSION > 3) || (ADCORE_VERSION == 3 && ADCORE_REVISION >= 15))
+
 using json = nlohmann::json;
 using namespace std;
 
@@ -172,7 +179,6 @@ class ADXSPD : ADDriver {
     asynStatus getInitialDetState();
     asynStatus acquireStart();
     asynStatus acquireStop();
-    NDDataType_t getDataTypeForBitDepth(int bitDepth);
 
     template <typename T>
     void subtractFrames(void* currentFrame, void* previousFrame, void* outputFrame,

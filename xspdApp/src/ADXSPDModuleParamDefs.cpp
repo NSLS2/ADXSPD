@@ -21,7 +21,7 @@ void ADXSPDModule::createAllParams() {
     createParam(ADXSPDModule_NumSubframesString, asynParamInt32, &ADXSPDModule_NumSubframes);
     createParam(ADXSPDModule_NumConsString, asynParamInt32, &ADXSPDModule_NumCons);
     createParam(ADXSPDModule_InterpModeString, asynParamInt32, &ADXSPDModule_InterpMode);
-    createParam(ADXSPDModule_FeatBitmaskString, asynParamInt32, &ADXSPDModule_FeatBitmask);
+    createParam(ADXSPDModule_FeatBitmaskString, asynParamUInt32Digital, &ADXSPDModule_FeatBitmask);
     createParam(ADXSPDModule_CompressLevelString, asynParamInt32, &ADXSPDModule_CompressLevel);
     createParam(ADXSPDModule_CompressorString, asynParamInt32, &ADXSPDModule_Compressor);
     createParam(ADXSPDModule_RamAllocatedString, asynParamInt32, &ADXSPDModule_RamAllocated);
