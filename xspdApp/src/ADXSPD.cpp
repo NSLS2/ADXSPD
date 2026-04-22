@@ -331,8 +331,9 @@ void ADXSPD::acquisitionThread() {
                     }
                 } else if (compressor == XSPD::Compressor::BLOSC) {
                     size_t decompressSize;
-                    decompressSize = blosc_decompress_ctx(zmq_msg_data(&frameMessages[2]),
-                                                      pArray->pData, arrayInfo.totalBytes, bloscNumThreads);
+                    decompressSize =
+                        blosc_decompress_ctx(zmq_msg_data(&frameMessages[2]), pArray->pData,
+                                             arrayInfo.totalBytes, bloscNumThreads);
                     if (decompressSize != arrayInfo.totalBytes) {
                         ERR_ARGS(
                             "Failed to decompress frame data with Blosc, decompressed size %zu "

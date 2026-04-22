@@ -84,8 +84,7 @@ def enum_lookup(cls: Type[enum.IntEnum], value_str: str) -> str:
         if m.name == upper:
             return m.name
     raise ValueError(
-        f"Invalid value '{value_str}' for {cls.__name__}. "
-        f"Allowed: {enum_names(cls)}"
+        f"Invalid value '{value_str}' for {cls.__name__}. Allowed: {enum_names(cls)}"
     )
 
 
@@ -196,13 +195,9 @@ def coerce_value(var_path: str, raw: str) -> Any:
 
     # Range check
     if spec.min_val is not None and val < spec.min_val:
-        raise ValueError(
-            f"Value {val} for {var_path} is below minimum {spec.min_val}"
-        )
+        raise ValueError(f"Value {val} for {var_path} is below minimum {spec.min_val}")
     if spec.max_val is not None and val > spec.max_val:
-        raise ValueError(
-            f"Value {val} for {var_path} is above maximum {spec.max_val}"
-        )
+        raise ValueError(f"Value {val} for {var_path} is above maximum {spec.max_val}")
     if spec.allowed is not None and val not in spec.allowed:
         raise ValueError(
             f"Value {val} for {var_path} not in allowed set {spec.allowed}"
@@ -304,7 +299,7 @@ def load_dump(filepath: str, state: SimulatorState) -> None:
     var_prefix = f"{device_key}/variables?path="
     for key, resp in dump.items():
         if key.startswith(var_prefix) and isinstance(resp, dict) and "value" in resp:
-            var_path = resp.get("path", key[len(var_prefix):])
+            var_path = resp.get("path", key[len(var_prefix) :])
             state.variables[var_path] = resp["value"]
 
 
@@ -326,7 +321,9 @@ def _max_for_dtype(dt: np.dtype) -> int:
     return int(np.iinfo(dt).max)
 
 
-def _draw_streak(img: np.ndarray, max_val: int, dt: np.dtype, intensity: float = 1.0) -> None:
+def _draw_streak(
+    img: np.ndarray, max_val: int, dt: np.dtype, intensity: float = 1.0
+) -> None:
     """Draw a single cosmic-ray-like streak onto img (in-place).
 
     The streak is 5-100 pixels long and 1-5 pixels wide, kept fairly
@@ -429,7 +426,7 @@ def generate_module_image(
             n_streaks = 1
             # Each subsequent: exponential decay  p_first * 0.4^k
             for k in range(1, max_streaks):
-                p_next = p_first * (0.4 ** k)
+                p_next = p_first * (0.4**k)
                 if np.random.random() < p_next:
                     n_streaks += 1
                 else:
@@ -468,13 +465,17 @@ def generate_stitched_image(
         px = int(position[0])
         py = int(position[1])
 
-        mod_img = generate_module_image(mod_w, mod_h, bit_depth, threshold_low, frame_number, shutter_time_ms)
+        mod_img = generate_module_image(
+            mod_w, mod_h, bit_depth, threshold_low, frame_number, shutter_time_ms
+        )
 
         # Clip to canvas bounds
         src_y_end = min(mod_h, canvas_h - py)
         src_x_end = min(mod_w, canvas_w - px)
         if src_y_end > 0 and src_x_end > 0 and py >= 0 and px >= 0:
-            canvas[py : py + src_y_end, px : px + src_x_end] = mod_img[:src_y_end, :src_x_end]
+            canvas[py : py + src_y_end, px : px + src_x_end] = mod_img[
+                :src_y_end, :src_x_end
+            ]
 
     return canvas
 
@@ -544,7 +545,9 @@ def publisher_thread(
             sockets.append(sock)
             print(f"[ZMQ] Module {mod_id} publisher bound to tcp://*:{port}")
 
-    def send_frame(sock: zmq.Socket, pixel_data: bytes, frame_num: int, trigger_num: int) -> None:
+    def send_frame(
+        sock: zmq.Socket, pixel_data: bytes, frame_num: int, trigger_num: int
+    ) -> None:
         header = struct.pack("BBBB", frame_num & 0xFF, trigger_num & 0xFF, 0, 0)
         sock.send_multipart([b"", header, pixel_data])
 
@@ -562,7 +565,9 @@ def publisher_thread(
             n_frames = int(state.get_var(f"{det_id}/n_frames", 1))
             bit_depth = int(state.get_var(f"{det_id}/bit_depth", 12))
             shutter_time_ms = float(state.get_var(f"{det_id}/shutter_time", 1000.0))
-            counter_mode = str(state.get_var(f"{det_id}/counter_mode", "SINGLE")).upper()
+            counter_mode = str(
+                state.get_var(f"{det_id}/counter_mode", "SINGLE")
+            ).upper()
             compressor_name = str(state.get_var(f"{det_id}/compressor", "NONE"))
 
             thresholds = state.get_var(f"{det_id}/thresholds", [])
@@ -593,7 +598,9 @@ def publisher_thread(
 
             # Generate frame(s)
             if stitched:
-                img = generate_stitched_image(state, bit_depth, threshold_low, frame_num, shutter_time_ms)
+                img = generate_stitched_image(
+                    state, bit_depth, threshold_low, frame_num, shutter_time_ms
+                )
                 raw = img.tobytes()
                 compressed = compress_data(raw, compressor_name)
                 send_frame(sockets[0], compressed, frame_num, 0)
@@ -608,7 +615,14 @@ def publisher_thread(
                 for i, mod_id in enumerate(state.module_ids):
                     mod_w = int(state.get_var(f"{mod_id}/frame_width", 1024))
                     mod_h = int(state.get_var(f"{mod_id}/frame_height", 1024))
-                    img = generate_module_image(mod_w, mod_h, bit_depth, threshold_low, frame_num, shutter_time_ms)
+                    img = generate_module_image(
+                        mod_w,
+                        mod_h,
+                        bit_depth,
+                        threshold_low,
+                        frame_num,
+                        shutter_time_ms,
+                    )
                     raw = img.tobytes()
                     compressed = compress_data(raw, compressor_name)
                     send_frame(sockets[i], compressed, frame_num, 0)
