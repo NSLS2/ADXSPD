@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Saved on 2026-04-22 13:19:11 by jwlodek-->
+<!--Saved on 2026-04-22 13:46:01 by jwlodek-->
 <display version="2.0.0">
   <name>ADXSPD Module - $(P)$(R)</name>
   <macros>
     <P>DEV:XSPD1:</P>
     <R>mod1:</R>
   </macros>
-  <width>750</width>
-  <height>730</height>
+  <width>950</width>
+  <height>625</height>
   <background_color>
     <color red="187" green="187" blue="187">
     </color>
@@ -17,7 +17,7 @@
   <widget type="label" version="2.0.0">
     <name>Title</name>
     <text>XSPD Module - $(P)$(R)</text>
-    <width>750</width>
+    <width>950</width>
     <height>25</height>
     <font>
       <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -567,7 +567,7 @@
     <x>375</x>
     <y>35</y>
     <width>375</width>
-    <height>205</height>
+    <height>157</height>
     <font>
       <font family="Liberation Sans" style="REGULAR" size="16.0">
       </font>
@@ -721,30 +721,11 @@
         </color>
       </background_color>
     </widget>
-    <widget type="textupdate" version="2.0.0">
-      <name>TextUpdate_18</name>
-      <pv_name>$(P)$(R)FeaturesBitmask_RBV</pv_name>
-      <x>150</x>
-      <y>124</y>
-      <width>80</width>
-      <font>
-        <font family="Liberation Sans" style="REGULAR" size="16.0">
-        </font>
-      </font>
-      <foreground_color>
-        <color red="10" green="0" blue="184">
-        </color>
-      </foreground_color>
-      <background_color>
-        <color red="187" green="187" blue="187">
-        </color>
-      </background_color>
-    </widget>
   </widget>
   <widget type="group" version="3.0.0">
     <name>Compression</name>
     <x>375</x>
-    <y>250</y>
+    <y>192</y>
     <width>375</width>
     <height>155</height>
     <font>
@@ -884,9 +865,9 @@
   <widget type="group" version="3.0.0">
     <name>Flatfield &amp; Status</name>
     <x>375</x>
-    <y>415</y>
+    <y>347</y>
     <width>375</width>
-    <height>305</height>
+    <height>261</height>
     <font>
       <font family="Liberation Sans" style="REGULAR" size="16.0">
       </font>
@@ -1194,6 +1175,123 @@
         <color red="187" green="187" blue="187">
         </color>
       </background_color>
+    </widget>
+  </widget>
+  <widget type="polygon" version="2.0.0">
+    <name>Polygon</name>
+    <x>904</x>
+    <y>252</y>
+    <width>0</width>
+    <height>0</height>
+    <points>
+      <point x="0.0" y="0.0">
+      </point>
+    </points>
+  </widget>
+  <widget type="group" version="3.0.0">
+    <name>Module Features</name>
+    <x>750</x>
+    <y>35</y>
+    <width>200</width>
+    <height>222</height>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="16.0">
+      </font>
+    </font>
+    <foreground_color>
+      <color red="10" green="0" blue="184">
+      </color>
+    </foreground_color>
+    <background_color>
+      <color red="213" green="213" blue="213">
+      </color>
+    </background_color>
+    <transparent>true</transparent>
+    <widget type="byte_monitor" version="2.0.0">
+      <name>Byte Monitor</name>
+      <pv_name>$(P)$(R)Features_RBV</pv_name>
+      <x>130</x>
+      <y>25</y>
+      <width>29</width>
+      <height>150</height>
+      <numBits>5</numBits>
+      <horizontal>false</horizontal>
+      <square>true</square>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_33</name>
+      <text>High Voltage Ctrl</text>
+      <y>30</y>
+      <width>125</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_34</name>
+      <text>1/6 Bit Readout</text>
+      <y>60</y>
+      <width>125</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_35</name>
+      <text>Medipix DAC I/O</text>
+      <y>90</y>
+      <width>125</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_36</name>
+      <text>Extended Gating</text>
+      <y>120</y>
+      <width>125</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_37</name>
+      <text>ROI Readout</text>
+      <y>150</y>
+      <width>125</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
     </widget>
   </widget>
 </display>

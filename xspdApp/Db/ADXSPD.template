@@ -579,7 +579,7 @@ record(bi, "$(P)$(R)Decompress_RBV"){
 }
 
 record(ao, "$(P)$(R)BloscNumThreads"){
-    field(DESC, "Number of threads for blosc decompression")
+    field(DESC, "Num blosc decompress threads")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_BLOSC_NUM_THREADS")
     field(VAL, "1")
@@ -588,7 +588,7 @@ record(ao, "$(P)$(R)BloscNumThreads"){
 }
 
 record(ai, "$(P)$(R)BloscNumThreads_RBV"){
-    field(DESC, "Number of threads for blosc decompression readback")
+    field(DESC, "Num blosc decompress threads rb")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_BLOSC_NUM_THREADS")
     field(SCAN, "I/O Intr")
