@@ -98,8 +98,7 @@ record(ai, "$(P)$(R)RotationRoll_RBV"){
 }
 
 record(ai, "$(P)$(R)PositionX_RBV"){
-    field(DESC, "Position X rb in mm")
-    field(EGU, "mm")
+    field(DESC, "Position X rb")
     field(DTYP, "asynFloat64")
     field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_POS_X")
@@ -107,8 +106,7 @@ record(ai, "$(P)$(R)PositionX_RBV"){
 }
 
 record(ai, "$(P)$(R)PositionY_RBV"){
-    field(DESC, "Position Y rb in mm")
-    field(EGU, "mm")
+    field(DESC, "Position Y rb")
     field(DTYP, "asynFloat64")
     field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_POS_Y")
@@ -116,8 +114,7 @@ record(ai, "$(P)$(R)PositionY_RBV"){
 }
 
 record(ai, "$(P)$(R)PositionZ_RBV"){
-    field(DESC, "Position Z rb in mm")
-    field(EGU, "mm")
+    field(DESC, "Position Z rb")
     field(DTYP, "asynFloat64")
     field(PREC, "1")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_POS_Z")

@@ -373,7 +373,7 @@
       <y>310</y>
       <width>150</width>
       <height>20</height>
-      <text>Position X rb in mm</text>
+      <text>Position X rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -408,7 +408,7 @@
       <y>340</y>
       <width>150</width>
       <height>20</height>
-      <text>Position Y rb in mm</text>
+      <text>Position Y rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
@@ -443,7 +443,7 @@
       <y>370</y>
       <width>150</width>
       <height>20</height>
-      <text>Position Z rb in mm</text>
+      <text>Position Z rb</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
