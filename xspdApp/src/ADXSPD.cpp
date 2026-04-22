@@ -384,9 +384,15 @@ void ADXSPD::acquisitionThread() {
                     case XSPD::Compressor::NONE:
                         break;
                     case XSPD::Compressor::ZLIB:
+#if ADCORE_SUPPORTS_ZLIB_NDARRAYS
                         pArray->codec.name = codecName[NDCODEC_ZLIB];
                         pArray->codec.level = compressionLevel;
                         break;
+#else
+                        ERR("ADCore R3-15 or later is required to support zlib-compressed NDArrays.");
+                        readoutOk = false;
+                        break;
+#endif
                     case XSPD::Compressor::BLOSC:
                         pArray->codec.name = codecName[NDCODEC_BLOSC];
                         // TODO: need to set compressor, level, and shuffle for blosc codec
@@ -398,7 +404,10 @@ void ADXSPD::acquisitionThread() {
                 // Copy data from new frame to pArray. With fully random data it is possible that
                 // compressed size is actually larger than the uncompressed size, so check for that
                 // and print an error.
-                if (frameSizeBytes > arrayInfo.totalBytes) {
+                if (!readoutOk) {
+                    // Don't attempt to copy data if we already know there's an issue with the compression settings.
+                    ERR("Compression settings are invalid, cannot read out frame data");
+                } else if (frameSizeBytes > arrayInfo.totalBytes) {
                     ERR_ARGS(
                         "Size of incoming frame data %zu bytes is larger than expected array size "
                         "%zu bytes!",
