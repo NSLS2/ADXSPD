@@ -9,7 +9,6 @@
 
 #include "ADXSPDModule.h"
 
-
 void ADXSPDModule::checkStatus() {
     // Module status/health checks
     setDoubleParam(ADXSPDModule_SensCurr, this->module->GetVar<double>("sensor_current"));

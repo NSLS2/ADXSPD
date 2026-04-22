@@ -366,12 +366,13 @@ vector<XSPD::ModuleFeature> XSPD::Module::GetFeatures() {
 
 /**
  * @brief Retrieves a user data variable from the detector.
- * 
+ *
  * Returns an empty string if the variable does not exist or cannot be read.
- * User data is user-defined metadata that can be associated with the detector, such as experimental parameters or notes.
- * Since we cannot guarantee the existence or format of user data variables, this function catches any
- * exceptions that occur during retrieval and returns an empty string in those cases.
- * 
+ * User data is user-defined metadata that can be associated with the detector, such as experimental
+ * parameters or notes. Since we cannot guarantee the existence or format of user data variables,
+ * this function catches any exceptions that occur during retrieval and returns an empty string in
+ * those cases.
+ *
  * @param varName The name of the user data variable to retrieve
  * @return The value of the user data variable, or an empty string if it cannot be retrieved
  */

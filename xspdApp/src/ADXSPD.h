@@ -58,22 +58,22 @@ using namespace std;
     if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) \
         fprintf(stderr, "ERROR | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
-#define ERR_TO_STATUS(msg)                                         \
-    if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) {                \
+#define ERR_TO_STATUS(msg)                                                  \
+    if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) {                     \
         fprintf(stderr, "ERROR | %s::%s: %s\n", driverName, __func__, msg); \
-        setStringParam(ADStatusMessage, msg);                        \
-        setIntegerParam(ADStatus, ADStatusError);                     \
-        callParamCallbacks();                                            \
+        setStringParam(ADStatusMessage, msg);                               \
+        setIntegerParam(ADStatus, ADStatusError);                           \
+        callParamCallbacks();                                               \
     }
 
-#define ERR_TO_STATUS_ARGS(fmt, ...)                                       \
-    if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) {               \
-        char errMsg[256];                                             \
-        snprintf(errMsg, sizeof(errMsg), fmt, __VA_ARGS__);           \
+#define ERR_TO_STATUS_ARGS(fmt, ...)                                           \
+    if (this->getLogLevel() >= ADXSPDLogLevel::ERROR) {                        \
+        char errMsg[256];                                                      \
+        snprintf(errMsg, sizeof(errMsg), fmt, __VA_ARGS__);                    \
         fprintf(stderr, "ERROR | %s::%s: %s\n", driverName, __func__, errMsg); \
-        setStringParam(ADStatusMessage, errMsg);                      \
-        setIntegerParam(ADStatus, ADStatusError);                     \
-        callParamCallbacks();                                         \
+        setStringParam(ADStatusMessage, errMsg);                               \
+        setIntegerParam(ADStatus, ADStatusError);                              \
+        callParamCallbacks();                                                  \
     }
 
 // Warning message formatters
@@ -85,20 +85,20 @@ using namespace std;
     if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) \
         fprintf(stderr, "WARNING | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
-#define WARN_TO_STATUS(msg)                                         \
-    if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) {                \
+#define WARN_TO_STATUS(msg)                                                   \
+    if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) {                     \
         fprintf(stderr, "WARNING | %s::%s: %s\n", driverName, __func__, msg); \
-        setStringParam(ADStatusMessage, msg);                        \
-        callParamCallbacks();                                            \
+        setStringParam(ADStatusMessage, msg);                                 \
+        callParamCallbacks();                                                 \
     }
 
-#define WARN_TO_STATUS_ARGS(fmt, ...)                                       \
-    if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) {                \
-        char warnMsg[256];                                               \
-        snprintf(warnMsg, sizeof(warnMsg), fmt, __VA_ARGS__);            \
+#define WARN_TO_STATUS_ARGS(fmt, ...)                                             \
+    if (this->getLogLevel() >= ADXSPDLogLevel::WARNING) {                         \
+        char warnMsg[256];                                                        \
+        snprintf(warnMsg, sizeof(warnMsg), fmt, __VA_ARGS__);                     \
         fprintf(stderr, "WARNING | %s::%s: %s\n", driverName, __func__, warnMsg); \
-        setStringParam(ADStatusMessage, warnMsg);                        \
-        callParamCallbacks();                                            \
+        setStringParam(ADStatusMessage, warnMsg);                                 \
+        callParamCallbacks();                                                     \
     }
 
 // Info message formatters
@@ -110,20 +110,20 @@ using namespace std;
     if (this->getLogLevel() >= ADXSPDLogLevel::INFO) \
         fprintf(stdout, "INFO | %s::%s: " fmt "\n", driverName, __func__, __VA_ARGS__);
 
-#define INFO_TO_STATUS(msg)                                         \
-    if (this->getLogLevel() >= ADXSPDLogLevel::INFO) {                \
+#define INFO_TO_STATUS(msg)                                                \
+    if (this->getLogLevel() >= ADXSPDLogLevel::INFO) {                     \
         fprintf(stdout, "INFO | %s::%s: %s\n", driverName, __func__, msg); \
-        setStringParam(ADStatusMessage, msg);                        \
-        callParamCallbacks();                                            \
+        setStringParam(ADStatusMessage, msg);                              \
+        callParamCallbacks();                                              \
     }
 
-#define INFO_TO_STATUS_ARGS(fmt, ...)                                      \
-    if (this->getLogLevel() >= ADXSPDLogLevel::INFO) {                \
-        char infoMsg[256];                                            \
-        snprintf(infoMsg, sizeof(infoMsg), fmt, __VA_ARGS__);         \
+#define INFO_TO_STATUS_ARGS(fmt, ...)                                          \
+    if (this->getLogLevel() >= ADXSPDLogLevel::INFO) {                         \
+        char infoMsg[256];                                                     \
+        snprintf(infoMsg, sizeof(infoMsg), fmt, __VA_ARGS__);                  \
         fprintf(stdout, "INFO | %s::%s: %s\n", driverName, __func__, infoMsg); \
-        setStringParam(ADStatusMessage, infoMsg);                     \
-        callParamCallbacks();                                         \
+        setStringParam(ADStatusMessage, infoMsg);                              \
+        callParamCallbacks();                                                  \
     }
 
 // Debug message formatters

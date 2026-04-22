@@ -578,6 +578,22 @@ record(bi, "$(P)$(R)Decompress_RBV"){
     field(SCAN, "I/O Intr")
 }
 
+record(ao, "$(P)$(R)BloscNumThreads"){
+    field(DESC, "Number of threads for blosc decompression")
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_BLOSC_NUM_THREADS")
+    field(VAL, "1")
+    field(DRVL, "1")
+    field(PINI, "YES")
+}
+
+record(ai, "$(P)$(R)BloscNumThreads_RBV"){
+    field(DESC, "Number of threads for blosc decompression readback")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_BLOSC_NUM_THREADS")
+    field(SCAN, "I/O Intr")
+}
+
 # Disable any ADBase records we don't want to use
 
 record(mbbo, "$(P)$(R)DataType")

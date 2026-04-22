@@ -88,13 +88,13 @@ asynStatus ADXSPD::getAPIVar(int paramIndex, XSPD::APIComponent& component, stri
         } else if constexpr (is_same_v<T, string>) {
             setStringParam(paramIndex, value.c_str());
         } else {
-            ERR_TO_STATUS_ARGS("Unsupported parameter type for variable %s/%s", component.GetId().c_str(),
-                     varName.c_str());
+            ERR_TO_STATUS_ARGS("Unsupported parameter type for variable %s/%s",
+                               component.GetId().c_str(), varName.c_str());
             return asynError;
         }
     } catch (std::exception& e) {
         ERR_TO_STATUS_ARGS("Failed to read API parameter %s/%s: %s", component.GetId().c_str(),
-                 varName.c_str(), e.what());
+                           varName.c_str(), e.what());
         return asynError;
     }
     return asynSuccess;
@@ -196,15 +196,15 @@ void ADXSPD::acquisitionThread() {
     void* zmqSubscriber = zmq_socket(this->zmqContext, ZMQ_SUB);
     int rc = zmq_connect(zmqSubscriber, this->pDetector->GetActiveDataPort()->GetURI().c_str());
     if (rc != 0) {
-        ERR_TO_STATUS_ARGS("Failed to connect to data port zmq socket at %s:%d", this->dataPortIp.c_str(),
-                      this->dataPortPort);
+        ERR_TO_STATUS_ARGS("Failed to connect to data port zmq socket at %s:%d",
+                           this->dataPortIp.c_str(), this->dataPortPort);
         return;
     }
     // Subscribe to all messages
     rc = zmq_setsockopt(zmqSubscriber, ZMQ_SUBSCRIBE, "", 0);
     if (rc != 0) {
         ERR_TO_STATUS_ARGS("Failed to set zmq socket options for data port at %s:%d",
-                      this->dataPortIp.c_str(), this->dataPortPort);
+                           this->dataPortIp.c_str(), this->dataPortPort);
         return;
     }
 
@@ -268,7 +268,6 @@ void ADXSPD::acquisitionThread() {
 
             getIntegerParam(NDDataType, (int*) &dataType);
 
-
             size_t dims[2];
             int sizeX, sizeY;
             getIntegerParam(ADSizeX, &sizeX);
@@ -301,19 +300,20 @@ void ADXSPD::acquisitionThread() {
 
             // Decompress data if compressed
             XSPD::Compressor compressor;
-            int compressionLevel;
+            int compressionLevel, bloscNumThreads;
             getIntegerParam(ADXSPD_Compressor, (int*) &compressor);
             getIntegerParam(ADXSPD_CompressLevel, &compressionLevel);
+            getIntegerParam(ADXSPD_BloscNumThreads, &bloscNumThreads);
 
             // if (counterMode == XSPD::CounterMode::DUAL)
             //     frameBuffer = calloc(1, arrayInfo.totalBytes);
             // else
             //     frameBuffer = pArray->pData;
 
-            bool decompressOK = true;
+            bool readoutOk = true;
             if (decompress && compressor != XSPD::Compressor::NONE) {
-                // If asked to decompress in the driver, decompress the data when copying it from the ZMQ
-                // message to the NDArray.
+                // If asked to decompress in the driver, decompress the data when copying it from
+                // the ZMQ message to the NDArray.
                 if (compressor == XSPD::Compressor::ZLIB) {
                     uLongf decompressedSize = arrayInfo.totalBytes;
                     int zlibStatus =
@@ -322,28 +322,30 @@ void ADXSPD::acquisitionThread() {
                     if (zlibStatus != Z_OK) {
                         ERR_ARGS("Failed to decompress frame data with zlib, status code %d",
                                  zlibStatus);
-                        decompressOK = false;
+                        readoutOk = false;
                     }
                     if (decompressedSize != arrayInfo.totalBytes) {
                         ERR_ARGS("Decompressed size %lu does not match expected size %lu",
                                  decompressedSize, arrayInfo.totalBytes);
-                        decompressOK = false;
+                        readoutOk = false;
                     }
                 } else if (compressor == XSPD::Compressor::BLOSC) {
                     size_t decompressSize;
-                    decompressSize = blosc_decompress(zmq_msg_data(&frameMessages[2]), pArray->pData,
-                                                      arrayInfo.totalBytes);
+                    decompressSize = blosc_decompress_ctx(zmq_msg_data(&frameMessages[2]),
+                                                      pArray->pData, arrayInfo.totalBytes, bloscNumThreads);
                     if (decompressSize != arrayInfo.totalBytes) {
                         ERR_ARGS(
-                            "Failed to decompress frame data with Blosc, decompressed size %zu does "
+                            "Failed to decompress frame data with Blosc, decompressed size %zu "
+                            "does "
                             "not match expected size %zu",
                             decompressSize, arrayInfo.totalBytes);
-                        decompressOK = false;
+                        readoutOk = false;
                     }
                 }
             } else {
-                // Otherwise, copy the framebuffer data directly to the NDArray, and set the codec information if compressed
-                switch(compressor) {
+                // Otherwise, copy the framebuffer data directly to the NDArray, and set the codec
+                // information if compressed
+                switch (compressor) {
                     case XSPD::Compressor::NONE:
                         break;
                     case XSPD::Compressor::ZLIB:
@@ -356,21 +358,22 @@ void ADXSPD::acquisitionThread() {
                         break;
                     default:
                         ERR_ARGS("Unsupported compressor type %d", (int) compressor);
-                        decompressOK = false;
+                        readoutOk = false;
                 }
-                // Copy data from new frame to pArray. With fully random data it is possible that compressed size is 
-                // actually larger than the uncompressed size, so we need to check and truncate if necessary to avoid overflow.
-                size_t copySize = frameSizeBytes;
+                // Copy data from new frame to pArray. With fully random data it is possible that
+                // compressed size is actually larger than the uncompressed size, so check for that
+                // and print an error.
                 if (frameSizeBytes > arrayInfo.totalBytes) {
-                    WARN_ARGS(
-                        "Size of incoming frame data %zu bytes is larger than expected array size %zu bytes truncating.",
+                    ERR_ARGS(
+                        "Size of incoming frame data %zu bytes is larger than expected array size "
+                        "%zu bytes!",
                         frameSizeBytes, arrayInfo.totalBytes);
-                    copySize = arrayInfo.totalBytes;
+                    readoutOk = false;
+                } else {
+                    memcpy(pArray->pData, zmq_msg_data(&frameMessages[2]), frameSizeBytes);
                 }
-                memcpy(pArray->pData, zmq_msg_data(&frameMessages[2]), copySize);
             }
 
-            bool subtractOk = true;
             // if (counterMode == XSPD::CounterMode::DUAL && prevFrameBuffer != nullptr) {
             //     switch (dataType) {
             //         case NDUInt8:
@@ -405,7 +408,7 @@ void ADXSPD::acquisitionThread() {
             //     subtractOk = false;
             // }
 
-            if (decompressOK && subtractOk) {
+            if (readoutOk) {
                 // increment the array counter
                 int arrayCounter;
                 getIntegerParam(NDArrayCounter, &arrayCounter);
@@ -662,7 +665,8 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             }
         }
         if (value < 1 || value > maxNumImages) {
-            ERR_TO_STATUS_ARGS("Invalid number of images: %d (valid range: 1-%d)", value, maxNumImages);
+            ERR_TO_STATUS_ARGS("Invalid number of images: %d (valid range: 1-%d)", value,
+                               maxNumImages);
             return asynError;
         }
         setIntegerParam(ADNumImages, this->pDetector->SetVar<int>("n_frames", value));
@@ -731,7 +735,8 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
                 status = asynError;
             }
         } catch (std::invalid_argument& e) {
-            ERR_TO_STATUS_ARGS("Invalid argument when setting parameter %s: %s", paramName, e.what());
+            ERR_TO_STATUS_ARGS("Invalid argument when setting parameter %s: %s", paramName,
+                               e.what());
             return asynError;
         } catch (std::runtime_error& e) {
             ERR_TO_STATUS_ARGS("Runtime error when setting parameter %s: %s", paramName, e.what());
