@@ -15,7 +15,7 @@ using ::testing::Throw;
 MockXSPDAPI::MockXSPDAPI() : XSPD::API("localhost", 8008) {
     // Load sample responses from JSON file. The sample responses were pulled from
     // the simulator provided by X-Spectrum
-    string sampleResponsesPath = "xspdApp/tests/samples/xspd_sample_responses.json";
+    string sampleResponsesPath = "scripts/samples/single_module_xsp_sim.json";
     std::ifstream file(sampleResponsesPath);
     if (!file.is_open())
         throw std::runtime_error("Failed to open sample responses JSON file at " +
