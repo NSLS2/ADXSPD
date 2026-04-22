@@ -172,7 +172,6 @@ class ADXSPD : ADDriver {
     asynStatus getInitialDetState();
     asynStatus acquireStart();
     asynStatus acquireStop();
-    NDDataType_t getDataTypeForBitDepth(int bitDepth);
 
     template <typename T>
     void subtractFrames(void* currentFrame, void* previousFrame, void* outputFrame,

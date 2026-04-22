@@ -321,10 +321,10 @@ class Detector : public APIComponent {
      *
      * Only accepts string, int, or double types. Returns an empty string for string types,
      * or 0 for int/double types if the variable does not exist or cannot be read.
-     * User data is user-defined metadata that can be associated with the detector, such as experimental
-     * parameters or notes. Since we cannot guarantee the existence or format of user data variables,
-     * this function catches any exceptions that occur during retrieval and returns a default value in
-     * those cases.
+     * User data is user-defined metadata that can be associated with the detector, such as
+     * experimental parameters or notes. Since we cannot guarantee the existence or format of user
+     * data variables, this function catches any exceptions that occur during retrieval and returns
+     * a default value in those cases.
      *
      * @param varName The name of the user data variable to retrieve
      * @return The value of the user data variable, or a default value if it cannot be retrieved
@@ -343,7 +343,6 @@ class Detector : public APIComponent {
             }
         }
     }
-
 
     /**
      * @brief Retrieves the IDs of all registered data ports

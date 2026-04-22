@@ -429,9 +429,8 @@ TEST_F(TestXSPDAPI, TestGetUserDataVar) {
     string s3 = pdet->GetUserDataVar<string>("test_var");
     ASSERT_EQ(s3, "test_value");
 
-    this->mapi->UpdateSampleResp(
-        "devices/lambda01/variables?path=lambda/user_data/test_var",
-        json{{"path", "lambda/user_data/test_var"}, {"value", 123}});
+    this->mapi->UpdateSampleResp("devices/lambda01/variables?path=lambda/user_data/test_var",
+                                 json{{"path", "lambda/user_data/test_var"}, {"value", 123}});
 
     this->mapi->MockGetVarRequest("lambda/user_data/test_var");
     int i = pdet->GetUserDataVar<int>("test_var");
