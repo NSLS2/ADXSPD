@@ -1397,7 +1397,7 @@
       <y>940</y>
       <width>150</width>
       <height>20</height>
-      <text>Number of threads for blosc decompression</text>
+      <text>Num blosc decompress threads</text>
       <foreground_color>
         <color red="0" blue="0" green="0" alpha="255"/>
       </foreground_color>
