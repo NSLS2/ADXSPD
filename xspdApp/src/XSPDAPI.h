@@ -66,6 +66,7 @@ enum class ModuleFeature {
     FEAT_1_6_BIT = 1,
     FEAT_MEDIPIX_DAC_IO = 2,
     FEAT_EXTENDED_GATING = 3,
+    FEAT_ROI = 4,
 };
 
 enum class APIState {

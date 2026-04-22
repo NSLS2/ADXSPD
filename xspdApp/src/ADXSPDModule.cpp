@@ -84,7 +84,7 @@ void ADXSPDModule::getInitialModuleState() {
     // Module feature support is stored as a bitmask w/ 4 bits.
     int featureBitmask = 0;
     for (auto& feature : this->module->GetFeatures()) {
-        featureBitmask += pow(2, static_cast<int>(feature));
+        featureBitmask |= (1 << static_cast<int>(feature));
     }
     setUIntDigitalParam(ADXSPDModule_FeatBitmask, featureBitmask,
                         0x1F);  // 0x1F = 00011111, since we have 5 features in the enum
@@ -98,8 +98,8 @@ void ADXSPDModule::getInitialModuleState() {
 ADXSPDModule::ADXSPDModule(const char* portName, XSPD::Module* module, ADXSPD* parent)
     : asynPortDriver(
           portName, 1, /* maxAddr */
-          asynInt32Mask | asynFloat64Mask | asynFloat64ArrayMask | asynDrvUserMask |
-              asynOctetMask, /* Interface mask */
+          asynInt32Mask | asynUInt32DigitalMask | asynFloat64Mask | asynFloat64ArrayMask |
+              asynDrvUserMask | asynOctetMask, /* Interface mask */
           asynInt32Mask | asynUInt32DigitalMask | asynFloat64Mask | asynFloat64ArrayMask |
               asynOctetMask, /* Interrupt mask */
           0, /* asynFlags.  This driver does not block and it is not multi-device, so flag is 0 */
