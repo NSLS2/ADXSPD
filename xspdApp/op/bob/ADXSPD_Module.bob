@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Saved on 2026-04-22 14:44:16 by jwlodek-->
+<!--Saved on 2026-04-22 15:01:56 by jwlodek-->
 <display version="2.0.0">
   <name>ADXSPD Module - $(P)$(R)</name>
   <macros>
@@ -1215,6 +1215,7 @@
       <width>29</width>
       <height>150</height>
       <numBits>5</numBits>
+      <bitReverse>true</bitReverse>
       <horizontal>false</horizontal>
       <square>true</square>
     </widget>
