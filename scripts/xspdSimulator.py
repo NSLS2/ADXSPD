@@ -388,8 +388,8 @@ def generate_module_image(
     max_val = _max_for_dtype(dt)
 
     if threshold_low < 2.0:
-        # Heavy noise -- full random image
-        keep_fraction = 1.0
+        # Moderate noise -- cap at 80% so zlib compression still helps
+        keep_fraction = 0.8
     elif threshold_low <= 5.0:
         # Exponential decay from ~80% at 2 to ~6% at 5
         keep_fraction = 0.8 * np.exp(-0.864 * (threshold_low - 2.0))
