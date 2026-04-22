@@ -47,6 +47,7 @@
 #include "XSPDAPI.h"
 
 // ADCore 3.15 introduced support for creating zlib-compressed NDArrays.
+// https://github.com/areaDetector/ADCore/pull/578
 // If buliding against an older version of ADCore, zlib compressed frames will
 // have to be decompressed in the driver and stored as uncompressed data in the NDArray.
 #define ADCORE_SUPPORTS_ZLIB_NDARRAYS \
