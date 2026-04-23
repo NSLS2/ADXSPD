@@ -441,7 +441,7 @@ TEST_F(TestXSPDAPI, TestGetUserDataVar) {
     ASSERT_DOUBLE_EQ(d, 123.0);
 }
 
-TEST_F(TestXSPDAPI, TestGetSerialNumber){
+TEST_F(TestXSPDAPI, TestGetSerialNumber) {
     XSPD::Detector* pdet = this->mapi->MockInitialization();
 
     this->mapi->MockGetVarRequest("lambda/user_data/serial_number");

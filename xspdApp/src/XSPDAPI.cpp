@@ -364,16 +364,16 @@ vector<XSPD::ModuleFeature> XSPD::Module::GetFeatures() {
     return features;
 }
 
-
 /**
  * @brief gets the serial number of the detector.
- * 
- * Since libxsp does not currently provide a way of reading the serial number directly, it must be stored in user
- * data by the user. This function attempts to read the serial number from user data, and if it is not found there,
- * it falls back to returning the system ID, which is unique to each device and can serve as an identifier 
- * in place of the serial number.
- * 
- * @return string The serial number of the detector, or the system ID if the s/n is not available in user data
+ *
+ * Since libxsp does not currently provide a way of reading the serial number directly, it must be
+ * stored in user data by the user. This function attempts to read the serial number from user data,
+ * and if it is not found there, it falls back to returning the system ID, which is unique to each
+ * device and can serve as an identifier in place of the serial number.
+ *
+ * @return string The serial number of the detector, or the system ID if the s/n is not available in
+ * user data
  */
 string XSPD::Detector::GetSerialNumber() {
     string sn = this->GetUserDataVar<string>("serial_number");
