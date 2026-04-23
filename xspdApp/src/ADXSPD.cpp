@@ -917,7 +917,7 @@ ADXSPD::ADXSPD(const char* portName, const char* ip, int portNum, const char* de
 
     setStringParam(ADXSPD_ApiVersion, this->pApi->GetApiVersion().c_str());
     setStringParam(ADXSPD_Version, this->pApi->GetXSPDVersion().c_str());
-    setStringParam(ADSerialNumber, this->pApi->GetSystemId().c_str());
+    setStringParam(ADSerialNumber, this->pDetector->GetSerialNumber().c_str());
     setStringParam(ADManufacturer, "X-Spectrum GmbH");
     setStringParam(ADModel, this->detectorId.c_str());
     setStringParam(ADSDKVersion, this->pApi->GetLibXSPVersion().c_str());
