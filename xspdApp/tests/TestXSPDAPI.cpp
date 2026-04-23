@@ -439,7 +439,6 @@ TEST_F(TestXSPDAPI, TestGetUserDataVar) {
     ASSERT_DOUBLE_EQ(d, 123.0);
 }
 
-
 TEST_F(TestXSPDAPI, TestGetChipIDInformation) {
     XSPD::Detector* pdet = this->mapi->MockInitialization();
 
@@ -461,7 +460,6 @@ TEST_F(TestXSPDAPI, TestGetChipIDInformation) {
     ASSERT_EQ(chipIds[9], "w10-A01,CRN,0x00000a11");
     ASSERT_EQ(chipIds[10], "w11-A01,CRN,0x00000b11");
     ASSERT_EQ(chipIds[11], "w12-A01,CRN,0x00000c11");
-
 }
 
 TEST_F(TestXSPDAPI, TestGetSerialNumber) {
