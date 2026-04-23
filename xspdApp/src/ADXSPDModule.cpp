@@ -92,6 +92,16 @@ void ADXSPDModule::getInitialModuleState() {
     setDoubleParam(ADXSPDModule_Voltage, this->module->GetVar<double>("voltage"));
     setIntegerParam(ADXSPDModule_NumSubframes, this->module->GetVar<int>("n_subframes"));
 
+    int numChips = this->module->GetNumChips();
+    setIntegerParam(ADXSPDModule_NumChips, numChips);
+    vector<string> chipIds = this->module->GetChipIds();
+    for (int i = 0; i < numChips; i++) {
+        // This is a bit of a hack, but we create the chip ID params in sequence, so we
+        // can guarantee that they are indexed in the this order.
+        int paramIndex = ADXSPDModule_Chip1Id + i;
+        setStringParam(paramIndex, chipIds[i].c_str());
+    }
+
     callParamCallbacks();
 }
 

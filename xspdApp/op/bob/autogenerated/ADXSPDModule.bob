@@ -1032,9 +1032,474 @@
       </font>
       <name>TextUpdate_28</name>
     </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>850</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Number of chips rb</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_29</name>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>170</x>
+      <y>850</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>TextUpdate_29</name>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>880</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Chip 1 ID rb</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_30</name>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>170</x>
+      <y>880</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Chip1ID_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>TextUpdate_30</name>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>910</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Chip 2 ID rb</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_31</name>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>170</x>
+      <y>910</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Chip2ID_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>TextUpdate_31</name>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>940</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Chip 3 ID rb</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_32</name>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>170</x>
+      <y>940</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Chip3ID_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>TextUpdate_32</name>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>970</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Chip 4 ID rb</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_33</name>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>170</x>
+      <y>970</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Chip4ID_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>TextUpdate_33</name>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>1000</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Chip 5 ID rb</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_34</name>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>170</x>
+      <y>1000</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Chip5ID_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>TextUpdate_34</name>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>1030</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Chip 6 ID rb</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_35</name>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>170</x>
+      <y>1030</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Chip6ID_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>TextUpdate_35</name>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>1060</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Chip 7 ID rb</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_36</name>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>170</x>
+      <y>1060</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Chip7ID_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>TextUpdate_36</name>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>1090</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Chip 8 ID rb</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_37</name>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>170</x>
+      <y>1090</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Chip8ID_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>TextUpdate_37</name>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>1120</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Chip 9 ID rb</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_38</name>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>170</x>
+      <y>1120</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Chip9ID_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>TextUpdate_38</name>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>1150</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Chip 10 ID rb</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_39</name>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>170</x>
+      <y>1150</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Chip10ID_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>TextUpdate_39</name>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>1180</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Chip 11 ID rb</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_40</name>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>170</x>
+      <y>1180</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Chip11ID_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>TextUpdate_40</name>
+    </widget>
+    <widget type="rectangle" version="2.0.0">
+      <x>480</x>
+      <y>10</y>
+      <width>2</width>
+      <height>1190</height>
+      <line_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </line_color>
+      <name>Rectangle_1</name>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>490</x>
+      <y>10</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Chip 12 ID rb</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_41</name>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <x>650</x>
+      <y>10</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Chip12ID_RBV</pv_name>
+      <foreground_color>
+        <color red="10" blue="184" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>TextUpdate_41</name>
+    </widget>
     <background_color>
       <color red="187" blue="187" green="187" alpha="255"/>
     </background_color>
-    <height>860</height>
-    <width>490</width>
+    <height>1210</height>
+    <width>810</width>
   </display>

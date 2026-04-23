@@ -35,6 +35,19 @@
 #define ADXSPDModule_FramesQueuedString "XSPD_FRAMES_QUEUED"
 #define ADXSPDModule_PixelMaskString "XSPD_PIXEL_MASK"
 #define ADXSPDModule_ShuffleModeString "XSPD_SHUFFLE_MODE"
+#define ADXSPDModule_NumChipsString "XSPD_NUM_CHIPS"
+#define ADXSPDModule_Chip1IdString "XSPD_CHIP1_ID"
+#define ADXSPDModule_Chip2IdString "XSPD_CHIP2_ID"
+#define ADXSPDModule_Chip3IdString "XSPD_CHIP3_ID"
+#define ADXSPDModule_Chip4IdString "XSPD_CHIP4_ID"
+#define ADXSPDModule_Chip5IdString "XSPD_CHIP5_ID"
+#define ADXSPDModule_Chip6IdString "XSPD_CHIP6_ID"
+#define ADXSPDModule_Chip7IdString "XSPD_CHIP7_ID"
+#define ADXSPDModule_Chip8IdString "XSPD_CHIP8_ID"
+#define ADXSPDModule_Chip9IdString "XSPD_CHIP9_ID"
+#define ADXSPDModule_Chip10IdString "XSPD_CHIP10_ID"
+#define ADXSPDModule_Chip11IdString "XSPD_CHIP11_ID"
+#define ADXSPDModule_Chip12IdString "XSPD_CHIP12_ID"
 
 // Parameter index definitions
 int ADXSPDModule_BoardTemp;
@@ -67,10 +80,23 @@ int ADXSPDModule_HighThreshFfDate;
 int ADXSPDModule_FramesQueued;
 int ADXSPDModule_PixelMask;
 int ADXSPDModule_ShuffleMode;
+int ADXSPDModule_NumChips;
+int ADXSPDModule_Chip1Id;
+int ADXSPDModule_Chip2Id;
+int ADXSPDModule_Chip3Id;
+int ADXSPDModule_Chip4Id;
+int ADXSPDModule_Chip5Id;
+int ADXSPDModule_Chip6Id;
+int ADXSPDModule_Chip7Id;
+int ADXSPDModule_Chip8Id;
+int ADXSPDModule_Chip9Id;
+int ADXSPDModule_Chip10Id;
+int ADXSPDModule_Chip11Id;
+int ADXSPDModule_Chip12Id;
 
 #define ADXSPDMODULE_FIRST_PARAM ADXSPDModule_BoardTemp
-#define ADXSPDMODULE_LAST_PARAM ADXSPDModule_ShuffleMode
+#define ADXSPDMODULE_LAST_PARAM ADXSPDModule_Chip12Id
 
-#define NUM_ADXSPDMODULE_PARAMS 30
+#define NUM_ADXSPDMODULE_PARAMS 43
 
 #endif

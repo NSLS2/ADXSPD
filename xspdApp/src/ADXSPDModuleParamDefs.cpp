@@ -37,4 +37,17 @@ void ADXSPDModule::createAllParams() {
     createParam(ADXSPDModule_FramesQueuedString, asynParamInt32, &ADXSPDModule_FramesQueued);
     createParam(ADXSPDModule_PixelMaskString, asynParamInt32, &ADXSPDModule_PixelMask);
     createParam(ADXSPDModule_ShuffleModeString, asynParamInt32, &ADXSPDModule_ShuffleMode);
+    createParam(ADXSPDModule_NumChipsString, asynParamInt32, &ADXSPDModule_NumChips);
+    createParam(ADXSPDModule_Chip1IdString, asynParamOctet, &ADXSPDModule_Chip1Id);
+    createParam(ADXSPDModule_Chip2IdString, asynParamOctet, &ADXSPDModule_Chip2Id);
+    createParam(ADXSPDModule_Chip3IdString, asynParamOctet, &ADXSPDModule_Chip3Id);
+    createParam(ADXSPDModule_Chip4IdString, asynParamOctet, &ADXSPDModule_Chip4Id);
+    createParam(ADXSPDModule_Chip5IdString, asynParamOctet, &ADXSPDModule_Chip5Id);
+    createParam(ADXSPDModule_Chip6IdString, asynParamOctet, &ADXSPDModule_Chip6Id);
+    createParam(ADXSPDModule_Chip7IdString, asynParamOctet, &ADXSPDModule_Chip7Id);
+    createParam(ADXSPDModule_Chip8IdString, asynParamOctet, &ADXSPDModule_Chip8Id);
+    createParam(ADXSPDModule_Chip9IdString, asynParamOctet, &ADXSPDModule_Chip9Id);
+    createParam(ADXSPDModule_Chip10IdString, asynParamOctet, &ADXSPDModule_Chip10Id);
+    createParam(ADXSPDModule_Chip11IdString, asynParamOctet, &ADXSPDModule_Chip11Id);
+    createParam(ADXSPDModule_Chip12IdString, asynParamOctet, &ADXSPDModule_Chip12Id);
 }

@@ -353,8 +353,7 @@ TEST_F(TestXSPDAPI, TestSetThresholdsLowLevel) {
 
     vector<double> thresholds =
         pdet->SetVar<std::string, std::vector<double>>("thresholds", "1.000000,2.000000");
-    size_t expectedSize = 2;
-    ASSERT_EQ(thresholds.size(), expectedSize);
+    ASSERT_EQ(thresholds.size(), static_cast<size_t>(2));
     ASSERT_DOUBLE_EQ(thresholds[0], 1.0);
     ASSERT_DOUBLE_EQ(thresholds[1], 2.0);
 }
@@ -394,8 +393,7 @@ TEST_F(TestXSPDAPI, TestGetModuleFeatures) {
     this->mapi->MockGetVarRequest("lambda/1/features");
 
     vector<XSPD::ModuleFeature> features = pmod->GetFeatures();
-    size_t expectedSize = 3;
-    ASSERT_EQ(features.size(), expectedSize);
+    ASSERT_EQ(features.size(), static_cast<size_t>(3));
     ASSERT_TRUE(std::find(features.begin(), features.end(), XSPD::ModuleFeature::FEAT_HV) !=
                 features.end());
     ASSERT_TRUE(std::find(features.begin(), features.end(), XSPD::ModuleFeature::FEAT_1_6_BIT) !=
@@ -439,6 +437,29 @@ TEST_F(TestXSPDAPI, TestGetUserDataVar) {
     this->mapi->MockGetVarRequest("lambda/user_data/test_var");
     double d = pdet->GetUserDataVar<double>("test_var");
     ASSERT_DOUBLE_EQ(d, 123.0);
+}
+
+TEST_F(TestXSPDAPI, TestGetChipIDInformation) {
+    XSPD::Detector* pdet = this->mapi->MockInitialization();
+
+    XSPD::Module* pmod = pdet->GetModules()[0];
+
+    size_t numChips = pmod->GetNumChips();
+    ASSERT_EQ(numChips, static_cast<size_t>(12));
+
+    vector<string> chipIds = pmod->GetChipIds();
+    ASSERT_EQ(chipIds[0], "w1-A01,CRN,0x00000111");
+    ASSERT_EQ(chipIds[1], "w2-A01,CRN,0x00000211");
+    ASSERT_EQ(chipIds[2], "w3-A01,CRN,0x00000311");
+    ASSERT_EQ(chipIds[3], "w4-A01,CRN,0x00000411");
+    ASSERT_EQ(chipIds[4], "w5-A01,CRN,0x00000511");
+    ASSERT_EQ(chipIds[5], "w6-A01,CRN,0x00000611");
+    ASSERT_EQ(chipIds[6], "w7-A01,CRN,0x00000711");
+    ASSERT_EQ(chipIds[7], "w8-A01,CRN,0x00000811");
+    ASSERT_EQ(chipIds[8], "w9-A01,CRN,0x00000911");
+    ASSERT_EQ(chipIds[9], "w10-A01,CRN,0x00000a11");
+    ASSERT_EQ(chipIds[10], "w11-A01,CRN,0x00000b11");
+    ASSERT_EQ(chipIds[11], "w12-A01,CRN,0x00000c11");
 }
 
 TEST_F(TestXSPDAPI, TestGetSerialNumber) {
