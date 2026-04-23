@@ -69,8 +69,9 @@ def get_full_endpoint(base_uri, endpoint):
 
 def get_sample_endpoint_value(base_uri, endpoint):
     url = base_uri + endpoint
-    logger.info(f"Getting value of endpoint {endpoint}")
+    logger.info(f"Getting value at {url}")
     response = requests.get("http://" + url)
+    logger.debug(response.json())
     response.raise_for_status()
     return {get_full_endpoint(base_uri, endpoint): response.json()}
 
@@ -116,10 +117,20 @@ def main():
         help="Port on which xspd is running"
     )
 
+    parser.add_argument(
+        "-d",
+        "--debug",
+        action="store_true",
+        help="Enable debug logging"
+    )
+
     args = parser.parse_args()
     base_uri = args.uri
     port = args.port
     base_uri = f"{base_uri}:{port}/" if not base_uri.endswith("/") else f"{base_uri}:{port}/"
+
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
 
     sample_responses = {}
 
