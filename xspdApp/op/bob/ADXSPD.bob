@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< Updated upstream
-<!--Saved on 2026-04-21 09:56:10 by jwlodek-->
-=======
-<!--Saved on 2026-04-23 15:16:27 by jwlodek-->
->>>>>>> Stashed changes
+<!--Saved on 2026-04-23 15:08:51 by jwlodek-->
 <display version="2.0.0">
   <name>ADXSPD Control - $(P)</name>
   <macros>
@@ -1987,7 +1983,7 @@
       <x>78</x>
       <y>11</y>
       <width>26</width>
-      <height>19</height>
+      <height>18</height>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -2000,7 +1996,7 @@
       <x>218</x>
       <y>11</y>
       <width>29</width>
-      <height>19</height>
+      <height>18</height>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -2169,7 +2165,7 @@
       <x>4</x>
       <y>37</y>
       <width>37</width>
-      <height>19</height>
+      <height>18</height>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -3271,9 +3267,9 @@
     <widget type="textupdate" version="2.0.0">
       <name>TextUpdate_29</name>
       <pv_name>$(P)$(R)CompressLevel_RBV</pv_name>
-      <x>140</x>
+      <x>251</x>
       <y>260</y>
-      <width>150</width>
+      <width>80</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -3419,6 +3415,21 @@
       </foreground_color>
       <background_color>
         <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+    </widget>
+    <widget type="combo" version="2.0.0">
+      <name>ComboBox_17</name>
+      <pv_name>$(P)$(R)CompressLevel</pv_name>
+      <x>140</x>
+      <y>260</y>
+      <height>20</height>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="115" green="223" blue="255">
         </color>
       </background_color>
     </widget>
