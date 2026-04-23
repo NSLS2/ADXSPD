@@ -8,14 +8,13 @@ It queries various endpoints of the API and saves the responses in a structured 
 
 import json
 import requests
-from pathlib import Path
 import logging
 import sys
 import argparse
-import time as ttime
 
 logging.basicConfig()
 logger = logging.getLogger("gen_sample_responses")
+
 
 class ColorFormatter(logging.Formatter):
     """ANSI color formatter for warnings and errors."""
@@ -86,9 +85,13 @@ def get_device_variable_values(base_uri, device_id):
     device_variables.update(variables)
     for variable in variables[get_full_endpoint(base_uri, var_endpoint)]:
         variable_id = variable["path"]
-        var_value = get_sample_endpoint_value(base_uri, f"{var_endpoint}?path={variable_id}")
+        var_value = get_sample_endpoint_value(
+            base_uri, f"{var_endpoint}?path={variable_id}"
+        )
         if variable_id.endswith("pixel_mask"):
-            var_value[get_full_endpoint(base_uri,  f"{var_endpoint}?path={variable_id}")]["value"] = "AAAAAAAAAA"
+            var_value[
+                get_full_endpoint(base_uri, f"{var_endpoint}?path={variable_id}")
+            ]["value"] = "AAAAAAAAAA"
         device_variables.update(var_value)
     return device_variables
 
@@ -111,24 +114,19 @@ def main():
     )
 
     parser.add_argument(
-        "-p",
-        "--port",
-        default=8008,
-        type=int,
-        help="Port on which xspd is running"
+        "-p", "--port", default=8008, type=int, help="Port on which xspd is running"
     )
 
     parser.add_argument(
-        "-d",
-        "--debug",
-        action="store_true",
-        help="Enable debug logging"
+        "-d", "--debug", action="store_true", help="Enable debug logging"
     )
 
     args = parser.parse_args()
     base_uri = args.uri
     port = args.port
-    base_uri = f"{base_uri}:{port}/" if not base_uri.endswith("/") else f"{base_uri}:{port}/"
+    base_uri = (
+        f"{base_uri}:{port}/" if not base_uri.endswith("/") else f"{base_uri}:{port}/"
+    )
 
     if args.debug:
         logger.setLevel(logging.DEBUG)
@@ -154,9 +152,7 @@ def main():
             get_sample_endpoint_value(base_uri, f"devices/{device_id}/commands")
         )
 
-    with open(
-        args.output_path, "w"
-    ) as fp:
+    with open(args.output_path, "w") as fp:
         fp.write(json.dumps(sample_responses, indent=4))
 
 
