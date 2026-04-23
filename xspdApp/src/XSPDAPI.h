@@ -358,6 +358,8 @@ class Detector : public APIComponent {
         return dpIds;
     }
 
+    string GetSerialNumber();
+
     void RegisterModule(Module* module) { this->modules.push_back(module); }
 
     /**
