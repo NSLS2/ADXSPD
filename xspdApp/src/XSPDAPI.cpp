@@ -142,9 +142,10 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
 
     this->detector = new Detector(this, detectorInfo["detector-id"].get<string>());
     for (auto& moduleJson : detectorInfo["modules"]) {
+        int numChips = moduleJson["chips"].get<int>();
         vector<string> chipIds;
-        for (auto& chipId : moduleJson["chip-ids"]) {
-            chipIds.push_back(chipId.get<string>());
+        for (int i = 0; i < numChips; i++) {
+            chipIds.push_back(moduleJson["chip-ids"][i].get<string>());
         }
         Module* pmodule = new Module(this, moduleJson["module"].get<string>(),
                                      moduleJson["firmware"].get<string>(), chipIds);
