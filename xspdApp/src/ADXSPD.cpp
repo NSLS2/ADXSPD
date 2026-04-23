@@ -729,13 +729,20 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
                     module->getMaxNumImages();
                 }
             } else if (function == ADXSPD_SummedFrames) {
-                actualValue = this->pDetector->SetVar<int>("summed_frames", value);
-                if (actualValue > 1) {
-                    // If summed frames > 1, libxsp will always return uint32 data regardless of bit depth, so set that here to avoid confusion
-                    setIntegerParam(NDDataType, NDUInt32);
+                XSPD::CounterMode counterMode;
+                getIntegerParam(ADXSPD_CounterMode, (int*) &counterMode);
+                if (counterMode == XSPD::CounterMode::DUAL && value > 1) {
+                    ERR_TO_STATUS("Dual counter mode not supporeted with summed frames > 1");
+                    status = asynError;
                 } else {
-                    int bitDepth = static_cast<int>(this->pDetector->GetVar<int>("bit_depth"));
-                    setIntegerParam(NDDataType, static_cast<int>(getDataTypeForBitDepth(bitDepth)));
+                    actualValue = this->pDetector->SetVar<int>("summed_frames", value);
+                    if (actualValue > 1) {
+                        // If summed frames > 1, libxsp will always return uint32 data regardless of bit depth, so set that here to avoid confusion
+                        setIntegerParam(NDDataType, NDUInt32);
+                    } else {
+                        int bitDepth = static_cast<int>(this->pDetector->GetVar<int>("bit_depth"));
+                        setIntegerParam(NDDataType, static_cast<int>(getDataTypeForBitDepth(bitDepth)));
+                    }
                 }
             } else if (function == ADXSPD_RoiRows) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<int>("roi_rows", value));
@@ -758,11 +765,17 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
                     "countrate_correction", static_cast<XSPD::OnOff>(value)));
             } else if (function == ADXSPD_CounterMode) {
-                actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::CounterMode>(
-                    "counter_mode", static_cast<XSPD::CounterMode>(value)));
-                for (auto& module : this->modules) {
-                    module->getMaxNumImages();
-                    module->getFlatfieldState();  // FF is different for each counter mode
+                int framesSummed;
+                getIntegerParam(ADXSPD_SummedFrames, &framesSummed);
+                if (framesSummed > 1) {
+                    ERR_TO_STATUS("Dual counter mode not supporeted with summed frames > 1");
+                } else {
+                    actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::CounterMode>(
+                        "counter_mode", static_cast<XSPD::CounterMode>(value)));
+                    for (auto& module : this->modules) {
+                        module->getMaxNumImages();
+                        module->getFlatfieldState();  // FF is different for each counter mode
+                    }
                 }
             } else if (function == ADXSPD_SaturationFlag) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
@@ -776,13 +789,15 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
                 }
             }
 
-            setIntegerParam(function, actualValue);
-            if (actualValue != value) {
-                WARN_ARGS("Requested value %d for parameter %s, but set value is %d", value,
-                          paramName, actualValue);
-                status = asynError;
+            if (status != asynError) {
+                setIntegerParam(function, actualValue);
+                if (actualValue != value) {
+                    WARN_ARGS("Requested value %d for parameter %s, but set value is %d", value,
+                              paramName, actualValue);
+                    status = asynError;
+                }
+                INFO_TO_STATUS_ARGS("Set %s to %d", formatParamName(paramName).c_str(), actualValue);
             }
-            INFO_TO_STATUS_ARGS("Set %s to %d", formatParamName(paramName).c_str(), actualValue);
         } catch (std::invalid_argument& e) {
             ERR_TO_STATUS_ARGS("Invalid argument when setting parameter %s: %s", paramName,
                                e.what());
