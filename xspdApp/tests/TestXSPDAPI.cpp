@@ -463,3 +463,24 @@ TEST_F(TestXSPDAPI, TestGetChipIDInformation) {
     ASSERT_EQ(chipIds[11], "w12-A01,CRN,0x00000c11");
 
 }
+
+TEST_F(TestXSPDAPI, TestGetSerialNumber) {
+    XSPD::Detector* pdet = this->mapi->MockInitialization();
+
+    this->mapi->MockGetVarRequest("lambda/user_data/serial_number");
+
+    // Sample responses don't have serial_number in user data, so first
+    // attempt should give system ID instead.
+    string serialNumber = pdet->GetSerialNumber();
+    ASSERT_EQ(serialNumber, "SYSTEM");
+
+    this->mapi->UpdateSampleResp(
+        "devices/lambda01/variables?path=lambda/user_data/serial_number",
+        json{{"path", "lambda/user_data/serial_number"}, {"value", "SN12345"}});
+
+    // Now that we have a serial number in the sample response user data
+    // it should be returned by GetSerialNumber.
+    this->mapi->MockGetVarRequest("lambda/user_data/serial_number");
+    serialNumber = pdet->GetSerialNumber();
+    ASSERT_EQ(serialNumber, "SN12345");
+}
