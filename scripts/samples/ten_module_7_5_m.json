@@ -1,0 +1,3479 @@
+{
+    "api": {
+        "api version": "1",
+        "xspd version": "1.6.0"
+    },
+    "api/v1/devices": {
+        "devices": [
+            {
+                "id": "detector",
+                "type": "xsp",
+                "href": "http://server:8008/api/v1/devices/detector"
+            }
+        ]
+    },
+    "api/v1/devices/detector": {
+        "id": "detector",
+        "type": "xsp",
+        "configfile": "/opt/xsp/config/system.yml",
+        "system": {
+            "id": "L-DS-000.473",
+            "detectors": [
+                {
+                    "id": "lambda",
+                    "modules": 10
+                }
+            ],
+            "data-ports": [
+                {
+                    "ref": "lambda",
+                    "id": "port-1",
+                    "ip": "192.168.1.100",
+                    "port": 4301
+                }
+            ]
+        }
+    },
+    "api/v1/devices/detector/variables?path=info": {
+        "path": "info",
+        "value": {
+            "libxsp version": "2.7.6",
+            "id": "L-DS-000.473",
+            "detectors": [
+                {
+                    "detector-id": "lambda",
+                    "modules": [
+                        {
+                            "module": "lambda/1",
+                            "firmware": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]",
+                            "chips": 12,
+                            "chip-ids": [
+                                "b37w17-D04,SAL,0x8004b144",
+                                "b37w17-F02,SAL,0x8004b162",
+                                "b37w17-I03,SAL,0x8004b193",
+                                "b39w3-C06,SAL,0x8004e336",
+                                "b37w9-B07,SAL,0x8004a927",
+                                "b37w9-K08,SAL,0x8004a9b8",
+                                "b37w9-I08,SAL,0x8004a998",
+                                "b37w9-L08,SAL,0x8004a9c8",
+                                "b39w3-C05,SAL,0x8004e335",
+                                "b37w17-E02,SAL,0x8004b152",
+                                "b37w17-G03,SAL,0x8004b173",
+                                "b37w17-F04,SAL,0x8004b164"
+                            ]
+                        },
+                        {
+                            "module": "lambda/2",
+                            "firmware": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]",
+                            "chips": 12,
+                            "chip-ids": [
+                                "b34w7-E06,SAL,0x80044756",
+                                "b34w7-G06,SAL,0x80044776",
+                                "b34w7-B05,SAL,0x80044725",
+                                "b34w7-D03,SAL,0x80044743",
+                                "b34w7-I04,SAL,0x80044794",
+                                "b34w7-J05,SAL,0x800447a5",
+                                "b34w7-H05,SAL,0x80044785",
+                                "b34w7-G04,SAL,0x80044774",
+                                "b34w7-K04,SAL,0x800447b4",
+                                "b34w7-G05,SAL,0x80044775",
+                                "b34w7-L06,SAL,0x800447c6",
+                                "b34w7-F06,SAL,0x80044766"
+                            ]
+                        },
+                        {
+                            "module": "lambda/3",
+                            "firmware": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]",
+                            "chips": 12,
+                            "chip-ids": [
+                                "b39w11-F06,SAL,0x8004eb66",
+                                "b39w11-G06,SAL,0x8004eb76",
+                                "b39w10-H04,SAL,0x8004ea84",
+                                "b39w10-E06,SAL,0x8004ea56",
+                                "b39w8-F03,SAL,0x8004e863",
+                                "b39w8-E03,SAL,0x8004e853",
+                                "b39w8-J03,SAL,0x8004e8a3",
+                                "b39w8-F02,SAL,0x8004e862",
+                                "b39w10-J07,SAL,0x8004eaa7",
+                                "b39w10-B09,SAL,0x8004ea29",
+                                "b39w11-D06,SAL,0x8004eb46",
+                                "b39w11-C06,SAL,0x8004eb36"
+                            ]
+                        },
+                        {
+                            "module": "lambda/4",
+                            "firmware": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]",
+                            "chips": 12,
+                            "chip-ids": [
+                                "b39w4-H05,SAL,0x8004e485",
+                                "b39w4-J05,SAL,0x8004e4a5",
+                                "b39w4-B04,SAL,0x8004e424",
+                                "b39w10-D06,SAL,0x8004ea46",
+                                "b39w11-H08,SAL,0x8004eb88",
+                                "b39w11-G08,SAL,0x8004eb78",
+                                "b39w11-K08,SAL,0x8004ebb8",
+                                "b39w11-L08,SAL,0x8004ebc8",
+                                "b39w10-I06,SAL,0x8004ea96",
+                                "b39w4-E04,SAL,0x8004e454",
+                                "b39w4-K05,SAL,0x8004e4b5",
+                                "b39w4-I05,SAL,0x8004e495"
+                            ]
+                        },
+                        {
+                            "module": "lambda/5",
+                            "firmware": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]",
+                            "chips": 12,
+                            "chip-ids": [
+                                "b39w1-H10,SAL,0x8004e18a",
+                                "b39w1-D07,SAL,0x8004e147",
+                                "b39w1-J06,SAL,0x8004e1a6",
+                                "b39w1-G08,SAL,0x8004e178",
+                                "b39w1-D08,SAL,0x8004e148",
+                                "b39w1-J07,SAL,0x8004e1a7",
+                                "b39w1-L07,SAL,0x8004e1c7",
+                                "b39w1-I07,SAL,0x8004e197",
+                                "b39w1-F08,SAL,0x8004e168",
+                                "b39w1-G05,SAL,0x8004e175",
+                                "b39w1-E07,SAL,0x8004e157",
+                                "b39w1-D09,SAL,0x8004e149"
+                            ]
+                        },
+                        {
+                            "module": "lambda/6",
+                            "firmware": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]",
+                            "chips": 12,
+                            "chip-ids": [
+                                "b39w11-J05,SAL,0x8004eba5",
+                                "b39w11-K04,SAL,0x8004ebb4",
+                                "b39w10-H10,SAL,0x8004ea8a",
+                                "b39w10-F07,SAL,0x8004ea67",
+                                "b39w8-I04,SAL,0x8004e894",
+                                "b39w8-D04,SAL,0x8004e844",
+                                "b39w8-J04,SAL,0x8004e8a4",
+                                "b39w8-K04,SAL,0x8004e8b4",
+                                "b39w10-H07,SAL,0x8004ea87",
+                                "b39w10-D11,SAL,0x8004ea4b",
+                                "b39w11-D04,SAL,0x8004eb44",
+                                "b39w11-L05,SAL,0x8004ebc5"
+                            ]
+                        },
+                        {
+                            "module": "lambda/7",
+                            "firmware": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]",
+                            "chips": 12,
+                            "chip-ids": [
+                                "b39w8-F01,SAL,0x8004e861",
+                                "b39w8-A07,SAL,0x8004e817",
+                                "b39w10-G03,SAL,0x8004ea73",
+                                "b39w10-C09,SAL,0x8004ea39",
+                                "b39w11-D09,SAL,0x8004eb49",
+                                "b39w11-F10,SAL,0x8004eb6a",
+                                "b39w11-E09,SAL,0x8004eb59",
+                                "b39w11-F09,SAL,0x8004eb69",
+                                "b39w10-J10,SAL,0x8004eaaa",
+                                "b39w10-B05,SAL,0x8004ea25",
+                                "b39w8-H11,SAL,0x8004e88b",
+                                "b39w11-L04,SAL,0x8004ebc4"
+                            ]
+                        },
+                        {
+                            "module": "lambda/8",
+                            "firmware": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]",
+                            "chips": 12,
+                            "chip-ids": [
+                                "b39w5-J07,SAL,0x8004e5a7",
+                                "b39w5-D05,SAL,0x8004e545",
+                                "b39w5-K03,SAL,0x8004e5b3",
+                                "b39w4-G10,SAL,0x8004e47a",
+                                "b39w4-G02,SAL,0x8004e472",
+                                "b39w4-J03,SAL,0x8004e4a3",
+                                "b39w4-F03,SAL,0x8004e463",
+                                "b39w4-E02,SAL,0x8004e452",
+                                "b39w4-H02,SAL,0x8004e482",
+                                "b39w5-J02,SAL,0x8004e5a2",
+                                "b39w5-L04,SAL,0x8004e5c4",
+                                "b39w5-H06,SAL,0x8004e586"
+                            ]
+                        },
+                        {
+                            "module": "lambda/9",
+                            "firmware": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]",
+                            "chips": 12,
+                            "chip-ids": [
+                                "b39w11-B07,SAL,0x8004eb27",
+                                "b39w11-B06,SAL,0x8004eb26",
+                                "b39w14-J06,SAL,0x8004eea6",
+                                "b39w10-F04,SAL,0x8004ea64",
+                                "b39w11-F05,SAL,0x8004eb65",
+                                "b39w11-D05,SAL,0x8004eb45",
+                                "b39w11-G05,SAL,0x8004eb75",
+                                "b39w11-K05,SAL,0x8004ebb5",
+                                "b39w10-J04,SAL,0x8004eaa4",
+                                "b39w10-C03,SAL,0x8004ea33",
+                                "b39w11-A07,SAL,0x8004eb17",
+                                "b39w11-B08,SAL,0x8004eb28"
+                            ]
+                        },
+                        {
+                            "module": "lambda/10",
+                            "firmware": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]",
+                            "chips": 12,
+                            "chip-ids": [
+                                "b39w11-I07,SAL,0x8004eb97",
+                                "b39w11-L07,SAL,0x8004ebc7",
+                                "b39w10-G04,SAL,0x8004ea74",
+                                "b39w10-D04,SAL,0x8004ea44",
+                                "b39w11-H11,SAL,0x8004eb8b",
+                                "b39w8-B04,SAL,0x8004e824",
+                                "b39w11-D07,SAL,0x8004eb47",
+                                "b39w11-I10,SAL,0x8004eb9a",
+                                "b39w10-I05,SAL,0x8004ea95",
+                                "b39w10-C05,SAL,0x8004ea35",
+                                "b39w11-H07,SAL,0x8004eb87",
+                                "b39w11-G07,SAL,0x8004eb77"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "api/v1/devices/detector/variables": [
+        {
+            "path": "lambda/beam_energy",
+            "description": "defines the current beam energy setting in keV"
+        },
+        {
+            "path": "lambda/bit_depth",
+            "description": "defines the readout bit depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "lambda/charge_summing",
+            "description": "enables/disables the charge summing mode with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/compression_level",
+            "description": "defines the compression level from '1' to '4'"
+        },
+        {
+            "path": "lambda/compressor",
+            "description": "defines the compressor 'zlib', 'blosc' or 'none'"
+        },
+        {
+            "path": "lambda/counter_mode",
+            "description": "defines the counter mode 'SINGLE' or 'DUAL'"
+        },
+        {
+            "path": "lambda/countrate_correction",
+            "description": "enables/disables the countrate correction with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/countrate_correction_enabled",
+            "description": "enables/disables the countrate correction with true or false"
+        },
+        {
+            "path": "lambda/flatfield_correction",
+            "description": "enables/disables the flatfield correction with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/flatfield_enabled",
+            "description": "enables/disables the flatfield correction with true or false"
+        },
+        {
+            "path": "lambda/gating_mode",
+            "description": "enables/disables the gating mode with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/n_frames",
+            "description": "defines the number of frames per acquisition"
+        },
+        {
+            "path": "lambda/n_modules",
+            "description": "returns the number of modules of a detector"
+        },
+        {
+            "path": "lambda/roi_rows",
+            "description": "defines the numbers of readout rows per chip"
+        },
+        {
+            "path": "lambda/saturation_flag",
+            "description": "enables/disables the saturation flag with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/saturation_flag_enabled",
+            "description": "enables/disables the saturation flag with true or false"
+        },
+        {
+            "path": "lambda/shuffle_mode",
+            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+        },
+        {
+            "path": "lambda/shutter_time",
+            "description": "defines the shutter time in ms"
+        },
+        {
+            "path": "lambda/status",
+            "description": "returns the detector status 'busy', 'ready' or 'connected'"
+        },
+        {
+            "path": "lambda/summed_frames",
+            "description": "returns the number of summed frames"
+        },
+        {
+            "path": "lambda/thresholds",
+            "description": "defines the detector thresholds in a list of floats"
+        },
+        {
+            "path": "lambda/trigger_mode",
+            "description": "defines the trigger mode 'SOFTWARE', 'EXT_FRAMES' or 'EXT_SEQUENCE'"
+        },
+        {
+            "path": "lambda/type",
+            "description": "returns the detector type"
+        },
+        {
+            "path": "lambda/user_data",
+            "description": "returns the user data to a specified key"
+        },
+        {
+            "path": "lambda/1/chip_ids",
+            "description": "returns a list of chip ids of the corresponding module"
+        },
+        {
+            "path": "lambda/1/compression_level",
+            "description": "defines the compression level from '1' to '4'"
+        },
+        {
+            "path": "lambda/1/compressor",
+            "description": "defines the compressor 'zlib', 'blosc' or 'none'"
+        },
+        {
+            "path": "lambda/1/features",
+            "description": "returns the supported firmware features"
+        },
+        {
+            "path": "lambda/1/firmware_version",
+            "description": "returns the firmware version in 'major.minor.patch' order"
+        },
+        {
+            "path": "lambda/1/flatfield",
+            "description": "returns the flatfield data"
+        },
+        {
+            "path": "lambda/1/flatfield_author",
+            "description": "returns the author of the flatfield"
+        },
+        {
+            "path": "lambda/1/flatfield_enabled",
+            "description": "returns true if a flatfield is applied, false otherwise"
+        },
+        {
+            "path": "lambda/1/flatfield_error",
+            "description": "returns the error of the flatfield"
+        },
+        {
+            "path": "lambda/1/flatfield_status",
+            "description": "returns the status of the latest generate_flatfield command call"
+        },
+        {
+            "path": "lambda/1/flatfield_timestamp",
+            "description": "returns the timestamp of the flatfield"
+        },
+        {
+            "path": "lambda/1/frame_depth",
+            "description": "defines the frame depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "lambda/1/frame_height",
+            "description": "returns the frame height in pixels"
+        },
+        {
+            "path": "lambda/1/frame_width",
+            "description": "returns the frame width in pixels"
+        },
+        {
+            "path": "lambda/1/frames_queued",
+            "description": "returns the number of queued frames"
+        },
+        {
+            "path": "lambda/1/humidity",
+            "description": "returns the measured humidity from a detector module"
+        },
+        {
+            "path": "lambda/1/interpolation",
+            "description": "enables/disables the interpolation with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/1/interpolation_enabled",
+            "description": "returns true if interpolation of extra large pixels is enabled, false otherwise"
+        },
+        {
+            "path": "lambda/1/max_frames",
+            "description": "defines the maximum number of frames that fit into the RAM buffer"
+        },
+        {
+            "path": "lambda/1/n_connectors",
+            "description": "returns the number of connected sensors"
+        },
+        {
+            "path": "lambda/1/n_subframes",
+            "description": "returns the number of subframes"
+        },
+        {
+            "path": "lambda/1/pixel_mask",
+            "description": "returns the base64 encoded pixel mask of a module"
+        },
+        {
+            "path": "lambda/1/pixel_mask_enabled",
+            "description": "returns true if a pixel mask is applied, false otherwise"
+        },
+        {
+            "path": "lambda/1/position",
+            "description": "returns the module position [x,y,z]"
+        },
+        {
+            "path": "lambda/1/ram_allocated",
+            "description": "returns true if ram is allocated, false otherwise"
+        },
+        {
+            "path": "lambda/1/rotation",
+            "description": "returns the module rotation [alpha, beta, gamma]"
+        },
+        {
+            "path": "lambda/1/saturation_threshold",
+            "description": "defines the actual saturation threshold in counts per second per pixel"
+        },
+        {
+            "path": "lambda/1/sensor_current",
+            "description": "returns the measured sensor current from a detector module"
+        },
+        {
+            "path": "lambda/1/shuffle_mode",
+            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+        },
+        {
+            "path": "lambda/1/status",
+            "description": "returns the module status 'busy', 'ready' or 'connected'"
+        },
+        {
+            "path": "lambda/1/temperature",
+            "description": "returns the measured temperatures from a detector module"
+        },
+        {
+            "path": "lambda/1/voltage",
+            "description": "returns the current high voltage in V"
+        },
+        {
+            "path": "lambda/2/chip_ids",
+            "description": "returns a list of chip ids of the corresponding module"
+        },
+        {
+            "path": "lambda/2/compression_level",
+            "description": "defines the compression level from '1' to '4'"
+        },
+        {
+            "path": "lambda/2/compressor",
+            "description": "defines the compressor 'zlib', 'blosc' or 'none'"
+        },
+        {
+            "path": "lambda/2/features",
+            "description": "returns the supported firmware features"
+        },
+        {
+            "path": "lambda/2/firmware_version",
+            "description": "returns the firmware version in 'major.minor.patch' order"
+        },
+        {
+            "path": "lambda/2/flatfield",
+            "description": "returns the flatfield data"
+        },
+        {
+            "path": "lambda/2/flatfield_author",
+            "description": "returns the author of the flatfield"
+        },
+        {
+            "path": "lambda/2/flatfield_enabled",
+            "description": "returns true if a flatfield is applied, false otherwise"
+        },
+        {
+            "path": "lambda/2/flatfield_error",
+            "description": "returns the error of the flatfield"
+        },
+        {
+            "path": "lambda/2/flatfield_status",
+            "description": "returns the status of the latest generate_flatfield command call"
+        },
+        {
+            "path": "lambda/2/flatfield_timestamp",
+            "description": "returns the timestamp of the flatfield"
+        },
+        {
+            "path": "lambda/2/frame_depth",
+            "description": "defines the frame depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "lambda/2/frame_height",
+            "description": "returns the frame height in pixels"
+        },
+        {
+            "path": "lambda/2/frame_width",
+            "description": "returns the frame width in pixels"
+        },
+        {
+            "path": "lambda/2/frames_queued",
+            "description": "returns the number of queued frames"
+        },
+        {
+            "path": "lambda/2/humidity",
+            "description": "returns the measured humidity from a detector module"
+        },
+        {
+            "path": "lambda/2/interpolation",
+            "description": "enables/disables the interpolation with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/2/interpolation_enabled",
+            "description": "returns true if interpolation of extra large pixels is enabled, false otherwise"
+        },
+        {
+            "path": "lambda/2/max_frames",
+            "description": "defines the maximum number of frames that fit into the RAM buffer"
+        },
+        {
+            "path": "lambda/2/n_connectors",
+            "description": "returns the number of connected sensors"
+        },
+        {
+            "path": "lambda/2/n_subframes",
+            "description": "returns the number of subframes"
+        },
+        {
+            "path": "lambda/2/pixel_mask",
+            "description": "returns the base64 encoded pixel mask of a module"
+        },
+        {
+            "path": "lambda/2/pixel_mask_enabled",
+            "description": "returns true if a pixel mask is applied, false otherwise"
+        },
+        {
+            "path": "lambda/2/position",
+            "description": "returns the module position [x,y,z]"
+        },
+        {
+            "path": "lambda/2/ram_allocated",
+            "description": "returns true if ram is allocated, false otherwise"
+        },
+        {
+            "path": "lambda/2/rotation",
+            "description": "returns the module rotation [alpha, beta, gamma]"
+        },
+        {
+            "path": "lambda/2/saturation_threshold",
+            "description": "defines the actual saturation threshold in counts per second per pixel"
+        },
+        {
+            "path": "lambda/2/sensor_current",
+            "description": "returns the measured sensor current from a detector module"
+        },
+        {
+            "path": "lambda/2/shuffle_mode",
+            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+        },
+        {
+            "path": "lambda/2/status",
+            "description": "returns the module status 'busy', 'ready' or 'connected'"
+        },
+        {
+            "path": "lambda/2/temperature",
+            "description": "returns the measured temperatures from a detector module"
+        },
+        {
+            "path": "lambda/2/voltage",
+            "description": "returns the current high voltage in V"
+        },
+        {
+            "path": "lambda/3/chip_ids",
+            "description": "returns a list of chip ids of the corresponding module"
+        },
+        {
+            "path": "lambda/3/compression_level",
+            "description": "defines the compression level from '1' to '4'"
+        },
+        {
+            "path": "lambda/3/compressor",
+            "description": "defines the compressor 'zlib', 'blosc' or 'none'"
+        },
+        {
+            "path": "lambda/3/features",
+            "description": "returns the supported firmware features"
+        },
+        {
+            "path": "lambda/3/firmware_version",
+            "description": "returns the firmware version in 'major.minor.patch' order"
+        },
+        {
+            "path": "lambda/3/flatfield",
+            "description": "returns the flatfield data"
+        },
+        {
+            "path": "lambda/3/flatfield_author",
+            "description": "returns the author of the flatfield"
+        },
+        {
+            "path": "lambda/3/flatfield_enabled",
+            "description": "returns true if a flatfield is applied, false otherwise"
+        },
+        {
+            "path": "lambda/3/flatfield_error",
+            "description": "returns the error of the flatfield"
+        },
+        {
+            "path": "lambda/3/flatfield_status",
+            "description": "returns the status of the latest generate_flatfield command call"
+        },
+        {
+            "path": "lambda/3/flatfield_timestamp",
+            "description": "returns the timestamp of the flatfield"
+        },
+        {
+            "path": "lambda/3/frame_depth",
+            "description": "defines the frame depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "lambda/3/frame_height",
+            "description": "returns the frame height in pixels"
+        },
+        {
+            "path": "lambda/3/frame_width",
+            "description": "returns the frame width in pixels"
+        },
+        {
+            "path": "lambda/3/frames_queued",
+            "description": "returns the number of queued frames"
+        },
+        {
+            "path": "lambda/3/humidity",
+            "description": "returns the measured humidity from a detector module"
+        },
+        {
+            "path": "lambda/3/interpolation",
+            "description": "enables/disables the interpolation with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/3/interpolation_enabled",
+            "description": "returns true if interpolation of extra large pixels is enabled, false otherwise"
+        },
+        {
+            "path": "lambda/3/max_frames",
+            "description": "defines the maximum number of frames that fit into the RAM buffer"
+        },
+        {
+            "path": "lambda/3/n_connectors",
+            "description": "returns the number of connected sensors"
+        },
+        {
+            "path": "lambda/3/n_subframes",
+            "description": "returns the number of subframes"
+        },
+        {
+            "path": "lambda/3/pixel_mask",
+            "description": "returns the base64 encoded pixel mask of a module"
+        },
+        {
+            "path": "lambda/3/pixel_mask_enabled",
+            "description": "returns true if a pixel mask is applied, false otherwise"
+        },
+        {
+            "path": "lambda/3/position",
+            "description": "returns the module position [x,y,z]"
+        },
+        {
+            "path": "lambda/3/ram_allocated",
+            "description": "returns true if ram is allocated, false otherwise"
+        },
+        {
+            "path": "lambda/3/rotation",
+            "description": "returns the module rotation [alpha, beta, gamma]"
+        },
+        {
+            "path": "lambda/3/saturation_threshold",
+            "description": "defines the actual saturation threshold in counts per second per pixel"
+        },
+        {
+            "path": "lambda/3/sensor_current",
+            "description": "returns the measured sensor current from a detector module"
+        },
+        {
+            "path": "lambda/3/shuffle_mode",
+            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+        },
+        {
+            "path": "lambda/3/status",
+            "description": "returns the module status 'busy', 'ready' or 'connected'"
+        },
+        {
+            "path": "lambda/3/temperature",
+            "description": "returns the measured temperatures from a detector module"
+        },
+        {
+            "path": "lambda/3/voltage",
+            "description": "returns the current high voltage in V"
+        },
+        {
+            "path": "lambda/4/chip_ids",
+            "description": "returns a list of chip ids of the corresponding module"
+        },
+        {
+            "path": "lambda/4/compression_level",
+            "description": "defines the compression level from '1' to '4'"
+        },
+        {
+            "path": "lambda/4/compressor",
+            "description": "defines the compressor 'zlib', 'blosc' or 'none'"
+        },
+        {
+            "path": "lambda/4/features",
+            "description": "returns the supported firmware features"
+        },
+        {
+            "path": "lambda/4/firmware_version",
+            "description": "returns the firmware version in 'major.minor.patch' order"
+        },
+        {
+            "path": "lambda/4/flatfield",
+            "description": "returns the flatfield data"
+        },
+        {
+            "path": "lambda/4/flatfield_author",
+            "description": "returns the author of the flatfield"
+        },
+        {
+            "path": "lambda/4/flatfield_enabled",
+            "description": "returns true if a flatfield is applied, false otherwise"
+        },
+        {
+            "path": "lambda/4/flatfield_error",
+            "description": "returns the error of the flatfield"
+        },
+        {
+            "path": "lambda/4/flatfield_status",
+            "description": "returns the status of the latest generate_flatfield command call"
+        },
+        {
+            "path": "lambda/4/flatfield_timestamp",
+            "description": "returns the timestamp of the flatfield"
+        },
+        {
+            "path": "lambda/4/frame_depth",
+            "description": "defines the frame depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "lambda/4/frame_height",
+            "description": "returns the frame height in pixels"
+        },
+        {
+            "path": "lambda/4/frame_width",
+            "description": "returns the frame width in pixels"
+        },
+        {
+            "path": "lambda/4/frames_queued",
+            "description": "returns the number of queued frames"
+        },
+        {
+            "path": "lambda/4/humidity",
+            "description": "returns the measured humidity from a detector module"
+        },
+        {
+            "path": "lambda/4/interpolation",
+            "description": "enables/disables the interpolation with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/4/interpolation_enabled",
+            "description": "returns true if interpolation of extra large pixels is enabled, false otherwise"
+        },
+        {
+            "path": "lambda/4/max_frames",
+            "description": "defines the maximum number of frames that fit into the RAM buffer"
+        },
+        {
+            "path": "lambda/4/n_connectors",
+            "description": "returns the number of connected sensors"
+        },
+        {
+            "path": "lambda/4/n_subframes",
+            "description": "returns the number of subframes"
+        },
+        {
+            "path": "lambda/4/pixel_mask",
+            "description": "returns the base64 encoded pixel mask of a module"
+        },
+        {
+            "path": "lambda/4/pixel_mask_enabled",
+            "description": "returns true if a pixel mask is applied, false otherwise"
+        },
+        {
+            "path": "lambda/4/position",
+            "description": "returns the module position [x,y,z]"
+        },
+        {
+            "path": "lambda/4/ram_allocated",
+            "description": "returns true if ram is allocated, false otherwise"
+        },
+        {
+            "path": "lambda/4/rotation",
+            "description": "returns the module rotation [alpha, beta, gamma]"
+        },
+        {
+            "path": "lambda/4/saturation_threshold",
+            "description": "defines the actual saturation threshold in counts per second per pixel"
+        },
+        {
+            "path": "lambda/4/sensor_current",
+            "description": "returns the measured sensor current from a detector module"
+        },
+        {
+            "path": "lambda/4/shuffle_mode",
+            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+        },
+        {
+            "path": "lambda/4/status",
+            "description": "returns the module status 'busy', 'ready' or 'connected'"
+        },
+        {
+            "path": "lambda/4/temperature",
+            "description": "returns the measured temperatures from a detector module"
+        },
+        {
+            "path": "lambda/4/voltage",
+            "description": "returns the current high voltage in V"
+        },
+        {
+            "path": "lambda/5/chip_ids",
+            "description": "returns a list of chip ids of the corresponding module"
+        },
+        {
+            "path": "lambda/5/compression_level",
+            "description": "defines the compression level from '1' to '4'"
+        },
+        {
+            "path": "lambda/5/compressor",
+            "description": "defines the compressor 'zlib', 'blosc' or 'none'"
+        },
+        {
+            "path": "lambda/5/features",
+            "description": "returns the supported firmware features"
+        },
+        {
+            "path": "lambda/5/firmware_version",
+            "description": "returns the firmware version in 'major.minor.patch' order"
+        },
+        {
+            "path": "lambda/5/flatfield",
+            "description": "returns the flatfield data"
+        },
+        {
+            "path": "lambda/5/flatfield_author",
+            "description": "returns the author of the flatfield"
+        },
+        {
+            "path": "lambda/5/flatfield_enabled",
+            "description": "returns true if a flatfield is applied, false otherwise"
+        },
+        {
+            "path": "lambda/5/flatfield_error",
+            "description": "returns the error of the flatfield"
+        },
+        {
+            "path": "lambda/5/flatfield_status",
+            "description": "returns the status of the latest generate_flatfield command call"
+        },
+        {
+            "path": "lambda/5/flatfield_timestamp",
+            "description": "returns the timestamp of the flatfield"
+        },
+        {
+            "path": "lambda/5/frame_depth",
+            "description": "defines the frame depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "lambda/5/frame_height",
+            "description": "returns the frame height in pixels"
+        },
+        {
+            "path": "lambda/5/frame_width",
+            "description": "returns the frame width in pixels"
+        },
+        {
+            "path": "lambda/5/frames_queued",
+            "description": "returns the number of queued frames"
+        },
+        {
+            "path": "lambda/5/humidity",
+            "description": "returns the measured humidity from a detector module"
+        },
+        {
+            "path": "lambda/5/interpolation",
+            "description": "enables/disables the interpolation with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/5/interpolation_enabled",
+            "description": "returns true if interpolation of extra large pixels is enabled, false otherwise"
+        },
+        {
+            "path": "lambda/5/max_frames",
+            "description": "defines the maximum number of frames that fit into the RAM buffer"
+        },
+        {
+            "path": "lambda/5/n_connectors",
+            "description": "returns the number of connected sensors"
+        },
+        {
+            "path": "lambda/5/n_subframes",
+            "description": "returns the number of subframes"
+        },
+        {
+            "path": "lambda/5/pixel_mask",
+            "description": "returns the base64 encoded pixel mask of a module"
+        },
+        {
+            "path": "lambda/5/pixel_mask_enabled",
+            "description": "returns true if a pixel mask is applied, false otherwise"
+        },
+        {
+            "path": "lambda/5/position",
+            "description": "returns the module position [x,y,z]"
+        },
+        {
+            "path": "lambda/5/ram_allocated",
+            "description": "returns true if ram is allocated, false otherwise"
+        },
+        {
+            "path": "lambda/5/rotation",
+            "description": "returns the module rotation [alpha, beta, gamma]"
+        },
+        {
+            "path": "lambda/5/saturation_threshold",
+            "description": "defines the actual saturation threshold in counts per second per pixel"
+        },
+        {
+            "path": "lambda/5/sensor_current",
+            "description": "returns the measured sensor current from a detector module"
+        },
+        {
+            "path": "lambda/5/shuffle_mode",
+            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+        },
+        {
+            "path": "lambda/5/status",
+            "description": "returns the module status 'busy', 'ready' or 'connected'"
+        },
+        {
+            "path": "lambda/5/temperature",
+            "description": "returns the measured temperatures from a detector module"
+        },
+        {
+            "path": "lambda/5/voltage",
+            "description": "returns the current high voltage in V"
+        },
+        {
+            "path": "lambda/6/chip_ids",
+            "description": "returns a list of chip ids of the corresponding module"
+        },
+        {
+            "path": "lambda/6/compression_level",
+            "description": "defines the compression level from '1' to '4'"
+        },
+        {
+            "path": "lambda/6/compressor",
+            "description": "defines the compressor 'zlib', 'blosc' or 'none'"
+        },
+        {
+            "path": "lambda/6/features",
+            "description": "returns the supported firmware features"
+        },
+        {
+            "path": "lambda/6/firmware_version",
+            "description": "returns the firmware version in 'major.minor.patch' order"
+        },
+        {
+            "path": "lambda/6/flatfield",
+            "description": "returns the flatfield data"
+        },
+        {
+            "path": "lambda/6/flatfield_author",
+            "description": "returns the author of the flatfield"
+        },
+        {
+            "path": "lambda/6/flatfield_enabled",
+            "description": "returns true if a flatfield is applied, false otherwise"
+        },
+        {
+            "path": "lambda/6/flatfield_error",
+            "description": "returns the error of the flatfield"
+        },
+        {
+            "path": "lambda/6/flatfield_status",
+            "description": "returns the status of the latest generate_flatfield command call"
+        },
+        {
+            "path": "lambda/6/flatfield_timestamp",
+            "description": "returns the timestamp of the flatfield"
+        },
+        {
+            "path": "lambda/6/frame_depth",
+            "description": "defines the frame depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "lambda/6/frame_height",
+            "description": "returns the frame height in pixels"
+        },
+        {
+            "path": "lambda/6/frame_width",
+            "description": "returns the frame width in pixels"
+        },
+        {
+            "path": "lambda/6/frames_queued",
+            "description": "returns the number of queued frames"
+        },
+        {
+            "path": "lambda/6/humidity",
+            "description": "returns the measured humidity from a detector module"
+        },
+        {
+            "path": "lambda/6/interpolation",
+            "description": "enables/disables the interpolation with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/6/interpolation_enabled",
+            "description": "returns true if interpolation of extra large pixels is enabled, false otherwise"
+        },
+        {
+            "path": "lambda/6/max_frames",
+            "description": "defines the maximum number of frames that fit into the RAM buffer"
+        },
+        {
+            "path": "lambda/6/n_connectors",
+            "description": "returns the number of connected sensors"
+        },
+        {
+            "path": "lambda/6/n_subframes",
+            "description": "returns the number of subframes"
+        },
+        {
+            "path": "lambda/6/pixel_mask",
+            "description": "returns the base64 encoded pixel mask of a module"
+        },
+        {
+            "path": "lambda/6/pixel_mask_enabled",
+            "description": "returns true if a pixel mask is applied, false otherwise"
+        },
+        {
+            "path": "lambda/6/position",
+            "description": "returns the module position [x,y,z]"
+        },
+        {
+            "path": "lambda/6/ram_allocated",
+            "description": "returns true if ram is allocated, false otherwise"
+        },
+        {
+            "path": "lambda/6/rotation",
+            "description": "returns the module rotation [alpha, beta, gamma]"
+        },
+        {
+            "path": "lambda/6/saturation_threshold",
+            "description": "defines the actual saturation threshold in counts per second per pixel"
+        },
+        {
+            "path": "lambda/6/sensor_current",
+            "description": "returns the measured sensor current from a detector module"
+        },
+        {
+            "path": "lambda/6/shuffle_mode",
+            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+        },
+        {
+            "path": "lambda/6/status",
+            "description": "returns the module status 'busy', 'ready' or 'connected'"
+        },
+        {
+            "path": "lambda/6/temperature",
+            "description": "returns the measured temperatures from a detector module"
+        },
+        {
+            "path": "lambda/6/voltage",
+            "description": "returns the current high voltage in V"
+        },
+        {
+            "path": "lambda/7/chip_ids",
+            "description": "returns a list of chip ids of the corresponding module"
+        },
+        {
+            "path": "lambda/7/compression_level",
+            "description": "defines the compression level from '1' to '4'"
+        },
+        {
+            "path": "lambda/7/compressor",
+            "description": "defines the compressor 'zlib', 'blosc' or 'none'"
+        },
+        {
+            "path": "lambda/7/features",
+            "description": "returns the supported firmware features"
+        },
+        {
+            "path": "lambda/7/firmware_version",
+            "description": "returns the firmware version in 'major.minor.patch' order"
+        },
+        {
+            "path": "lambda/7/flatfield",
+            "description": "returns the flatfield data"
+        },
+        {
+            "path": "lambda/7/flatfield_author",
+            "description": "returns the author of the flatfield"
+        },
+        {
+            "path": "lambda/7/flatfield_enabled",
+            "description": "returns true if a flatfield is applied, false otherwise"
+        },
+        {
+            "path": "lambda/7/flatfield_error",
+            "description": "returns the error of the flatfield"
+        },
+        {
+            "path": "lambda/7/flatfield_status",
+            "description": "returns the status of the latest generate_flatfield command call"
+        },
+        {
+            "path": "lambda/7/flatfield_timestamp",
+            "description": "returns the timestamp of the flatfield"
+        },
+        {
+            "path": "lambda/7/frame_depth",
+            "description": "defines the frame depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "lambda/7/frame_height",
+            "description": "returns the frame height in pixels"
+        },
+        {
+            "path": "lambda/7/frame_width",
+            "description": "returns the frame width in pixels"
+        },
+        {
+            "path": "lambda/7/frames_queued",
+            "description": "returns the number of queued frames"
+        },
+        {
+            "path": "lambda/7/humidity",
+            "description": "returns the measured humidity from a detector module"
+        },
+        {
+            "path": "lambda/7/interpolation",
+            "description": "enables/disables the interpolation with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/7/interpolation_enabled",
+            "description": "returns true if interpolation of extra large pixels is enabled, false otherwise"
+        },
+        {
+            "path": "lambda/7/max_frames",
+            "description": "defines the maximum number of frames that fit into the RAM buffer"
+        },
+        {
+            "path": "lambda/7/n_connectors",
+            "description": "returns the number of connected sensors"
+        },
+        {
+            "path": "lambda/7/n_subframes",
+            "description": "returns the number of subframes"
+        },
+        {
+            "path": "lambda/7/pixel_mask",
+            "description": "returns the base64 encoded pixel mask of a module"
+        },
+        {
+            "path": "lambda/7/pixel_mask_enabled",
+            "description": "returns true if a pixel mask is applied, false otherwise"
+        },
+        {
+            "path": "lambda/7/position",
+            "description": "returns the module position [x,y,z]"
+        },
+        {
+            "path": "lambda/7/ram_allocated",
+            "description": "returns true if ram is allocated, false otherwise"
+        },
+        {
+            "path": "lambda/7/rotation",
+            "description": "returns the module rotation [alpha, beta, gamma]"
+        },
+        {
+            "path": "lambda/7/saturation_threshold",
+            "description": "defines the actual saturation threshold in counts per second per pixel"
+        },
+        {
+            "path": "lambda/7/sensor_current",
+            "description": "returns the measured sensor current from a detector module"
+        },
+        {
+            "path": "lambda/7/shuffle_mode",
+            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+        },
+        {
+            "path": "lambda/7/status",
+            "description": "returns the module status 'busy', 'ready' or 'connected'"
+        },
+        {
+            "path": "lambda/7/temperature",
+            "description": "returns the measured temperatures from a detector module"
+        },
+        {
+            "path": "lambda/7/voltage",
+            "description": "returns the current high voltage in V"
+        },
+        {
+            "path": "lambda/8/chip_ids",
+            "description": "returns a list of chip ids of the corresponding module"
+        },
+        {
+            "path": "lambda/8/compression_level",
+            "description": "defines the compression level from '1' to '4'"
+        },
+        {
+            "path": "lambda/8/compressor",
+            "description": "defines the compressor 'zlib', 'blosc' or 'none'"
+        },
+        {
+            "path": "lambda/8/features",
+            "description": "returns the supported firmware features"
+        },
+        {
+            "path": "lambda/8/firmware_version",
+            "description": "returns the firmware version in 'major.minor.patch' order"
+        },
+        {
+            "path": "lambda/8/flatfield",
+            "description": "returns the flatfield data"
+        },
+        {
+            "path": "lambda/8/flatfield_author",
+            "description": "returns the author of the flatfield"
+        },
+        {
+            "path": "lambda/8/flatfield_enabled",
+            "description": "returns true if a flatfield is applied, false otherwise"
+        },
+        {
+            "path": "lambda/8/flatfield_error",
+            "description": "returns the error of the flatfield"
+        },
+        {
+            "path": "lambda/8/flatfield_status",
+            "description": "returns the status of the latest generate_flatfield command call"
+        },
+        {
+            "path": "lambda/8/flatfield_timestamp",
+            "description": "returns the timestamp of the flatfield"
+        },
+        {
+            "path": "lambda/8/frame_depth",
+            "description": "defines the frame depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "lambda/8/frame_height",
+            "description": "returns the frame height in pixels"
+        },
+        {
+            "path": "lambda/8/frame_width",
+            "description": "returns the frame width in pixels"
+        },
+        {
+            "path": "lambda/8/frames_queued",
+            "description": "returns the number of queued frames"
+        },
+        {
+            "path": "lambda/8/humidity",
+            "description": "returns the measured humidity from a detector module"
+        },
+        {
+            "path": "lambda/8/interpolation",
+            "description": "enables/disables the interpolation with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/8/interpolation_enabled",
+            "description": "returns true if interpolation of extra large pixels is enabled, false otherwise"
+        },
+        {
+            "path": "lambda/8/max_frames",
+            "description": "defines the maximum number of frames that fit into the RAM buffer"
+        },
+        {
+            "path": "lambda/8/n_connectors",
+            "description": "returns the number of connected sensors"
+        },
+        {
+            "path": "lambda/8/n_subframes",
+            "description": "returns the number of subframes"
+        },
+        {
+            "path": "lambda/8/pixel_mask",
+            "description": "returns the base64 encoded pixel mask of a module"
+        },
+        {
+            "path": "lambda/8/pixel_mask_enabled",
+            "description": "returns true if a pixel mask is applied, false otherwise"
+        },
+        {
+            "path": "lambda/8/position",
+            "description": "returns the module position [x,y,z]"
+        },
+        {
+            "path": "lambda/8/ram_allocated",
+            "description": "returns true if ram is allocated, false otherwise"
+        },
+        {
+            "path": "lambda/8/rotation",
+            "description": "returns the module rotation [alpha, beta, gamma]"
+        },
+        {
+            "path": "lambda/8/saturation_threshold",
+            "description": "defines the actual saturation threshold in counts per second per pixel"
+        },
+        {
+            "path": "lambda/8/sensor_current",
+            "description": "returns the measured sensor current from a detector module"
+        },
+        {
+            "path": "lambda/8/shuffle_mode",
+            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+        },
+        {
+            "path": "lambda/8/status",
+            "description": "returns the module status 'busy', 'ready' or 'connected'"
+        },
+        {
+            "path": "lambda/8/temperature",
+            "description": "returns the measured temperatures from a detector module"
+        },
+        {
+            "path": "lambda/8/voltage",
+            "description": "returns the current high voltage in V"
+        },
+        {
+            "path": "lambda/9/chip_ids",
+            "description": "returns a list of chip ids of the corresponding module"
+        },
+        {
+            "path": "lambda/9/compression_level",
+            "description": "defines the compression level from '1' to '4'"
+        },
+        {
+            "path": "lambda/9/compressor",
+            "description": "defines the compressor 'zlib', 'blosc' or 'none'"
+        },
+        {
+            "path": "lambda/9/features",
+            "description": "returns the supported firmware features"
+        },
+        {
+            "path": "lambda/9/firmware_version",
+            "description": "returns the firmware version in 'major.minor.patch' order"
+        },
+        {
+            "path": "lambda/9/flatfield",
+            "description": "returns the flatfield data"
+        },
+        {
+            "path": "lambda/9/flatfield_author",
+            "description": "returns the author of the flatfield"
+        },
+        {
+            "path": "lambda/9/flatfield_enabled",
+            "description": "returns true if a flatfield is applied, false otherwise"
+        },
+        {
+            "path": "lambda/9/flatfield_error",
+            "description": "returns the error of the flatfield"
+        },
+        {
+            "path": "lambda/9/flatfield_status",
+            "description": "returns the status of the latest generate_flatfield command call"
+        },
+        {
+            "path": "lambda/9/flatfield_timestamp",
+            "description": "returns the timestamp of the flatfield"
+        },
+        {
+            "path": "lambda/9/frame_depth",
+            "description": "defines the frame depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "lambda/9/frame_height",
+            "description": "returns the frame height in pixels"
+        },
+        {
+            "path": "lambda/9/frame_width",
+            "description": "returns the frame width in pixels"
+        },
+        {
+            "path": "lambda/9/frames_queued",
+            "description": "returns the number of queued frames"
+        },
+        {
+            "path": "lambda/9/humidity",
+            "description": "returns the measured humidity from a detector module"
+        },
+        {
+            "path": "lambda/9/interpolation",
+            "description": "enables/disables the interpolation with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/9/interpolation_enabled",
+            "description": "returns true if interpolation of extra large pixels is enabled, false otherwise"
+        },
+        {
+            "path": "lambda/9/max_frames",
+            "description": "defines the maximum number of frames that fit into the RAM buffer"
+        },
+        {
+            "path": "lambda/9/n_connectors",
+            "description": "returns the number of connected sensors"
+        },
+        {
+            "path": "lambda/9/n_subframes",
+            "description": "returns the number of subframes"
+        },
+        {
+            "path": "lambda/9/pixel_mask",
+            "description": "returns the base64 encoded pixel mask of a module"
+        },
+        {
+            "path": "lambda/9/pixel_mask_enabled",
+            "description": "returns true if a pixel mask is applied, false otherwise"
+        },
+        {
+            "path": "lambda/9/position",
+            "description": "returns the module position [x,y,z]"
+        },
+        {
+            "path": "lambda/9/ram_allocated",
+            "description": "returns true if ram is allocated, false otherwise"
+        },
+        {
+            "path": "lambda/9/rotation",
+            "description": "returns the module rotation [alpha, beta, gamma]"
+        },
+        {
+            "path": "lambda/9/saturation_threshold",
+            "description": "defines the actual saturation threshold in counts per second per pixel"
+        },
+        {
+            "path": "lambda/9/sensor_current",
+            "description": "returns the measured sensor current from a detector module"
+        },
+        {
+            "path": "lambda/9/shuffle_mode",
+            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+        },
+        {
+            "path": "lambda/9/status",
+            "description": "returns the module status 'busy', 'ready' or 'connected'"
+        },
+        {
+            "path": "lambda/9/temperature",
+            "description": "returns the measured temperatures from a detector module"
+        },
+        {
+            "path": "lambda/9/voltage",
+            "description": "returns the current high voltage in V"
+        },
+        {
+            "path": "lambda/10/chip_ids",
+            "description": "returns a list of chip ids of the corresponding module"
+        },
+        {
+            "path": "lambda/10/compression_level",
+            "description": "defines the compression level from '1' to '4'"
+        },
+        {
+            "path": "lambda/10/compressor",
+            "description": "defines the compressor 'zlib', 'blosc' or 'none'"
+        },
+        {
+            "path": "lambda/10/features",
+            "description": "returns the supported firmware features"
+        },
+        {
+            "path": "lambda/10/firmware_version",
+            "description": "returns the firmware version in 'major.minor.patch' order"
+        },
+        {
+            "path": "lambda/10/flatfield",
+            "description": "returns the flatfield data"
+        },
+        {
+            "path": "lambda/10/flatfield_author",
+            "description": "returns the author of the flatfield"
+        },
+        {
+            "path": "lambda/10/flatfield_enabled",
+            "description": "returns true if a flatfield is applied, false otherwise"
+        },
+        {
+            "path": "lambda/10/flatfield_error",
+            "description": "returns the error of the flatfield"
+        },
+        {
+            "path": "lambda/10/flatfield_status",
+            "description": "returns the status of the latest generate_flatfield command call"
+        },
+        {
+            "path": "lambda/10/flatfield_timestamp",
+            "description": "returns the timestamp of the flatfield"
+        },
+        {
+            "path": "lambda/10/frame_depth",
+            "description": "defines the frame depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "lambda/10/frame_height",
+            "description": "returns the frame height in pixels"
+        },
+        {
+            "path": "lambda/10/frame_width",
+            "description": "returns the frame width in pixels"
+        },
+        {
+            "path": "lambda/10/frames_queued",
+            "description": "returns the number of queued frames"
+        },
+        {
+            "path": "lambda/10/humidity",
+            "description": "returns the measured humidity from a detector module"
+        },
+        {
+            "path": "lambda/10/interpolation",
+            "description": "enables/disables the interpolation with 'ON' or 'OFF'"
+        },
+        {
+            "path": "lambda/10/interpolation_enabled",
+            "description": "returns true if interpolation of extra large pixels is enabled, false otherwise"
+        },
+        {
+            "path": "lambda/10/max_frames",
+            "description": "defines the maximum number of frames that fit into the RAM buffer"
+        },
+        {
+            "path": "lambda/10/n_connectors",
+            "description": "returns the number of connected sensors"
+        },
+        {
+            "path": "lambda/10/n_subframes",
+            "description": "returns the number of subframes"
+        },
+        {
+            "path": "lambda/10/pixel_mask",
+            "description": "returns the base64 encoded pixel mask of a module"
+        },
+        {
+            "path": "lambda/10/pixel_mask_enabled",
+            "description": "returns true if a pixel mask is applied, false otherwise"
+        },
+        {
+            "path": "lambda/10/position",
+            "description": "returns the module position [x,y,z]"
+        },
+        {
+            "path": "lambda/10/ram_allocated",
+            "description": "returns true if ram is allocated, false otherwise"
+        },
+        {
+            "path": "lambda/10/rotation",
+            "description": "returns the module rotation [alpha, beta, gamma]"
+        },
+        {
+            "path": "lambda/10/saturation_threshold",
+            "description": "defines the actual saturation threshold in counts per second per pixel"
+        },
+        {
+            "path": "lambda/10/sensor_current",
+            "description": "returns the measured sensor current from a detector module"
+        },
+        {
+            "path": "lambda/10/shuffle_mode",
+            "description": "defines the shuffle mode 'NO_SHUFFLE', 'AUTO_SHUFFLE', 'BIT_SHUFFLE' or 'BYTE_SHUFFLE'"
+        },
+        {
+            "path": "lambda/10/status",
+            "description": "returns the module status 'busy', 'ready' or 'connected'"
+        },
+        {
+            "path": "lambda/10/temperature",
+            "description": "returns the measured temperatures from a detector module"
+        },
+        {
+            "path": "lambda/10/voltage",
+            "description": "returns the current high voltage in V"
+        },
+        {
+            "path": "port-1/frame_depth",
+            "description": "defines the frame depth '1', '6', '12' or '24' bit"
+        },
+        {
+            "path": "port-1/frame_height",
+            "description": "returns the frame height in pixels"
+        },
+        {
+            "path": "port-1/frame_width",
+            "description": "returns the frame width in pixels"
+        },
+        {
+            "path": "port-1/frames_queued",
+            "description": "returns the number of queued frames"
+        },
+        {
+            "path": "port-1/pixel_mask",
+            "description": "returns the base64 encoded pixel mask"
+        }
+    ],
+    "api/v1/devices/detector/variables?path=lambda/beam_energy": {
+        "path": "lambda/beam_energy",
+        "value": 0.0
+    },
+    "api/v1/devices/detector/variables?path=lambda/bit_depth": {
+        "path": "lambda/bit_depth",
+        "value": 12
+    },
+    "api/v1/devices/detector/variables?path=lambda/charge_summing": {
+        "path": "lambda/charge_summing",
+        "value": "OFF"
+    },
+    "api/v1/devices/detector/variables?path=lambda/compression_level": {
+        "path": "lambda/compression_level",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/compressor": {
+        "path": "lambda/compressor",
+        "value": "none"
+    },
+    "api/v1/devices/detector/variables?path=lambda/counter_mode": {
+        "path": "lambda/counter_mode",
+        "value": "SINGLE"
+    },
+    "api/v1/devices/detector/variables?path=lambda/countrate_correction": {
+        "path": "lambda/countrate_correction",
+        "value": "ON"
+    },
+    "api/v1/devices/detector/variables?path=lambda/countrate_correction_enabled": {
+        "path": "lambda/countrate_correction_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/flatfield_correction": {
+        "path": "lambda/flatfield_correction",
+        "value": "ON"
+    },
+    "api/v1/devices/detector/variables?path=lambda/flatfield_enabled": {
+        "path": "lambda/flatfield_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/gating_mode": {
+        "path": "lambda/gating_mode",
+        "value": "OFF"
+    },
+    "api/v1/devices/detector/variables?path=lambda/n_frames": {
+        "path": "lambda/n_frames",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/n_modules": {
+        "path": "lambda/n_modules",
+        "value": 10
+    },
+    "api/v1/devices/detector/variables?path=lambda/roi_rows": {
+        "path": "lambda/roi_rows",
+        "value": 256
+    },
+    "api/v1/devices/detector/variables?path=lambda/saturation_flag": {
+        "path": "lambda/saturation_flag",
+        "value": "OFF"
+    },
+    "api/v1/devices/detector/variables?path=lambda/saturation_flag_enabled": {
+        "path": "lambda/saturation_flag_enabled",
+        "value": false
+    },
+    "api/v1/devices/detector/variables?path=lambda/shuffle_mode": {
+        "path": "lambda/shuffle_mode",
+        "value": "NO_SHUFFLE"
+    },
+    "api/v1/devices/detector/variables?path=lambda/shutter_time": {
+        "path": "lambda/shutter_time",
+        "value": 1.0
+    },
+    "api/v1/devices/detector/variables?path=lambda/status": {
+        "path": "lambda/status",
+        "value": "ready"
+    },
+    "api/v1/devices/detector/variables?path=lambda/summed_frames": {
+        "path": "lambda/summed_frames",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/thresholds": {
+        "path": "lambda/thresholds",
+        "value": []
+    },
+    "api/v1/devices/detector/variables?path=lambda/trigger_mode": {
+        "path": "lambda/trigger_mode",
+        "value": "SOFTWARE"
+    },
+    "api/v1/devices/detector/variables?path=lambda/type": {
+        "path": "lambda/type",
+        "value": "Lambda"
+    },
+    "api/v1/devices/detector/variables?path=lambda/user_data": {
+        "path": "lambda/user_data",
+        "value": ""
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/chip_ids": {
+        "path": "lambda/1/chip_ids",
+        "value": [
+            "b37w17-D04,SAL,0x8004b144",
+            "b37w17-F02,SAL,0x8004b162",
+            "b37w17-I03,SAL,0x8004b193",
+            "b39w3-C06,SAL,0x8004e336",
+            "b37w9-B07,SAL,0x8004a927",
+            "b37w9-K08,SAL,0x8004a9b8",
+            "b37w9-I08,SAL,0x8004a998",
+            "b37w9-L08,SAL,0x8004a9c8",
+            "b39w3-C05,SAL,0x8004e335",
+            "b37w17-E02,SAL,0x8004b152",
+            "b37w17-G03,SAL,0x8004b173",
+            "b37w17-F04,SAL,0x8004b164"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/compression_level": {
+        "path": "lambda/1/compression_level",
+        "value": 2
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/compressor": {
+        "path": "lambda/1/compressor",
+        "value": "none"
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/features": {
+        "path": "lambda/1/features",
+        "value": [
+            "FEAT_HV",
+            "FEAT_1_6_BIT",
+            "FEAT_EXTENDED_GATING"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/firmware_version": {
+        "path": "lambda/1/firmware_version",
+        "value": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]"
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/flatfield": {
+        "path": "lambda/1/flatfield",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/flatfield_author": {
+        "path": "lambda/1/flatfield_author",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/flatfield_enabled": {
+        "path": "lambda/1/flatfield_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/flatfield_error": {
+        "path": "lambda/1/flatfield_error",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/flatfield_status": {
+        "path": "lambda/1/flatfield_status",
+        "value": "No flatfield measurement started"
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/flatfield_timestamp": {
+        "path": "lambda/1/flatfield_timestamp",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/frame_depth": {
+        "path": "lambda/1/frame_depth",
+        "value": 12
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/frame_height": {
+        "path": "lambda/1/frame_height",
+        "value": 516
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/frame_width": {
+        "path": "lambda/1/frame_width",
+        "value": 1554
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/frames_queued": {
+        "path": "lambda/1/frames_queued",
+        "value": 0
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/humidity": {
+        "path": "lambda/1/humidity",
+        "value": 5.351334
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/interpolation": {
+        "path": "lambda/1/interpolation",
+        "value": "ON"
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/interpolation_enabled": {
+        "path": "lambda/1/interpolation_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/max_frames": {
+        "path": "lambda/1/max_frames",
+        "value": 4480
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/n_connectors": {
+        "path": "lambda/1/n_connectors",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/n_subframes": {
+        "path": "lambda/1/n_subframes",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/pixel_mask": {
+        "path": "lambda/1/pixel_mask",
+        "value": "AAAAAAAAAA"
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/pixel_mask_enabled": {
+        "path": "lambda/1/pixel_mask_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/position": {
+        "path": "lambda/1/position",
+        "value": [
+            0.0,
+            2.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/ram_allocated": {
+        "path": "lambda/1/ram_allocated",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/rotation": {
+        "path": "lambda/1/rotation",
+        "value": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/saturation_threshold": {
+        "path": "lambda/1/saturation_threshold",
+        "value": 200000
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/sensor_current": {
+        "path": "lambda/1/sensor_current",
+        "value": 71.932785
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/shuffle_mode": {
+        "path": "lambda/1/shuffle_mode",
+        "value": "NO_SHUFFLE"
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/status": {
+        "path": "lambda/1/status",
+        "value": "ready"
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/temperature": {
+        "path": "lambda/1/temperature",
+        "value": [
+            53.0625,
+            53.29628,
+            42.106125
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/1/voltage": {
+        "path": "lambda/1/voltage",
+        "value": 298.116302
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/chip_ids": {
+        "path": "lambda/2/chip_ids",
+        "value": [
+            "b34w7-E06,SAL,0x80044756",
+            "b34w7-G06,SAL,0x80044776",
+            "b34w7-B05,SAL,0x80044725",
+            "b34w7-D03,SAL,0x80044743",
+            "b34w7-I04,SAL,0x80044794",
+            "b34w7-J05,SAL,0x800447a5",
+            "b34w7-H05,SAL,0x80044785",
+            "b34w7-G04,SAL,0x80044774",
+            "b34w7-K04,SAL,0x800447b4",
+            "b34w7-G05,SAL,0x80044775",
+            "b34w7-L06,SAL,0x800447c6",
+            "b34w7-F06,SAL,0x80044766"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/compression_level": {
+        "path": "lambda/2/compression_level",
+        "value": 2
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/compressor": {
+        "path": "lambda/2/compressor",
+        "value": "none"
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/features": {
+        "path": "lambda/2/features",
+        "value": [
+            "FEAT_HV",
+            "FEAT_1_6_BIT",
+            "FEAT_EXTENDED_GATING"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/firmware_version": {
+        "path": "lambda/2/firmware_version",
+        "value": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]"
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/flatfield": {
+        "path": "lambda/2/flatfield",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/flatfield_author": {
+        "path": "lambda/2/flatfield_author",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/flatfield_enabled": {
+        "path": "lambda/2/flatfield_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/flatfield_error": {
+        "path": "lambda/2/flatfield_error",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/flatfield_status": {
+        "path": "lambda/2/flatfield_status",
+        "value": "failed to find data socket for detector lambda and module 2"
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/flatfield_timestamp": {
+        "path": "lambda/2/flatfield_timestamp",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/frame_depth": {
+        "path": "lambda/2/frame_depth",
+        "value": 12
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/frame_height": {
+        "path": "lambda/2/frame_height",
+        "value": 516
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/frame_width": {
+        "path": "lambda/2/frame_width",
+        "value": 1554
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/frames_queued": {
+        "path": "lambda/2/frames_queued",
+        "value": 0
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/humidity": {
+        "path": "lambda/2/humidity",
+        "value": 28.209351
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/interpolation": {
+        "path": "lambda/2/interpolation",
+        "value": "ON"
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/interpolation_enabled": {
+        "path": "lambda/2/interpolation_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/max_frames": {
+        "path": "lambda/2/max_frames",
+        "value": 4480
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/n_connectors": {
+        "path": "lambda/2/n_connectors",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/n_subframes": {
+        "path": "lambda/2/n_subframes",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/pixel_mask": {
+        "path": "lambda/2/pixel_mask",
+        "value": "AAAAAAAAAA"
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/pixel_mask_enabled": {
+        "path": "lambda/2/pixel_mask_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/position": {
+        "path": "lambda/2/position",
+        "value": [
+            0.0,
+            655.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/ram_allocated": {
+        "path": "lambda/2/ram_allocated",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/rotation": {
+        "path": "lambda/2/rotation",
+        "value": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/saturation_threshold": {
+        "path": "lambda/2/saturation_threshold",
+        "value": 200000
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/sensor_current": {
+        "path": "lambda/2/sensor_current",
+        "value": 20.066177
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/shuffle_mode": {
+        "path": "lambda/2/shuffle_mode",
+        "value": "NO_SHUFFLE"
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/status": {
+        "path": "lambda/2/status",
+        "value": "ready"
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/temperature": {
+        "path": "lambda/2/temperature",
+        "value": [
+            53.5,
+            52.927155,
+            43.505371
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/2/voltage": {
+        "path": "lambda/2/voltage",
+        "value": 298.087524
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/chip_ids": {
+        "path": "lambda/3/chip_ids",
+        "value": [
+            "b39w11-F06,SAL,0x8004eb66",
+            "b39w11-G06,SAL,0x8004eb76",
+            "b39w10-H04,SAL,0x8004ea84",
+            "b39w10-E06,SAL,0x8004ea56",
+            "b39w8-F03,SAL,0x8004e863",
+            "b39w8-E03,SAL,0x8004e853",
+            "b39w8-J03,SAL,0x8004e8a3",
+            "b39w8-F02,SAL,0x8004e862",
+            "b39w10-J07,SAL,0x8004eaa7",
+            "b39w10-B09,SAL,0x8004ea29",
+            "b39w11-D06,SAL,0x8004eb46",
+            "b39w11-C06,SAL,0x8004eb36"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/compression_level": {
+        "path": "lambda/3/compression_level",
+        "value": 2
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/compressor": {
+        "path": "lambda/3/compressor",
+        "value": "none"
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/features": {
+        "path": "lambda/3/features",
+        "value": [
+            "FEAT_HV",
+            "FEAT_1_6_BIT",
+            "FEAT_EXTENDED_GATING"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/firmware_version": {
+        "path": "lambda/3/firmware_version",
+        "value": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]"
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/flatfield": {
+        "path": "lambda/3/flatfield",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/flatfield_author": {
+        "path": "lambda/3/flatfield_author",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/flatfield_enabled": {
+        "path": "lambda/3/flatfield_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/flatfield_error": {
+        "path": "lambda/3/flatfield_error",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/flatfield_status": {
+        "path": "lambda/3/flatfield_status",
+        "value": "failed to find data socket for detector lambda and module 3"
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/flatfield_timestamp": {
+        "path": "lambda/3/flatfield_timestamp",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/frame_depth": {
+        "path": "lambda/3/frame_depth",
+        "value": 12
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/frame_height": {
+        "path": "lambda/3/frame_height",
+        "value": 516
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/frame_width": {
+        "path": "lambda/3/frame_width",
+        "value": 1554
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/frames_queued": {
+        "path": "lambda/3/frames_queued",
+        "value": 0
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/humidity": {
+        "path": "lambda/3/humidity",
+        "value": 11.551071
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/interpolation": {
+        "path": "lambda/3/interpolation",
+        "value": "ON"
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/interpolation_enabled": {
+        "path": "lambda/3/interpolation_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/max_frames": {
+        "path": "lambda/3/max_frames",
+        "value": 4480
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/n_connectors": {
+        "path": "lambda/3/n_connectors",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/n_subframes": {
+        "path": "lambda/3/n_subframes",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/pixel_mask": {
+        "path": "lambda/3/pixel_mask",
+        "value": "AAAAAAAAAA"
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/pixel_mask_enabled": {
+        "path": "lambda/3/pixel_mask_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/position": {
+        "path": "lambda/3/position",
+        "value": [
+            0.0,
+            1306.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/ram_allocated": {
+        "path": "lambda/3/ram_allocated",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/rotation": {
+        "path": "lambda/3/rotation",
+        "value": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/saturation_threshold": {
+        "path": "lambda/3/saturation_threshold",
+        "value": 200000
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/sensor_current": {
+        "path": "lambda/3/sensor_current",
+        "value": 0.0
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/shuffle_mode": {
+        "path": "lambda/3/shuffle_mode",
+        "value": "NO_SHUFFLE"
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/status": {
+        "path": "lambda/3/status",
+        "value": "ready"
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/temperature": {
+        "path": "lambda/3/temperature",
+        "value": [
+            57.9375,
+            56.003174,
+            46.480118
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/3/voltage": {
+        "path": "lambda/3/voltage",
+        "value": 0.0
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/chip_ids": {
+        "path": "lambda/4/chip_ids",
+        "value": [
+            "b39w4-H05,SAL,0x8004e485",
+            "b39w4-J05,SAL,0x8004e4a5",
+            "b39w4-B04,SAL,0x8004e424",
+            "b39w10-D06,SAL,0x8004ea46",
+            "b39w11-H08,SAL,0x8004eb88",
+            "b39w11-G08,SAL,0x8004eb78",
+            "b39w11-K08,SAL,0x8004ebb8",
+            "b39w11-L08,SAL,0x8004ebc8",
+            "b39w10-I06,SAL,0x8004ea96",
+            "b39w4-E04,SAL,0x8004e454",
+            "b39w4-K05,SAL,0x8004e4b5",
+            "b39w4-I05,SAL,0x8004e495"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/compression_level": {
+        "path": "lambda/4/compression_level",
+        "value": 2
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/compressor": {
+        "path": "lambda/4/compressor",
+        "value": "none"
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/features": {
+        "path": "lambda/4/features",
+        "value": [
+            "FEAT_HV",
+            "FEAT_1_6_BIT",
+            "FEAT_EXTENDED_GATING"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/firmware_version": {
+        "path": "lambda/4/firmware_version",
+        "value": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]"
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/flatfield": {
+        "path": "lambda/4/flatfield",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/flatfield_author": {
+        "path": "lambda/4/flatfield_author",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/flatfield_enabled": {
+        "path": "lambda/4/flatfield_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/flatfield_error": {
+        "path": "lambda/4/flatfield_error",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/flatfield_status": {
+        "path": "lambda/4/flatfield_status",
+        "value": "failed to find data socket for detector lambda and module 4"
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/flatfield_timestamp": {
+        "path": "lambda/4/flatfield_timestamp",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/frame_depth": {
+        "path": "lambda/4/frame_depth",
+        "value": 12
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/frame_height": {
+        "path": "lambda/4/frame_height",
+        "value": 516
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/frame_width": {
+        "path": "lambda/4/frame_width",
+        "value": 1554
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/frames_queued": {
+        "path": "lambda/4/frames_queued",
+        "value": 0
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/humidity": {
+        "path": "lambda/4/humidity",
+        "value": 12.739746
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/interpolation": {
+        "path": "lambda/4/interpolation",
+        "value": "ON"
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/interpolation_enabled": {
+        "path": "lambda/4/interpolation_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/max_frames": {
+        "path": "lambda/4/max_frames",
+        "value": 4480
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/n_connectors": {
+        "path": "lambda/4/n_connectors",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/n_subframes": {
+        "path": "lambda/4/n_subframes",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/pixel_mask": {
+        "path": "lambda/4/pixel_mask",
+        "value": "AAAAAAAAAA"
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/pixel_mask_enabled": {
+        "path": "lambda/4/pixel_mask_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/position": {
+        "path": "lambda/4/position",
+        "value": [
+            1.0,
+            1958.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/ram_allocated": {
+        "path": "lambda/4/ram_allocated",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/rotation": {
+        "path": "lambda/4/rotation",
+        "value": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/saturation_threshold": {
+        "path": "lambda/4/saturation_threshold",
+        "value": 200000
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/sensor_current": {
+        "path": "lambda/4/sensor_current",
+        "value": 35.782593
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/shuffle_mode": {
+        "path": "lambda/4/shuffle_mode",
+        "value": "NO_SHUFFLE"
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/status": {
+        "path": "lambda/4/status",
+        "value": "ready"
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/temperature": {
+        "path": "lambda/4/temperature",
+        "value": [
+            52.9375,
+            59.20224,
+            44.378571
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/4/voltage": {
+        "path": "lambda/4/voltage",
+        "value": 295.873962
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/chip_ids": {
+        "path": "lambda/5/chip_ids",
+        "value": [
+            "b39w1-H10,SAL,0x8004e18a",
+            "b39w1-D07,SAL,0x8004e147",
+            "b39w1-J06,SAL,0x8004e1a6",
+            "b39w1-G08,SAL,0x8004e178",
+            "b39w1-D08,SAL,0x8004e148",
+            "b39w1-J07,SAL,0x8004e1a7",
+            "b39w1-L07,SAL,0x8004e1c7",
+            "b39w1-I07,SAL,0x8004e197",
+            "b39w1-F08,SAL,0x8004e168",
+            "b39w1-G05,SAL,0x8004e175",
+            "b39w1-E07,SAL,0x8004e157",
+            "b39w1-D09,SAL,0x8004e149"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/compression_level": {
+        "path": "lambda/5/compression_level",
+        "value": 2
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/compressor": {
+        "path": "lambda/5/compressor",
+        "value": "none"
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/features": {
+        "path": "lambda/5/features",
+        "value": [
+            "FEAT_HV",
+            "FEAT_1_6_BIT",
+            "FEAT_EXTENDED_GATING"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/firmware_version": {
+        "path": "lambda/5/firmware_version",
+        "value": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]"
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/flatfield": {
+        "path": "lambda/5/flatfield",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/flatfield_author": {
+        "path": "lambda/5/flatfield_author",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/flatfield_enabled": {
+        "path": "lambda/5/flatfield_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/flatfield_error": {
+        "path": "lambda/5/flatfield_error",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/flatfield_status": {
+        "path": "lambda/5/flatfield_status",
+        "value": "failed to find data socket for detector lambda and module 5"
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/flatfield_timestamp": {
+        "path": "lambda/5/flatfield_timestamp",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/frame_depth": {
+        "path": "lambda/5/frame_depth",
+        "value": 12
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/frame_height": {
+        "path": "lambda/5/frame_height",
+        "value": 516
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/frame_width": {
+        "path": "lambda/5/frame_width",
+        "value": 1554
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/frames_queued": {
+        "path": "lambda/5/frames_queued",
+        "value": 0
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/humidity": {
+        "path": "lambda/5/humidity",
+        "value": 13.739212
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/interpolation": {
+        "path": "lambda/5/interpolation",
+        "value": "ON"
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/interpolation_enabled": {
+        "path": "lambda/5/interpolation_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/max_frames": {
+        "path": "lambda/5/max_frames",
+        "value": 4480
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/n_connectors": {
+        "path": "lambda/5/n_connectors",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/n_subframes": {
+        "path": "lambda/5/n_subframes",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/pixel_mask": {
+        "path": "lambda/5/pixel_mask",
+        "value": "AAAAAAAAAA"
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/pixel_mask_enabled": {
+        "path": "lambda/5/pixel_mask_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/position": {
+        "path": "lambda/5/position",
+        "value": [
+            2.0,
+            2610.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/ram_allocated": {
+        "path": "lambda/5/ram_allocated",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/rotation": {
+        "path": "lambda/5/rotation",
+        "value": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/saturation_threshold": {
+        "path": "lambda/5/saturation_threshold",
+        "value": 200000
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/sensor_current": {
+        "path": "lambda/5/sensor_current",
+        "value": 52.34993
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/shuffle_mode": {
+        "path": "lambda/5/shuffle_mode",
+        "value": "NO_SHUFFLE"
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/status": {
+        "path": "lambda/5/status",
+        "value": "ready"
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/temperature": {
+        "path": "lambda/5/temperature",
+        "value": [
+            51.125,
+            51.450668,
+            42.899216
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/5/voltage": {
+        "path": "lambda/5/voltage",
+        "value": 296.908875
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/chip_ids": {
+        "path": "lambda/6/chip_ids",
+        "value": [
+            "b39w11-J05,SAL,0x8004eba5",
+            "b39w11-K04,SAL,0x8004ebb4",
+            "b39w10-H10,SAL,0x8004ea8a",
+            "b39w10-F07,SAL,0x8004ea67",
+            "b39w8-I04,SAL,0x8004e894",
+            "b39w8-D04,SAL,0x8004e844",
+            "b39w8-J04,SAL,0x8004e8a4",
+            "b39w8-K04,SAL,0x8004e8b4",
+            "b39w10-H07,SAL,0x8004ea87",
+            "b39w10-D11,SAL,0x8004ea4b",
+            "b39w11-D04,SAL,0x8004eb44",
+            "b39w11-L05,SAL,0x8004ebc5"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/compression_level": {
+        "path": "lambda/6/compression_level",
+        "value": 2
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/compressor": {
+        "path": "lambda/6/compressor",
+        "value": "none"
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/features": {
+        "path": "lambda/6/features",
+        "value": [
+            "FEAT_HV",
+            "FEAT_1_6_BIT",
+            "FEAT_EXTENDED_GATING"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/firmware_version": {
+        "path": "lambda/6/firmware_version",
+        "value": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]"
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/flatfield": {
+        "path": "lambda/6/flatfield",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/flatfield_author": {
+        "path": "lambda/6/flatfield_author",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/flatfield_enabled": {
+        "path": "lambda/6/flatfield_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/flatfield_error": {
+        "path": "lambda/6/flatfield_error",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/flatfield_status": {
+        "path": "lambda/6/flatfield_status",
+        "value": "failed to find data socket for detector lambda and module 6"
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/flatfield_timestamp": {
+        "path": "lambda/6/flatfield_timestamp",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/frame_depth": {
+        "path": "lambda/6/frame_depth",
+        "value": 12
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/frame_height": {
+        "path": "lambda/6/frame_height",
+        "value": 516
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/frame_width": {
+        "path": "lambda/6/frame_width",
+        "value": 1554
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/frames_queued": {
+        "path": "lambda/6/frames_queued",
+        "value": 0
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/humidity": {
+        "path": "lambda/6/humidity",
+        "value": 11.49614
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/interpolation": {
+        "path": "lambda/6/interpolation",
+        "value": "ON"
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/interpolation_enabled": {
+        "path": "lambda/6/interpolation_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/max_frames": {
+        "path": "lambda/6/max_frames",
+        "value": 4480
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/n_connectors": {
+        "path": "lambda/6/n_connectors",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/n_subframes": {
+        "path": "lambda/6/n_subframes",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/pixel_mask": {
+        "path": "lambda/6/pixel_mask",
+        "value": "AAAAAAAAAA"
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/pixel_mask_enabled": {
+        "path": "lambda/6/pixel_mask_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/position": {
+        "path": "lambda/6/position",
+        "value": [
+            1578.0,
+            2610.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/ram_allocated": {
+        "path": "lambda/6/ram_allocated",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/rotation": {
+        "path": "lambda/6/rotation",
+        "value": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/saturation_threshold": {
+        "path": "lambda/6/saturation_threshold",
+        "value": 200000
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/sensor_current": {
+        "path": "lambda/6/sensor_current",
+        "value": 0.0
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/shuffle_mode": {
+        "path": "lambda/6/shuffle_mode",
+        "value": "NO_SHUFFLE"
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/status": {
+        "path": "lambda/6/status",
+        "value": "ready"
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/temperature": {
+        "path": "lambda/6/temperature",
+        "value": [
+            56.25,
+            56.003174,
+            44.391922
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/6/voltage": {
+        "path": "lambda/6/voltage",
+        "value": 0.0
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/chip_ids": {
+        "path": "lambda/7/chip_ids",
+        "value": [
+            "b39w8-F01,SAL,0x8004e861",
+            "b39w8-A07,SAL,0x8004e817",
+            "b39w10-G03,SAL,0x8004ea73",
+            "b39w10-C09,SAL,0x8004ea39",
+            "b39w11-D09,SAL,0x8004eb49",
+            "b39w11-F10,SAL,0x8004eb6a",
+            "b39w11-E09,SAL,0x8004eb59",
+            "b39w11-F09,SAL,0x8004eb69",
+            "b39w10-J10,SAL,0x8004eaaa",
+            "b39w10-B05,SAL,0x8004ea25",
+            "b39w8-H11,SAL,0x8004e88b",
+            "b39w11-L04,SAL,0x8004ebc4"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/compression_level": {
+        "path": "lambda/7/compression_level",
+        "value": 2
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/compressor": {
+        "path": "lambda/7/compressor",
+        "value": "none"
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/features": {
+        "path": "lambda/7/features",
+        "value": [
+            "FEAT_HV",
+            "FEAT_1_6_BIT",
+            "FEAT_EXTENDED_GATING"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/firmware_version": {
+        "path": "lambda/7/firmware_version",
+        "value": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]"
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/flatfield": {
+        "path": "lambda/7/flatfield",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/flatfield_author": {
+        "path": "lambda/7/flatfield_author",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/flatfield_enabled": {
+        "path": "lambda/7/flatfield_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/flatfield_error": {
+        "path": "lambda/7/flatfield_error",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/flatfield_status": {
+        "path": "lambda/7/flatfield_status",
+        "value": "failed to find data socket for detector lambda and module 7"
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/flatfield_timestamp": {
+        "path": "lambda/7/flatfield_timestamp",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/frame_depth": {
+        "path": "lambda/7/frame_depth",
+        "value": 12
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/frame_height": {
+        "path": "lambda/7/frame_height",
+        "value": 516
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/frame_width": {
+        "path": "lambda/7/frame_width",
+        "value": 1554
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/frames_queued": {
+        "path": "lambda/7/frames_queued",
+        "value": 0
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/humidity": {
+        "path": "lambda/7/humidity",
+        "value": 9.668106
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/interpolation": {
+        "path": "lambda/7/interpolation",
+        "value": "ON"
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/interpolation_enabled": {
+        "path": "lambda/7/interpolation_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/max_frames": {
+        "path": "lambda/7/max_frames",
+        "value": 4480
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/n_connectors": {
+        "path": "lambda/7/n_connectors",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/n_subframes": {
+        "path": "lambda/7/n_subframes",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/pixel_mask": {
+        "path": "lambda/7/pixel_mask",
+        "value": "AAAAAAAAAA"
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/pixel_mask_enabled": {
+        "path": "lambda/7/pixel_mask_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/position": {
+        "path": "lambda/7/position",
+        "value": [
+            1580.0,
+            1960.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/ram_allocated": {
+        "path": "lambda/7/ram_allocated",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/rotation": {
+        "path": "lambda/7/rotation",
+        "value": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/saturation_threshold": {
+        "path": "lambda/7/saturation_threshold",
+        "value": 200000
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/sensor_current": {
+        "path": "lambda/7/sensor_current",
+        "value": 27.906876
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/shuffle_mode": {
+        "path": "lambda/7/shuffle_mode",
+        "value": "NO_SHUFFLE"
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/status": {
+        "path": "lambda/7/status",
+        "value": "ready"
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/temperature": {
+        "path": "lambda/7/temperature",
+        "value": [
+            53.25,
+            54.034531,
+            43.4039
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/7/voltage": {
+        "path": "lambda/7/voltage",
+        "value": 297.08136
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/chip_ids": {
+        "path": "lambda/8/chip_ids",
+        "value": [
+            "b39w5-J07,SAL,0x8004e5a7",
+            "b39w5-D05,SAL,0x8004e545",
+            "b39w5-K03,SAL,0x8004e5b3",
+            "b39w4-G10,SAL,0x8004e47a",
+            "b39w4-G02,SAL,0x8004e472",
+            "b39w4-J03,SAL,0x8004e4a3",
+            "b39w4-F03,SAL,0x8004e463",
+            "b39w4-E02,SAL,0x8004e452",
+            "b39w4-H02,SAL,0x8004e482",
+            "b39w5-J02,SAL,0x8004e5a2",
+            "b39w5-L04,SAL,0x8004e5c4",
+            "b39w5-H06,SAL,0x8004e586"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/compression_level": {
+        "path": "lambda/8/compression_level",
+        "value": 2
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/compressor": {
+        "path": "lambda/8/compressor",
+        "value": "none"
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/features": {
+        "path": "lambda/8/features",
+        "value": [
+            "FEAT_HV",
+            "FEAT_1_6_BIT",
+            "FEAT_EXTENDED_GATING"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/firmware_version": {
+        "path": "lambda/8/firmware_version",
+        "value": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]"
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/flatfield": {
+        "path": "lambda/8/flatfield",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/flatfield_author": {
+        "path": "lambda/8/flatfield_author",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/flatfield_enabled": {
+        "path": "lambda/8/flatfield_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/flatfield_error": {
+        "path": "lambda/8/flatfield_error",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/flatfield_status": {
+        "path": "lambda/8/flatfield_status",
+        "value": "failed to find data socket for detector lambda and module 8"
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/flatfield_timestamp": {
+        "path": "lambda/8/flatfield_timestamp",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/frame_depth": {
+        "path": "lambda/8/frame_depth",
+        "value": 12
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/frame_height": {
+        "path": "lambda/8/frame_height",
+        "value": 516
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/frame_width": {
+        "path": "lambda/8/frame_width",
+        "value": 1554
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/frames_queued": {
+        "path": "lambda/8/frames_queued",
+        "value": 0
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/humidity": {
+        "path": "lambda/8/humidity",
+        "value": 12.237732
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/interpolation": {
+        "path": "lambda/8/interpolation",
+        "value": "ON"
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/interpolation_enabled": {
+        "path": "lambda/8/interpolation_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/max_frames": {
+        "path": "lambda/8/max_frames",
+        "value": 4480
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/n_connectors": {
+        "path": "lambda/8/n_connectors",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/n_subframes": {
+        "path": "lambda/8/n_subframes",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/pixel_mask": {
+        "path": "lambda/8/pixel_mask",
+        "value": "AAAAAAAAAA"
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/pixel_mask_enabled": {
+        "path": "lambda/8/pixel_mask_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/position": {
+        "path": "lambda/8/position",
+        "value": [
+            1580.0,
+            1307.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/ram_allocated": {
+        "path": "lambda/8/ram_allocated",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/rotation": {
+        "path": "lambda/8/rotation",
+        "value": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/saturation_threshold": {
+        "path": "lambda/8/saturation_threshold",
+        "value": 200000
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/sensor_current": {
+        "path": "lambda/8/sensor_current",
+        "value": 238.426208
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/shuffle_mode": {
+        "path": "lambda/8/shuffle_mode",
+        "value": "NO_SHUFFLE"
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/status": {
+        "path": "lambda/8/status",
+        "value": "ready"
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/temperature": {
+        "path": "lambda/8/temperature",
+        "value": [
+            50.875,
+            54.157562,
+            43.427933
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/8/voltage": {
+        "path": "lambda/8/voltage",
+        "value": 297.31134
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/chip_ids": {
+        "path": "lambda/9/chip_ids",
+        "value": [
+            "b39w11-B07,SAL,0x8004eb27",
+            "b39w11-B06,SAL,0x8004eb26",
+            "b39w14-J06,SAL,0x8004eea6",
+            "b39w10-F04,SAL,0x8004ea64",
+            "b39w11-F05,SAL,0x8004eb65",
+            "b39w11-D05,SAL,0x8004eb45",
+            "b39w11-G05,SAL,0x8004eb75",
+            "b39w11-K05,SAL,0x8004ebb5",
+            "b39w10-J04,SAL,0x8004eaa4",
+            "b39w10-C03,SAL,0x8004ea33",
+            "b39w11-A07,SAL,0x8004eb17",
+            "b39w11-B08,SAL,0x8004eb28"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/compression_level": {
+        "path": "lambda/9/compression_level",
+        "value": 2
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/compressor": {
+        "path": "lambda/9/compressor",
+        "value": "none"
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/features": {
+        "path": "lambda/9/features",
+        "value": [
+            "FEAT_HV",
+            "FEAT_1_6_BIT",
+            "FEAT_EXTENDED_GATING"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/firmware_version": {
+        "path": "lambda/9/firmware_version",
+        "value": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]"
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/flatfield": {
+        "path": "lambda/9/flatfield",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/flatfield_author": {
+        "path": "lambda/9/flatfield_author",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/flatfield_enabled": {
+        "path": "lambda/9/flatfield_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/flatfield_error": {
+        "path": "lambda/9/flatfield_error",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/flatfield_status": {
+        "path": "lambda/9/flatfield_status",
+        "value": "failed to find data socket for detector lambda and module 9"
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/flatfield_timestamp": {
+        "path": "lambda/9/flatfield_timestamp",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/frame_depth": {
+        "path": "lambda/9/frame_depth",
+        "value": 12
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/frame_height": {
+        "path": "lambda/9/frame_height",
+        "value": 516
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/frame_width": {
+        "path": "lambda/9/frame_width",
+        "value": 1554
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/frames_queued": {
+        "path": "lambda/9/frames_queued",
+        "value": 0
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/humidity": {
+        "path": "lambda/9/humidity",
+        "value": 18.541229
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/interpolation": {
+        "path": "lambda/9/interpolation",
+        "value": "ON"
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/interpolation_enabled": {
+        "path": "lambda/9/interpolation_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/max_frames": {
+        "path": "lambda/9/max_frames",
+        "value": 4480
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/n_connectors": {
+        "path": "lambda/9/n_connectors",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/n_subframes": {
+        "path": "lambda/9/n_subframes",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/pixel_mask": {
+        "path": "lambda/9/pixel_mask",
+        "value": "AAAAAAAAAA"
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/pixel_mask_enabled": {
+        "path": "lambda/9/pixel_mask_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/position": {
+        "path": "lambda/9/position",
+        "value": [
+            1579.0,
+            654.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/ram_allocated": {
+        "path": "lambda/9/ram_allocated",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/rotation": {
+        "path": "lambda/9/rotation",
+        "value": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/saturation_threshold": {
+        "path": "lambda/9/saturation_threshold",
+        "value": 200000
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/sensor_current": {
+        "path": "lambda/9/sensor_current",
+        "value": 47.441437
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/shuffle_mode": {
+        "path": "lambda/9/shuffle_mode",
+        "value": "NO_SHUFFLE"
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/status": {
+        "path": "lambda/9/status",
+        "value": "ready"
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/temperature": {
+        "path": "lambda/9/temperature",
+        "value": [
+            50.9375,
+            51.081543,
+            41.948578
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/9/voltage": {
+        "path": "lambda/9/voltage",
+        "value": 298.518738
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/chip_ids": {
+        "path": "lambda/10/chip_ids",
+        "value": [
+            "b39w11-I07,SAL,0x8004eb97",
+            "b39w11-L07,SAL,0x8004ebc7",
+            "b39w10-G04,SAL,0x8004ea74",
+            "b39w10-D04,SAL,0x8004ea44",
+            "b39w11-H11,SAL,0x8004eb8b",
+            "b39w8-B04,SAL,0x8004e824",
+            "b39w11-D07,SAL,0x8004eb47",
+            "b39w11-I10,SAL,0x8004eb9a",
+            "b39w10-I05,SAL,0x8004ea95",
+            "b39w10-C05,SAL,0x8004ea35",
+            "b39w11-H07,SAL,0x8004eb87",
+            "b39w11-G07,SAL,0x8004eb77"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/compression_level": {
+        "path": "lambda/10/compression_level",
+        "value": 2
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/compressor": {
+        "path": "lambda/10/compressor",
+        "value": "none"
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/features": {
+        "path": "lambda/10/features",
+        "value": [
+            "FEAT_HV",
+            "FEAT_1_6_BIT",
+            "FEAT_EXTENDED_GATING"
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/firmware_version": {
+        "path": "lambda/10/firmware_version",
+        "value": "2.2.11 [ctrl=v0, data=v3, feat=0x16b]"
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/flatfield": {
+        "path": "lambda/10/flatfield",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/flatfield_author": {
+        "path": "lambda/10/flatfield_author",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/flatfield_enabled": {
+        "path": "lambda/10/flatfield_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/flatfield_error": {
+        "path": "lambda/10/flatfield_error",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/flatfield_status": {
+        "path": "lambda/10/flatfield_status",
+        "value": "failed to find data socket for detector lambda and module 10"
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/flatfield_timestamp": {
+        "path": "lambda/10/flatfield_timestamp",
+        "value": [
+            "",
+            ""
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/frame_depth": {
+        "path": "lambda/10/frame_depth",
+        "value": 12
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/frame_height": {
+        "path": "lambda/10/frame_height",
+        "value": 516
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/frame_width": {
+        "path": "lambda/10/frame_width",
+        "value": 1554
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/frames_queued": {
+        "path": "lambda/10/frames_queued",
+        "value": 0
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/humidity": {
+        "path": "lambda/10/humidity",
+        "value": 9.701675
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/interpolation": {
+        "path": "lambda/10/interpolation",
+        "value": "ON"
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/interpolation_enabled": {
+        "path": "lambda/10/interpolation_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/max_frames": {
+        "path": "lambda/10/max_frames",
+        "value": 4480
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/n_connectors": {
+        "path": "lambda/10/n_connectors",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/n_subframes": {
+        "path": "lambda/10/n_subframes",
+        "value": 1
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/pixel_mask": {
+        "path": "lambda/10/pixel_mask",
+        "value": "AAAAAAAAAA"
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/pixel_mask_enabled": {
+        "path": "lambda/10/pixel_mask_enabled",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/position": {
+        "path": "lambda/10/position",
+        "value": [
+            1581.0,
+            0.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/ram_allocated": {
+        "path": "lambda/10/ram_allocated",
+        "value": true
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/rotation": {
+        "path": "lambda/10/rotation",
+        "value": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/saturation_threshold": {
+        "path": "lambda/10/saturation_threshold",
+        "value": 200000
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/sensor_current": {
+        "path": "lambda/10/sensor_current",
+        "value": 256.827332
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/shuffle_mode": {
+        "path": "lambda/10/shuffle_mode",
+        "value": "NO_SHUFFLE"
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/status": {
+        "path": "lambda/10/status",
+        "value": "ready"
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/temperature": {
+        "path": "lambda/10/temperature",
+        "value": [
+            48.9375,
+            50.589386,
+            40.220871
+        ]
+    },
+    "api/v1/devices/detector/variables?path=lambda/10/voltage": {
+        "path": "lambda/10/voltage",
+        "value": 296.851379
+    },
+    "api/v1/devices/detector/variables?path=port-1/frame_depth": {
+        "path": "port-1/frame_depth",
+        "value": 12
+    },
+    "api/v1/devices/detector/variables?path=port-1/frame_height": {
+        "path": "port-1/frame_height",
+        "value": 3126
+    },
+    "api/v1/devices/detector/variables?path=port-1/frame_width": {
+        "path": "port-1/frame_width",
+        "value": 3135
+    },
+    "api/v1/devices/detector/variables?path=port-1/frames_queued": {
+        "path": "port-1/frames_queued",
+        "value": 0
+    },
+    "api/v1/devices/detector/variables?path=port-1/pixel_mask": {
+        "path": "port-1/pixel_mask",
+        "value": "AAAAAAAAAA"
+    },
+    "api/v1/devices/detector/commands": [
+        {
+            "path": "start",
+            "description": "starts an acquisition on all detectors"
+        },
+        {
+            "path": "stop",
+            "description": "stops an acquisition on all detectors"
+        },
+        {
+            "path": "reset",
+            "description": "resets all detectors"
+        },
+        {
+            "path": "generate_flatfield",
+            "description": "generates flatfield correction for all detectors"
+        },
+        {
+            "path": "lambda/start",
+            "description": "starts an acquisition on detector with id: lambda"
+        },
+        {
+            "path": "lambda/stop",
+            "description": "stops an acquisition on detector with id: lambda"
+        },
+        {
+            "path": "lambda/reset",
+            "description": "resets the detector with id: lambda"
+        },
+        {
+            "path": "lambda/generate_flatfield",
+            "description": "generates flatfield for detector with id: lambda"
+        }
+    ]
+}
