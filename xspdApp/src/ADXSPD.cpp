@@ -225,7 +225,7 @@ void ADXSPD::acquisitionThread() {
     // void* prevFrameBuffer = nullptr;
 
     int arrayCallbacks, decompress;
-    int collectedImages;
+    int collectedImages, summedFrames;
 
     void* zmqSubscriber = zmq_socket(this->zmqContext, ZMQ_SUB);
     int rc = zmq_connect(zmqSubscriber, this->pDetector->GetActiveDataPort()->GetURI().c_str());
@@ -718,12 +718,25 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             string endpoint;
             if (function == ADXSPD_BitDepth) {
                 actualValue = this->pDetector->SetVar<int>("bit_depth", value);
-                setIntegerParam(NDDataType, static_cast<int>(getDataTypeForBitDepth(actualValue)));
+                int summedFrames = this->pDetector->GetVar<int>("summed_frames");
+                if (summedFrames > 1) {
+                    // If summed frames > 1, libxsp will always return uint32 data regardless of bit depth, so set that here to avoid confusion
+                    setIntegerParam(NDDataType, NDUInt32);
+                } else {
+                    setIntegerParam(NDDataType, static_cast<int>(getDataTypeForBitDepth(actualValue)));
+                }
                 for (auto& module : this->modules) {
                     module->getMaxNumImages();
                 }
             } else if (function == ADXSPD_SummedFrames) {
                 actualValue = this->pDetector->SetVar<int>("summed_frames", value);
+                if (actualValue > 1) {
+                    // If summed frames > 1, libxsp will always return uint32 data regardless of bit depth, so set that here to avoid confusion
+                    setIntegerParam(NDDataType, NDUInt32);
+                } else {
+                    int bitDepth = static_cast<int>(this->pDetector->GetVar<int>("bit_depth"));
+                    setIntegerParam(NDDataType, static_cast<int>(getDataTypeForBitDepth(bitDepth)));
+                }
             } else if (function == ADXSPD_RoiRows) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<int>("roi_rows", value));
                 for (auto& module : this->modules) {
@@ -782,7 +795,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
     callParamCallbacks();
 
     if (status) {
-        ERR_TO_STATUS_ARGS("status=%d, parameter=%s, value=%d", status, paramName, value);
+        ERR_ARGS("status=%d, parameter=%s, value=%d", status, paramName, value);
         return asynError;
     } else {
         DEBUG_ARGS("parameter=%s value=%d", paramName, value);

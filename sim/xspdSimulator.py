@@ -3,8 +3,8 @@
 """
 FastAPI + ZMQ based simulator for the ADXSPD driver.
 
-Loads initial state from a JSON dump file (same format as
-xspdApp/tests/samples/xspd_sample_responses.json) and serves
+Loads initial state from a JSON dump file created with the
+generate_sample_response_json.py script and serves
 the REST API expected by the ADXSPD EPICS driver while streaming
 simulated image data over ZMQ.
 
