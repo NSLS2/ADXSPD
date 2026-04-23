@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Saved on 2026-04-22 15:01:56 by jwlodek-->
+<!--Saved on 2026-04-23 11:36:56 by jwlodek-->
 <display version="2.0.0">
   <name>ADXSPD Module - $(P)$(R)</name>
   <macros>
     <P>DEV:XSPD1:</P>
     <R>mod1:</R>
   </macros>
-  <width>955</width>
+  <width>1000</width>
   <height>625</height>
   <background_color>
     <color red="187" green="187" blue="187">
@@ -17,7 +17,7 @@
   <widget type="label" version="2.0.0">
     <name>Title</name>
     <text>XSPD Module - $(P)$(R)</text>
-    <width>955</width>
+    <width>1000</width>
     <height>25</height>
     <font>
       <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -38,7 +38,7 @@
   <widget type="group" version="3.0.0">
     <name>Temperature / Environment</name>
     <y>35</y>
-    <width>375</width>
+    <width>349</width>
     <height>180</height>
     <font>
       <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -196,9 +196,10 @@
   </widget>
   <widget type="group" version="3.0.0">
     <name>Sensor</name>
-    <y>225</y>
-    <width>375</width>
-    <height>155</height>
+    <x>724</x>
+    <y>487</y>
+    <width>271</width>
+    <height>137</height>
     <font>
       <font family="Liberation Sans" style="REGULAR" size="16.0">
       </font>
@@ -215,9 +216,8 @@
     <widget type="label" version="2.0.0">
       <name>Label_5</name>
       <text>Voltage (V)</text>
-      <x>5</x>
-      <y>24</y>
-      <width>140</width>
+      <y>20</y>
+      <width>82</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -231,8 +231,8 @@
     <widget type="textentry" version="3.0.0">
       <name>TextEntry_1</name>
       <pv_name>$(P)$(R)Voltage</pv_name>
-      <x>150</x>
-      <y>24</y>
+      <x>83</x>
+      <y>20</y>
       <width>60</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -246,8 +246,8 @@
     <widget type="textupdate" version="2.0.0">
       <name>TextUpdate_5</name>
       <pv_name>$(P)$(R)Voltage_RBV</pv_name>
-      <x>215</x>
-      <y>24</y>
+      <x>150</x>
+      <y>20</y>
       <width>80</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -266,7 +266,7 @@
       <name>Label_6</name>
       <text>Sensor Current (uA)</text>
       <x>5</x>
-      <y>49</y>
+      <y>45</y>
       <width>140</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -282,7 +282,7 @@
       <name>TextUpdate_6</name>
       <pv_name>$(P)$(R)SensorCurrent_RBV</pv_name>
       <x>150</x>
-      <y>49</y>
+      <y>45</y>
       <width>80</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -301,7 +301,7 @@
       <name>Label_7</name>
       <text>Saturation Thresh</text>
       <x>5</x>
-      <y>74</y>
+      <y>70</y>
       <width>140</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -317,7 +317,7 @@
       <name>TextUpdate_7</name>
       <pv_name>$(P)$(R)SaturationThresh_RBV</pv_name>
       <x>150</x>
-      <y>74</y>
+      <y>70</y>
       <width>80</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -335,8 +335,9 @@
   </widget>
   <widget type="group" version="3.0.0">
     <name>Position &amp; Orientation</name>
-    <y>390</y>
-    <width>375</width>
+    <x>724</x>
+    <y>257</y>
+    <width>271</width>
     <height>230</height>
     <font>
       <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -564,7 +565,7 @@
   </widget>
   <widget type="group" version="3.0.0">
     <name>Module Configuration</name>
-    <x>375</x>
+    <x>349</x>
     <y>35</y>
     <width>375</width>
     <height>157</height>
@@ -724,7 +725,7 @@
   </widget>
   <widget type="group" version="3.0.0">
     <name>Compression</name>
-    <x>375</x>
+    <x>349</x>
     <y>192</y>
     <width>375</width>
     <height>155</height>
@@ -864,7 +865,7 @@
   </widget>
   <widget type="group" version="3.0.0">
     <name>Flatfield &amp; Status</name>
-    <x>375</x>
+    <x>349</x>
     <y>347</y>
     <width>375</width>
     <height>261</height>
@@ -884,9 +885,8 @@
     <widget type="label" version="2.0.0">
       <name>Label_22</name>
       <text>Flatfield Enabled</text>
-      <x>5</x>
       <y>24</y>
-      <width>140</width>
+      <width>165</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -900,7 +900,7 @@
     <widget type="textupdate" version="2.0.0">
       <name>TextUpdate_22</name>
       <pv_name>$(P)$(R)FlatfieldEnabled_RBV</pv_name>
-      <x>150</x>
+      <x>170</x>
       <y>24</y>
       <width>80</width>
       <font>
@@ -919,9 +919,8 @@
     <widget type="label" version="2.0.0">
       <name>Label_23</name>
       <text>Low Thresh FF Author</text>
-      <x>5</x>
       <y>49</y>
-      <width>140</width>
+      <width>165</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -935,9 +934,9 @@
     <widget type="textupdate" version="2.0.0">
       <name>TextUpdate_23</name>
       <pv_name>$(P)$(R)LowThreshFfAuthor_RBV</pv_name>
-      <x>150</x>
+      <x>170</x>
       <y>49</y>
-      <width>80</width>
+      <width>165</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -954,9 +953,8 @@
     <widget type="label" version="2.0.0">
       <name>Label_24</name>
       <text>High Thresh FF Author</text>
-      <x>5</x>
       <y>74</y>
-      <width>140</width>
+      <width>165</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -970,9 +968,9 @@
     <widget type="textupdate" version="2.0.0">
       <name>TextUpdate_24</name>
       <pv_name>$(P)$(R)HighThreshFfAuthor_RBV</pv_name>
-      <x>150</x>
+      <x>170</x>
       <y>74</y>
-      <width>80</width>
+      <width>165</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -989,9 +987,8 @@
     <widget type="label" version="2.0.0">
       <name>Label_25</name>
       <text>Low Thresh FF Date</text>
-      <x>5</x>
       <y>99</y>
-      <width>140</width>
+      <width>165</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1005,9 +1002,9 @@
     <widget type="textupdate" version="2.0.0">
       <name>TextUpdate_25</name>
       <pv_name>$(P)$(R)LowThreshFfDate_RBV</pv_name>
-      <x>150</x>
+      <x>170</x>
       <y>99</y>
-      <width>80</width>
+      <width>165</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1024,9 +1021,8 @@
     <widget type="label" version="2.0.0">
       <name>Label_26</name>
       <text>High Thresh FF Date</text>
-      <x>5</x>
       <y>124</y>
-      <width>140</width>
+      <width>165</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1040,9 +1036,9 @@
     <widget type="textupdate" version="2.0.0">
       <name>TextUpdate_26</name>
       <pv_name>$(P)$(R)HighThreshFfDate_RBV</pv_name>
-      <x>150</x>
+      <x>170</x>
       <y>124</y>
-      <width>80</width>
+      <width>165</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1059,9 +1055,8 @@
     <widget type="label" version="2.0.0">
       <name>Label_21</name>
       <text>RAM Allocated</text>
-      <x>5</x>
       <y>149</y>
-      <width>140</width>
+      <width>165</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1075,7 +1070,7 @@
     <widget type="textupdate" version="2.0.0">
       <name>TextUpdate_21</name>
       <pv_name>$(P)$(R)RamAllocated_RBV</pv_name>
-      <x>150</x>
+      <x>170</x>
       <y>149</y>
       <width>80</width>
       <font>
@@ -1094,9 +1089,8 @@
     <widget type="label" version="2.0.0">
       <name>Label_27</name>
       <text>Frames Queued</text>
-      <x>5</x>
       <y>174</y>
-      <width>140</width>
+      <width>165</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1110,7 +1104,7 @@
     <widget type="textupdate" version="2.0.0">
       <name>TextUpdate_27</name>
       <pv_name>$(P)$(R)FramesQueued_RBV</pv_name>
-      <x>150</x>
+      <x>170</x>
       <y>174</y>
       <width>80</width>
       <font>
@@ -1129,9 +1123,9 @@
     <widget type="label" version="2.0.0">
       <name>Label_28</name>
       <text>Pixel Mask</text>
-      <x>5</x>
+      <x>38</x>
       <y>199</y>
-      <width>140</width>
+      <width>107</width>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="16.0">
         </font>
@@ -1190,9 +1184,9 @@
   </widget>
   <widget type="group" version="3.0.0">
     <name>Module Features</name>
-    <x>750</x>
+    <x>724</x>
     <y>35</y>
-    <width>205</width>
+    <width>229</width>
     <height>222</height>
     <font>
       <font family="Liberation Sans" style="REGULAR" size="16.0">
@@ -1210,7 +1204,7 @@
     <widget type="byte_monitor" version="2.0.0">
       <name>Byte Monitor</name>
       <pv_name>$(P)$(R)Features_RBV</pv_name>
-      <x>135</x>
+      <x>145</x>
       <y>25</y>
       <width>29</width>
       <height>150</height>
@@ -1222,6 +1216,7 @@
     <widget type="label" version="2.0.0">
       <name>Label_33</name>
       <text>High Voltage Ctrl</text>
+      <x>5</x>
       <y>30</y>
       <width>125</width>
       <font>
@@ -1237,6 +1232,7 @@
     <widget type="label" version="2.0.0">
       <name>Label_34</name>
       <text>1/6 Bit Readout</text>
+      <x>5</x>
       <y>60</y>
       <width>125</width>
       <font>
@@ -1252,6 +1248,7 @@
     <widget type="label" version="2.0.0">
       <name>Label_35</name>
       <text>Medipix DAC I/O</text>
+      <x>5</x>
       <y>90</y>
       <width>125</width>
       <font>
@@ -1267,6 +1264,7 @@
     <widget type="label" version="2.0.0">
       <name>Label_36</name>
       <text>Extended Gating</text>
+      <x>5</x>
       <y>120</y>
       <width>125</width>
       <font>
@@ -1282,6 +1280,7 @@
     <widget type="label" version="2.0.0">
       <name>Label_37</name>
       <text>ROI Readout</text>
+      <x>5</x>
       <y>150</y>
       <width>125</width>
       <font>
@@ -1293,6 +1292,713 @@
         </color>
       </background_color>
       <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+  </widget>
+  <widget type="group" version="3.0.0">
+    <name>Chips</name>
+    <y>215</y>
+    <width>349</width>
+    <height>380</height>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="16.0">
+      </font>
+    </font>
+    <foreground_color>
+      <color red="10" green="0" blue="184">
+      </color>
+    </foreground_color>
+    <background_color>
+      <color red="213" green="213" blue="213">
+      </color>
+    </background_color>
+    <transparent>true</transparent>
+    <rules>
+      <rule name="HeightMatchesChips" prop_id="height" out_exp="false">
+        <exp bool_exp="pvInt0==1">
+          <value>105</value>
+        </exp>
+        <exp bool_exp="pvInt0==2">
+          <value>130</value>
+        </exp>
+        <exp bool_exp="pvInt0==3">
+          <value>155</value>
+        </exp>
+        <exp bool_exp="pvInt0==4">
+          <value>180</value>
+        </exp>
+        <exp bool_exp="pvInt0==5">
+          <value>205</value>
+        </exp>
+        <exp bool_exp="pvInt0==6">
+          <value>230</value>
+        </exp>
+        <exp bool_exp="pvInt0==7">
+          <value>255</value>
+        </exp>
+        <exp bool_exp="pvInt0==8">
+          <value>280</value>
+        </exp>
+        <exp bool_exp="pvInt0==9">
+          <value>305</value>
+        </exp>
+        <exp bool_exp="pvInt0==10">
+          <value>330</value>
+        </exp>
+        <exp bool_exp="pvInt0==11">
+          <value>355</value>
+        </exp>
+        <exp bool_exp="pvInt0==12">
+          <value>380</value>
+        </exp>
+        <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+      </rule>
+    </rules>
+    <widget type="label" version="2.0.0">
+      <name>Label_38</name>
+      <text>Num Chips</text>
+      <x>32</x>
+      <y>20</y>
+      <width>80</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>TextUpdate_33</name>
+      <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+      <x>124</x>
+      <y>20</y>
+      <width>80</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <foreground_color>
+        <color red="10" green="0" blue="184">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>TextUpdate_34</name>
+      <pv_name>$(P)$(R)Chip1ID_RBV</pv_name>
+      <x>88</x>
+      <y>45</y>
+      <width>224</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <foreground_color>
+        <color red="10" green="0" blue="184">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 1">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_44</name>
+      <text>Chip 1</text>
+      <x>10</x>
+      <y>45</y>
+      <width>68</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 1">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_46</name>
+      <text>Chip 2</text>
+      <x>10</x>
+      <y>70</y>
+      <width>68</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 2">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>TextUpdate_41</name>
+      <pv_name>$(P)$(R)Chip2ID_RBV</pv_name>
+      <x>88</x>
+      <y>70</y>
+      <width>224</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <foreground_color>
+        <color red="10" green="0" blue="184">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 2">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_47</name>
+      <text>Chip 3</text>
+      <x>10</x>
+      <y>95</y>
+      <width>68</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 3">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>TextUpdate_42</name>
+      <pv_name>$(P)$(R)Chip3ID_RBV</pv_name>
+      <x>88</x>
+      <y>95</y>
+      <width>224</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <foreground_color>
+        <color red="10" green="0" blue="184">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 3">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_48</name>
+      <text>Chip 4</text>
+      <x>10</x>
+      <y>120</y>
+      <width>68</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 4">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>TextUpdate_43</name>
+      <pv_name>$(P)$(R)Chip4ID_RBV</pv_name>
+      <x>88</x>
+      <y>120</y>
+      <width>224</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <foreground_color>
+        <color red="10" green="0" blue="184">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 4">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_50</name>
+      <text>Chip 5</text>
+      <x>10</x>
+      <y>145</y>
+      <width>68</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 5">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>TextUpdate_45</name>
+      <pv_name>$(P)$(R)Chip5ID_RBV</pv_name>
+      <x>88</x>
+      <y>145</y>
+      <width>224</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <foreground_color>
+        <color red="10" green="0" blue="184">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 5">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_49</name>
+      <text>Chip 6</text>
+      <x>10</x>
+      <y>170</y>
+      <width>68</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 6">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>TextUpdate_44</name>
+      <pv_name>$(P)$(R)Chip6ID_RBV</pv_name>
+      <x>88</x>
+      <y>170</y>
+      <width>224</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <foreground_color>
+        <color red="10" green="0" blue="184">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 6">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_55</name>
+      <text>Chip 7</text>
+      <x>10</x>
+      <y>195</y>
+      <width>68</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 7">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>TextUpdate_50</name>
+      <pv_name>$(P)$(R)Chip7ID_RBV</pv_name>
+      <x>88</x>
+      <y>195</y>
+      <width>224</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <foreground_color>
+        <color red="10" green="0" blue="184">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 7">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_56</name>
+      <text>Chip 8</text>
+      <x>10</x>
+      <y>220</y>
+      <width>68</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 8">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>TextUpdate_51</name>
+      <pv_name>$(P)$(R)Chip8ID_RBV</pv_name>
+      <x>88</x>
+      <y>220</y>
+      <width>224</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <foreground_color>
+        <color red="10" green="0" blue="184">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 8">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_57</name>
+      <text>Chip 9</text>
+      <x>10</x>
+      <y>245</y>
+      <width>68</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 9">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>TextUpdate_52</name>
+      <pv_name>$(P)$(R)Chip9ID_RBV</pv_name>
+      <x>88</x>
+      <y>245</y>
+      <width>224</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <foreground_color>
+        <color red="10" green="0" blue="184">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 9">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_58</name>
+      <text>Chip 10</text>
+      <x>10</x>
+      <y>270</y>
+      <width>68</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 10">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>TextUpdate_53</name>
+      <pv_name>$(P)$(R)Chip10ID_RBV</pv_name>
+      <x>88</x>
+      <y>270</y>
+      <width>224</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <foreground_color>
+        <color red="10" green="0" blue="184">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 10">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_59</name>
+      <text>Chip 11</text>
+      <x>10</x>
+      <y>295</y>
+      <width>68</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 11">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>TextUpdate_54</name>
+      <pv_name>$(P)$(R)Chip11ID_RBV</pv_name>
+      <x>88</x>
+      <y>295</y>
+      <width>224</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <foreground_color>
+        <color red="10" green="0" blue="184">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 11">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_60</name>
+      <text>Chip 12</text>
+      <x>10</x>
+      <y>320</y>
+      <width>68</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <horizontal_alignment>2</horizontal_alignment>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 12">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>TextUpdate_55</name>
+      <pv_name>$(P)$(R)Chip12ID_RBV</pv_name>
+      <x>88</x>
+      <y>320</y>
+      <width>224</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="16.0">
+        </font>
+      </font>
+      <foreground_color>
+        <color red="10" green="0" blue="184">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color red="187" green="187" blue="187">
+        </color>
+      </background_color>
+      <rules>
+        <rule name="NumChipsVisible" prop_id="visible" out_exp="false">
+          <exp bool_exp="pv0 &lt; 12">
+            <value>false</value>
+          </exp>
+          <pv_name>$(P)$(R)NumChips_RBV</pv_name>
+        </rule>
+      </rules>
     </widget>
   </widget>
 </display>

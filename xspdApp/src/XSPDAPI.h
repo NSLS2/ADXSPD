@@ -288,6 +288,7 @@ class Module : public APIComponent {
         : APIComponent(api, id), moduleFirmware(moduleFirmware), chipIds(chipIds) {}
     virtual ~Module() = default;
     string GetFirmware() { return this->moduleFirmware; }
+    int GetNumChips() { return this->chipIds.size(); }
     vector<string> GetChipIds() { return this->chipIds; }
     vector<XSPD::ModuleFeature> GetFeatures();
 

@@ -340,3 +340,97 @@ record(mbbi, "$(P)$(R)ShuffleMode_RBV"){
     field(THST, "Byte Shuffle")
     field(SCAN, "I/O Intr")
 }
+
+
+# Module can have 1-12 chips, so we create 12 readbacks for chip IDs and populate based on the number of chips
+
+record(ai, "$(P)$(R)NumChips_RBV"){
+    field(DESC, "Number of chips rb")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_NUM_CHIPS")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)Chip1ID_RBV"){
+    field(DESC, "Chip 1 ID rb")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHIP1_ID")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)Chip2ID_RBV"){
+    field(DESC, "Chip 2 ID rb")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHIP2_ID")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)Chip3ID_RBV"){
+    field(DESC, "Chip 3 ID rb")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHIP3_ID")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)Chip4ID_RBV"){
+    field(DESC, "Chip 4 ID rb")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHIP4_ID")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)Chip5ID_RBV"){
+    field(DESC, "Chip 5 ID rb")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHIP5_ID")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)Chip6ID_RBV"){
+    field(DESC, "Chip 6 ID rb")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHIP6_ID")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)Chip7ID_RBV"){
+    field(DESC, "Chip 7 ID rb")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHIP7_ID")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)Chip8ID_RBV"){
+    field(DESC, "Chip 8 ID rb")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHIP8_ID")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)Chip9ID_RBV"){
+    field(DESC, "Chip 9 ID rb")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHIP9_ID")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)Chip10ID_RBV"){
+    field(DESC, "Chip 10 ID rb")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHIP10_ID")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)Chip11ID_RBV"){
+    field(DESC, "Chip 11 ID rb")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHIP11_ID")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)Chip12ID_RBV"){
+    field(DESC, "Chip 12 ID rb")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_CHIP12_ID")
+    field(SCAN, "I/O Intr")
+}
