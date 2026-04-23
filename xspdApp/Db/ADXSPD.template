@@ -53,6 +53,16 @@ record(mbbi, "$(P)$(R)TriggerMode_RBV") {
     field(TWST, "External Sequence")
 }
 
+record(ao, "$(P)$(R)AcquireTime") {
+    field(EGU, "s")
+    field(PREC, "5")
+}
+
+record(ai, "$(P)$(R)AcquireTime_RBV") {
+    field(EGU, "s")
+    field(PREC, "5")
+}
+
 # XSPD specific records
 
 record(stringin, "$(P)$(R)APIVersion_RBV"){
@@ -150,6 +160,7 @@ record(ao, "$(P)$(R)BeamEnergy"){
     field(EGU, "keV")
     field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_BEAM_ENERGY")
     field(VAL, "0.0")
+    field(PREC, "3")
     field(PINI, "NO")
 }
 
