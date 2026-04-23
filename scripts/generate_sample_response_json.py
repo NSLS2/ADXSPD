@@ -12,7 +12,7 @@ from pathlib import Path
 import logging
 import sys
 import argparse
-
+import time as ttime
 
 logging.basicConfig()
 logger = logging.getLogger("gen_sample_responses")
@@ -86,9 +86,10 @@ def get_device_variable_values(base_uri, device_id):
     device_variables.update(variables)
     for variable in variables[get_full_endpoint(base_uri, var_endpoint)]:
         variable_id = variable["path"]
-        device_variables.update(
-            get_sample_endpoint_value(base_uri, f"{var_endpoint}?path={variable_id}")
-        )
+        var_value = get_sample_endpoint_value(base_uri, f"{var_endpoint}?path={variable_id}")
+        if variable_id.endswith("pixel_mask"):
+            var_value[get_full_endpoint(base_uri,  f"{var_endpoint}?path={variable_id}")]["value"] = "AAAAAAAAAA"
+        device_variables.update(var_value)
     return device_variables
 
 
@@ -154,7 +155,7 @@ def main():
         )
 
     with open(
-        Path(__file__).parent.absolute() / "../samples/xspd_sample_responses.json", "w"
+        args.output_path, "w"
     ) as fp:
         fp.write(json.dumps(sample_responses, indent=4))
 
