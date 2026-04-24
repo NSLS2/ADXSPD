@@ -180,6 +180,7 @@ record(ai, "$(P)$(R)BeamEnergy_RBV"){
     field(DTYP, "asynFloat64")
     field(EGU, "keV")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_BEAM_ENERGY")
+    field(PREC, "3")
     field(SCAN, "I/O Intr")
 }
 
