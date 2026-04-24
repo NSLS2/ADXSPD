@@ -154,14 +154,13 @@ record(mbbi, "$(P)$(R)Compressor_RBV"){
     field(THVL, "3")
     field(THST, "blosc/lz4")
     field(FRVL, "4")
-    field(FVST, "blosc/lz4hc")
+    field(FRST, "blosc/lz4hc")
     field(FVVL, "5")
-    field(SXST, "blosc/snappy")
+    field(FVST, "blosc/snappy")
     field(SXVL, "6")
-    field(SVST, "blosc/zlib")
+    field(SXST, "blosc/zlib")
     field(SVVL, "7")
-    field(EIST, "blosc/zstd")
-    field(EIVL, "8")
+    field(SVST, "blosc/zstd")
     field(SCAN, "I/O Intr")
 }
 
