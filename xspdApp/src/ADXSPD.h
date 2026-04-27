@@ -19,6 +19,7 @@
 #define ADXSPD_REVISION 2
 #define ADXSPD_MODIFICATION 0
 
+// Include the API header first to avoid preprocessor collisions
 #include <blosc.h>
 #include <cpr/cpr.h>
 #include <epicsExit.h>

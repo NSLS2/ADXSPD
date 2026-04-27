@@ -311,6 +311,40 @@ TEST_F(TestXSPDAPI, TestReadVarFromRespPathDoesNotMatch) {
                     "Variable path mismatch: expected some/path, got some/other/path")));
 }
 
+TEST_F(TestXSPDAPI, TestReadVarFromRespCompressorSpecialCase) {
+    json response = json{{"path", "compressor"}, {"value", "zlib"}};
+    XSPD::Compressor compressor =
+        this->mapi->ReadVarFromResp<XSPD::Compressor>(response, "compressor", "value");
+    ASSERT_EQ(compressor, XSPD::Compressor::ZLIB);
+
+    response["value"] = "none";
+    compressor = this->mapi->ReadVarFromResp<XSPD::Compressor>(response, "compressor", "value");
+    ASSERT_EQ(compressor, XSPD::Compressor::NONE);
+
+    response["value"] = "blosc/blosclz";
+    compressor = this->mapi->ReadVarFromResp<XSPD::Compressor>(response, "compressor", "value");
+    ASSERT_EQ(compressor, XSPD::Compressor::BLOSC_BLOSCLZ);
+
+    response["value"] = "blosc/lz4";
+    compressor = this->mapi->ReadVarFromResp<XSPD::Compressor>(response, "compressor", "value");
+    ASSERT_EQ(compressor, XSPD::Compressor::BLOSC_LZ4);
+}
+
+TEST_F(TestXSPDAPI, TestIsBloscCompressor) {
+    ASSERT_TRUE(XSPD::IsBloscCompressor(XSPD::Compressor::BLOSC_BLOSCLZ));
+    ASSERT_TRUE(XSPD::IsBloscCompressor(XSPD::Compressor::BLOSC_LZ4));
+    ASSERT_FALSE(XSPD::IsBloscCompressor(XSPD::Compressor::NONE));
+    ASSERT_FALSE(XSPD::IsBloscCompressor(XSPD::Compressor::ZLIB));
+}
+
+TEST_F(TestXSPDAPI, TestGetBloscSubcompressorName) {
+    ASSERT_EQ(XSPD::GetBloscSubcompressorName(XSPD::Compressor::BLOSC_BLOSCLZ), "blosclz");
+    ASSERT_EQ(XSPD::GetBloscSubcompressorName(XSPD::Compressor::BLOSC_LZ4), "lz4");
+    ASSERT_THAT([&]() { XSPD::GetBloscSubcompressorName(XSPD::Compressor::ZLIB); },
+                testing::ThrowsMessage<std::invalid_argument>(
+                    testing::HasSubstr("Compressor ZLIB is not a Blosc compressor")));
+}
+
 TEST_F(TestXSPDAPI, TestGetIntDetectorVar) {
     XSPD::Detector* pdet = this->mapi->MockInitialization();
 
@@ -482,3 +516,16 @@ TEST_F(TestXSPDAPI, TestGetSerialNumber) {
     serialNumber = pdet->GetSerialNumber();
     ASSERT_EQ(serialNumber, "SN12345");
 }
+
+// TEST_F(TestXSPDAPI, TestGetCompressionSettings) {
+//     XSPD::Detector* pdet = this->mapi->MockInitialization();
+
+//     this->mapi->MockGetVarRequest("lambda/compressor");
+//     this->mapi->MockGetVarRequest("lambda/compression_level");
+
+//     auto settings = pdet->GetCompressionSettings();
+//     ASSERT_EQ(settings.compressor, XSPD::Compressor::ZLIB);
+//     ASSERT_EQ(settings.level, 5);
+
+//     auto settings =
+// }

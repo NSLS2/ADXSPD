@@ -29,14 +29,22 @@ enum class OnOff {
 enum class Compressor {
     NONE = 0,
     ZLIB = 1,
-    BLOSC = 2,
+    BLOSC_BLOSCLZ = 2,
+    BLOSC_LZ4 = 3,
+    BLOSC_LZ4HC = 4,
+    BLOSC_SNAPPY = 5,
+    BLOSC_ZLIB = 6,
+    BLOSC_ZSTD = 7
 };
+
+bool IsBloscCompressor(Compressor compressor);
+string GetBloscSubcompressorName(Compressor compressor);
 
 enum class ShuffleMode {
     NO_SHUFFLE = 0,
-    AUTO_SHUFFLE = 1,
+    SHUFFLE_BYTE = 1,
     SHUFFLE_BIT = 2,
-    SHUFFLE_BYTE = 3,
+    AUTO_SHUFFLE = 3,
 };
 
 enum class TriggerMode {
@@ -76,6 +84,17 @@ enum class APIState {
     RETRIEVING_DEVICE_INFO = 3,
     INITIALIZED = 4,
 };
+
+// struct CompressionSettings {
+//     Compressor compressor;
+//     int compressionLevel;
+//     virtual ~CompressionSettings() = default;
+// };
+
+// struct BloscCompressionSettings : public CompressionSettings {
+//     BloscCompressor bloscCompressor;
+//     ShuffleMode shuffleMode;
+// };
 
 // Default port number for XSPD API
 constexpr int DEFAULT_PORT = 8008;
@@ -195,6 +214,12 @@ class API {
         if (response.contains(key)) {
             if constexpr (is_enum_v<T>) {
                 string valAsStr = response[key].get<string>();
+                if constexpr (std::is_same_v<T, Compressor>) {
+                    // Special case - XSPD returns compressor enum values for blosc compressors as
+                    // "blosc/blosclz", "blosc/lz4", etc. replace the '/' with '_' to match our enum
+                    // names
+                    std::replace(valAsStr.begin(), valAsStr.end(), '/', '_');
+                }
                 auto enumValue = magic_enum::enum_cast<T>(valAsStr, magic_enum::case_insensitive);
                 if (enumValue.has_value()) {
                     return enumValue.value();
@@ -264,6 +289,8 @@ class APIComponent {
     T SetVar(string varName, T value, string rbKey = "value") {
         return this->api->SetVar<T>(this->id + "/" + varName, value, rbKey);
     }
+
+    // CompressionSettings GetCompressionSettings();
 
    private:
     API* api;
@@ -401,6 +428,7 @@ class Detector : public APIComponent {
     DataPort* GetActiveDataPort() { return this->activeDataPort; }
 
     void ExecCommand(string command) { this->GetAPI()->ExecCommand(this->GetId() + "/" + command); }
+    // CompressionSettings GetCompressionSettings();
 
    private:
     Status status;

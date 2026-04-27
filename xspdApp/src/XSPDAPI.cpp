@@ -32,6 +32,48 @@ tuple<int, int, int> XSPD::ParseVersionString(const string& versionStr) {
 }
 
 /**
+ * @brief Checks if the given compressor is a Blosc compressor
+ *
+ * @param compressor The compressor to check
+ * @return true if the compressor is a Blosc compressor, false otherwise
+ */
+bool XSPD::IsBloscCompressor(XSPD::Compressor compressor) {
+    return compressor != XSPD::Compressor::NONE && compressor != XSPD::Compressor::ZLIB;
+}
+
+/**
+ * @brief Retrieves the name of the Blosc subcompressor corresponding to the given compressor enum
+ * value
+ *
+ * @param compressor The compressor enum value for which to get the Blosc subcompressor name
+ * @return The name of the Blosc subcompressor as a string
+ * @throws invalid_argument if the provided compressor is not a Blosc compressor
+ */
+string XSPD::GetBloscSubcompressorName(XSPD::Compressor compressor) {
+    if (!IsBloscCompressor(compressor)) {
+        auto compressorName = magic_enum::enum_name(compressor);
+        throw invalid_argument("Compressor " + string(compressorName) +
+                               " is not a Blosc compressor");
+    }
+    switch (compressor) {
+        case Compressor::BLOSC_BLOSCLZ:
+            return "blosclz";
+        case Compressor::BLOSC_LZ4:
+            return "lz4";
+        case Compressor::BLOSC_LZ4HC:
+            return "lz4hc";
+        case Compressor::BLOSC_SNAPPY:
+            return "snappy";
+        case Compressor::BLOSC_ZLIB:
+            return "zlib";
+        case Compressor::BLOSC_ZSTD:
+            return "zstd";
+        default:
+            throw invalid_argument("Unsupported Blosc compressor");
+    }
+}
+
+/**
  * @brief Checks if a device with the given device ID exists
  *
  * @param deviceId The device ID to check
@@ -382,3 +424,24 @@ string XSPD::Detector::GetSerialNumber() {
     if (sn.empty()) sn = this->GetAPI()->GetSystemId();
     return sn;
 }
+
+// XSPD::CompressionSettings XSPD::Detector::GetCompressionSettings() {
+//     string fullCompressor = this->GetVar<string>("compressor");
+//     auto slashPos = fullCompressor.find('/');
+//     Compressor baseCompressor = magic_enum::enum_cast<Compressor>((slashPos != string::npos) ?
+//     fullCompressor.substr(0, slashPos) : fullCompressor).value(); int compressionLevel =
+//     this->GetVar<int>("compression_level"); if (baseCompressor == Compressor::BLOSC) {
+//         BloscCompressionSettings settings;
+//         settings.compressor = baseCompressor;
+//         settings.compressionLevel = compressionLevel;
+
+//         settings.bloscCompressor =
+//         magic_enum::enum_cast<BloscCompressor>(fullCompressor.substr(slashPos + 1)).value();
+//         settings.shuffleMode = this->GetVar<ShuffleMode>("shuffle_mode");
+//         return settings;
+//     }
+//     CompressionSettings settings;
+//     settings.compressor = baseCompressor;
+//     settings.compressionLevel = compressionLevel;
+//     return settings;
+// }

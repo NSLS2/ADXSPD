@@ -43,17 +43,22 @@ class OnOff(enum.IntEnum):
     ON = 1
 
 
-class Compressor(enum.IntEnum):
-    NONE = 0
-    ZLIB = 1
-    BLOSC = 2
+class Compressor(enum.Enum):
+    NONE = "none"
+    ZLIB = "zlib"
+    BLOSC_BLOSCLZ = "blosc/blosclz"
+    BLOSC_LZ4 = "blosc/lz4"
+    BLOSC_LZ4HC = "blosc/lz4hc"
+    BLOSC_SNAPPY = "blosc/snappy"
+    BLOSC_ZLIB = "blosc/zlib"
+    BLOSC_ZSTD = "blosc/zstd"
 
 
 class ShuffleMode(enum.IntEnum):
     NO_SHUFFLE = 0
-    AUTO_SHUFFLE = 1
+    SHUFFLE_BYTE = 1
     SHUFFLE_BIT = 2
-    SHUFFLE_BYTE = 3
+    AUTO_SHUFFLE = 3
 
 
 class TriggerMode(enum.IntEnum):
@@ -73,16 +78,27 @@ class Status(enum.IntEnum):
     BUSY = 2
 
 
-def enum_names(cls: Type[enum.IntEnum]) -> List[str]:
-    return [m.name for m in cls]
+def enum_names(cls) -> List[str]:
+    """Return the list of canonical display values for an enum class."""
+    if issubclass(cls, enum.IntEnum):
+        return [m.name for m in cls]
+    # For string-valued enums (e.g. Compressor), return values
+    return [m.value for m in cls]
 
 
-def enum_lookup(cls: Type[enum.IntEnum], value_str: str) -> str:
-    """Case-insensitive enum name lookup.  Returns the canonical name."""
-    upper = value_str.upper()
-    for m in cls:
-        if m.name == upper:
-            return m.name
+def enum_lookup(cls, value_str: str) -> str:
+    """Case-insensitive enum lookup.  Returns the canonical display value."""
+    lower = value_str.lower()
+    if issubclass(cls, enum.IntEnum):
+        # Match by name
+        for m in cls:
+            if m.name.lower() == lower:
+                return m.name
+    else:
+        # For string-valued enums, match by name or value
+        for m in cls:
+            if m.name.lower() == lower or m.value.lower() == lower:
+                return m.value
     raise ValueError(
         f"Invalid value '{value_str}' for {cls.__name__}. Allowed: {enum_names(cls)}"
     )
@@ -497,23 +513,25 @@ def apply_high_threshold(img: np.ndarray, threshold_high: float) -> np.ndarray:
 
 def compress_data(raw_bytes: bytes, compressor_name: str) -> bytes:
     """Optionally compress pixel data.  Returns raw_bytes if compressor is NONE."""
-    upper = compressor_name.upper() if isinstance(compressor_name, str) else "NONE"
-    if upper == "NONE":
+    lower = compressor_name.lower() if isinstance(compressor_name, str) else "none"
+    if lower == "none":
         return raw_bytes
-    if upper == "ZLIB":
+    if lower == "zlib":
         try:
             import zlib as _zlib
         except ImportError:
             raise RuntimeError("zlib module not available for compression")
         return _zlib.compress(raw_bytes)
-    if upper == "BLOSC":
+    if lower.startswith("blosc"):
         try:
             import blosc as _blosc
         except ImportError:
             raise RuntimeError(
                 "blosc package not installed. Install with: pip install blosc"
             )
-        return _blosc.compress(raw_bytes, typesize=1)
+        # Extract sub-compressor name (e.g. "blosc/lz4" -> "lz4")
+        cname = lower.split("/")[1] if "/" in lower else "blosclz"
+        return _blosc.compress(raw_bytes, typesize=1, cname=cname)
     return raw_bytes
 
 
@@ -831,7 +849,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--compressor",
         type=str,
-        choices=["none", "zlib", "blosc"],
+        choices=[
+            "none",
+            "zlib",
+            "blosc/blosclz",
+            "blosc/lz4",
+            "blosc/lz4hc",
+            "blosc/snappy",
+            "blosc/zlib",
+            "blosc/zstd",
+        ],
         default="none",
         help="Initial compressor for ZMQ frame data (default: none)",
     )
@@ -847,9 +874,10 @@ def main() -> None:
 
     # Override compressor from CLI
     det_id = state.detector_id
-    state.set_var(f"{det_id}/compressor", args.compressor.upper())
+    compressor_val = enum_lookup(Compressor, args.compressor)
+    state.set_var(f"{det_id}/compressor", compressor_val)
     for mod_id in state.module_ids:
-        state.set_var(f"{mod_id}/compressor", args.compressor.upper())
+        state.set_var(f"{mod_id}/compressor", compressor_val)
 
     print(f"[INIT] Device: {state.device_id}")
     print(f"[INIT] Detector: {state.detector_id}")
