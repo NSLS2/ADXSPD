@@ -312,7 +312,7 @@ TEST_F(TestXSPDAPI, TestReadVarFromRespPathDoesNotMatch) {
 }
 
 TEST_F(TestXSPDAPI, TestReadVarFromRespCompressorSpecialCase) {
-    json response = json {{"path", "compressor"}, {"value", "zlib"}};
+    json response = json{{"path", "compressor"}, {"value", "zlib"}};
     XSPD::Compressor compressor =
         this->mapi->ReadVarFromResp<XSPD::Compressor>(response, "compressor", "value");
     ASSERT_EQ(compressor, XSPD::Compressor::ZLIB);
@@ -527,5 +527,5 @@ TEST_F(TestXSPDAPI, TestGetSerialNumber) {
 //     ASSERT_EQ(settings.compressor, XSPD::Compressor::ZLIB);
 //     ASSERT_EQ(settings.level, 5);
 
-//     auto settings = 
+//     auto settings =
 // }

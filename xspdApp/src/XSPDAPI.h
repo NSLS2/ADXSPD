@@ -216,7 +216,8 @@ class API {
                 string valAsStr = response[key].get<string>();
                 if constexpr (std::is_same_v<T, Compressor>) {
                     // Special case - XSPD returns compressor enum values for blosc compressors as
-                    // "blosc/blosclz", "blosc/lz4", etc. replace the '/' with '_' to match our enum names
+                    // "blosc/blosclz", "blosc/lz4", etc. replace the '/' with '_' to match our enum
+                    // names
                     std::replace(valAsStr.begin(), valAsStr.end(), '/', '_');
                 }
                 auto enumValue = magic_enum::enum_cast<T>(valAsStr, magic_enum::case_insensitive);

@@ -410,16 +410,17 @@ void ADXSPD::acquisitionThread() {
                     break;
 #endif
                 } else if (XSPD::IsBloscCompressor(compressor)) {
-                    XSPD::ShuffleMode shuffleMode = this->pDetector->GetVar<XSPD::ShuffleMode>("shuffle_mode");
+                    XSPD::ShuffleMode shuffleMode =
+                        this->pDetector->GetVar<XSPD::ShuffleMode>("shuffle_mode");
                     pArray->codec.name = "blosc";
                     string subcompressorName = GetBloscSubcompressorName(compressor);
                     pArray->codec.compressor = getBloscSubcompressorId(subcompressorName);
                     pArray->codec.level = compressionLevel;
                     // ADCore has blosc shuffle settings defined as 0=None, 1=Byte, 2=Bit, but there
-                    // is not any enumeration for this (it comes from the NDPluginCodec blosc shuffle record).
-                    // The XSPD::ShuffleMode enum has been set up with the same values for ease of translation,
-                    // so we can just static_cast it here. If ADCore gets an enumeration for this in the future,
-                    // it should be used here.
+                    // is not any enumeration for this (it comes from the NDPluginCodec blosc
+                    // shuffle record). The XSPD::ShuffleMode enum has been set up with the same
+                    // values for ease of translation, so we can just static_cast it here. If ADCore
+                    // gets an enumeration for this in the future, it should be used here.
                     pArray->codec.shuffle = static_cast<int>(shuffleMode);
                 }
 
@@ -428,9 +429,9 @@ void ADXSPD::acquisitionThread() {
                     // compression settings.
                     ERR("Compression settings are invalid, cannot read out frame data");
                 } else if (frameSizeBytes > arrayInfo.totalBytes) {
-                    // Copy data from new frame to pArray. With fully random data it is possible that
-                    // compressed size is actually larger than the uncompressed size, so check for that
-                    // and print an error.
+                    // Copy data from new frame to pArray. With fully random data it is possible
+                    // that compressed size is actually larger than the uncompressed size, so check
+                    // for that and print an error.
                     ERR_ARGS(
                         "Size of incoming frame data %zu bytes is larger than expected array size "
                         "%zu bytes!",
@@ -753,8 +754,8 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             } else if (function == ADXSPD_GatingMode) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
                     "gating_mode", static_cast<XSPD::OnOff>(value)));
-            // } else if (function == ADXSPD_CompressLevel) {
-            //      actualValue = this->pDetector->SetVar<int>("compression_level", value);
+                // } else if (function == ADXSPD_CompressLevel) {
+                //      actualValue = this->pDetector->SetVar<int>("compression_level", value);
             } else if (function == ADXSPD_FFCorrection) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
                     "flatfield_correction", static_cast<XSPD::OnOff>(value)));

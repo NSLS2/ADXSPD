@@ -849,7 +849,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--compressor",
         type=str,
-        choices=["none", "zlib", "blosc/blosclz", "blosc/lz4", "blosc/lz4hc", "blosc/snappy", "blosc/zlib", "blosc/zstd"],
+        choices=[
+            "none",
+            "zlib",
+            "blosc/blosclz",
+            "blosc/lz4",
+            "blosc/lz4hc",
+            "blosc/snappy",
+            "blosc/zlib",
+            "blosc/zstd",
+        ],
         default="none",
         help="Initial compressor for ZMQ frame data (default: none)",
     )
