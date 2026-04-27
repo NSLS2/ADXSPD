@@ -753,8 +753,8 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             } else if (function == ADXSPD_GatingMode) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
                     "gating_mode", static_cast<XSPD::OnOff>(value)));
-            } else if (function == ADXSPD_CompressLevel) {
-                actualValue = this->pDetector->SetVar<int>("compression_level", value);
+            // } else if (function == ADXSPD_CompressLevel) {
+            //      actualValue = this->pDetector->SetVar<int>("compression_level", value);
             } else if (function == ADXSPD_FFCorrection) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
                     "flatfield_correction", static_cast<XSPD::OnOff>(value)));
