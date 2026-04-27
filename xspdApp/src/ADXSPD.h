@@ -19,6 +19,9 @@
 #define ADXSPD_REVISION 2
 #define ADXSPD_MODIFICATION 0
 
+// Include the API header first to avoid preprocessor collisions
+#include "XSPDAPI.h"
+
 #include <blosc.h>
 #include <cpr/cpr.h>
 #include <epicsExit.h>
@@ -44,7 +47,6 @@
 #include <type_traits>
 
 #include "ADDriver.h"
-#include "XSPDAPI.h"
 
 // ADCore 3.15 introduced support for creating zlib-compressed NDArrays.
 // https://github.com/areaDetector/ADCore/pull/578
