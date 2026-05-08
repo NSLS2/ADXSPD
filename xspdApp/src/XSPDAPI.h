@@ -39,6 +39,7 @@ enum class Compressor {
 
 bool IsBloscCompressor(Compressor compressor);
 string GetBloscSubcompressorName(Compressor compressor);
+int GetBloscSubcompressorId(Compressor compressor);
 
 enum class ShuffleMode {
     NO_SHUFFLE = 0,

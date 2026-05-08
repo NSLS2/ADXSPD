@@ -75,24 +75,6 @@ static NDDataType_t getDataTypeForBitDepth(int bitDepth) {
     }
 }
 
-int getBloscSubcompressorId(string compressor) {
-    if (compressor == "blosclz") {
-        return BLOSC_BLOSCLZ;
-    } else if (compressor == "lz4") {
-        return BLOSC_LZ4;
-    } else if (compressor == "lz4hc") {
-        return BLOSC_LZ4HC;
-    } else if (compressor == "snappy") {
-        return BLOSC_SNAPPY;
-    } else if (compressor == "zlib") {
-        return BLOSC_ZLIB;
-    } else if (compressor == "zstd") {
-        return BLOSC_ZSTD;
-    } else {
-        throw std::invalid_argument("Unsupported Blosc compressor: " + compressor);
-    }
-}
-
 /**
  * @brief Wrapper C function passed to epicsThreadCreate to create acquisition thread
  *
@@ -410,17 +392,17 @@ void ADXSPD::acquisitionThread() {
                     break;
 #endif
                 } else if (XSPD::IsBloscCompressor(compressor)) {
-                    XSPD::ShuffleMode shuffleMode =
-                        this->pDetector->GetVar<XSPD::ShuffleMode>("shuffle_mode");
                     pArray->codec.name = "blosc";
-                    string subcompressorName = GetBloscSubcompressorName(compressor);
-                    pArray->codec.compressor = getBloscSubcompressorId(subcompressorName);
+                    pArray->codec.compressor = GetBloscSubcompressorId(compressor);
                     pArray->codec.level = compressionLevel;
                     // ADCore has blosc shuffle settings defined as 0=None, 1=Byte, 2=Bit, but there
                     // is not any enumeration for this (it comes from the NDPluginCodec blosc
                     // shuffle record). The XSPD::ShuffleMode enum has been set up with the same
                     // values for ease of translation, so we can just static_cast it here. If ADCore
                     // gets an enumeration for this in the future, it should be used here.
+                    XSPD::ShuffleMode shuffleMode =
+                        this->pDetector->GetVar<XSPD::ShuffleMode>("shuffle_mode");
+                    // TODO: Handle auto shuffle mode correctly.
                     pArray->codec.shuffle = static_cast<int>(shuffleMode);
                 }
 
@@ -496,7 +478,7 @@ void ADXSPD::acquisitionThread() {
             // complete acquisition.
             if (acquisitionMode == ADImageSingle ||
                 (acquisitionMode == ADImageMultiple &&
-                 collectedImages == (targetNumImages * pow(2, (int) counterMode)))) {
+                 collectedImages == (targetNumImages * pow(2, static_cast<int>(counterMode))))) {
                 acquireStop();
             }
             pArray->release();

@@ -517,15 +517,10 @@ TEST_F(TestXSPDAPI, TestGetSerialNumber) {
     ASSERT_EQ(serialNumber, "SN12345");
 }
 
-// TEST_F(TestXSPDAPI, TestGetCompressionSettings) {
-//     XSPD::Detector* pdet = this->mapi->MockInitialization();
-
-//     this->mapi->MockGetVarRequest("lambda/compressor");
-//     this->mapi->MockGetVarRequest("lambda/compression_level");
-
-//     auto settings = pdet->GetCompressionSettings();
-//     ASSERT_EQ(settings.compressor, XSPD::Compressor::ZLIB);
-//     ASSERT_EQ(settings.level, 5);
-
-//     auto settings =
-// }
+TEST_F(TestXSPDAPI, TestGetBloscSubcompressorId){
+    ASSERT_EQ(XSPD::GetBloscSubcompressorId(XSPD::Compressor::BLOSC_BLOSCLZ), 0);
+    ASSERT_EQ(XSPD::GetBloscSubcompressorId(XSPD::Compressor::BLOSC_LZ4), 1);
+    ASSERT_THAT([&]() { XSPD::GetBloscSubcompressorId(XSPD::Compressor::ZLIB); },
+                testing::ThrowsMessage<std::invalid_argument>(
+                    testing::HasSubstr("Compressor ZLIB is not a Blosc compressor")));
+}

@@ -73,6 +73,17 @@ string XSPD::GetBloscSubcompressorName(XSPD::Compressor compressor) {
     }
 }
 
+int XSPD::GetBloscSubcompressorId(XSPD::Compressor compressor) {
+    if (!XSPD::IsBloscCompressor(compressor)) {
+        auto compressorName = magic_enum::enum_name(compressor);
+        throw invalid_argument("Compressor " + string(compressorName) +
+                               " is not a Blosc compressor");
+    }
+
+    return static_cast<int>(compressor) - 2;  // Subtract 2 to convert from Compressor enum to Blosc compressor ID
+}
+
+
 /**
  * @brief Checks if a device with the given device ID exists
  *
