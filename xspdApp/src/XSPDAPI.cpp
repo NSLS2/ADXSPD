@@ -215,8 +215,9 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
                 "Data port information is missing 'id', 'ip', or 'port' field for device ID " +
                 this->deviceId);
 
-        auto pdataPort = make_unique<DataPort>(this, dpInfo["id"].get<string>(),
-                                               dpInfo["ip"].get<string>(), dpInfo["port"].get<int>());
+        auto pdataPort =
+            make_unique<DataPort>(this, dpInfo["id"].get<string>(), dpInfo["ip"].get<string>(),
+                                  dpInfo["port"].get<int>());
         this->detector->RegisterDataPort(std::move(pdataPort));
     }
 
