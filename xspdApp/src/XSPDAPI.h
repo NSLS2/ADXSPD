@@ -6,6 +6,7 @@
 #include <iostream>
 #include <magic_enum/magic_enum.hpp>
 #include <map>
+#include <memory>
 #include <string>
 
 #include "nlohmann/json.hpp"
@@ -237,7 +238,7 @@ class API {
 
    private:
     string baseUri, apiVersion, xspdVersion, libxspVersion, deviceId, systemId;
-    Detector* detector = nullptr;
+    unique_ptr<Detector> detector;
 };
 
 class APIComponent {
@@ -344,7 +345,13 @@ class Detector : public APIComponent {
 
     Status GetStatus() { return this->status; }
 
-    vector<Module*> GetModules() { return this->modules; }
+    vector<Module*> GetModules() {
+        vector<Module*> result;
+        for (auto& m : this->modules) {
+            result.push_back(m.get());
+        }
+        return result;
+    }
 
     /**
      * @brief Retrieves a user data variable from the detector.
@@ -389,16 +396,17 @@ class Detector : public APIComponent {
 
     string GetSerialNumber();
 
-    void RegisterModule(Module* module) { this->modules.push_back(module); }
+    void RegisterModule(unique_ptr<Module> module) { this->modules.push_back(std::move(module)); }
 
     /**
      * @brief Registers a DataPort with the detector
      *
      * @param dataPort Pointer to the DataPort to register
      */
-    void RegisterDataPort(DataPort* dataPort) {
-        this->dataPorts[dataPort->GetId()] = dataPort;
-        if (this->activeDataPort == nullptr) this->activeDataPort = dataPort;
+    void RegisterDataPort(unique_ptr<DataPort> dataPort) {
+        DataPort* raw = dataPort.get();
+        this->dataPorts[raw->GetId()] = std::move(dataPort);
+        if (this->activeDataPort == nullptr) this->activeDataPort = raw;
     }
 
     /**
@@ -413,7 +421,7 @@ class Detector : public APIComponent {
         } else {
             bool identicalFW = true;
             string fwVersion = this->modules[0]->GetFirmware();
-            for (auto module : this->modules) {
+            for (auto& module : this->modules) {
                 if (module->GetFirmware() != fwVersion) {
                     identicalFW = false;
                     break;
@@ -433,8 +441,8 @@ class Detector : public APIComponent {
 
    private:
     Status status;
-    vector<Module*> modules;
-    map<string, DataPort*> dataPorts;
+    vector<unique_ptr<Module>> modules;
+    map<string, unique_ptr<DataPort>> dataPorts;
     DataPort* activeDataPort = nullptr;
 };
 };  // namespace XSPD

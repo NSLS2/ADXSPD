@@ -193,16 +193,16 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
             "Detector information is missing 'detector-id' or 'modules' field for device ID " +
             this->deviceId);
 
-    this->detector = new Detector(this, detectorInfo["detector-id"].get<string>());
+    this->detector = make_unique<Detector>(this, detectorInfo["detector-id"].get<string>());
     for (auto& moduleJson : detectorInfo["modules"]) {
         int numChips = moduleJson["chips"].get<int>();
         vector<string> chipIds;
         for (int i = 0; i < numChips; i++) {
             chipIds.push_back(moduleJson["chip-ids"][i].get<string>());
         }
-        Module* pmodule = new Module(this, moduleJson["module"].get<string>(),
-                                     moduleJson["firmware"].get<string>(), chipIds);
-        this->detector->RegisterModule(pmodule);
+        auto pmodule = make_unique<Module>(this, moduleJson["module"].get<string>(),
+                                           moduleJson["firmware"].get<string>(), chipIds);
+        this->detector->RegisterModule(std::move(pmodule));
     }
 
     json dataPortInfo = Get("devices/" + this->deviceId)["system"]["data-ports"];
@@ -215,12 +215,12 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
                 "Data port information is missing 'id', 'ip', or 'port' field for device ID " +
                 this->deviceId);
 
-        DataPort* pdataPort = new DataPort(this, dpInfo["id"].get<string>(),
-                                           dpInfo["ip"].get<string>(), dpInfo["port"].get<int>());
-        this->detector->RegisterDataPort(pdataPort);
+        auto pdataPort = make_unique<DataPort>(this, dpInfo["id"].get<string>(),
+                                               dpInfo["ip"].get<string>(), dpInfo["port"].get<int>());
+        this->detector->RegisterDataPort(std::move(pdataPort));
     }
 
-    return this->detector;
+    return this->detector.get();
 }
 
 /**

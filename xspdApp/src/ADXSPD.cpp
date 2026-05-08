@@ -1000,7 +1000,6 @@ ADXSPD::~ADXSPD() {
     }
 
     INFO("Releasing detector and API objects...");
-    delete this->pDetector;
     delete this->pApi;
 
     // This seems to intermittently segfault, leave commented for now.
