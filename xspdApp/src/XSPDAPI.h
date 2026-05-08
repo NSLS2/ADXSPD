@@ -6,6 +6,7 @@
 #include <iostream>
 #include <magic_enum/magic_enum.hpp>
 #include <map>
+#include <memory>
 #include <string>
 
 #include "nlohmann/json.hpp"
@@ -29,14 +30,23 @@ enum class OnOff {
 enum class Compressor {
     NONE = 0,
     ZLIB = 1,
-    BLOSC = 2,
+    BLOSC_BLOSCLZ = 2,
+    BLOSC_LZ4 = 3,
+    BLOSC_LZ4HC = 4,
+    BLOSC_SNAPPY = 5,
+    BLOSC_ZLIB = 6,
+    BLOSC_ZSTD = 7
 };
+
+bool IsBloscCompressor(Compressor compressor);
+string GetBloscSubcompressorName(Compressor compressor);
+int GetBloscSubcompressorId(Compressor compressor);
 
 enum class ShuffleMode {
     NO_SHUFFLE = 0,
-    AUTO_SHUFFLE = 1,
+    SHUFFLE_BYTE = 1,
     SHUFFLE_BIT = 2,
-    SHUFFLE_BYTE = 3,
+    AUTO_SHUFFLE = 3,
 };
 
 enum class TriggerMode {
@@ -76,6 +86,17 @@ enum class APIState {
     RETRIEVING_DEVICE_INFO = 3,
     INITIALIZED = 4,
 };
+
+// struct CompressionSettings {
+//     Compressor compressor;
+//     int compressionLevel;
+//     virtual ~CompressionSettings() = default;
+// };
+
+// struct BloscCompressionSettings : public CompressionSettings {
+//     BloscCompressor bloscCompressor;
+//     ShuffleMode shuffleMode;
+// };
 
 // Default port number for XSPD API
 constexpr int DEFAULT_PORT = 8008;
@@ -195,6 +216,12 @@ class API {
         if (response.contains(key)) {
             if constexpr (is_enum_v<T>) {
                 string valAsStr = response[key].get<string>();
+                if constexpr (std::is_same_v<T, Compressor>) {
+                    // Special case - XSPD returns compressor enum values for blosc compressors as
+                    // "blosc/blosclz", "blosc/lz4", etc. replace the '/' with '_' to match our enum
+                    // names
+                    std::replace(valAsStr.begin(), valAsStr.end(), '/', '_');
+                }
                 auto enumValue = magic_enum::enum_cast<T>(valAsStr, magic_enum::case_insensitive);
                 if (enumValue.has_value()) {
                     return enumValue.value();
@@ -211,7 +238,7 @@ class API {
 
    private:
     string baseUri, apiVersion, xspdVersion, libxspVersion, deviceId, systemId;
-    Detector* detector = nullptr;
+    unique_ptr<Detector> detector;
 };
 
 class APIComponent {
@@ -265,6 +292,8 @@ class APIComponent {
         return this->api->SetVar<T>(this->id + "/" + varName, value, rbKey);
     }
 
+    // CompressionSettings GetCompressionSettings();
+
    private:
     API* api;
     string id;
@@ -316,7 +345,13 @@ class Detector : public APIComponent {
 
     Status GetStatus() { return this->status; }
 
-    vector<Module*> GetModules() { return this->modules; }
+    vector<Module*> GetModules() {
+        vector<Module*> result;
+        for (auto& m : this->modules) {
+            result.push_back(m.get());
+        }
+        return result;
+    }
 
     /**
      * @brief Retrieves a user data variable from the detector.
@@ -361,16 +396,17 @@ class Detector : public APIComponent {
 
     string GetSerialNumber();
 
-    void RegisterModule(Module* module) { this->modules.push_back(module); }
+    void RegisterModule(unique_ptr<Module> module) { this->modules.push_back(std::move(module)); }
 
     /**
      * @brief Registers a DataPort with the detector
      *
      * @param dataPort Pointer to the DataPort to register
      */
-    void RegisterDataPort(DataPort* dataPort) {
-        this->dataPorts[dataPort->GetId()] = dataPort;
-        if (this->activeDataPort == nullptr) this->activeDataPort = dataPort;
+    void RegisterDataPort(unique_ptr<DataPort> dataPort) {
+        DataPort* raw = dataPort.get();
+        this->dataPorts[raw->GetId()] = std::move(dataPort);
+        if (this->activeDataPort == nullptr) this->activeDataPort = raw;
     }
 
     /**
@@ -385,7 +421,7 @@ class Detector : public APIComponent {
         } else {
             bool identicalFW = true;
             string fwVersion = this->modules[0]->GetFirmware();
-            for (auto module : this->modules) {
+            for (auto& module : this->modules) {
                 if (module->GetFirmware() != fwVersion) {
                     identicalFW = false;
                     break;
@@ -401,11 +437,12 @@ class Detector : public APIComponent {
     DataPort* GetActiveDataPort() { return this->activeDataPort; }
 
     void ExecCommand(string command) { this->GetAPI()->ExecCommand(this->GetId() + "/" + command); }
+    // CompressionSettings GetCompressionSettings();
 
    private:
     Status status;
-    vector<Module*> modules;
-    map<string, DataPort*> dataPorts;
+    vector<unique_ptr<Module>> modules;
+    map<string, unique_ptr<DataPort>> dataPorts;
     DataPort* activeDataPort = nullptr;
 };
 };  // namespace XSPD

@@ -19,11 +19,11 @@ using ::testing::StrictMock;
 
 class TestXSPDAPI : public ::testing::Test {
    protected:
-    void SetUp() override { mapi = new StrictMock<MockXSPDAPI>(); }
+    void SetUp() override { mapi = std::make_unique<StrictMock<MockXSPDAPI>>(); }
 
-    void TearDown() override { delete mapi; }
+    void TearDown() override { mapi.reset(); }
 
-    StrictMock<MockXSPDAPI>* mapi;
+    unique_ptr<StrictMock<MockXSPDAPI>> mapi;
 };
 
 #endif  // TEST_XSPDAPI_H

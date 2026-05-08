@@ -317,11 +317,11 @@ record(mbbo, "$(P)$(R)ShuffleMode"){
     field(ZRVL, "0")
     field(ZRST, "None")
     field(ONVL, "1")
-    field(ONST, "Auto")
+    field(ONST, "Byte Shuffle")
     field(TWVL, "2")
     field(TWST, "Bit Shuffle")
     field(THVL, "3")
-    field(THST, "Byte Shuffle")
+    field(THST, "Auto")
     field(VAL, "0")
     field(PINI, "NO")
 }
@@ -333,11 +333,11 @@ record(mbbi, "$(P)$(R)ShuffleMode_RBV"){
     field(ZRVL, "0")
     field(ZRST, "None")
     field(ONVL, "1")
-    field(ONST, "Auto")
+    field(ONST, "Byte Shuffle")
     field(TWVL, "2")
     field(TWST, "Bit Shuffle")
     field(THVL, "3")
-    field(THST, "Byte Shuffle")
+    field(THST, "Auto")
     field(SCAN, "I/O Intr")
 }
 

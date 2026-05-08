@@ -363,7 +363,7 @@ void ADXSPD::acquisitionThread() {
                                  decompressedSize, arrayInfo.totalBytes);
                         readoutOk = false;
                     }
-                } else if (compressor == XSPD::Compressor::BLOSC) {
+                } else if (XSPD::IsBloscCompressor(compressor)) {
                     size_t decompressSize;
                     decompressSize =
                         blosc_decompress_ctx(zmq_msg_data(&frameMessages[2]), pArray->pData,
@@ -380,36 +380,40 @@ void ADXSPD::acquisitionThread() {
             } else {
                 // Otherwise, copy the framebuffer data directly to the NDArray, and set the codec
                 // information if compressed
-                switch (compressor) {
-                    case XSPD::Compressor::NONE:
-                        break;
-                    case XSPD::Compressor::ZLIB:
+                if (compressor == XSPD::Compressor::ZLIB) {
 #if ADCORE_SUPPORTS_ZLIB_NDARRAYS
-                        pArray->codec.name = codecName[NDCODEC_ZLIB];
-                        pArray->codec.level = compressionLevel;
-                        break;
+                    pArray->codec.name = "zlib";
+                    pArray->codec.level = compressionLevel;
+                    break;
 #else
-                        ERR("ADCore R3-15 or later is required to support zlib-compressed "
-                            "NDArrays.");
-                        readoutOk = false;
-                        break;
+                    ERR("ADCore R3-15 or later is required to support zlib-compressed "
+                        "NDArrays.");
+                    readoutOk = false;
+                    break;
 #endif
-                    case XSPD::Compressor::BLOSC:
-                        pArray->codec.name = codecName[NDCODEC_BLOSC];
-                        // TODO: need to set compressor, level, and shuffle for blosc codec
-                        break;
-                    default:
-                        ERR_ARGS("Unsupported compressor type %d", (int) compressor);
-                        readoutOk = false;
+                } else if (XSPD::IsBloscCompressor(compressor)) {
+                    pArray->codec.name = "blosc";
+                    pArray->codec.compressor = GetBloscSubcompressorId(compressor);
+                    pArray->codec.level = compressionLevel;
+                    // ADCore has blosc shuffle settings defined as 0=None, 1=Byte, 2=Bit, but there
+                    // is not any enumeration for this (it comes from the NDPluginCodec blosc
+                    // shuffle record). The XSPD::ShuffleMode enum has been set up with the same
+                    // values for ease of translation, so we can just static_cast it here. If ADCore
+                    // gets an enumeration for this in the future, it should be used here.
+                    XSPD::ShuffleMode shuffleMode =
+                        this->pDetector->GetVar<XSPD::ShuffleMode>("shuffle_mode");
+                    // TODO: Handle auto shuffle mode correctly.
+                    pArray->codec.shuffle = static_cast<int>(shuffleMode);
                 }
-                // Copy data from new frame to pArray. With fully random data it is possible that
-                // compressed size is actually larger than the uncompressed size, so check for that
-                // and print an error.
+
                 if (!readoutOk) {
                     // Don't attempt to copy data if we already know there's an issue with the
                     // compression settings.
                     ERR("Compression settings are invalid, cannot read out frame data");
                 } else if (frameSizeBytes > arrayInfo.totalBytes) {
+                    // Copy data from new frame to pArray. With fully random data it is possible
+                    // that compressed size is actually larger than the uncompressed size, so check
+                    // for that and print an error.
                     ERR_ARGS(
                         "Size of incoming frame data %zu bytes is larger than expected array size "
                         "%zu bytes!",
@@ -474,7 +478,7 @@ void ADXSPD::acquisitionThread() {
             // complete acquisition.
             if (acquisitionMode == ADImageSingle ||
                 (acquisitionMode == ADImageMultiple &&
-                 collectedImages == (targetNumImages * pow(2, (int) counterMode)))) {
+                 collectedImages == (targetNumImages * pow(2, static_cast<int>(counterMode))))) {
                 acquireStop();
             }
             pArray->release();
@@ -732,8 +736,8 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
             } else if (function == ADXSPD_GatingMode) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
                     "gating_mode", static_cast<XSPD::OnOff>(value)));
-            // } else if (function == ADXSPD_CompressLevel) {
-            //      actualValue = this->pDetector->SetVar<int>("compression_level", value);
+                // } else if (function == ADXSPD_CompressLevel) {
+                //      actualValue = this->pDetector->SetVar<int>("compression_level", value);
             } else if (function == ADXSPD_FFCorrection) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<XSPD::OnOff>(
                     "flatfield_correction", static_cast<XSPD::OnOff>(value)));
@@ -996,7 +1000,6 @@ ADXSPD::~ADXSPD() {
     }
 
     INFO("Releasing detector and API objects...");
-    delete this->pDetector;
     delete this->pApi;
 
     // This seems to intermittently segfault, leave commented for now.

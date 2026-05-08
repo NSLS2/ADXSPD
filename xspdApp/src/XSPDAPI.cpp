@@ -32,6 +32,59 @@ tuple<int, int, int> XSPD::ParseVersionString(const string& versionStr) {
 }
 
 /**
+ * @brief Checks if the given compressor is a Blosc compressor
+ *
+ * @param compressor The compressor to check
+ * @return true if the compressor is a Blosc compressor, false otherwise
+ */
+bool XSPD::IsBloscCompressor(XSPD::Compressor compressor) {
+    return compressor != XSPD::Compressor::NONE && compressor != XSPD::Compressor::ZLIB;
+}
+
+/**
+ * @brief Retrieves the name of the Blosc subcompressor corresponding to the given compressor enum
+ * value
+ *
+ * @param compressor The compressor enum value for which to get the Blosc subcompressor name
+ * @return The name of the Blosc subcompressor as a string
+ * @throws invalid_argument if the provided compressor is not a Blosc compressor
+ */
+string XSPD::GetBloscSubcompressorName(XSPD::Compressor compressor) {
+    if (!IsBloscCompressor(compressor)) {
+        auto compressorName = magic_enum::enum_name(compressor);
+        throw invalid_argument("Compressor " + string(compressorName) +
+                               " is not a Blosc compressor");
+    }
+    switch (compressor) {
+        case Compressor::BLOSC_BLOSCLZ:
+            return "blosclz";
+        case Compressor::BLOSC_LZ4:
+            return "lz4";
+        case Compressor::BLOSC_LZ4HC:
+            return "lz4hc";
+        case Compressor::BLOSC_SNAPPY:
+            return "snappy";
+        case Compressor::BLOSC_ZLIB:
+            return "zlib";
+        case Compressor::BLOSC_ZSTD:
+            return "zstd";
+        default:
+            throw invalid_argument("Unsupported Blosc compressor");
+    }
+}
+
+int XSPD::GetBloscSubcompressorId(XSPD::Compressor compressor) {
+    if (!XSPD::IsBloscCompressor(compressor)) {
+        auto compressorName = magic_enum::enum_name(compressor);
+        throw invalid_argument("Compressor " + string(compressorName) +
+                               " is not a Blosc compressor");
+    }
+
+    return static_cast<int>(compressor) -
+           2;  // Subtract 2 to convert from Compressor enum to Blosc compressor ID
+}
+
+/**
  * @brief Checks if a device with the given device ID exists
  *
  * @param deviceId The device ID to check
@@ -140,16 +193,16 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
             "Detector information is missing 'detector-id' or 'modules' field for device ID " +
             this->deviceId);
 
-    this->detector = new Detector(this, detectorInfo["detector-id"].get<string>());
+    this->detector = make_unique<Detector>(this, detectorInfo["detector-id"].get<string>());
     for (auto& moduleJson : detectorInfo["modules"]) {
         int numChips = moduleJson["chips"].get<int>();
         vector<string> chipIds;
         for (int i = 0; i < numChips; i++) {
             chipIds.push_back(moduleJson["chip-ids"][i].get<string>());
         }
-        Module* pmodule = new Module(this, moduleJson["module"].get<string>(),
-                                     moduleJson["firmware"].get<string>(), chipIds);
-        this->detector->RegisterModule(pmodule);
+        auto pmodule = make_unique<Module>(this, moduleJson["module"].get<string>(),
+                                           moduleJson["firmware"].get<string>(), chipIds);
+        this->detector->RegisterModule(std::move(pmodule));
     }
 
     json dataPortInfo = Get("devices/" + this->deviceId)["system"]["data-ports"];
@@ -162,12 +215,13 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
                 "Data port information is missing 'id', 'ip', or 'port' field for device ID " +
                 this->deviceId);
 
-        DataPort* pdataPort = new DataPort(this, dpInfo["id"].get<string>(),
-                                           dpInfo["ip"].get<string>(), dpInfo["port"].get<int>());
-        this->detector->RegisterDataPort(pdataPort);
+        auto pdataPort =
+            make_unique<DataPort>(this, dpInfo["id"].get<string>(), dpInfo["ip"].get<string>(),
+                                  dpInfo["port"].get<int>());
+        this->detector->RegisterDataPort(std::move(pdataPort));
     }
 
-    return this->detector;
+    return this->detector.get();
 }
 
 /**
@@ -382,3 +436,24 @@ string XSPD::Detector::GetSerialNumber() {
     if (sn.empty()) sn = this->GetAPI()->GetSystemId();
     return sn;
 }
+
+// XSPD::CompressionSettings XSPD::Detector::GetCompressionSettings() {
+//     string fullCompressor = this->GetVar<string>("compressor");
+//     auto slashPos = fullCompressor.find('/');
+//     Compressor baseCompressor = magic_enum::enum_cast<Compressor>((slashPos != string::npos) ?
+//     fullCompressor.substr(0, slashPos) : fullCompressor).value(); int compressionLevel =
+//     this->GetVar<int>("compression_level"); if (baseCompressor == Compressor::BLOSC) {
+//         BloscCompressionSettings settings;
+//         settings.compressor = baseCompressor;
+//         settings.compressionLevel = compressionLevel;
+
+//         settings.bloscCompressor =
+//         magic_enum::enum_cast<BloscCompressor>(fullCompressor.substr(slashPos + 1)).value();
+//         settings.shuffleMode = this->GetVar<ShuffleMode>("shuffle_mode");
+//         return settings;
+//     }
+//     CompressionSettings settings;
+//     settings.compressor = baseCompressor;
+//     settings.compressionLevel = compressionLevel;
+//     return settings;
+// }
