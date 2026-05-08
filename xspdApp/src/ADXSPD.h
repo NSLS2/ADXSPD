@@ -19,9 +19,19 @@
 #define ADXSPD_REVISION 2
 #define ADXSPD_MODIFICATION 0
 
-// Include the API header first to avoid preprocessor collisions
+// API interface header
+#include "XSPDAPI.h"
+
+// Include third party libraries
 #include <blosc.h>
 #include <cpr/cpr.h>
+#include <zlib.h>
+#include <zmq.h>
+
+#include <magic_enum/magic_enum.hpp>
+#include <nlohmann/json.hpp>
+
+// EPICS includes
 #include <epicsExit.h>
 #include <epicsExport.h>
 #include <epicsStdio.h>
@@ -29,23 +39,21 @@
 #include <epicsThread.h>
 #include <epicsTime.h>
 #include <iocsh.h>
+
+// Standard library includes
 #include <stdlib.h>
-#include <zlib.h>
-#include <zmq.h>
 
 #include <cmath>
 #include <cstddef>
 #include <cstdio>
 #include <cstring>
 #include <iostream>
-#include <magic_enum/magic_enum.hpp>
 #include <map>
-#include <nlohmann/json.hpp>
 #include <string>
 #include <type_traits>
 
+// ADCore includes
 #include "ADDriver.h"
-#include "XSPDAPI.h"
 
 // ADCore 3.15 introduced support for creating zlib-compressed NDArrays.
 // https://github.com/areaDetector/ADCore/pull/578

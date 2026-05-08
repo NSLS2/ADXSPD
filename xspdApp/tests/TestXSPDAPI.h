@@ -21,7 +21,7 @@ class TestXSPDAPI : public ::testing::Test {
    protected:
     void SetUp() override { mapi = std::make_unique<StrictMock<MockXSPDAPI>>(); }
 
-    void TearDown() override {}
+    void TearDown() override { mapi.reset(); }
 
     unique_ptr<StrictMock<MockXSPDAPI>> mapi;
 };
