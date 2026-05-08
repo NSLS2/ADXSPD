@@ -517,7 +517,7 @@ TEST_F(TestXSPDAPI, TestGetSerialNumber) {
     ASSERT_EQ(serialNumber, "SN12345");
 }
 
-TEST_F(TestXSPDAPI, TestGetBloscSubcompressorId){
+TEST_F(TestXSPDAPI, TestGetBloscSubcompressorId) {
     ASSERT_EQ(XSPD::GetBloscSubcompressorId(XSPD::Compressor::BLOSC_BLOSCLZ), 0);
     ASSERT_EQ(XSPD::GetBloscSubcompressorId(XSPD::Compressor::BLOSC_LZ4), 1);
     ASSERT_THAT([&]() { XSPD::GetBloscSubcompressorId(XSPD::Compressor::ZLIB); },

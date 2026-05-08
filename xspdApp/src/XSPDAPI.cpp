@@ -80,9 +80,9 @@ int XSPD::GetBloscSubcompressorId(XSPD::Compressor compressor) {
                                " is not a Blosc compressor");
     }
 
-    return static_cast<int>(compressor) - 2;  // Subtract 2 to convert from Compressor enum to Blosc compressor ID
+    return static_cast<int>(compressor) -
+           2;  // Subtract 2 to convert from Compressor enum to Blosc compressor ID
 }
-
 
 /**
  * @brief Checks if a device with the given device ID exists
