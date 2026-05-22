@@ -1026,9 +1026,9 @@ static void configXSPDCallFunc(const iocshArgBuf* args) {
 }
 
 /* Function definition */
-static const iocshFuncDef configXSPD = {"ADXSPDConfig", 4, XSPDConfigArgs};
+static const iocshFuncDef configXSPDFuncDef = {"ADXSPDConfig", 4, XSPDConfigArgs};
 /* IOC register function */
-static void ADXSPDRegister(void) { iocshRegister(&configXSPD, configXSPDCallFunc); }
+static void ADXSPDRegister(void) { iocshRegister(&configXSPDFuncDef, configXSPDCallFunc); }
 
 /* external function for IOC registration */
 extern "C" {
