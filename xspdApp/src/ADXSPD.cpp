@@ -393,7 +393,7 @@ void ADXSPD::acquisitionThread() {
 #endif
                 } else if (XSPD::IsBloscCompressor(compressor)) {
                     pArray->codec.name = "blosc";
-                    pArray->codec.compressor = GetBloscSubcompressorId(compressor);
+                    pArray->codec.compressor = XSPD::GetBloscSubcompressorId(compressor);
                     pArray->codec.level = compressionLevel;
                     // ADCore has blosc shuffle settings defined as 0=None, 1=Byte, 2=Bit, but there
                     // is not any enumeration for this (it comes from the NDPluginCodec blosc
@@ -1026,9 +1026,9 @@ static void configXSPDCallFunc(const iocshArgBuf* args) {
 }
 
 /* Function definition */
-static const iocshFuncDef configXSPD = {"ADXSPDConfig", 4, XSPDConfigArgs};
+static const iocshFuncDef configXSPDFuncDef = {"ADXSPDConfig", 4, XSPDConfigArgs};
 /* IOC register function */
-static void ADXSPDRegister(void) { iocshRegister(&configXSPD, configXSPDCallFunc); }
+static void ADXSPDRegister(void) { iocshRegister(&configXSPDFuncDef, configXSPDCallFunc); }
 
 /* external function for IOC registration */
 extern "C" {
