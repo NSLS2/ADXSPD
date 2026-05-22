@@ -122,15 +122,15 @@ jobs:
       # Epics bundle rpm should be converted to require devel versions of packages
       - name: Install required system packages
         run: |
-          dnf -y install curl-devel zeromq-devel zlib-devel blosc-devel hdf5-devel libtiff-devel libjpeg-devel libaec-devel libxml2-devel
+          dnf -y install curl-devel zeromq-devel zlib-devel blosc-devel hdf5-devel libtiff-devel libjpeg-devel libaec-devel libxml2-devel valgrind
 
       - name: Build ADXSPD driver and unit tests
         run: |
           make -j4
 
-      - name: Run unit tests
+      - name: Run unit tests with valgrind
         run: |
-          pixi run tests
+          pixi run tests-w-valgrind
 
       # TODO: add coverage reporting to CI once it is working & codecov enabled
       # - name: Get coverage info
