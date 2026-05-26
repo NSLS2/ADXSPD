@@ -139,6 +139,7 @@ class API {
      */
     template <typename T>
     T GetVar(string varPath, string key = "value") {
+        std::lock_guard<std::mutex> lock(this->apiMutex);  // Ensure thread safety for API calls
         json response = Get("devices/" + this->deviceId + "/variables?path=" + varPath);
         return ReadVarFromResp<T>(response, varPath, key);
     }
@@ -170,6 +171,7 @@ class API {
             valueAsStr = to_string(value);
         }
 
+        std::lock_guard<std::mutex> lock(this->apiMutex);  // Ensure thread safety for API calls
         json response = this->Put("devices/" + this->deviceId + "/variables?path=" + varPath +
                                   "&value=" + valueAsStr);
         return ReadVarFromResp<GetT>(response, varPath, rbKey);
@@ -237,6 +239,7 @@ class API {
     }
 
    private:
+    mutex apiMutex;  // Mutex to protect API calls and internal state
     string baseUri, apiVersion, xspdVersion, libxspVersion, deviceId, systemId;
     unique_ptr<Detector> detector;
 };
