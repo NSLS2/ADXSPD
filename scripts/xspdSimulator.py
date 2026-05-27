@@ -234,6 +234,11 @@ class SimulatorState:
         self.lock = threading.Lock()
         self.acquiring = False
         self.frame_number = 0
+        self.baseline_noise_scale = 1.0
+
+        # Stable baseline noise maps keyed by module geometry/bit depth.
+        # These are reused across frames so low-threshold baseline stays fixed.
+        self._module_baseline_noise: Dict[tuple[str, int, int, int, int], np.ndarray] = {}
 
         # Populated by load_dump()
         self.device_id: str = ""
@@ -259,6 +264,23 @@ class SimulatorState:
 
     def set_var(self, path: str, value: Any) -> None:
         self.variables[path] = value
+
+    def get_or_create_module_baseline(
+        self,
+        module_id: str,
+        width: int,
+        height: int,
+        bit_depth: int,
+    ) -> np.ndarray:
+        scale_key = int(round(self.baseline_noise_scale * 1000.0))
+        key = (module_id, width, height, bit_depth, scale_key)
+        baseline = self._module_baseline_noise.get(key)
+        if baseline is None:
+            baseline = create_baseline_noise_map(
+                width, height, bit_depth, self.baseline_noise_scale
+            )
+            self._module_baseline_noise[key] = baseline
+        return baseline
 
 
 # ---------------------------------------------------------------------------
@@ -337,6 +359,116 @@ def _max_for_dtype(dt: np.dtype) -> int:
     return int(np.iinfo(dt).max)
 
 
+def create_baseline_noise_map(
+    width: int, height: int, bit_depth: int, noise_scale: float = 1.0
+) -> np.ndarray:
+    """Create a stable low-threshold baseline map with 256x256 chip-local variation.
+
+    Each 256x256 block gets an independently random sparse baseline pattern to
+    mimic chip-level fixed-pattern noise.
+    """
+    chip_size = 256
+    dt = _dtype_for_bit_depth(bit_depth)
+    max_val = _max_for_dtype(dt)
+    scale = max(0.1, float(noise_scale))
+
+    baseline = np.zeros((height, width), dtype=dt)
+    # Keep baseline low in amplitude and sparse in occupancy.
+    baseline_hi = max(2, int(max_val * 0.02 * scale))
+
+    for y0 in range(0, height, chip_size):
+        for x0 in range(0, width, chip_size):
+            y1 = min(y0 + chip_size, height)
+            x1 = min(x0 + chip_size, width)
+            block_h = y1 - y0
+            block_w = x1 - x0
+
+            # Distinct chip-level floor range plus per-pixel random floor avoids
+            # large constant-value blocks while keeping chip-local character.
+            chip_floor_lo = max(
+                0, int(max_val * np.random.uniform(0.0001, 0.0010) * scale)
+            )
+            chip_floor_hi = max(
+                chip_floor_lo + 1,
+                int(max_val * np.random.uniform(0.0008, 0.0030) * scale),
+            )
+            chip_gain = np.random.uniform(0.75, 1.35)
+
+            # Slightly different static density/amplitude per chip.
+            density = min(0.2, np.random.uniform(0.006, 0.02) * scale)
+            chip_hi = max(2, int(baseline_hi * np.random.uniform(0.7, 1.3)))
+
+            mask = np.random.random((block_h, block_w)) < density
+            vals = np.random.randint(1, chip_hi + 1, size=(block_h, block_w), dtype=dt)
+
+            block = np.random.randint(
+                chip_floor_lo,
+                chip_floor_hi + 1,
+                size=(block_h, block_w),
+                dtype=np.uint32,
+            )
+            block[mask] += vals[mask].astype(np.uint32)
+
+            # A few static hot pixels per chip.
+            hot_count = np.random.randint(2, 10)
+            ys = np.random.randint(0, block_h, size=hot_count)
+            xs = np.random.randint(0, block_w, size=hot_count)
+            hot_lo = max(2, int(max_val * 0.03 * scale))
+            hot_hi = max(hot_lo + 1, int(max_val * min(1.0, 0.12 * scale)))
+            block[ys, xs] = np.random.randint(hot_lo, hot_hi, size=hot_count, dtype=dt)
+
+            # Add a thin, chip-local edge attenuation to emphasize chip seams.
+            edge_w = min(2, block_h // 4, block_w // 4)
+            if edge_w > 0:
+                edge_scale = np.random.uniform(0.15, 0.45)
+                block[:edge_w, :] = np.rint(block[:edge_w, :] * edge_scale).astype(
+                    np.uint32
+                )
+                block[-edge_w:, :] = np.rint(block[-edge_w:, :] * edge_scale).astype(
+                    np.uint32
+                )
+                block[:, :edge_w] = np.rint(block[:, :edge_w] * edge_scale).astype(
+                    np.uint32
+                )
+                block[:, -edge_w:] = np.rint(block[:, -edge_w:] * edge_scale).astype(
+                    np.uint32
+                )
+
+            block = np.rint(block.astype(np.float32) * chip_gain).astype(np.uint32)
+            block = np.clip(block, 0, max_val).astype(dt)
+
+            baseline[y0:y1, x0:x1] = block
+
+    return baseline
+
+
+def _apply_scatter(
+    img: np.ndarray,
+    max_val: int,
+    strength: float,
+) -> None:
+    """Apply per-frame bidirectional salt-and-pepper scatter in-place."""
+    if strength <= 0.0:
+        return
+
+    # Keep it visible but bounded so the image remains usable for testing.
+    scatter_density = min(0.03, 0.003 + 0.015 * strength)
+    scatter_hi = max(2, int(max_val * (0.003 + 0.02 * strength)))
+
+    total = img.size
+    n_scatter = int(total * scatter_density)
+    if n_scatter <= 0:
+        return
+
+    # Sparse update for speed on large frames.
+    idx = np.random.randint(0, total, size=n_scatter)
+    signed_noise = np.random.randint(-scatter_hi, scatter_hi + 1, size=n_scatter)
+
+    flat = img.reshape(-1)
+    updated = flat[idx].astype(np.int64) + signed_noise.astype(np.int64)
+    flat[idx] = np.clip(updated, 0, max_val).astype(img.dtype)
+
+
 def _draw_streak(
     img: np.ndarray, max_val: int, dt: np.dtype, intensity: float = 1.0
 ) -> None:
@@ -391,6 +523,7 @@ def generate_module_image(
     threshold_low: float,
     frame_number: int,
     shutter_time_ms: float = 1000.0,
+    baseline_map: Optional[np.ndarray] = None,
 ) -> np.ndarray:
     """Generate a single module image with noise shaped by threshold_low.
 
@@ -403,6 +536,15 @@ def generate_module_image(
     dt = _dtype_for_bit_depth(bit_depth)
     max_val = _max_for_dtype(dt)
 
+    # Fixed-pattern baseline appears strongly at low thresholds and fades out
+    # as threshold increases.
+    baseline_strength = 0.0
+    if baseline_map is not None:
+        if threshold_low < 2.0:
+            baseline_strength = 1.0
+        elif threshold_low <= 5.0:
+            baseline_strength = float(np.exp(-1.0 * (threshold_low - 2.0)))
+
     if threshold_low < 2.0:
         # Moderate noise -- cap at 80% so zlib compression still helps
         keep_fraction = 0.8
@@ -414,8 +556,62 @@ def generate_module_image(
         # ~0.5% at 6, ~0.04% at 7, never hard-clips to zero
         keep_fraction = 0.06 * np.exp(-2.5 * (threshold_low - 5.0))
 
-    # Generate base image
-    if keep_fraction < 1e-6:
+    # Generate base image.
+    if baseline_map is not None and baseline_strength > 0.0:
+        if baseline_strength >= 0.999:
+            img = baseline_map.copy()
+        else:
+            img = np.rint(baseline_map.astype(np.float32) * baseline_strength).astype(dt)
+
+        # Keep low-threshold baseline bounded so at ~1 keV it tops out at ~50%.
+        if threshold_low <= 1.0:
+            baseline_ceiling_frac = 0.5
+        elif threshold_low < 2.0:
+            baseline_ceiling_frac = 0.5 + 0.25 * (threshold_low - 1.0)
+        else:
+            baseline_ceiling_frac = 1.0
+        baseline_ceiling = int(max_val * baseline_ceiling_frac)
+        img = np.minimum(img, baseline_ceiling).astype(dt)
+
+        # Add sparse dynamic hits on top of stable baseline.
+        dynamic_fraction = max(0.0, min(0.05, 0.01 + 0.03 * baseline_strength))
+        if dynamic_fraction > 0.0:
+            dyn_hi = max(2, int(max_val * (0.008 + 0.03 * baseline_strength)))
+            n_dyn = int(height * width * dynamic_fraction)
+            if n_dyn > 0:
+                idx = np.random.randint(0, height * width, size=n_dyn)
+                dyn_vals = np.random.randint(-dyn_hi, dyn_hi + 1, size=n_dyn)
+                flat = img.reshape(-1)
+                updated = flat[idx].astype(np.int64) + dyn_vals.astype(np.int64)
+                flat[idx] = np.clip(updated, 0, max_val).astype(dt)
+
+        # For very low thresholds, keep most pixels non-zero.
+        if threshold_low < 2.0:
+            if threshold_low <= 1.0:
+                target_nonzero_frac = 0.95
+            else:
+                target_nonzero_frac = 0.75 + 0.20 * (2.0 - threshold_low)
+
+            flat = img.reshape(-1)
+            zero_idx = np.flatnonzero(flat == 0)
+            target_nonzero = int(flat.size * target_nonzero_frac)
+            need_nonzero = max(0, target_nonzero - (flat.size - zero_idx.size))
+            if need_nonzero > 0 and zero_idx.size > 0:
+                fill_count = min(need_nonzero, zero_idx.size)
+                sel = np.random.choice(zero_idx, size=fill_count, replace=False)
+                fill_hi = max(2, int(max_val * 0.06))
+                flat[sel] = np.random.randint(1, fill_hi + 1, size=fill_count, dtype=dt)
+
+        # Small frame-to-frame scatter to avoid perfectly static output.
+        _apply_scatter(img, max_val, baseline_strength)
+
+        # Keep low-threshold baseline/noise maxima in a practical 200-300 band.
+        if threshold_low <= 3.0:
+            noise_cap = int(300 - 40 * max(0.0, threshold_low - 1.0))
+            noise_cap = max(200, min(300, noise_cap))
+            noise_cap = min(max_val, noise_cap)
+            img = np.minimum(img, noise_cap).astype(dt)
+    elif keep_fraction < 1e-6:
         img = np.zeros((height, width), dtype=dt)
     else:
         img = np.random.randint(0, max_val + 1, size=(height, width), dtype=dt)
@@ -423,14 +619,14 @@ def generate_module_image(
             mask = np.random.random((height, width)) < keep_fraction
             img[~mask] = 0
 
-    # Add rare cosmic-ray streaks for threshold > 3
+    # Add rare cosmic-ray streaks for threshold >= 3
     # Probability scales with shutter time: longer exposures collect more
     # cosmic rays.  Base probability at 1000ms is 0.05; scales linearly
     # with shutter_time_ms, capped at 0.2 (1 in 5).
     # Each additional streak after the first has exponentially decaying
     # probability: p_next = p_first * 0.4^k.
     # Intensity also scales with shutter time (more charge deposited).
-    if threshold_low > 3.0:
+    if threshold_low >= 3.0:
         # Base probability at 1000ms -> 0.05, scales linearly, cap at 0.2
         p_first = min(0.2, 0.05 * (shutter_time_ms / 1000.0))
         # Intensity factor: 0.4 at 1ms, 1.0 at 1000ms+
@@ -482,7 +678,15 @@ def generate_stitched_image(
         py = int(position[1])
 
         mod_img = generate_module_image(
-            mod_w, mod_h, bit_depth, threshold_low, frame_number, shutter_time_ms
+            mod_w,
+            mod_h,
+            bit_depth,
+            threshold_low,
+            frame_number,
+            shutter_time_ms,
+            baseline_map=state.get_or_create_module_baseline(
+                mod_id, mod_w, mod_h, bit_depth
+            ),
         )
 
         # Clip to canvas bounds
@@ -640,6 +844,9 @@ def publisher_thread(
                         threshold_low,
                         frame_num,
                         shutter_time_ms,
+                        baseline_map=state.get_or_create_module_baseline(
+                            mod_id, mod_w, mod_h, bit_depth
+                        ),
                     )
                     raw = img.tobytes()
                     compressed = compress_data(raw, compressor_name)
@@ -862,6 +1069,12 @@ def parse_args() -> argparse.Namespace:
         default="none",
         help="Initial compressor for ZMQ frame data (default: none)",
     )
+    parser.add_argument(
+        "--baseline-noise-scale",
+        type=float,
+        default=1.0,
+        help="Scale factor for baseline noise intensity/density (default: 1.0)",
+    )
     return parser.parse_args()
 
 
@@ -878,6 +1091,7 @@ def main() -> None:
     state.set_var(f"{det_id}/compressor", compressor_val)
     for mod_id in state.module_ids:
         state.set_var(f"{mod_id}/compressor", compressor_val)
+    state.baseline_noise_scale = max(0.1, float(args.baseline_noise_scale))
 
     print(f"[INIT] Device: {state.device_id}")
     print(f"[INIT] Detector: {state.detector_id}")
@@ -885,6 +1099,7 @@ def main() -> None:
     print(f"[INIT] Data ports: {state.data_port_ids}")
     print(f"[INIT] Stitched: {args.stitched}")
     print(f"[INIT] Compressor: {args.compressor}")
+    print(f"[INIT] Baseline noise scale: {state.baseline_noise_scale:.2f}")
     print(f"[INIT] Variables loaded: {len(state.variables)}")
 
     # Start ZMQ publisher thread
