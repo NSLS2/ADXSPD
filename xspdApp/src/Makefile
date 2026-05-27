@@ -9,8 +9,6 @@ endif
 
 USR_CPPFLAGS += -std=c++17
 
-INC += ADXSPD.h ADXSPDParamDefs.h ADXSPDModule.h ADXSPDModuleParamDefs.h XSPDAPI.h
-
 LIBRARY_IOC = ADXSPD
 LIB_SRCS += ADXSPDParamDefs.cpp ADXSPD.cpp ADXSPDModuleParamDefs.cpp ADXSPDModule.cpp XSPDAPI.cpp
 
