@@ -24,7 +24,7 @@ dbLoadDatabase("$(ADXSPD)/iocs/xspdIOC/dbd/xspdApp.dbd")
 xspdApp_registerRecordDeviceDriver(pdbbase)
 
 # Create instance of ADXSPD driver, and pause to show connection messages
-ADXSPDConfig("$(PORT)", "localhost", 8008)
+ADXSPDConfig("$(PORT)", "localhost", 8888)
 # epicsThreadSleep(3)
 
 dbLoadRecords("$(ADXSPD)/db/ADXSPD.template","P=$(PREFIX),R=cam1:,PORT=$(PORT),ADDR=0,TIMEOUT=1")
