@@ -4,6 +4,7 @@ include $(TOP)/configure/CONFIG
 #----------------------------------------
 
 USR_CPPFLAGS += -std=c++17
+USR_INCLUDES += -I$(TOP)/xspdApp/src
 
 TESTPROD_IOC = TestADXSPD
 
