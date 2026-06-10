@@ -238,7 +238,9 @@ class SimulatorState:
 
         # Stable baseline noise maps keyed by module geometry/bit depth.
         # These are reused across frames so low-threshold baseline stays fixed.
-        self._module_baseline_noise: Dict[tuple[str, int, int, int, int], np.ndarray] = {}
+        self._module_baseline_noise: Dict[
+            tuple[str, int, int, int, int], np.ndarray
+        ] = {}
 
         # Populated by load_dump()
         self.device_id: str = ""
@@ -561,7 +563,9 @@ def generate_module_image(
         if baseline_strength >= 0.999:
             img = baseline_map.copy()
         else:
-            img = np.rint(baseline_map.astype(np.float32) * baseline_strength).astype(dt)
+            img = np.rint(baseline_map.astype(np.float32) * baseline_strength).astype(
+                dt
+            )
 
         # Keep low-threshold baseline bounded so at ~1 keV it tops out at ~50%.
         if threshold_low <= 1.0:
