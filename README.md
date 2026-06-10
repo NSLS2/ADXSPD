@@ -1,4 +1,4 @@
-# ADXSPD
+# ADXSPD [![CI](https://github.com/NSLS2/ADXSPD/actions/workflows/ci.yaml/badge.svg)](https://github.com/NSLS2/ADXSPD/actions/workflows/ci.yaml)
 
 EPICS areaDetector driver for controlling [X-Spectrum Lambda](https://x-spectrum.de/products/lambda/) detectors, using their XSPD remote control (REST) api interface.
 
