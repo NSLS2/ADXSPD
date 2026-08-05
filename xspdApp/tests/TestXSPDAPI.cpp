@@ -183,6 +183,7 @@ TEST_F(TestXSPDAPI, TestAPIInitNoDataPorts) {
     this->mapi->MockAPIVersionCheck();
     this->mapi->MockGetRequest("devices");
     this->mapi->MockGetVarRequest("info");
+    this->mapi->MockGetRequest("devices/lambda01/commands");
     this->mapi->MockGetRequest("devices/lambda01", &modifiedDeviceInfo);
     EXPECT_THAT([&]() { this->mapi->Initialize("lambda01"); },
                 testing::ThrowsMessage<std::runtime_error>(
@@ -196,6 +197,7 @@ TEST_F(TestXSPDAPI, TestAPIInitMissingDataPortInfo) {
     this->mapi->MockAPIVersionCheck();
     this->mapi->MockGetRequest("devices");
     this->mapi->MockGetVarRequest("info");
+    this->mapi->MockGetRequest("devices/lambda01/commands");
     this->mapi->MockGetRequest("devices/lambda01", &modifiedDeviceInfo);
     EXPECT_THAT([&]() { this->mapi->Initialize("lambda01"); },
                 testing::ThrowsMessage<std::runtime_error>(

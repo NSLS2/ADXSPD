@@ -186,6 +186,7 @@ class ADXSPD : ADDriver {
     ADXSPDLogLevel getLogLevel() { return this->logLevel; }
 
     asynStatus getInitialDetState();
+    asynStatus refreshFrameSize();
     asynStatus acquireStart();
     asynStatus acquireStop();
 

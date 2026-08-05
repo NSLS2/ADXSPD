@@ -144,20 +144,38 @@ asynStatus ADXSPD::acquireStart() {
     setIntegerParam(ADNumImagesCounter, 0);
 
     try {
-        int sizeX = this->pDetector->GetActiveDataPort()->GetVar<int>("frame_width");
-        int sizeY = this->pDetector->GetActiveDataPort()->GetVar<int>("frame_height");
-        setIntegerParam(ADSizeX, sizeX);
-        setIntegerParam(ADSizeY, sizeY);
+        // Frame geometry is cached at init and refreshed on roi_rows writes, so no need to
+        // re-read it from the detector on every acquisition.
         setIntegerParam(ADStatus, ADStatusAcquire);
 
         callParamCallbacks();
 
-        this->pDetector->ExecCommand("start");
+        this->pDetector->StartAcquisition();
 
         INFO_TO_STATUS("Acquisition started");
 
     } catch (std::exception& e) {
         ERR_TO_STATUS_ARGS("Failed to start acquisition: %s", e.what());
+        return asynError;
+    }
+    return asynSuccess;
+}
+
+/**
+ * @brief Reads the data port frame geometry and caches it in the size parameters
+ *
+ * @return asynStatus asynSuccess on success, asynError if the geometry could not be read
+ */
+asynStatus ADXSPD::refreshFrameSize() {
+    try {
+        int sizeX = this->pDetector->GetActiveDataPort()->GetVar<int>("frame_width");
+        int sizeY = this->pDetector->GetActiveDataPort()->GetVar<int>("frame_height");
+        setIntegerParam(ADMaxSizeX, sizeX);
+        setIntegerParam(ADMaxSizeY, sizeY);
+        setIntegerParam(ADSizeX, sizeX);
+        setIntegerParam(ADSizeY, sizeY);
+    } catch (std::exception& e) {
+        ERR_ARGS("Failed to refresh frame size: %s", e.what());
         return asynError;
     }
     return asynSuccess;
@@ -171,7 +189,7 @@ asynStatus ADXSPD::acquireStart() {
 asynStatus ADXSPD::acquireStop() {
     setIntegerParam(ADAcquire, 0);
     try {
-        this->pDetector->ExecCommand("stop");
+        this->pDetector->StopAcquisition();
         setIntegerParam(ADStatus, ADStatusIdle);
         callParamCallbacks();
     } catch (std::exception& e) {
@@ -400,10 +418,12 @@ void ADXSPD::acquisitionThread() {
                     // shuffle record). The XSPD::ShuffleMode enum has been set up with the same
                     // values for ease of translation, so we can just static_cast it here. If ADCore
                     // gets an enumeration for this in the future, it should be used here.
-                    XSPD::ShuffleMode shuffleMode =
-                        this->pDetector->GetVar<XSPD::ShuffleMode>("shuffle_mode");
+                    // Read from the cached parameter rather than the API to avoid a per-frame
+                    // request.
+                    int shuffleMode;
+                    getIntegerParam(ADXSPD_ShuffleMode, &shuffleMode);
                     // TODO: Handle auto shuffle mode correctly.
-                    pArray->codec.shuffle = static_cast<int>(shuffleMode);
+                    pArray->codec.shuffle = shuffleMode;
                 }
 
                 if (!readoutOk) {
@@ -615,8 +635,7 @@ asynStatus ADXSPD::getInitialDetState() {
     }
 
     // Retrieve all remaining initial parameters.
-    status |= this->getDataPortVar<int>(ADMaxSizeX, "frame_width");
-    status |= this->getDataPortVar<int>(ADMaxSizeY, "frame_height");
+    status |= this->refreshFrameSize();
     status |= this->getDetVar<int>(ADXSPD_SummedFrames, "summed_frames");
     status |= this->getDetVar<int>(ADXSPD_CompressLevel, "compression_level");
     status |= this->getDetVar<XSPD::Compressor>(ADXSPD_Compressor, "compressor");
@@ -698,7 +717,7 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
     } else if (function == ADNumImages) {
         int maxNumImages = INT_MAX;
         for (auto& module : this->modules) {
-            int moduleMax = module->getMaxNumImages();
+            int moduleMax = module->getCachedMaxNumImages();
             if (moduleMax < maxNumImages) {
                 maxNumImages = moduleMax;
             }
@@ -730,6 +749,8 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
                 actualValue = this->pDetector->SetVar<int>("summed_frames", value);
             } else if (function == ADXSPD_RoiRows) {
                 actualValue = static_cast<int>(this->pDetector->SetVar<int>("roi_rows", value));
+                // ROI readout may change the data port frame geometry; refresh cached size.
+                this->refreshFrameSize();
                 for (auto& module : this->modules) {
                     module->getMaxNumImages();
                 }

@@ -193,6 +193,14 @@ XSPD::Detector* XSPD::API::Initialize(string deviceId) {
             "Detector information is missing 'detector-id' or 'modules' field for device ID " +
             this->deviceId);
 
+    // Cache available commands on init to avoid repeated API calls during acq
+    json availableCommands = Get("devices/" + this->deviceId + "/commands");
+    for (auto& cmd : availableCommands) {
+        if (cmd.contains("path")) {
+            this->availableCommands.push_back(cmd["path"].get<string>());
+        }
+    }
+
     this->detector = make_unique<Detector>(this, detectorInfo["detector-id"].get<string>());
     for (auto& moduleJson : detectorInfo["modules"]) {
         int numChips = moduleJson["chips"].get<int>();
@@ -344,16 +352,8 @@ json XSPD::API::Put(string endpoint) {
  * @param command The command to execute
  */
 void XSPD::API::ExecCommand(string command) {
-    json availableCommands = Get("devices/" + this->deviceId + "/commands");
-    bool commandFound = false;
-    for (auto& cmd : availableCommands) {
-        if (cmd["path"] == command) {
-            commandFound = true;
-            break;
-        }
-    }
-
-    if (!commandFound)
+    if (std::find(this->availableCommands.begin(), this->availableCommands.end(), command) ==
+        this->availableCommands.end())
         throw invalid_argument("Command '" + command + "' not found for device ID " +
                                this->deviceId);
 
@@ -436,24 +436,3 @@ string XSPD::Detector::GetSerialNumber() {
     if (sn.empty()) sn = this->GetAPI()->GetSystemId();
     return sn;
 }
-
-// XSPD::CompressionSettings XSPD::Detector::GetCompressionSettings() {
-//     string fullCompressor = this->GetVar<string>("compressor");
-//     auto slashPos = fullCompressor.find('/');
-//     Compressor baseCompressor = magic_enum::enum_cast<Compressor>((slashPos != string::npos) ?
-//     fullCompressor.substr(0, slashPos) : fullCompressor).value(); int compressionLevel =
-//     this->GetVar<int>("compression_level"); if (baseCompressor == Compressor::BLOSC) {
-//         BloscCompressionSettings settings;
-//         settings.compressor = baseCompressor;
-//         settings.compressionLevel = compressionLevel;
-
-//         settings.bloscCompressor =
-//         magic_enum::enum_cast<BloscCompressor>(fullCompressor.substr(slashPos + 1)).value();
-//         settings.shuffleMode = this->GetVar<ShuffleMode>("shuffle_mode");
-//         return settings;
-//     }
-//     CompressionSettings settings;
-//     settings.compressor = baseCompressor;
-//     settings.compressionLevel = compressionLevel;
-//     return settings;
-// }

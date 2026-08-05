@@ -50,6 +50,14 @@ int ADXSPDModule::getMaxNumImages() {
     return maxFrames;
 }
 
+// Returns the last known max_frames without querying the API. Only changes with bit_depth,
+// roi_rows, and counter_mode, all of which refresh the cached value on write.
+int ADXSPDModule::getCachedMaxNumImages() {
+    int maxFrames;
+    getIntegerParam(ADXSPDModule_MaxFrames, &maxFrames);
+    return maxFrames;
+}
+
 void ADXSPDModule::getInitialModuleState() {
     this->checkStatus();
 

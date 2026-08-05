@@ -3,6 +3,7 @@
 
 #include <cpr/cpr.h>
 
+#include <algorithm>
 #include <iostream>
 #include <magic_enum/magic_enum.hpp>
 #include <map>
@@ -87,17 +88,6 @@ enum class APIState {
     INITIALIZED = 4,
 };
 
-// struct CompressionSettings {
-//     Compressor compressor;
-//     int compressionLevel;
-//     virtual ~CompressionSettings() = default;
-// };
-
-// struct BloscCompressionSettings : public CompressionSettings {
-//     BloscCompressor bloscCompressor;
-//     ShuffleMode shuffleMode;
-// };
-
 // Default port number for XSPD API
 constexpr int DEFAULT_PORT = 8008;
 
@@ -123,6 +113,7 @@ class API {
     string GetSystemId();
 
     bool DeviceExists(string deviceId);
+    bool IsCommandAvailable(string command);
     string GetDeviceAtIndex(int deviceIndex);
     virtual json SubmitRequest(string uri, RequestType reqType);
 
@@ -241,6 +232,7 @@ class API {
    private:
     mutex apiMutex;  // Mutex to protect API calls and internal state
     string baseUri, apiVersion, xspdVersion, libxspVersion, deviceId, systemId;
+    vector<string> availableCommands;
     unique_ptr<Detector> detector;
 };
 
@@ -440,6 +432,10 @@ class Detector : public APIComponent {
     DataPort* GetActiveDataPort() { return this->activeDataPort; }
 
     void ExecCommand(string command) { this->GetAPI()->ExecCommand(this->GetId() + "/" + command); }
+
+    // Convenience methods for starting and stopping acquisition
+    void StartAcquisition() { this->ExecCommand("start"); }
+    void StopAcquisition() { this->ExecCommand("stop"); }
     // CompressionSettings GetCompressionSettings();
 
    private:

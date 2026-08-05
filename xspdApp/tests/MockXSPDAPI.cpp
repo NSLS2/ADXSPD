@@ -167,6 +167,7 @@ void MockXSPDAPI::MockInitializationSeq(std::string deviceId) {
     this->MockAPIVersionCheck();
     this->MockGetRequest("devices");
     this->MockGetRequest("devices/" + deviceId + "/variables?path=info");
+    this->MockGetRequest("devices/" + deviceId + "/commands");
     this->MockGetRequest("devices/" + deviceId);
 }
 

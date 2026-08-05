@@ -28,6 +28,7 @@ class ADXSPDModule : public asynPortDriver {
     void getInitialModuleState();
     void getFlatfieldState();
     int getMaxNumImages();
+    int getCachedMaxNumImages();
 
    protected:
     // Module parameters
