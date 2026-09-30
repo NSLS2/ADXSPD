@@ -950,7 +950,8 @@ asynStatus ADXSPD::writeOctet(asynUser* pasynUser, const char* value, size_t nCh
 
     int logRequests;
     getIntegerParam(ADXSPD_LogRequests, &logRequests);
-    if (status == asynSuccess && logRequests && (function == NDFilePath || function == NDFileName)) {
+    if (status == asynSuccess && logRequests &&
+        (function == NDFilePath || function == NDFileName)) {
         try {
             this->setRequestLogging(true);
         } catch (std::runtime_error& e) {
