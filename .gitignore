@@ -29,4 +29,6 @@ checkVar.sh
 setVar.sh
 coverage.info
 coverage-report/
+# rendered docs from `pixi run build-docs`
+build/
 __pycache__/
