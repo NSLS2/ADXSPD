@@ -295,6 +295,7 @@ string XSPD::API::GetSystemId() {
  * @return json Parsed JSON response from the API
  */
 json XSPD::API::SubmitRequest(string uri, XSPD::RequestType reqType) {
+    std::lock_guard<std::mutex> lock(this->apiMutex);
     cpr::Response response;
     string verbMsg;
     switch (reqType) {
@@ -332,7 +333,7 @@ json XSPD::API::SubmitRequest(string uri, XSPD::RequestType reqType) {
  * @throws runtime_error if the log file cannot be opened
  */
 void XSPD::API::EnableRequestLogging(const string& logFilePath) {
-    std::lock_guard<std::mutex> lock(this->logMutex);
+    std::lock_guard<std::mutex> lock(this->apiMutex);
     if (this->requestLogFile.is_open()) this->requestLogFile.close();
     this->logRequests = false;
 
@@ -348,7 +349,7 @@ void XSPD::API::EnableRequestLogging(const string& logFilePath) {
  * @brief Disables logging of HTTP requests, closing the log file if one is open
  */
 void XSPD::API::DisableRequestLogging() {
-    std::lock_guard<std::mutex> lock(this->logMutex);
+    std::lock_guard<std::mutex> lock(this->apiMutex);
     this->logRequests = false;
     if (this->requestLogFile.is_open()) this->requestLogFile.close();
 }
@@ -359,7 +360,7 @@ void XSPD::API::DisableRequestLogging() {
  * @return true if request logging is enabled, false otherwise
  */
 bool XSPD::API::IsRequestLoggingEnabled() {
-    std::lock_guard<std::mutex> lock(this->logMutex);
+    std::lock_guard<std::mutex> lock(this->apiMutex);
     return this->logRequests;
 }
 
@@ -373,7 +374,6 @@ bool XSPD::API::IsRequestLoggingEnabled() {
  */
 void XSPD::API::LogRequest(XSPD::RequestType reqType, const string& uri, long statusCode,
                            double elapsed) {
-    std::lock_guard<std::mutex> lock(this->logMutex);
     if (!this->logRequests) return;
 
     auto now = chrono::system_clock::now();
