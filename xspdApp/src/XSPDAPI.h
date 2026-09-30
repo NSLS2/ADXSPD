@@ -4,10 +4,12 @@
 #include <cpr/cpr.h>
 
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <magic_enum/magic_enum.hpp>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <string>
 
 #include "nlohmann/json.hpp"
@@ -120,6 +122,11 @@ class API {
     json Get(string endpoint);
     json Put(string endpoint);
 
+    void EnableRequestLogging(const string& logFilePath = "");
+    void DisableRequestLogging();
+    bool IsRequestLoggingEnabled();
+    void LogRequest(RequestType reqType, const string& uri, long statusCode, double elapsed);
+
     /**
      * @brief Retrieves the value of a variable from the API
      *
@@ -231,6 +238,9 @@ class API {
 
    private:
     mutex apiMutex;  // Mutex to protect API calls and internal state
+    mutex logMutex;  // Separate from apiMutex, since Initialize() submits requests without it
+    bool logRequests = false;
+    ofstream requestLogFile;  // If not open while logging is enabled, requests go to stdout
     string baseUri, apiVersion, xspdVersion, libxspVersion, deviceId, systemId;
     vector<string> availableCommands;
     unique_ptr<Detector> detector;

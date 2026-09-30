@@ -526,3 +526,44 @@ TEST_F(TestXSPDAPI, TestGetBloscSubcompressorId) {
                 testing::ThrowsMessage<std::invalid_argument>(
                     testing::HasSubstr("Compressor ZLIB is not a Blosc compressor")));
 }
+
+TEST_F(TestXSPDAPI, TestRequestLoggingDisabledByDefault) {
+    ASSERT_FALSE(this->mapi->IsRequestLoggingEnabled());
+}
+
+TEST_F(TestXSPDAPI, TestRequestLoggingToFile) {
+    string logFilePath = testing::TempDir() + "xspd_request_log_test.log";
+    std::remove(logFilePath.c_str());
+
+    this->mapi->EnableRequestLogging(logFilePath);
+    ASSERT_TRUE(this->mapi->IsRequestLoggingEnabled());
+    this->mapi->LogRequest(XSPD::RequestType::GET, "localhost:8008/api", 200, 0.0125);
+    this->mapi->DisableRequestLogging();
+    ASSERT_FALSE(this->mapi->IsRequestLoggingEnabled());
+    this->mapi->LogRequest(XSPD::RequestType::PUT, "localhost:8008/not_logged", 200, 0.0);
+
+    std::ifstream logFile(logFilePath);
+    std::stringstream contents;
+    contents << logFile.rdbuf();
+    ASSERT_THAT(contents.str(), testing::HasSubstr("GET localhost:8008/api | status=200 | "
+                                                   "elapsed=12.500 ms"));
+    ASSERT_THAT(contents.str(), testing::Not(testing::HasSubstr("not_logged")));
+    std::remove(logFilePath.c_str());
+}
+
+TEST_F(TestXSPDAPI, TestRequestLoggingToStdout) {
+    this->mapi->EnableRequestLogging();
+    std::stringstream captured;
+    std::streambuf* origBuf = std::cout.rdbuf(captured.rdbuf());
+    this->mapi->LogRequest(XSPD::RequestType::PUT, "localhost:8008/api/v1/devices", 404, 0.001);
+    std::cout.rdbuf(origBuf);
+    ASSERT_THAT(captured.str(),
+                testing::HasSubstr("PUT localhost:8008/api/v1/devices | status=404 | elapsed="));
+}
+
+TEST_F(TestXSPDAPI, TestRequestLoggingInvalidFilePath) {
+    ASSERT_THAT([&]() { this->mapi->EnableRequestLogging("/nonexistent_dir/xspd.log"); },
+                testing::ThrowsMessage<std::runtime_error>(
+                    testing::HasSubstr("Failed to open request log file")));
+    ASSERT_FALSE(this->mapi->IsRequestLoggingEnabled());
+}

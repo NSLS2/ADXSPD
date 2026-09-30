@@ -20,6 +20,7 @@
 ##################################################################
 
 include "ADBase.template"
+include "NDFile.template"
 
 # ADBase record overrides
 
@@ -617,6 +618,26 @@ record(ai, "$(P)$(R)BloscNumThreads_RBV"){
     field(DESC, "Num blosc decompress threads rb")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_BLOSC_NUM_THREADS")
+    field(SCAN, "I/O Intr")
+}
+
+# Log files are written to FilePath; stdout is used if FilePath is empty
+record(bo, "$(P)$(R)LogRequests"){
+    field(DESC, "Log HTTP requests sent to XSPD")
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_LOG_REQUESTS")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
+    field(VAL, "0")
+    field(PINI, "NO")
+}
+
+record(bi, "$(P)$(R)LogRequests_RBV"){
+    field(DESC, "Log HTTP requests readback")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSPD_LOG_REQUESTS")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
     field(SCAN, "I/O Intr")
 }
 

@@ -1,6 +1,11 @@
 
 #include "XSPDAPI.h"
 
+#include <chrono>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
+
 /**
  * @brief Parses a version string into its major, minor, and patch components
  *
@@ -305,6 +310,8 @@ json XSPD::API::SubmitRequest(string uri, XSPD::RequestType reqType) {
             throw invalid_argument("Unsupported request type");
     }
 
+    this->LogRequest(reqType, uri, response.status_code, response.elapsed);
+
     if (response.status_code != 200)
         throw runtime_error("Failed to " + verbMsg + ": " + response.error.message);
 
@@ -316,6 +323,74 @@ json XSPD::API::SubmitRequest(string uri, XSPD::RequestType reqType) {
     } catch (json::parse_error& e) {
         throw runtime_error("Failed to parse JSON response from " + uri + ": " + string(e.what()));
     }
+}
+
+/**
+ * @brief Enables logging of each HTTP request submitted to XSPD
+ *
+ * @param logFilePath Path of the file to append log entries to. If empty, logs to stdout.
+ * @throws runtime_error if the log file cannot be opened
+ */
+void XSPD::API::EnableRequestLogging(const string& logFilePath) {
+    std::lock_guard<std::mutex> lock(this->logMutex);
+    if (this->requestLogFile.is_open()) this->requestLogFile.close();
+    this->logRequests = false;
+
+    if (!logFilePath.empty()) {
+        this->requestLogFile.open(logFilePath, ios::out | ios::app);
+        if (!this->requestLogFile.is_open())
+            throw runtime_error("Failed to open request log file " + logFilePath);
+    }
+    this->logRequests = true;
+}
+
+/**
+ * @brief Disables logging of HTTP requests, closing the log file if one is open
+ */
+void XSPD::API::DisableRequestLogging() {
+    std::lock_guard<std::mutex> lock(this->logMutex);
+    this->logRequests = false;
+    if (this->requestLogFile.is_open()) this->requestLogFile.close();
+}
+
+/**
+ * @brief Checks whether HTTP request logging is enabled
+ *
+ * @return true if request logging is enabled, false otherwise
+ */
+bool XSPD::API::IsRequestLoggingEnabled() {
+    std::lock_guard<std::mutex> lock(this->logMutex);
+    return this->logRequests;
+}
+
+/**
+ * @brief Writes a single request log entry, if request logging is enabled
+ *
+ * @param reqType The type of HTTP request
+ * @param uri The full URI the request was sent to
+ * @param statusCode The HTTP status code of the response (0 if no response was received)
+ * @param elapsed Time taken to complete the request, in seconds
+ */
+void XSPD::API::LogRequest(XSPD::RequestType reqType, const string& uri, long statusCode,
+                           double elapsed) {
+    std::lock_guard<std::mutex> lock(this->logMutex);
+    if (!this->logRequests) return;
+
+    auto now = chrono::system_clock::now();
+    time_t nowSec = chrono::system_clock::to_time_t(now);
+    auto ms = chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()) % 1000;
+    tm localTime;
+    localtime_r(&nowSec, &localTime);
+
+    // Format into a local stream so we don't alter the formatting state of stdout
+    ostringstream entry;
+    entry << put_time(&localTime, "%Y-%m-%d %H:%M:%S") << "." << setfill('0') << setw(3)
+          << ms.count() << " | " << magic_enum::enum_name(reqType) << " " << uri
+          << " | status=" << statusCode << " | elapsed=" << fixed << setprecision(3)
+          << elapsed * 1000.0 << " ms";
+
+    ostream& out = this->requestLogFile.is_open() ? this->requestLogFile : cout;
+    out << entry.str() << endl;
 }
 
 /**

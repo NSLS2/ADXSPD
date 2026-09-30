@@ -200,6 +200,47 @@ asynStatus ADXSPD::acquireStop() {
 }
 
 /**
+ * @brief Enables or disables logging of HTTP requests sent to XSPD.
+ *
+ * Logs are written to <FilePath>/<FileName>, or <FilePath>/xspd_requests.log if FileName is empty.
+ * If FilePath is empty, logs are written to stdout.
+ *
+ * @param enable Whether to enable request logging
+ * @throws runtime_error if the file path does not exist or the log file cannot be opened
+ */
+void ADXSPD::setRequestLogging(bool enable) {
+    if (!enable) {
+        this->pApi->DisableRequestLogging();
+        setStringParam(NDFullFileName, "");
+        return;
+    }
+
+    char filePath[MAX_FILENAME_LEN];
+    char fileName[MAX_FILENAME_LEN];
+    getStringParam(NDFilePath, sizeof(filePath), filePath);
+
+    if (strlen(filePath) == 0) {
+        this->pApi->EnableRequestLogging();
+        setStringParam(NDFullFileName, "");
+        INFO("Logging XSPD requests to stdout");
+        return;
+    }
+
+    if (this->checkPath() != asynSuccess)
+        throw runtime_error("File path " + string(filePath) + " does not exist");
+
+    // checkPath() normalizes the path to include a trailing delimiter
+    getStringParam(NDFilePath, sizeof(filePath), filePath);
+    getStringParam(NDFileName, sizeof(fileName), fileName);
+    string logFilePath =
+        string(filePath) + (strlen(fileName) > 0 ? string(fileName) : "xspd_requests.log");
+
+    this->pApi->EnableRequestLogging(logFilePath);
+    setStringParam(NDFullFileName, logFilePath.c_str());
+    INFO_ARGS("Logging XSPD requests to %s", logFilePath.c_str());
+}
+
+/**
  * @brief Subtracts two frames element-wise with floor at 0
  *
  * @tparam T The data type of the frame pixels
@@ -788,6 +829,8 @@ asynStatus ADXSPD::writeInt32(asynUser* pasynUser, epicsInt32 value) {
                 if (value < ADXSPD_MIN_STATUS_POLL_INTERVAL) {
                     actualValue = ADXSPD_MIN_STATUS_POLL_INTERVAL;
                 }
+            } else if (function == ADXSPD_LogRequests) {
+                this->setRequestLogging(value != 0);
             }
 
             setIntegerParam(function, actualValue);
@@ -888,6 +931,38 @@ asynStatus ADXSPD::writeFloat64(asynUser* pasynUser, epicsFloat64 value) {
         DEBUG_ARGS("parameter=%s value=%f", paramName, value);
         return status;
     }
+}
+
+/**
+ * @brief Override of asynNDArrayDriver::writeOctet. Re-opens the request log if the file
+ * path or name changes while request logging is enabled.
+ *
+ * @param pasynUser asyn client who requests a write
+ * @param value string value to write
+ * @param nChars number of characters to write
+ * @param nActual number of characters actually written
+ * @return asynStatus success if write was successful, else failure
+ */
+asynStatus ADXSPD::writeOctet(asynUser* pasynUser, const char* value, size_t nChars,
+                              size_t* nActual) {
+    int function = pasynUser->reason;
+    asynStatus status = ADDriver::writeOctet(pasynUser, value, nChars, nActual);
+
+    int logRequests;
+    getIntegerParam(ADXSPD_LogRequests, &logRequests);
+    if (status == asynSuccess && logRequests && (function == NDFilePath || function == NDFileName)) {
+        try {
+            this->setRequestLogging(true);
+        } catch (std::runtime_error& e) {
+            this->pApi->DisableRequestLogging();
+            setIntegerParam(ADXSPD_LogRequests, 0);
+            ERR_TO_STATUS_ARGS("Failed to update request log file, disabling logging: %s",
+                               e.what());
+            status = asynError;
+        }
+        callParamCallbacks();
+    }
+    return status;
 }
 
 /**
