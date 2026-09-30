@@ -4,10 +4,12 @@
 #include <cpr/cpr.h>
 
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <magic_enum/magic_enum.hpp>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <string>
 
 #include "nlohmann/json.hpp"
@@ -120,6 +122,12 @@ class API {
     json Get(string endpoint);
     json Put(string endpoint);
 
+    void EnableRequestLogging(const string& logFilePath = "");
+    void DisableRequestLogging();
+    bool IsRequestLoggingEnabled();
+    // Caller must hold apiMutex
+    void LogRequest(RequestType reqType, const string& uri, long statusCode, double elapsed);
+
     /**
      * @brief Retrieves the value of a variable from the API
      *
@@ -130,7 +138,6 @@ class API {
      */
     template <typename T>
     T GetVar(string varPath, string key = "value") {
-        std::lock_guard<std::mutex> lock(this->apiMutex);  // Ensure thread safety for API calls
         json response = Get("devices/" + this->deviceId + "/variables?path=" + varPath);
         return ReadVarFromResp<T>(response, varPath, key);
     }
@@ -162,7 +169,6 @@ class API {
             valueAsStr = to_string(value);
         }
 
-        std::lock_guard<std::mutex> lock(this->apiMutex);  // Ensure thread safety for API calls
         json response = this->Put("devices/" + this->deviceId + "/variables?path=" + varPath +
                                   "&value=" + valueAsStr);
         return ReadVarFromResp<GetT>(response, varPath, rbKey);
@@ -230,7 +236,9 @@ class API {
     }
 
    private:
-    mutex apiMutex;  // Mutex to protect API calls and internal state
+    mutex apiMutex;  // Serializes HTTP requests and guards request logging state
+    bool logRequests = false;
+    ofstream requestLogFile;  // If not open while logging is enabled, requests go to stdout
     string baseUri, apiVersion, xspdVersion, libxspVersion, deviceId, systemId;
     vector<string> availableCommands;
     unique_ptr<Detector> detector;

@@ -35,4 +35,5 @@ void ADXSPD::createAllParams() {
     createParam(ADXSPD_MonitorIntervalString, asynParamFloat64, &ADXSPD_MonitorInterval);
     createParam(ADXSPD_DecompressString, asynParamInt32, &ADXSPD_Decompress);
     createParam(ADXSPD_BloscNumThreadsString, asynParamInt32, &ADXSPD_BloscNumThreads);
+    createParam(ADXSPD_LogRequestsString, asynParamInt32, &ADXSPD_LogRequests);
 }

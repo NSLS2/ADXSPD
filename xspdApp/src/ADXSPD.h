@@ -174,6 +174,8 @@ class ADXSPD : ADDriver {
     // ADDriver overrides
     virtual asynStatus writeInt32(asynUser* pasynUser, epicsInt32 value);
     virtual asynStatus writeFloat64(asynUser* pasynUser, epicsFloat64 value);
+    virtual asynStatus writeOctet(asynUser* pasynUser, const char* value, size_t nChars,
+                                  size_t* nActual);
     virtual void report(FILE* fp, int details);
 
     // Destructor. Disconnects from the detector and performs cleanup
@@ -189,6 +191,7 @@ class ADXSPD : ADDriver {
     asynStatus refreshFrameSize();
     asynStatus acquireStart();
     asynStatus acquireStop();
+    void setRequestLogging(bool enable);
 
     template <typename T>
     void subtractFrames(void* currentFrame, void* previousFrame, void* outputFrame,
