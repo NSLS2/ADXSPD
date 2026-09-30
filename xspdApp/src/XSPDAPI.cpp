@@ -380,7 +380,11 @@ void XSPD::API::LogRequest(XSPD::RequestType reqType, const string& uri, long st
     time_t nowSec = chrono::system_clock::to_time_t(now);
     auto ms = chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()) % 1000;
     tm localTime;
+#ifdef _WIN32
+    localtime_s(&localTime, &nowSec);
+#else
     localtime_r(&nowSec, &localTime);
+#endif
 
     // Format into a local stream so we don't alter the formatting state of stdout
     ostringstream entry;
