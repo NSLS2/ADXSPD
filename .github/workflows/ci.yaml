@@ -29,6 +29,26 @@ jobs:
       - name: Run linting checks
         run: pixi run lint
 
+  docs:
+    name: Build Docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup pixi
+        uses: prefix-dev/setup-pixi@2253d9c9310442c09975d64615591b5b381da6e7  # v0.10.0
+        with:
+          pixi-version: v0.71.3
+          cache: false
+          frozen: true
+          environments: docs
+
+      - name: Build docs
+        run: pixi run -e docs build-docs
+
   build-and-test:
     name: Build and Test ADXSPD on EL${{ matrix.rhel_version }}
 

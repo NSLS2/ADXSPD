@@ -34,3 +34,17 @@ fastapi = ">=0.136.0,<0.137"
 [pypi-dependencies]
 epicsdbtools = { git = "https://github.com/jwlodek/epicsdbtools.git" }
 epicsdb2bob = { git = "https://github.com/NSLS2/epicsdb2bob.git" }
+
+[feature.docs.dependencies]
+python = ">=3.12,<3.13"
+sphinx = ">=9.1.0,<10"
+sphinx_rtd_theme = ">=3.1.0,<4"
+
+[feature.docs.pypi-dependencies]
+linuxdoc = ">=20260504"
+
+[feature.docs.tasks]
+build-docs = "sphinx-build -W --keep-going -c scripts/sphinx -b html docs build/docs/html"
+
+[environments]
+docs = { features = ["docs"], no-default-feature = true }
